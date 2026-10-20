@@ -1,33 +1,34 @@
 /-
-EPAM, the phenomena it was built to explain, under their psychological names.
+The phenomena EPAM explains, as consequences of its postulates.
 
-Each theorem here is a corollary of the postulates (Selection, Discrimination,
-Association, Macro), stated the way P-1817 §4.1.1.3 and Feigenbaum & Simon
-(1962) state the phenomenon. The List A instance (`ListA.lean`) gives a
-concrete case of the first.
+Each theorem states a phenomenon the way P-1817 §4.1.1.3 or Feigenbaum &
+Simon (1962) state it, and proves it from the CogLib constructs that EPAM's
+postulates choose (`Postulates.lean`). Where CogLib has a theory-neutral
+statement of the phenomenon (`Cog.Phenomena`), the theorem is about that
+statement. The List A instance (`ListA.lean`) gives a concrete case of the
+first.
 -/
 
-import Epam.Association
-import Epam.Macro
+import Epam.Postulates
 import Epam.ListA
 
 namespace Epam.Phenomena
 
-open Epam Net
+open Cog Net
 
 /-- **Stimulus generalization** (§4.1.1.3.2). A stimulus that has not been
 learned, but agrees with a learned stimulus on every feature its path
-examines, is recognized as that stimulus and so gets its response. (Fig. 4.1,
+examines, is recognized as that stimulus, and so gets its response. (Fig. 4.1,
 trial 4: PEM answered as ROM; see `stimulus_generalization_List_A`.) -/
-theorem stimulus_generalization (N : Net) (x y : Item) (hx : Recognizes N x)
-    (hagree : ∀ f ∈ N.path x, x.feat f = y.feat f) : N.select y = some x := by
-  rw [select_depends_only_on_noticed_features N x y hagree]
-  exact hx
+theorem stimulus_generalization (order : NoticingOrder) (N : Net) (x y : Item) (hyx : y ≠ x)
+    (hx : Recognizes N x) (hagree : ∀ f ∈ N.path x, x.feat f = y.feat f) :
+    Cog.Phenomena.StimulusGeneralization (learner order) N x y :=
+  netLearner_generalizes order N x y hyx hx hagree
 
 /-- The List A instance of stimulus generalization, at trial 4. -/
 theorem stimulus_generalization_List_A :
-    ListA.netTrial4.select ListA.PEM = some ListA.ROM :=
-  stimulus_generalization _ _ _ ListA.trial4_learned_recognized.2.2.2.1
+    Cog.Phenomena.StimulusGeneralization (learner ListA.order) ListA.netTrial4 ListA.ROM ListA.PEM :=
+  stimulus_generalization _ _ _ _ (by decide) ListA.trial4_learned_recognized.2.2.2.1
     ListA.PEM_agrees_with_ROM_on_ROMs_path
 
 /-- **Generalization is removed by discrimination learning.** Once the
@@ -63,7 +64,7 @@ theorem oscillation (order : NoticingOrder) (y w : Item) (f : Feature)
     let cue := cueOf y []
     CueSelects before cue (some y) ∧
       CueSelects after cue (some w) ∧ CueSelects after cue (some y) :=
-  Net.oscillation order y w f hyw hf
+  cue_can_fail_after_growth order y w f hyw hf
 
 /-- **Recovery** (D8). Rebuilding the cue from the response's current path
 restores the link for good (it selects the response and nothing else). -/
@@ -77,29 +78,30 @@ correct response to old material. -/
 theorem retroactive_inhibition (order : NoticingOrder) (y w : Item) (f : Feature)
     (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
     ∃ N c, CueSelects N c (some y) ∧ CueSelects (N.learn order w) c (some w) :=
-  Net.retroactive_inhibition order y w f hyw hf
+  learning_can_capture_old_cue order y w f hyw hf
 
-/-- **Learning to criterion is possible, without unlearning.** A list of
-mutually noticeable items is completely learned with one discrimination
-cycle each, and each cycle keeps what was learned before. -/
-theorem learning_to_criterion (order : NoticingOrder) (xs : List Item)
-    (h : ∀ x ∈ xs, ∀ z ∈ xs, z ≠ x → Noticeable order x z) :
-    ∀ x ∈ xs, Recognizes (learnAll order (leaf none) xs) x :=
-  learnAll_recognizes order xs (leaf none)
-    (fun x hx z hz hzx => by
-      rcases hz with hz | hz
-      · simp [images] at hz
-      · exact h x hx z hz hzx)
+/-- **Learning is non-interfering**: learning one item never undoes the
+recognition of another. -/
+theorem non_interference (order : NoticingOrder) :
+    Cog.Phenomena.NonInterference (learner order) :=
+  netLearner_nonInterference order
+
+/-- **Learning to criterion, without unlearning.** From an empty memory, a
+list of mutually noticeable items is completely learned with one
+discrimination cycle each. -/
+theorem learning_to_criterion (order : NoticingOrder) :
+    Cog.Phenomena.ReachesCriterion (learner order) (leaf none) (PairwiseNoticeable order) :=
+  netLearner_reachesCriterion order
 
 /-- **Learning time grows with the amount to be learned** (M0, M1). -/
 theorem total_time (learned : Nat → Nat) (n T : Nat)
     (hunit : ∀ t, learned t ≤ t) (hcrit : n ≤ learned T) : n ≤ T :=
-  trials_at_least_pairs learned n T hunit hcrit
+  trials_at_least_items learned n T hunit hcrit
 
-/-- **The serial position effect** (Feigenbaum & Simon 1962). Errors increase
-with distance from the nearer end of the list: a bowed curve. -/
-theorem serial_position_effect (n i j : Nat)
-    (h : anchorDist n i < anchorDist n j) : errorsAt n i < errorsAt n j :=
-  Epam.serial_position_effect n i j h
+/-- **The serial position effect** (M3; Feigenbaum & Simon 1962). Errors
+increase with distance from the nearer end of the list: a bowed curve. -/
+theorem serial_position_effect (n : Nat) :
+    Cog.Phenomena.SerialPositionEffect n (errorsAt n) :=
+  anchorAttention_serialPosition n
 
 end Epam.Phenomena

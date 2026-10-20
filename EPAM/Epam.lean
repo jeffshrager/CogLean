@@ -1,7 +1,4 @@
-import Epam.Selection
-import Epam.Discrimination
-import Epam.Association
-import Epam.Macro
+import Epam.Postulates
 import Epam.ListA
 import Epam.Phenomena
 import Epam.Experiment

@@ -31,7 +31,7 @@ import Epam.Fig41
 
 namespace Epam.Fig41Alt
 
-open Epam Fig41 SylSet
+open Cog Epam Fig41 SylSet
 ''']
 for L, bits, fixed in rows:
     out.append('/-- %s: U1 fixes `%s`. -/\ndef %s : Item := %s' % (L, fixed, L, lit(bits)))

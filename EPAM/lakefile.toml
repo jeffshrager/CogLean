@@ -3,3 +3,7 @@ defaultTargets = ["Epam"]
 
 [[lean_lib]]
 name = "Epam"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"

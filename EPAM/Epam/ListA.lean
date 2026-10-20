@@ -17,11 +17,11 @@ The theorems are computed by the Lean kernel (`decide`): they are facts about
 this model with these codes, not general laws.
 -/
 
-import Epam.Discrimination
+import CogLib
 
 namespace Epam.ListA
 
-open Epam Net
+open Cog Net
 
 /-- The code for A (historical, Q1). -/
 def A : Item := [true, false, false, false, true, true, false, false, false, true, false, true, true, true]

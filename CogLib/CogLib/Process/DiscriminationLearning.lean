@@ -1,60 +1,40 @@
 /-
-EPAM, the discrimination-learning postulates (F1, F1b).
+Processes: discrimination learning in a net.
 
-P-1817 §2.4: "F1: Discrimination Learning Process. Learning an item in the
-discrimination net consists of finding a unique terminal in the net at which
-to store the image, or creating such a terminal by growing the net at a point
-of confusion; i.e., adding discriminatory tests at that point."
+Learning a code in a discrimination net means finding a unique terminal for
+its image, or creating one by growing the net at a point of confusion:
+* an empty terminal (the null image) simply receives the new image;
+* a terminal holding a *different* image is a point of confusion. The codes
+  are scanned in noticing order for a difference, and a test on it is put in
+  place of the terminal, with the old image on one side and the new on the
+  other;
+* nothing else in the net changes.
 
-"F1b: Noticing Order. The scanning of codes for differences is controlled by
-a noticing order."
-
-Modelled here, in its simplest form (one test added per confusion, as with the
-listing's P2 = 1):
-* An empty terminal (the null image) simply receives the new image.
-* A terminal holding a *different* image is a point of confusion. The codes
-  are scanned in noticing order for the first feature where they differ, and
-  that test is put in place of the terminal, with the old image on one side
-  and the new image on the other.
-* Nothing else in the net changes.
+`learn` adds one test per confusion. `learnK` notices up to `k` differences,
+adding redundant tests on the new code's side with null images on the
+branches it doesn't take.
 
 Results:
-* `learn_recognizes`: after learning a stimulus, the net recognizes it.
-* `learn_preserves`: learning one stimulus never disturbs the recognition of
-  another (discrimination learning is local and non-interfering).
-* `learn_all_recognized`: so a list of mutually noticeable stimuli is
-  completely learned in one discrimination cycle each.
-* `learned_test_is_first_noticed_difference` and `scan_cost_grows_with_similarity`:
-  the test added is the first difference in the noticing order, so the more
-  alike two stimuli are in the features noticed first, the further down the
-  noticing order the scan must go.
+* `learn_recognizes`: after learning a code, the net recognizes it.
+* `learn_preserves`: learning one code never disturbs the recognition of
+  another. Learning is local.
+* `learnAll_recognizes`: a list of mutually noticeable codes is learned with
+  one cycle each.
+* `learned_test_is_first_noticed_difference`: the test grown is the first
+  difference in noticing order.
+* As phenomena (`netLearner`): non-interference, learning to criterion, and
+  stimulus generalization.
 -/
 
-import Epam.Selection
+import CogLib.Memory.DiscriminationNet
+import CogLib.Control.Attention
+import CogLib.Phenomena.Learning
 
-namespace Epam
-
-/-- A noticing order: the order in which features are scanned for
-differences (F1b; the listing's P0 and P1). -/
-abbrev NoticingOrder := List Feature
-
-/-- The first feature, in noticing order, on which `x` and `z` differ. -/
-def firstDiff (order : NoticingOrder) (x z : Item) : Option Feature :=
-  order.find? (fun f => x.feat f != z.feat f)
-
-/-- Two stimuli are *noticeably different* under a noticing order when the
-scan finds a difference. -/
-def Noticeable (order : NoticingOrder) (x z : Item) : Prop :=
-  ∃ f, firstDiff order x z = some f
-
-theorem firstDiff_differs {order : NoticingOrder} {x z : Item} {f : Feature}
-    (h : firstDiff order x z = some f) : x.feat f ≠ z.feat f := by
-  have := List.find?_some h
-  simpa [bne_iff_ne] using this
+namespace Cog
 
 namespace Net
 
-/-- F1: discriminate a new stimulus into the net. -/
+/-- Discrimination learning: discriminate a new code into the net. -/
 def learn (order : NoticingOrder) : Net → Item → Net
   | leaf none, x => leaf (some x)
   | leaf (some z), x =>
@@ -67,13 +47,7 @@ def learn (order : NoticingOrder) : Net → Item → Net
   | test f n0 n1, x =>
     if x.feat f then test f n0 (n1.learn order x) else test f (n0.learn order x) n1
 
-/-- The images stored in a net. -/
-def images : Net → List Item
-  | leaf none => []
-  | leaf (some z) => [z]
-  | test _ n0 n1 => n0.images ++ n1.images
-
-/-- **F1 succeeds.** If the new stimulus is noticeably different from every
+/-- **Learning succeeds.** If the new code is noticeably different from every
 image already stored, after learning it the net recognizes it. -/
 theorem learn_recognizes (order : NoticingOrder) (N : Net) (x : Item)
     (hn : ∀ z ∈ N.images, z ≠ x → Noticeable order x z) :
@@ -97,8 +71,8 @@ theorem learn_recognizes (order : NoticingOrder) (N : Net) (x : Item)
       have := ih0 (fun z hz => hn z (by simp [images, hz]))
       simpa [learn, Recognizes, select, hx] using this
 
-/-- **F1 does not interfere.** Learning `x` leaves every other recognized
-stimulus recognized. -/
+/-- **Learning does not interfere.** Learning `x` leaves every other
+recognized code recognized. -/
 theorem learn_preserves (order : NoticingOrder) (N : Net) (x y : Item)
     (hy : Recognizes N y) (hyx : y ≠ x) : Recognizes (N.learn order x) y := by
   induction N with
@@ -146,7 +120,7 @@ theorem images_learn_subset (order : NoticingOrder) (N : Net) (x : Item) :
       · simp_all
       · rcases ih1 z hz with h | h <;> simp_all
 
-/-- Learn a list of stimuli, one F1 cycle each, in order. -/
+/-- Learn a list of codes, one learning cycle each, in order. -/
 def learnAll (order : NoticingOrder) (N : Net) (xs : List Item) : Net :=
   xs.foldl (fun n x => n.learn order x) N
 
@@ -161,9 +135,8 @@ theorem learnAll_preserves (order : NoticingOrder) (xs : List Item) :
     have h1 := learn_preserves order N a y hy hnot.1
     simpa [learnAll] using ih (N.learn order a) y h1 hnot.2
 
-/-- **A list is learned in one discrimination cycle per stimulus**, provided
-any two different stimuli involved (already stored, or on the list) are
-noticeably different. -/
+/-- **A list is learned in one cycle per code**, provided any two different
+codes involved (already stored, or on the list) are noticeably different. -/
 theorem learnAll_recognizes (order : NoticingOrder) (xs : List Item) :
     ∀ (N : Net),
       (∀ x ∈ xs, ∀ z, (z ∈ N.images ∨ z ∈ xs) → z ≠ x → Noticeable order x z) →
@@ -192,41 +165,78 @@ theorem learnAll_recognizes (order : NoticingOrder) (xs : List Item) :
         learn_recognizes order N x (fun z hz hzx => H x hx z (Or.inl hz) hzx)
       simpa [learnAll] using learnAll_preserves order rest (N.learn order x) x h1 hr
 
-/-- **F1b: the test grown at a point of confusion is the first difference in
-the noticing order.** -/
+/-- **The test grown at a point of confusion is the first difference in the
+noticing order.** -/
 theorem learned_test_is_first_noticed_difference (order : NoticingOrder)
     (x z : Item) (f : Feature) (hzx : z ≠ x) (hf : firstDiff order x z = some f) :
     ∃ n0 n1, (leaf (some z)).learn order x = test f n0 n1 := by
   simp only [learn, hzx, ite_false, hf]
   cases x.feat f <;> exact ⟨_, _, rfl⟩
 
+/-- Redundant tests on the features `fs`: `x` goes down its own branch of
+each, and the other branch gets a null image. -/
+def chain : List Feature → Item → Net
+  | [], x => leaf (some x)
+  | f :: fs, x =>
+    if x.feat f then test f (leaf none) (chain fs x) else test f (chain fs x) (leaf none)
+
+/-- Discrimination learning noticing up to `k` differences per confusion,
+with redundant tests (`chain`) beyond the first. -/
+def learnK (order : NoticingOrder) (k : Nat) : Net → Item → Net
+  | leaf none, x => leaf (some x)
+  | leaf (some z), x =>
+    if z = x then leaf (some z) else
+      match diffs order k x z with
+      | [] => leaf (some z)
+      | f :: fs =>
+        if x.feat f then test f (leaf (some z)) (chain fs x)
+        else test f (chain fs x) (leaf (some z))
+  | test f n0 n1, x =>
+    if x.feat f then test f n0 (n1.learnK order k x) else test f (n0.learnK order k x) n1
+
 end Net
 
-/-- How many features are scanned, in noticing order, before a difference
-between `x` and `z` is found (all of them if none is). -/
-def scanCost : NoticingOrder → Item → Item → Nat
-  | [], _, _ => 0
-  | f :: fs, x, z => if x.feat f != z.feat f then 1 else 1 + scanCost fs x z
+/-! ### Discrimination learning as an incremental learner, and its phenomena -/
 
-/-- **Similarity costs scanning.** If two stimuli agree on the first `k`
-features of the noticing order, finding their difference costs at least `k`
-steps: the more alike they are in what is noticed first, the longer the
-search (cf. intralist similarity, §4.1.1.3.3). -/
-theorem scanCost_ge_of_agree (order : NoticingOrder) (x z : Item) :
-    ∀ k, k ≤ order.length → (∀ f ∈ order.take k, x.feat f = z.feat f) →
-      k ≤ scanCost order x z := by
-  induction order with
-  | nil => intro k hk _; simp at hk; omega
-  | cons f fs ih =>
-    intro k hk hagree
-    cases k with
-    | zero => exact Nat.zero_le _
-    | succ k =>
-      have hf : x.feat f = z.feat f := hagree f (by simp)
-      have hrest : ∀ g ∈ fs.take k, x.feat g = z.feat g :=
-        fun g hg => hagree g (by simp [hg])
-      have := ih k (by simp at hk; omega) hrest
-      simp [scanCost, hf]
-      omega
+/-- A discrimination net with one-test learning, as an incremental learner. -/
+def netLearner (order : NoticingOrder) : IncrementalLearner Net Item :=
+  ⟨fun N x => N.learn order x, Net.select⟩
 
-end Epam
+/-- **Discrimination learning has non-interference.** -/
+theorem netLearner_nonInterference (order : NoticingOrder) :
+    Phenomena.NonInterference (netLearner order) :=
+  fun N x y hy hyx => Net.learn_preserves order N x y hy hyx
+
+/-- The lists a discrimination learner can learn: any two different items
+are noticeably different under its noticing order. -/
+def PairwiseNoticeable (order : NoticingOrder) (xs : List Item) : Prop :=
+  ∀ x ∈ xs, ∀ z ∈ xs, z ≠ x → Noticeable order x z
+
+/-- **Discrimination learning reaches criterion** from an empty memory, on
+every list of pairwise noticeable items. Proved from the general
+`criterion_of_nonInterference`: the invariant is "every stored image is on
+the list". -/
+theorem netLearner_reachesCriterion (order : NoticingOrder) :
+    Phenomena.ReachesCriterion (netLearner order) (Net.leaf none) (PairwiseNoticeable order) := by
+  apply Phenomena.criterion_of_nonInterference _ (netLearner_nonInterference order)
+  intro xs hxs
+  refine ⟨fun N => ∀ z ∈ N.images, z ∈ xs, by simp [Net.images], ?_, ?_⟩
+  · intro N x hx hN z hz
+    rcases Net.images_learn_subset order N x z hz with h | h
+    · exact h ▸ hx
+    · exact hN z h
+  · intro N x hx hN
+    exact Net.learn_recognizes order N x (fun z hz hzx => hxs x hx z (hN z hz) hzx)
+
+/-- **Discrimination nets generalize.** A learned code `x`, and a different
+code `y` that agrees with it on every feature its path examines: `y` is
+recognized as `x`. -/
+theorem netLearner_generalizes (order : NoticingOrder) (N : Net) (x y : Item)
+    (hyx : y ≠ x) (hx : Net.Recognizes N x) (hagree : ∀ f ∈ N.path x, x.feat f = y.feat f) :
+    Phenomena.StimulusGeneralization (netLearner order) N x y := by
+  refine ⟨hyx, hx, ?_⟩
+  show N.select y = some x
+  rw [Net.select_depends_only_on_noticed_features N x y hagree]
+  exact hx
+
+end Cog

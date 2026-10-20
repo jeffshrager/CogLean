@@ -18,7 +18,7 @@ import Epam.Fig41
 
 namespace Epam.Fig41Alt
 
-open Epam Fig41 SylSet
+open Cog Epam Fig41 SylSet
 
 /-- A: U1 fixes `1.001.00......`. -/
 def A : Item := [true, false, false, false, true, true, false, false, false, true, false, true, true, true]

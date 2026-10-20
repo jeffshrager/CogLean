@@ -1,60 +1,68 @@
-# EPAM's cognitive postulates in Lean
+# EPAM in CogLean
 
-EPAM, the first theory in CogLean (`../README.md`), a library of cognitive theory in Lean 4. This directory states EPAM's cognitive propositions (selection by a discrimination net, discrimination learning, association by cue codes, restoration, serial attention with anchor points; P-1817 §2.4). It then proves from them alone the phenomena they explain, and computes a full serial-anticipation experiment.
+EPAM (Feigenbaum, RAND P-1817, 1959; Feigenbaum & Simon 1962) is the first theory in CogLean (`../README.md`), a library of cognitive theory in Lean 4. EPAM's postulates (P-1817 §2.4) are choices from the general constructs of **CogLib** (`../CogLib/`): feature codes, discrimination nets, discrimination learning with a noticing order, cue codes, serial attention to anchor points. This directory records those choices, proves the phenomena EPAM was built to explain (most of them through CogLib's theory-neutral statements of the phenomena), and computes a full serial-anticipation experiment.
 
-The proofs are **qualitative**. They show that a phenomenon *follows from* (or *is possible under*) the postulates, not that it matches human data in size. All 48 theorems are machine-checked: `lake build` succeeds, there is no `sorry`, and `#print axioms` shows only Lean's standard `propext`, `Quot.sound` and `Classical.choice`.
+The proofs are **qualitative**. They show that a phenomenon *follows from* (or *is possible under*) the postulates, not that it matches human data in size. Everything is machine-checked: `lake build` succeeds, there is no `sorry`, and `#print axioms` shows only Lean's standard `propext`, `Quot.sound` and `Classical.choice`. EPAM has 30 theorems of its own; the 27 general ones it uses are in CogLib.
 
 ```sh
 cd EPAM
-lake build          # Lean 4.35.0 via elan (~/.elan); core Lean only, no Mathlib
+lake build          # builds CogLib too; Lean 4.35.0 via elan (~/.elan), core Lean only
 ```
 
 ## What is modelled
 
 The model is deliberately abstract. It formalizes the *propositions*, not the 1959 IPL-V code, which is reconstructed and run in the ExecutableArchaeology project ([EPAM/IPL](https://github.com/jeffshrager/ExecutableArchaeology/tree/main/EPAM/IPL)).
 
-| Concept (P-1817) | Lean |
+| Concept (P-1817) | CogLib |
 |---|---|
-| Stimulus code, a string of bits (§3.3.2) | `Item := List Bool`, `Item.feat` |
-| Discrimination net: testing points and terminals holding an image or the null image (§3.4.1) | `inductive Net` (`leaf`, `test`) |
-| Noticing order (F1b; the listing's P0/P1) | `NoticingOrder := List Feature` |
-| Cue code: partial information about a response (F2) | `Cue := Feature → Option Bool`, `cueOf` |
-| A test with missing information branches at random (§3.5.1.2) | `Net.CueSelects`, a relation with `guess0`/`guess1` |
+| Stimulus code, a string of bits (§3.3.2) | `Cog.Item := List Bool`, `Item.feat` (`Rep/Features`) |
+| Discrimination net: testing points and terminals holding an image or the null image (§3.4.1) | `Cog.Net` (`leaf`, `test`) (`Memory/DiscriminationNet`) |
+| Noticing order (F1b; the listing's P0/P1) | `Cog.NoticingOrder` (`Control/Attention`) |
+| Cue code: partial information about a response (F2) | `Cog.Cue`, `cueOf` (`Memory/Cue`) |
+| A test with missing information branches at random (§3.5.1.2) | `Net.CueSelects`, a relation with `guess0`/`guess1` (`Memory/Cue`) |
 
-## Postulates (definitions) and what is proved
+`Epam/Postulates.lean` quotes each postulate and names the CogLib construct that realizes it. `Epam.learner order` is EPAM as a `Cog.IncrementalLearner`, the interface CogLib's phenomena are stated about.
+
+## Postulates and what is proved
+
+The mechanism-level results are proved once, in CogLib, for any net, code and noticing order. EPAM inherits them.
 
 **Microprocesses**
 
-| Postulate (§2.4) | Lean definition | Proved properties |
+| Postulate (§2.4) | CogLib definition | Proved properties (CogLib) |
 |---|---|---|
 | D2 Selection: codes select images in a discrimination net | `Net.select`, `Net.path` | `select_depends_only_on_noticed_features`: what a stimulus is recognized as depends only on the features examined on its path. `discrimination_needs_a_difference`: a net that tells two stimuli apart must have tested a feature on which they differ. |
 | F1 Discrimination learning: find a unique terminal, or grow the net at a point of confusion | `Net.learn` | `learn_recognizes`: after learning, the stimulus is recognized. `learn_preserves`: learning never disturbs another stimulus's recognition. `learnAll_recognizes`: a list of noticeably different stimuli is learned with one F1 cycle each. |
-| F1b Noticing order | `firstDiff`, `scanCost` | `learned_test_is_first_noticed_difference`: the test grown is the first difference in the noticing order. `scanCost_ge_of_agree`: stimuli that agree on the first *k* noticed features cost at least *k* scanning steps. |
-| F2 Association by cue code ("enough of the code for Y") | `cueOf`, `Net.CueSelects` | `cue_from_path_selects`: the cue holding the response's path features selects it, and nothing else. |
-| R Responder (D2 applied to the cue) | `Net.CueSelects` | (used by the results below) |
+| F1a Redundancy (P2 > 1) | `Net.learnK`, `Net.chain` | (used by the experiment) |
+| F1b Noticing order | `firstDiff`, `diffs`, `scanCost` | `learned_test_is_first_noticed_difference`: the test grown is the first difference in the noticing order. `scanCost_ge_of_agree`: stimuli that agree on the first *k* noticed features cost at least *k* scanning steps. |
+| F2 Association by cue code ("enough of the code for Y") | `cueOf`, `cueFor`, `Net.CueSelects` | `cue_from_path_selects`: the cue holding the response's path features selects it, and nothing else. `cue_can_fail_after_growth`, `learning_can_capture_old_cue`: as the net grows, a cue can become insufficient. |
+| R Responder (D2 applied to the cue) | `Net.CueSelects`, `Net.cueResults` | (used by the results below) |
 | D8 Restoration: add information to the cue after a failure | `cueOf y (N.path y)` on the grown net | `restoration`: the rebuilt cue re-establishes the link. |
 
 **Macroprocesses** (Feigenbaum & Simon 1962)
 
-| Postulate | Lean definition | Proved properties |
+| Postulate | CogLib definition | Proved properties (CogLib) |
 |---|---|---|
-| M0 Serial mechanism + M1 Unit processing time | one learning cycle per trial | `trials_at_least_pairs`: *n* associations need at least *n* trials. |
-| M3 Anchor points: attend first to the ends, then inward | `anchorDist`, `learnedOnTrial`, `errorsAt` | `serial_position_effect`: positions further from the nearer anchor collect strictly more errors. `first_position_fewest_errors`, `errors_rise_toward_middle`, `errors_fall_toward_end`: the error curve is bowed. |
+| M0 Serial mechanism + M1 Unit processing time | one learning cycle per trial | `trials_at_least_items`: *n* items need at least *n* trials. |
+| M3 Anchor points: attend first to the ends, then inward | `learnedOnTrial`, `errorsAt` | `anchorAttention_serialPosition`: the serial position effect. `first_position_fewest_errors`, `errors_rise_toward_middle`, `errors_fall_toward_end`: the error curve is bowed. |
 
 M2 (immediate memory) is not used yet.
 
 ## The phenomena, and the claims they formalize
 
+All in `Epam/Phenomena.lean`. Where CogLib states the phenomenon theory-neutrally (`Cog.Phenomena`), EPAM's theorem is about that statement, for EPAM's learner.
+
 | Phenomenon (P-1817 §4.1.1.3, unless noted) | Theorem | Reading |
 |---|---|---|
-| **Stimulus generalization** (4.1.1.3.2; e.g. Fig. 4.1, trial 4, "PEM is confused with ROM") | `select_depends_only_on_noticed_features` | An untrained stimulus that agrees with a learned one on the features its path examines is recognized *as* that one. |
-| **Intralist similarity** (4.1.1.3.3) | `discrimination_needs_a_difference`, `scanCost_ge_of_agree` | Similar items can only be told apart on their few differing features, and finding those costs more scanning. |
+| **Stimulus generalization** (4.1.1.3.2; e.g. Fig. 4.1, trial 4, "PEM is confused with ROM") | `stimulus_generalization` (`Cog.Phenomena.StimulusGeneralization`), `stimulus_generalization_List_A` | An untrained stimulus that agrees with a learned one on the features its path examines is recognized *as* that one. |
+| **Intralist similarity** (4.1.1.3.3) | `intralist_similarity_needs_differences`, `intralist_similarity_costs_scanning` | Similar items can only be told apart on their few differing features, and finding those costs more scanning. |
 | **Oscillation** (4.1.1.3.4: a response is right, then wrong, then right) | `oscillation` | A cue that was enough when formed may not be after the net grows. The same stimulus can then give a wrong response, or still the right one. |
-| **Recovery** (D8) | `restoration` | Adding the new path's features to the cue makes the response correct again. |
+| **Recovery** (D8) | `recovery` | Adding the new path's features to the cue makes the response correct again. |
 | **Retroactive inhibition** (4.1.2) | `retroactive_inhibition` | Learning new material can undo a correct old response, by the same mechanism as oscillation. |
-| **Learning to criterion is possible, and incremental** | `learnAll_recognizes`, `learn_preserves` | Discrimination learning is local, so a list is learned without unlearning. |
-| **Total time ~ amount to be learned** (M0/M1) | `trials_at_least_pairs` | |
-| **Serial position effect** (Feigenbaum & Simon 1962) | `serial_position_effect` and companions | A bowed error curve, from anchor-point attention. |
+| **Non-interference of learning** | `non_interference` (`Cog.Phenomena.NonInterference`) | Learning one item never undoes the recognition of another. |
+| **Learning to criterion** | `learning_to_criterion` (`Cog.Phenomena.ReachesCriterion`) | From an empty memory, any list of mutually noticeable items is learned with one cycle per item. Proved in CogLib from non-interference, by a theorem that holds for every learner. |
+| **Total time ~ amount to be learned** (M0/M1) | `total_time` | |
+| **Serial position effect** (Feigenbaum & Simon 1962) | `serial_position_effect` (`Cog.Phenomena.SerialPositionEffect`) | A bowed error curve, from anchor-point attention. |
 
 ## Simplifications (for honesty)
 
@@ -68,17 +76,15 @@ M2 (immediate memory) is not used yet.
 
 | File | Contents |
 |---|---|
-| `Epam/Selection.lean` | Items, nets, D2, and the noticed-features theorem |
-| `Epam/Discrimination.lean` | F1, F1b, learning lists, scan cost |
-| `Epam/Association.lean` | F2, R, D8, oscillation, restoration, retroactive inhibition |
-| `Epam/Macro.lean` | M0, M1, M3 and the serial position effect |
+| `Epam/Postulates.lean` | EPAM's postulates, quoted, each mapped to the CogLib construct that realizes it; `Epam.learner` |
+| `Epam/Phenomena.lean` | The phenomena under their psychological names, proved from the postulates |
 | `Epam/ListA.lean` | The List A instance (generated by `gen_lista.py`): Fig. 4.1's trial-4 confusion of PEM with ROM, computed by the kernel |
-| `Epam/Phenomena.lean` | The phenomena under their psychological names, as corollaries of the postulates |
-| `Epam/Experiment.lean` | The experiment machinery: F1 with up to *k* differences and null images (P2, F1a), cues stored with images (F2), and all possible responses (R) |
+| `Epam/Experiment.lean` | EPAM's learner state (net plus a cue per image), the learning events of its F0 cycle, and all possible responses (R) |
 | `Epam/Fig41.lean` | Fig. 4.1, checked: the figure's learning schedule, and its 34 recorded responses compared with what the postulates make possible |
 | `Epam/Fig41Alt.lean` | Fig. 4.1 under other U1-consistent codes, which reproduce all 34 (generated by `analysis/gen_alt.py`) |
 | `phenomena_learning-to-criteria_narrative.md` | A walk through one multi-level theorem (`learning_to_criterion`) and the lemmas it rests on |
 | `analysis/` | `robustness.py` and `RESULTS.md`, testing Feigenbaum's robustness footnote (p. 87) |
+| `data/` | The letter codes reconstructed from EPAM II's letter net U1 |
 
 ## A concrete case: List A and Fig. 4.1
 
@@ -120,22 +126,8 @@ Feigenbaum claimed that the qualitative behavior does not depend sensitively on 
 - the PEM/ROM confusion needs the third letter noticed before the vowel;
 - vowel-first noticing fits the figure worst.
 
-## Contribution to the library
-
-Most of what is defined here is not EPAM-specific, and is to be lifted into shared CogLean modules (`../README.md`, roadmap):
-
-| General construct | Here | Destined for |
-|---|---|---|
-| Feature codes | `Item`, `Item.feat` | `Cog/Rep` |
-| Discrimination nets, selection, learning with noticing order and redundancy | `Net`, `select`, `learn`, `learnK`, `NoticingOrder` | `Cog/Memory/DiscriminationNet` |
-| Cue codes, retrieval from partial cues, restoration | `Cue`, `cueOf`, `CueSelects`, `cueResults` | `Cog/Memory/Cue` |
-| Serial attention with anchor points | `anchorDist`, `learnedOnTrial` | `Cog/Control/Attention` |
-| Learner state, learning events, possible responses | `Learner`, `Event`, `responses` | `Cog/Experiments` |
-| Phenomena (generalization, oscillation, interference, serial position, ...) | `Phenomena.lean` | `Cog/Phenomena`, stated theory-neutrally as properties of learners |
-
 ## Next
 
-1. Lift the general constructs into shared modules (above).
-2. Tie the model to the running IPL-V program ([ExecutableArchaeology EPAM/IPL](https://github.com/jeffshrager/ExecutableArchaeology/tree/main/EPAM/IPL)): run List A with the same codes and check for the same confusions (needs the experiment driver; ExecutableArchaeology OPEN_ISSUES #17-18).
-2. State the rest of Fig. 4.1 (oscillations, trials to criterion) and Fig. 4.2 (paired associates: RIL → LUK, ROM → LUK).
-3. The phenomena not yet stated: response generalization, error types (4.1.1.3.5), serial anticipation vs paired associates (4.1.1.3.6).
+1. State the rest of Fig. 4.2 (paired associates: RIL → LUK, ROM → LUK).
+2. The phenomena not yet stated: response generalization, error types (4.1.1.3.5), serial anticipation vs paired associates (4.1.1.3.6). Oscillation and retroactive inhibition still need theory-neutral statements in `Cog.Phenomena` (they need a responder interface, not just recognition).
+3. Tie the model to the running IPL-V program ([ExecutableArchaeology EPAM/IPL](https://github.com/jeffshrager/ExecutableArchaeology/tree/main/EPAM/IPL)): run List A with the same codes and check for the same confusions (needs the experiment driver; ExecutableArchaeology OPEN_ISSUES #17-18).

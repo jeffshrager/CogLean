@@ -2,8 +2,8 @@
 
 ## Library
 
-1. **Lift the general constructs out of `EPAM/`** into theory-neutral modules (`Cog/Rep`, `Cog/Memory/DiscriminationNet`, `Cog/Memory/Cue`, `Cog/Control/Attention`, `Cog/Phenomena`, `Cog/Theories/EPAM`, `Cog/Experiments/SerialAnticipation`). Phenomena become predicates on learners; EPAM proves them about its learner. See the "Contribution to the library" table in `EPAM/README.md`.
-2. **A single Lake project for the library**, once modules are shared across theories (today `EPAM/` is its own project).
+1. **Theory-neutral oscillation and retroactive interference.** CogLib states these only at the mechanism level (`cue_can_fail_after_growth`, `learning_can_capture_old_cue`). A phenomenon-level statement needs a *responder* interface (a learner that can give a response to a stimulus, possibly nondeterministically), alongside `IncrementalLearner`.
+2. **Experiments as a layer.** Lift the serial-anticipation machinery (learning schedule, possible responses per trial) out of `EPAM/Epam/Fig41.lean` into `CogLib/Experiments/`.
 
 ## EPAM
 

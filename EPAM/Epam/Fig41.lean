@@ -29,7 +29,7 @@ import Epam.ListA
 
 namespace Epam.Fig41
 
-open Epam
+open Cog Epam
 
 def k : Nat := 3
 

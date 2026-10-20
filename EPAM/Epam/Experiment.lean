@@ -1,8 +1,8 @@
 /-
 EPAM, the machinery of a serial-anticipation experiment.
 
-This extends the postulates of `Discrimination.lean` and `Association.lean`
-to the form the hand simulation of P-1817 §4.1 actually used:
+This puts EPAM's postulates (`Postulates.lean`) together in the form the
+hand simulation of P-1817 §4.1 actually used. The pieces are CogLib's:
 
 * **F1 with redundancy (F1a) and P2 = k.** At a point of confusion F1 notices
   up to `k` differences (§4.1.1.1.2: "the maximum number of differences
@@ -18,52 +18,16 @@ to the form the hand simulation of P-1817 §4.1 actually used:
   note 6, "When cue code contains insufficient information, D2 selects
   randomly"). `responses` lists every possible response, so possibilities
   can be computed and checked by `decide`.
+
+What is EPAM-specific here is the learner's state (a net, and a cue stored
+with each image) and the learning events of its F0 cycle.
 -/
 
-import Epam.Association
+import Epam.Postulates
 
 namespace Epam
 
-/-- The first `k` features, in noticing order, on which `x` and `z` differ. -/
-def diffs (order : NoticingOrder) (k : Nat) (x z : Item) : List Feature :=
-  (order.filter (fun f => x.feat f != z.feat f)).take k
-
-namespace Net
-
-/-- Redundant tests on the features `fs`: `x` goes down its own branch of
-each, and the other branch gets a null image. -/
-def chain : List Feature → Item → Net
-  | [], x => leaf (some x)
-  | f :: fs, x =>
-    if x.feat f then test f (leaf none) (chain fs x) else test f (chain fs x) (leaf none)
-
-/-- F1 with up to `k` differences noticed (F1, F1a, F1b, P2 = k). -/
-def learnK (order : NoticingOrder) (k : Nat) : Net → Item → Net
-  | leaf none, x => leaf (some x)
-  | leaf (some z), x =>
-    if z = x then leaf (some z) else
-      match diffs order k x z with
-      | [] => leaf (some z)
-      | f :: fs =>
-        if x.feat f then test f (leaf (some z)) (chain fs x)
-        else test f (chain fs x) (leaf (some z))
-  | test f n0 n1, x =>
-    if x.feat f then test f n0 (n1.learnK order k x) else test f (n0.learnK order k x) n1
-
-/-- Every image a cue (a list of known feature values) can reach. -/
-def cueResults : Net → List (Feature × Bool) → List (Option Item)
-  | leaf img, _ => [img]
-  | test f n0 n1, c =>
-    match c.lookup f with
-    | some true => n1.cueResults c
-    | some false => n0.cueResults c
-    | none => n0.cueResults c ++ n1.cueResults c
-
-end Net
-
-/-- F2: the cue for `y` in net `N`, its features on its current path. -/
-def cueFor (N : Net) (y : Item) : List (Feature × Bool) :=
-  (N.path y).map (fun f => (f, y.feat f))
+open Cog
 
 /-- The learner's state: its net, and the cue stored with each image. -/
 structure Learner where

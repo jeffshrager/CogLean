@@ -46,7 +46,7 @@ The guarantee is relative. Lean checks that a theorem follows from the definitio
 
 ### General results, specific theories
 
-The theorems about EPAM are already general in one sense. They quantify over *arbitrary* discrimination nets, stimuli, noticing orders and learning histories, not just the experiments in the paper. What is not yet general is the *code's organization*: the general mechanisms (discrimination nets, cue-based retrieval, attention schedules) are still defined inside the EPAM theory, next to EPAM-specific material. Lean doesn't require that. Definitions, executable models and proofs can live in separate modules. It is simply where the first theory started. Factoring the general mechanisms out into theory-neutral modules is the first item on the roadmap.
+The library is split accordingly. **CogLib** (`CogLib/`) holds the general constructs and the theory-neutral phenomena. Its theorems quantify over *arbitrary* discrimination nets, stimuli, noticing orders, learning histories and, for the phenomena, arbitrary learners. Each **theory** (so far `EPAM/`) imports CogLib, records which constructs its postulates choose, and proves the phenomena for its learner. For example, "any learner whose learning is non-interfering reaches criterion" is proved once in CogLib. Discrimination nets are proved non-interfering, also in CogLib. EPAM gets learning to criterion in one line, and any later theory with non-interfering learning gets it the same way.
 
 ## What goes in the library
 
@@ -74,38 +74,27 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 ## Where it stands
 
-The first theory in the library is **EPAM** (`EPAM/`), 48 theorems, no `sorry`:
+**CogLib** (`CogLib/`, 27 theorems): feature codes; discrimination nets; discrimination learning with a noticing order and redundancy; cue codes and retrieval from partial cues; serial attention with anchor points; and the phenomena of non-interference, learning to criterion, stimulus generalization and the serial position effect, stated theory-neutrally, with the mechanisms that have them.
 
-- **Constructs it defines:**
-  - feature codes;
-  - discrimination nets with selection;
-  - discrimination learning with a noticing order and redundancy;
-  - cue codes and retrieval from partial cues with random branching;
-  - restoration of cues;
-  - serial attention with anchor points;
-  - learner state and learning events for an experiment.
+**EPAM** (`EPAM/`, 30 theorems), the first theory:
+
 - **Phenomena it proves:**
   - stimulus generalization;
   - the cost of intralist similarity;
   - oscillation (correct responses that fail and recover);
   - retroactive inhibition;
-  - learning to criterion without unlearning;
+  - non-interference, and learning to criterion;
   - total time growing with the amount to be learned;
   - the serial position effect.
 - **An experiment it computes:** serial anticipation of a six-syllable list. The responses the postulates make possible are compared trial by trial with a published simulation (33 or 34 of 34 agree, depending on the stimulus codes), and the result's sensitivity to codes, noticing order and parameters is measured (`EPAM/analysis/RESULTS.md`).
 
-At present these constructs live inside the EPAM theory. The next step for the library is to lift the general ones out into shared modules.
+No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
 
-1. **Library structure.** Move the general constructs out of `EPAM/` into theory-neutral modules. Each phenomenon becomes a predicate on learners, and EPAM proves it about its learner. Proposed layout:
-   - `Cog/Rep` (codes and features)
-   - `Cog/Memory/DiscriminationNet`
-   - `Cog/Memory/Cue`
-   - `Cog/Control/Attention`
-   - `Cog/Phenomena`
-   - `Cog/Theories/EPAM`
-   - `Cog/Experiments/SerialAnticipation`
+1. **Library structure.** Done in outline: `CogLib/` with `Rep`, `Memory`, `Control`, `Process` and `Phenomena` layers, imported by `EPAM/`. Still to do:
+   - theory-neutral statements of oscillation and retroactive interference, which need a *responder* interface (cue-based retrieval), not just recognition;
+   - experiments as their own layer (`Experiments/SerialAnticipation`), lifted from EPAM's Fig. 4.1 machinery.
 2. **Finish EPAM:**
    - paired associates;
    - response generalization;
@@ -149,5 +138,5 @@ CogLean's EPAM theory was developed alongside [ExecutableArchaeology](https://gi
 
 ```sh
 curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh   # installs ~/.elan
-cd EPAM && lake build
+cd EPAM && lake build      # builds CogLib, then EPAM
 ```

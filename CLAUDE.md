@@ -5,7 +5,8 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 ## Build
 
 - Lean 4.35.0 via elan in `~/.elan`: `export PATH=$HOME/.elan/bin:$PATH`.
-- Each theory is a Lake project (currently `EPAM/`): `cd EPAM && lake build`.
+- `CogLib/` is the general library, a Lake package that imports no theory. Each theory is its own Lake package (currently `EPAM/`) that requires CogLib by path: `cd EPAM && lake build` builds both.
+- Keep the split clean: general constructs, general theorems, and theory-neutral phenomena go in CogLib; a theory's directory holds its postulates (as choices of CogLib constructs), its parameters, its experiments, and its phenomena theorems.
 - Core Lean only so far, no Mathlib (ACT-R may change that).
 - Every theorem fully proved: no `sorry`; `#print axioms` shows only `propext`, `Quot.sound`, `Classical.choice`.
 - Generated files: `EPAM/Epam/ListA.lean` (from `EPAM/gen_lista.py`, run in `EPAM/`) and `EPAM/Epam/Fig41Alt.lean` (from `EPAM/analysis/gen_alt.py`, run in `EPAM/analysis/`). Edit the generators, not the outputs.

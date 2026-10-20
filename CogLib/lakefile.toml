@@ -1,0 +1,5 @@
+name = "coglib"
+defaultTargets = ["CogLib"]
+
+[[lean_lib]]
+name = "CogLib"
