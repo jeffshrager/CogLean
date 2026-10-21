@@ -233,3 +233,37 @@ Every lemma and theorem above, except the Proposition, is proved in Lean 4.35 in
 | Theorem 11 | `aboveShare_shift`, `SC.peaking_lowers_retrieval_errors` | `CogLib/CogLib/Process/SampledRetrieval.lean`, `StrategyChoice/StrategyChoice/Phenomena.lean` |
 
 The postulates themselves, with page citations, are in `StrategyChoice/StrategyChoice/Postulates.lean`. Names without a prefix are in the namespace `Cog`. Lean states Lemma 1 one list element at a time, and derives the sum form by induction inside Lemma 2.
+
+## Which results are psychologically substantive
+
+Five of the results predict a **dissociation**: one manipulation changes one measure of performance and leaves another alone. These can be tested, and a rival theory need not share them. The rest are the machinery the five rest on.
+
+### Testable predictions
+
+1. **Persistence changes how often children retrieve, not how accurately (Theorems 3 and 7).** Accuracy on retrieval trials is the wrong answers' share of the strength above the criterion, for any search length.
+    - *Test:* vary persistence (time pressure, or "don't give up yet"). Overt strategy use should shift while accuracy on retrieval trials stays flat.
+    - *Contrast:* raising the criterion (for example, by stressing accuracy) should change both measures. Search length and criterion therefore dissociate.
+2. **Retrieval doesn't depend on the backup strategies (Theorem 8).** How often children retrieve, and how accurately, is the same however good or available the backups are.
+    - *Test:* make fingers unavailable, or counting harder. Retrieval rate and retrieval accuracy should not change.
+    - *Why it matters:* an account in which children weigh their options predicts more retrieval when backups are costly. The theorem holds because the criterion and search length are set without regard to the backups. A test is therefore a test of the chapter's central claim, that strategy choice needs no metacognitive governor. This is the most interesting result in the set.
+3. **Errors on counting trials don't depend on the associations (Theorem 9).** This is the chapter's "nonintuitive prediction" (p. 245), proved exactly.
+    - *Test:* compare problems with the same sum but different distributions, such as 1 + 4 and 2 + 3. Accuracy on counting trials should be equal, even though 2 + 3 sends children to counting more often.
+4. **Strengthening the correct answer never raises retrieval errors (Theorem 11).** This holds at every criterion and search length.
+    - *Test:* in training or microgenetic studies, the error rate on retrieval trials for a practiced problem should never rise.
+5. **Strengthening the correct answer can raise overt strategy use (the Proposition).** This happens when a strong wrong competitor falls below the criterion. During learning, overt strategy use can therefore rise while accuracy improves.
+    - *Test:* look for a temporary rise in overt strategy use on problems with a strong wrong competitor. The counting-string error 2 + 3 → 4 is the obvious case.
+    - *Already seen in simulation:* the chapter's simulation found that problems with interfering counting-string associations first elicited retrieval relatively often, and later least often (p. 276). The Proposition explains that observation.
+
+### Technical results
+
+Lemmas 1–10, Theorems 1 and 2, and Theorem 10 are the machinery. Theorems 4 and 5 are true but expected: reaching the criterion more often, or searching longer, makes exhaustion less likely. Theorem 6, that overt strategy use is (1 − R)ⁿ, sits between the two groups. On its own it can't be tested, because R and n are not observed directly. It becomes substantive through the dissociations above.
+
+### What a test would test
+
+The independence results (predictions 2 and 3, and the search-length half of 1) are only as strong as the simplifications they rest on:
+
+- the criterion and search length don't adapt to the problem or to the backups available;
+- successive searches are independent draws from the same distribution;
+- elaboration represents the problem correctly.
+
+That is useful. A failed test would show which of these assumptions is wrong.
