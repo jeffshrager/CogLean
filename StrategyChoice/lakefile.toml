@@ -1,0 +1,9 @@
+name = "strategychoice"
+defaultTargets = ["StrategyChoice"]
+
+[[lean_lib]]
+name = "StrategyChoice"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"

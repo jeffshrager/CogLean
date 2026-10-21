@@ -21,9 +21,9 @@ criterion. Then:
 * `exhausted_antitone_reach`, `exhausted_antitone_length`: the more often a
   search reaches the criterion, and the longer the search, the less often
   retrieval is exhausted.
-* `stated_share_shift`: moving strength towards one answer (from any of the
-  others) never raises the share of the others among stated answers, at any
-  criterion.
+* `stated_share_shift`, `aboveShare_shift`: moving strength towards one
+  answer (from any of the others) never raises the share of the others among
+  stated answers, at any criterion.
 -/
 
 import CogLib.Rep.Distribution
@@ -216,5 +216,37 @@ theorem stated_share_shift [DecidableEq α] (as : List α) (s s' : α → Rat) (
   have h1 : W' * C ≤ W * C := Rat.mul_le_mul_of_nonneg_right hW c0
   have h2 : W * C ≤ W * C' := Rat.mul_le_mul_of_nonneg_left hC (Rat.le_trans w0 hW)
   grind
+
+/-- Retrieval either states an answer or is exhausted:
+`R · geom (1 - R) n = 1 - (1 - R)^n`. -/
+theorem reach_mul_geom (R : Rat) : ∀ n, R * geom (1 - R) n = 1 - (1 - R) ^ n := by
+  intro n
+  induction n with
+  | zero => simp [geom]; grind
+  | succ n ih =>
+    simp only [geom, Rat.pow_succ]
+    have : R * (1 + (1 - R) * geom (1 - R) n) = R + (1 - R) * (R * geom (1 - R) n) := by grind
+    rw [this, ih]; grind
+
+/-- The share, among the strength above the criterion, of the answers with
+`P`. By `stated_share` and `reachSuch_div_reach`, it is the share of stated
+answers with `P`. -/
+def aboveShare (as : List α) (s : α → Rat) (cc : Rat) (P : α → Bool) : Rat :=
+  strengthIn as s (fun a => above s cc a && P a) / strengthIn as s (above s cc)
+
+theorem reachSuch_div_reach (as : List α) (s : α → Rat) (cc : Rat) (P : α → Bool)
+    (hT : total as s ≠ 0) (hR : strengthIn as s (above s cc) ≠ 0) :
+    reachSuch as s cc P / reach as s cc = aboveShare as s cc P := by
+  simp only [reachSuch, reach, aboveShare, prob_sample]
+  grind
+
+/-- **Shifting strength towards an answer never raises the others' share**
+of the strength above any criterion (so of stated answers). -/
+theorem aboveShare_shift [DecidableEq α] (as : List α) (s s' : α → Rat) (cc : Rat) (c : α)
+    (hs : ∀ a, 0 ≤ s a) (hs' : ∀ a, 0 ≤ s' a)
+    (hc : s c ≤ s' c) (hother : ∀ a, a ≠ c → s' a ≤ s a)
+    (hR : 0 < strengthIn as s (above s cc)) (hR' : 0 < strengthIn as s' (above s' cc)) :
+    aboveShare as s' cc (fun a => a != c) ≤ aboveShare as s cc (fun a => a != c) :=
+  div_le_div_cross hR' hR (stated_share_shift as s s' cc c hs hs' hc hother)
 
 end Cog

@@ -46,7 +46,7 @@ The guarantee is relative. Lean checks that a theorem follows from the definitio
 
 ### General results, specific theories
 
-The library is split accordingly. **CogLib** (`CogLib/`) holds the general constructs and the theory-neutral phenomena. Its theorems quantify over *arbitrary* discrimination nets, stimuli, noticing orders, learning histories and, for the phenomena, arbitrary learners. Each **theory** (so far `EPAM/`) imports CogLib, records which constructs its postulates choose, and proves the phenomena for its learner. For example, "any learner whose learning is non-interfering reaches criterion" is proved once in CogLib. Discrimination nets are proved non-interfering, also in CogLib. EPAM gets learning to criterion in one line, and any later theory with non-interfering learning gets it the same way.
+The library is split accordingly. **CogLib** (`CogLib/`) holds the general constructs and the theory-neutral phenomena. Its theorems quantify over *arbitrary* discrimination nets, stimuli, noticing orders, learning histories and, for the phenomena, arbitrary learners. Each **theory** (so far `EPAM/` and `StrategyChoice/`) imports CogLib, records which constructs its postulates choose, and proves the phenomena for its learner. For example, "any learner whose learning is non-interfering reaches criterion" is proved once in CogLib. Discrimination nets are proved non-interfering, also in CogLib. EPAM gets learning to criterion in one line, and any later theory with non-interfering learning gets it the same way.
 
 ## What goes in the library
 
@@ -74,7 +74,7 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 ## Where it stands
 
-**CogLib** (`CogLib/`, 27 theorems): feature codes; discrimination nets; discrimination learning with a noticing order and redundancy; cue codes and retrieval from partial cues; serial attention with anchor points; and the phenomena of non-interference, learning to criterion, stimulus generalization and the serial position effect, stated theory-neutrally, with the mechanisms that have them.
+**CogLib** (`CogLib/`): feature codes; finite probability distributions (exact rationals); discrimination nets; discrimination learning with a noticing order and redundancy; cue codes and retrieval from partial cues; retrieval by sampling with a confidence criterion and a search length; serial attention with anchor points; and the phenomena of non-interference, learning to criterion, stimulus generalization, oscillation, retroactive interference and the serial position effect, stated theory-neutrally (over learners and responders), with the mechanisms that have them.
 
 **EPAM** (`EPAM/`, 30 theorems), the first theory:
 
@@ -92,8 +92,7 @@ No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
 
-1. **Library structure.** Done in outline: `CogLib/` with `Rep`, `Memory`, `Control`, `Process` and `Phenomena` layers, imported by `EPAM/`. Still to do:
-   - theory-neutral statements of oscillation and retroactive interference, which need a *responder* interface (cue-based retrieval), not just recognition;
+1. **Library structure.** Done in outline: `CogLib/` with `Rep`, `Memory`, `Control`, `Process` and `Phenomena` layers, imported by `EPAM/` and `StrategyChoice/`. Still to do:
    - experiments as their own layer (`Experiments/SerialAnticipation`), lifted from EPAM's Fig. 4.1 machinery.
 2. **Finish EPAM:**
    - paired associates;
@@ -101,11 +100,10 @@ No `sorry` anywhere; only Lean's standard axioms.
    - the distribution of error types;
    - cue codes sized by trial and error;
    - immediate memory.
-3. **A second, different theory, to test that the constructs really are shared.** Candidates:
-   - a bounded-memory account of sentence production (Yngve's depth hypothesis);
-   - a production-system theory;
-   - an activation-based retrieval theory, above all **ACT-R** (the main next target; its real-valued activation will likely bring in Mathlib).
-4. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas.
+3. **Finish strategy choice:** learning (stronger increments for correct answers), the full 25-problem matrix, the learning simulation, and a condition under which peaking does reduce overt strategy use.
+4. **A rival theory of the same data: ACT-R's declarative memory.** ACT-R's own tutorial fits the same children's answers by partial matching, with no backup strategy, criterion or learning. Stated over the same constructs, the two theories can be compared phenomenon by phenomenon. Its real-valued activation will bring in Mathlib, in that package only.
+5. **Other theories:** a bounded-memory account of sentence production (Yngve's depth hypothesis); a production-system theory; strategy discovery (SCADS, Shrager & Siegler 1998).
+6. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas.
 
 ## Related approaches
 
@@ -138,5 +136,6 @@ CogLean's EPAM theory was developed alongside [ExecutableArchaeology](https://gi
 
 ```sh
 curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh   # installs ~/.elan
-cd EPAM && lake build      # builds CogLib, then EPAM
+cd EPAM && lake build              # builds CogLib, then EPAM
+cd StrategyChoice && lake build    # builds CogLib, then the strategy-choice model
 ```

@@ -164,6 +164,17 @@ theorem div_nonneg' {a b : Rat} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a / b := b
   · subst h; rw [Rat.inv_zero]; exact Rat.le_refl
   · exact Rat.le_of_lt (Rat.inv_pos.mpr (Rat.lt_of_le_of_ne hb (Ne.symm h)))
 
+/-- Comparing quotients by cross-multiplying. -/
+theorem div_le_div_cross {a b c d : Rat} (hb : 0 < b) (hd : 0 < d) (h : a * d ≤ c * b) :
+    a / b ≤ c / d := by
+  have hb' : b ≠ 0 := by grind
+  have hd' : d ≠ 0 := by grind
+  have e1 : a / b = (a * d) * (b * d)⁻¹ := by grind
+  have e2 : c / d = (c * b) * (b * d)⁻¹ := by grind
+  rw [e1, e2]
+  apply Rat.mul_le_mul_of_nonneg_right h
+  exact Rat.le_of_lt (Rat.inv_pos.mpr (Rat.mul_pos hb hd))
+
 theorem strengthIn_nonneg (as : List α) (s : α → Rat) (e : α → Bool) (hs : ∀ a, 0 ≤ s a) :
     0 ≤ strengthIn as s e := by
   induction as with
