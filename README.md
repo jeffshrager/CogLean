@@ -88,6 +88,17 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
   - the serial position effect.
 - **An experiment it computes:** serial anticipation of a six-syllable list. The responses the postulates make possible are compared trial by trial with a published simulation (33 or 34 of 34 agree, depending on the stimulus codes), and the result's sensitivity to codes, noticing order and parameters is measured (`EPAM/analysis/RESULTS.md`).
 
+**Strategy choice** (`StrategyChoice/`), the second: the distributions-of-associations model (Siegler & Shrager 1984), in which children's errors, solution times and use of overt strategies on addition problems all depend on the distribution of associations between each problem and its possible answers.
+
+- **Phenomena it proves**, for any associations, confidence criterion and search length:
+  - retrieval is used with probability `1 - (1-R)^n`;
+  - the error share on retrieval trials is the wrong answers' share of the strength above the criterion, whatever the search length and the backup strategies;
+  - the error share on counting trials is the counting process's, whatever the associations (the chapter's "nonintuitive prediction");
+  - moving strength to the correct answer never raises the error share on retrieval trials.
+- **A limit it finds:** making a distribution more peaked can *raise* overt strategy use, even averaged over the chapter's twelve confidence criteria, so "peaked distributions mean fewer overt strategies" needs a condition the chapter doesn't state.
+- **Predictions it computes:** exact overt-use predictions for six problems from the chapter's own associative strengths.
+- **The theorems, with complete proofs:** [`StrategyChoice/docs/THEOREMS.md`](StrategyChoice/docs/THEOREMS.md) states every result that holds without reference to specific numerical values, proves each in full, and gives the Lean name of each.
+
 No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
