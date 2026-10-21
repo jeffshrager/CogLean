@@ -109,6 +109,18 @@ theorem prob_bind_split (d : Dist α) (f : α → Dist β) (e : β → Bool) (g�
     simp only [prob]
     by_cases h₁ : g₁ a <;> by_cases h₂ : g₂ a <;> simp [h₁, h₂] <;> grind
 
+/-- **Relabelling.** Drawing from `d` and then certainly giving `g a` is
+drawing from `d` and asking of `g a`. -/
+theorem prob_bind_pure (d : Dist α) (g : α → β) (e : β → Bool) :
+    prob (bind d fun a => pure (g a)) e = prob d (fun a => e (g a)) := by
+  induction d with
+  | nil => simp [bind, prob]
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    rw [prob_bind_cons, ih, prob_pure]
+    simp only [prob]
+    split <;> grind
+
 /-- The impossible event. -/
 theorem prob_false (d : Dist α) : prob d (fun _ => false) = 0 := by
   induction d with

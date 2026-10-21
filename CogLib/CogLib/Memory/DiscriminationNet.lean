@@ -12,6 +12,10 @@ Results:
   discrimination net makes comes from this.
 * `discrimination_needs_a_difference`: a net that tells two codes apart has
   examined a feature on which they differ.
+* `confusion_agrees_on_path`: if each image is stored once, a code
+  recognized as a stored image agrees with it on every feature its path
+  examines. A confusion is always a confusion with a code that looks the
+  same to the net.
 -/
 
 import CogLib.Rep.Features
@@ -81,6 +85,47 @@ theorem discrimination_needs_a_difference (N : Net) (x y : Item)
     intro hne
     exact hno ⟨f, hf, hne⟩
   exact (select_depends_only_on_noticed_features N x y hall).symm
+
+/-- What selection returns is an image stored in the net. -/
+theorem select_mem_images (N : Net) (x z : Item) (h : N.select x = some z) : z ∈ N.images := by
+  induction N with
+  | leaf img =>
+    cases img with
+    | none => simp [select] at h
+    | some w => simp [select] at h; simp [images, h]
+  | test f n0 n1 ih0 ih1 =>
+    simp only [select] at h
+    simp only [images, List.mem_append]
+    split at h
+    · exact Or.inr (ih1 h)
+    · exact Or.inl (ih0 h)
+
+/-- **A confusion is with a code that looks the same to the net.** If each
+image is stored once, and `x` is recognized as the stored image `y` (which
+the net itself recognizes), then `x` agrees with `y` on every feature
+examined along `x`'s path. -/
+theorem confusion_agrees_on_path (N : Net) (x y : Item) (hnd : N.images.Nodup)
+    (hy : N.select y = some y) (hx : N.select x = some y) :
+    ∀ f ∈ N.path x, x.feat f = y.feat f := by
+  induction N with
+  | leaf img => simp [path]
+  | test f n0 n1 ih0 ih1 =>
+    simp only [images, List.nodup_append] at hnd
+    obtain ⟨hnd0, hnd1, hdisj⟩ := hnd
+    simp only [select] at hx hy
+    intro g hg
+    simp only [path] at hg
+    cases hxf : x.feat f <;> cases hyf : y.feat f <;> simp [hxf, hyf] at hx hy hg
+    · -- both go to n0
+      rcases hg with rfl | hg
+      · rw [hxf, hyf]
+      · exact ih0 hnd0 hy hx g hg
+    · -- x to n0, y to n1: y stored in both
+      exact absurd rfl (hdisj y (select_mem_images n0 x y hx) y (select_mem_images n1 y y hy))
+    · exact absurd rfl (hdisj y (select_mem_images n0 y y hy) y (select_mem_images n1 x y hx))
+    · rcases hg with rfl | hg
+      · rw [hxf, hyf]
+      · exact ih1 hnd1 hy hx g hg
 
 end Net
 end Cog

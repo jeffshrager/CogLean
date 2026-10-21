@@ -46,7 +46,7 @@ The guarantee is relative. Lean checks that a theorem follows from the definitio
 
 ### General results, specific theories
 
-The library is split accordingly. **CogLib** (`CogLib/`) holds the general constructs and the theory-neutral phenomena. Its theorems quantify over *arbitrary* discrimination nets, stimuli, noticing orders, learning histories and, for the phenomena, arbitrary learners. Each **theory** (so far `EPAM/` and `StrategyChoice/`) imports CogLib, records which constructs its postulates choose, and proves the phenomena for its learner. For example, "any learner whose learning is non-interfering reaches criterion" is proved once in CogLib. Discrimination nets are proved non-interfering, also in CogLib. EPAM gets learning to criterion in one line, and any later theory with non-interfering learning gets it the same way.
+The library is split accordingly. **CogLib** (`CogLib/`) holds the general constructs and the theory-neutral phenomena. Its theorems quantify over *arbitrary* discrimination nets, stimuli, noticing orders, learning histories and, for the phenomena, arbitrary learners. Each **theory** (so far `EPAM/`, `StrategyChoice/`, and `MultiDigit/`, which combines the two) imports CogLib, records which constructs its postulates choose, and proves the phenomena for its learner. For example, "any learner whose learning is non-interfering reaches criterion" is proved once in CogLib. Discrimination nets are proved non-interfering, also in CogLib. EPAM gets learning to criterion in one line, and any later theory with non-interfering learning gets it the same way.
 
 ## What goes in the library
 
@@ -99,6 +99,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 - **Predictions it computes:** exact overt-use predictions for six problems from the chapter's own associative strengths.
 - **The theorems, with complete proofs:** [`StrategyChoice/docs/THEOREMS.md`](StrategyChoice/docs/THEOREMS.md) states every result that holds without reference to specific numerical values, proves each in full, and gives the Lean name of each.
 
+**Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a fast, retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. The predictions, with proofs, are in [`MultiDigit/docs/PREDICTIONS.md`](MultiDigit/docs/PREDICTIONS.md).
+
 No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
@@ -112,9 +114,10 @@ No `sorry` anywhere; only Lean's standard axioms.
    - cue codes sized by trial and error;
    - immediate memory.
 3. **Finish strategy choice:** learning (stronger increments for correct answers), the full 25-problem matrix, the learning simulation, and a condition under which peaking does reduce overt strategy use.
-4. **A rival theory of the same data: ACT-R's declarative memory.** ACT-R's own tutorial fits the same children's answers by partial matching, with no backup strategy, criterion or learning. Stated over the same constructs, the two theories can be compared phenomenon by phenomenon. Its real-valued activation will bring in Mathlib, in that package only.
-5. **Other theories:** a bounded-memory account of sentence production (Yngve's depth hypothesis); a production-system theory; strategy discovery (SCADS, Shrager & Siegler 1998).
-6. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas.
+4. **Multi-digit addition:** the column backup built from single-digit DOA trials with carries; learning (EPAM discrimination on confusions, DOA strengthening); a proof that EPAM's learning stores each image once.
+5. **A rival theory of the same data: ACT-R's declarative memory.** ACT-R's own tutorial fits the same children's answers by partial matching, with no backup strategy, criterion or learning. Stated over the same constructs, the two theories can be compared phenomenon by phenomenon. Its real-valued activation will bring in Mathlib, in that package only.
+6. **Other theories:** a bounded-memory account of sentence production (Yngve's depth hypothesis); a production-system theory; strategy discovery (SCADS, Shrager & Siegler 1998).
+7. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas.
 
 ## Related approaches
 
@@ -149,4 +152,5 @@ CogLean's EPAM theory was developed alongside [ExecutableArchaeology](https://gi
 curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh   # installs ~/.elan
 cd EPAM && lake build              # builds CogLib, then EPAM
 cd StrategyChoice && lake build    # builds CogLib, then the strategy-choice model
+cd MultiDigit && lake build        # builds CogLib, then the combined multi-digit model
 ```

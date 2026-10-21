@@ -1,6 +1,6 @@
 # CogLib
 
-The general part of CogLean: constructs of cognitive theory, and phenomena stated without reference to any theory. Theories (EPAM in `../EPAM/`, strategy choice in `../StrategyChoice/`) import CogLib, choose among its constructs, and prove which phenomena they have.
+The general part of CogLean: constructs of cognitive theory, and phenomena stated without reference to any theory. Theories (EPAM in `../EPAM/`, strategy choice in `../StrategyChoice/`, multi-digit addition in `../MultiDigit/`) import CogLib, choose among its constructs, and prove which phenomena they have.
 
 CogLib must never import a theory. It is a separate Lake package so that this is enforced: a theory requires CogLib by path (see `../EPAM/lakefile.toml`), and CogLib requires nothing.
 
@@ -15,8 +15,8 @@ No `sorry`; only Lean's standard axioms. Core Lean only (probabilities are core 
 | Module | Contents | Main results |
 |---|---|---|
 | `Rep/Features` | feature codes: `Feature`, `Item`, `Item.feat` | |
-| `Rep/Distribution` | finite distributions with exact rational probabilities: `Dist`, `pure`, `bind`, `prob`, `Possible`; sampling in proportion to strength: `sample`, `strengthIn`, `total` | `prob_bind_ite`, `prob_bind_split`, `prob_sample`, `mass_sample`, `strengthIn_mono` |
-| `Memory/DiscriminationNet` | discrimination nets: `Net`, `select`, `path`, `Recognizes`, `images` | `select_depends_only_on_noticed_features`, `discrimination_needs_a_difference` |
+| `Rep/Distribution` | finite distributions with exact rational probabilities: `Dist`, `pure`, `bind`, `prob`, `Possible`; sampling in proportion to strength: `sample`, `strengthIn`, `total` | `prob_bind_ite`, `prob_bind_split`, `prob_bind_pure`, `prob_sample`, `mass_sample`, `strengthIn_mono` |
+| `Memory/DiscriminationNet` | discrimination nets: `Net`, `select`, `path`, `Recognizes`, `images` | `select_depends_only_on_noticed_features`, `discrimination_needs_a_difference`, `confusion_agrees_on_path` (with each image stored once, a confusion is with a code that agrees on every feature tested) |
 | `Memory/Cue` | cue codes and retrieval from partial information: `Cue`, `cueOf`, `cueFor`, `CueSelects` (nondeterministic where the cue is silent), `cueResults` | `cue_from_path_selects`, `restoration` |
 | `Control/Attention` | noticing orders: `NoticingOrder`, `firstDiff`, `Noticeable`, `diffs`, `scanCost` | `firstDiff_differs`, `scanCost_ge_of_agree` |
 | `Control/Serial` | a serial mechanism with unit processing time; anchor-point attention: `learnedOnTrial`, `errorsAt` | `trials_at_least_items`, `anchorAttention_serialPosition`, and the shape of the bow |
