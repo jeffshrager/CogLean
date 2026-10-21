@@ -1,0 +1,214 @@
+/-
+Representations: finite probability distributions.
+
+Some theories say what a system *can* do (EPAM's guesses at a silent cue);
+others say how *likely* it is to do it (a child's chance of retrieving an
+answer). A finite distribution is a list of outcomes with their
+probabilities, exact rationals. Outcomes may repeat: the probability of an
+event is the total weight of the outcomes in it.
+
+Results:
+* `prob_bind`: the probability of an event after a two-stage process is the
+  first stage's probabilities times the second's, summed.
+* `prob_bind_ite`: when the second stage's probability takes one value on
+  one set of first-stage outcomes and another off it, the whole is a mix of
+  the two values, weighted by the first stage.
+* `prob_sample`: sampling in proportion to strengths gives an event the
+  share of the total strength that lies in it.
+-/
+
+namespace Cog
+
+/-- A finite distribution: outcomes with their probabilities. -/
+abbrev Dist (α : Type) := List (α × Rat)
+
+namespace Dist
+
+variable {α β : Type}
+
+/-- The distribution certain of `a`. -/
+def pure (a : α) : Dist α := [(a, 1)]
+
+/-- A two-stage process: draw `a` from `d`, then draw from `f a`. -/
+def bind (d : Dist α) (f : α → Dist β) : Dist β :=
+  match d with
+  | [] => []
+  | (a, p) :: d => ((f a).map fun (b, q) => (b, p * q)) ++ bind d f
+
+/-- The probability of an event. -/
+def prob : Dist α → (α → Bool) → Rat
+  | [], _ => 0
+  | (a, p) :: d, e => (if e a then p else 0) + prob d e
+
+/-- The total probability (1 for a proper distribution). -/
+def mass (d : Dist α) : Rat := prob d fun _ => true
+
+/-- `a` can occur: it has positive probability. -/
+def Possible (d : Dist α) (a : α) : Prop := ∃ p, (a, p) ∈ d ∧ 0 < p
+
+theorem prob_append (d d' : Dist α) (e : α → Bool) :
+    prob (d ++ d') e = prob d e + prob d' e := by
+  induction d with
+  | nil => simp [prob]; grind
+  | cons x d ih => obtain ⟨a, p⟩ := x; simp only [List.cons_append, prob, ih]; grind
+
+theorem prob_scale (d : Dist β) (p : Rat) (e : β → Bool) :
+    prob (d.map fun (b, q) => (b, p * q)) e = p * prob d e := by
+  induction d with
+  | nil => simp [prob]
+  | cons x d ih =>
+    obtain ⟨b, q⟩ := x
+    simp only [List.map_cons, prob, ih]
+    split <;> grind
+
+/-- Complementary events share the mass. -/
+theorem prob_add_not (d : Dist α) (e : α → Bool) :
+    prob d e + prob d (fun a => !e a) = mass d := by
+  induction d with
+  | nil => simp [mass, prob]; grind
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    simp only [mass, prob] at ih ⊢
+    by_cases h : e a <;> simp [h] <;> grind
+
+theorem prob_pure (a : α) (e : α → Bool) : prob (pure a) e = if e a then 1 else 0 := by
+  simp [pure, prob]; split <;> grind
+
+/-- **Two stages.** -/
+theorem prob_bind_cons (a : α) (p : Rat) (d : Dist α) (f : α → Dist β) (e : β → Bool) :
+    prob (bind ((a, p) :: d) f) e = p * prob (f a) e + prob (bind d f) e := by
+  simp [bind, prob_append, prob_scale]
+
+/-- **A two-valued second stage.** If the event has probability `c` after
+each first-stage outcome in `g`, and `c'` after each outcome not in it, its
+probability overall is `c` times the chance of `g` plus `c'` times the chance
+of not `g`. -/
+theorem prob_bind_ite (d : Dist α) (f : α → Dist β) (e : β → Bool) (g : α → Bool) (c c' : Rat)
+    (hf : ∀ a, prob (f a) e = if g a then c else c') :
+    prob (bind d f) e = c * prob d g + c' * prob d (fun a => !g a) := by
+  induction d with
+  | nil => simp [bind, prob]; grind
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    rw [prob_bind_cons, ih, hf]
+    simp only [prob]
+    by_cases h : g a <;> simp [h] <;> grind
+
+/-- **A second stage that is certain on one set and constant on another.** If
+the event is certain after first-stage outcomes in `g₁`, has probability `c`
+after those in `g₂`, and is impossible otherwise, its probability overall is
+the chance of `g₁` plus `c` times the chance of `g₂`. -/
+theorem prob_bind_split (d : Dist α) (f : α → Dist β) (e : β → Bool) (g₁ g₂ : α → Bool) (c : Rat)
+    (hf : ∀ a, prob (f a) e = (if g₁ a then 1 else 0) + (if g₂ a then c else 0)) :
+    prob (bind d f) e = prob d g₁ + c * prob d g₂ := by
+  induction d with
+  | nil => simp [bind, prob]; grind
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    rw [prob_bind_cons, ih, hf]
+    simp only [prob]
+    by_cases h₁ : g₁ a <;> by_cases h₂ : g₂ a <;> simp [h₁, h₂] <;> grind
+
+/-- The impossible event. -/
+theorem prob_false (d : Dist α) : prob d (fun _ => false) = 0 := by
+  induction d with
+  | nil => rfl
+  | cons x d ih => obtain ⟨a, p⟩ := x; simp [prob, ih]; grind
+
+/-- The probability of an event is unchanged by an event that agrees with it
+on every outcome. -/
+theorem prob_congr (d : Dist α) (e e' : α → Bool) (h : ∀ a, e a = e' a) :
+    prob d e = prob d e' := by
+  have : e = e' := funext h
+  rw [this]
+
+/-! ### Sampling in proportion to strength -/
+
+/-- The total strength of the outcomes in `as` that satisfy `e`. -/
+def strengthIn (as : List α) (s : α → Rat) (e : α → Bool) : Rat :=
+  match as with
+  | [] => 0
+  | a :: as => (if e a then s a else 0) + strengthIn as s e
+
+/-- The total strength of `as`. -/
+def total (as : List α) (s : α → Rat) : Rat := strengthIn as s fun _ => true
+
+/-- Draw one of `as`, each with probability proportional to its strength. -/
+def sample (as : List α) (s : α → Rat) : Dist α :=
+  as.map fun a => (a, s a / total as s)
+
+theorem prob_map_div (as : List α) (s : α → Rat) (T : Rat) (e : α → Bool) :
+    prob (as.map fun a => (a, s a / T)) e = strengthIn as s e / T := by
+  induction as with
+  | nil => simp [prob, strengthIn]; grind
+  | cons a as ih =>
+    simp only [List.map_cons, prob, strengthIn, ih]
+    split <;> grind
+
+/-- **Sampling.** An event's probability is its share of the total
+strength. -/
+theorem prob_sample (as : List α) (s : α → Rat) (e : α → Bool) :
+    prob (sample as s) e = strengthIn as s e / total as s :=
+  prob_map_div as s _ e
+
+/-- A sample from positive total strength is a proper distribution. -/
+theorem mass_sample (as : List α) (s : α → Rat) (hT : total as s ≠ 0) :
+    mass (sample as s) = 1 := by
+  rw [mass, prob_sample]
+  exact (by grind : ∀ T : Rat, T ≠ 0 → T / T = 1) _ hT
+
+theorem div_nonneg' {a b : Rat} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a / b := by
+  rw [Rat.div_def]
+  apply Rat.mul_nonneg ha
+  by_cases h : b = 0
+  · subst h; rw [Rat.inv_zero]; exact Rat.le_refl
+  · exact Rat.le_of_lt (Rat.inv_pos.mpr (Rat.lt_of_le_of_ne hb (Ne.symm h)))
+
+theorem strengthIn_nonneg (as : List α) (s : α → Rat) (e : α → Bool) (hs : ∀ a, 0 ≤ s a) :
+    0 ≤ strengthIn as s e := by
+  induction as with
+  | nil => simp [strengthIn]
+  | cons a as ih =>
+    simp only [strengthIn]
+    have := hs a
+    split <;> grind
+
+/-- Splitting an event by a second test. -/
+theorem strengthIn_split (as : List α) (s : α → Rat) (e g : α → Bool) :
+    strengthIn as s e =
+      strengthIn as s (fun a => e a && g a) + strengthIn as s (fun a => e a && !g a) := by
+  induction as with
+  | nil => simp [strengthIn]; grind
+  | cons a as ih =>
+    simp only [strengthIn, ih]
+    by_cases he : e a <;> by_cases hg : g a <;> simp [he, hg] <;> grind
+
+/-- **Less strength, in a smaller event, is less total strength.** If every
+outcome in `e'` under strengths `s'` is in `e` with at least as much strength
+under `s`, the total strength of `e'` under `s'` is at most that of `e` under
+`s`. -/
+theorem strengthIn_mono (as : List α) (s s' : α → Rat) (e e' : α → Bool)
+    (hs : ∀ a, 0 ≤ s a) (h : ∀ a, e' a = true → e a = true ∧ s' a ≤ s a) :
+    strengthIn as s' e' ≤ strengthIn as s e := by
+  induction as with
+  | nil => simp [strengthIn]
+  | cons a as ih =>
+    simp only [strengthIn]
+    have := hs a
+    by_cases he' : e' a
+    · obtain ⟨he, hle⟩ := h a he'
+      simp [he, he']; grind
+    · simp [he']
+      by_cases he : e a <;> simp [he] <;> grind
+
+theorem strengthIn_le_total (as : List α) (s : α → Rat) (e : α → Bool) (hs : ∀ a, 0 ≤ s a) :
+    strengthIn as s e ≤ total as s := by
+  induction as with
+  | nil => simp [total, strengthIn]
+  | cons a as ih =>
+    simp only [total, strengthIn] at ih ⊢
+    have := hs a
+    split <;> grind
+
+end Dist
+end Cog

@@ -13,10 +13,15 @@ Results:
 
 So in a discrimination-net memory, interference arises in retrieval (the
 cues), not in storage (the net, which is monotone: `learn_preserves`).
+
+As phenomena: a net retrieving by cue codes is a responder
+(`netResponder`), and it has `Oscillation` and `RetroactiveInterference`
+whenever two codes are noticeably different.
 -/
 
 import CogLib.Memory.Cue
 import CogLib.Process.DiscriminationLearning
+import CogLib.Phenomena.Responder
 
 namespace Cog
 namespace Net
@@ -54,4 +59,24 @@ theorem learning_can_capture_old_cue (order : NoticingOrder) (y w : Item) (f : F
   exact ⟨_, _, h1, h2⟩
 
 end Net
+
+/-! ### As phenomena -/
+
+/-- A discrimination net retrieving by cue codes, as a responder. -/
+def netResponder : Responder Net Cue Item := ⟨Net.CueSelects⟩
+
+/-- **Cue retrieval in a growing net oscillates.** -/
+theorem netResponder_oscillation (order : NoticingOrder) (y w : Item) (f : Feature)
+    (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
+    Phenomena.Oscillation netResponder (fun N x => N.learn order x) := by
+  obtain ⟨h1, h2, h3⟩ := Net.cue_can_fail_after_growth order y w f hyw hf
+  exact ⟨_, _, y, w, some w, h1, by simp [Ne.symm hyw], h2, h3⟩
+
+/-- **Cue retrieval in a growing net shows retroactive interference.** -/
+theorem netResponder_retroactiveInterference (order : NoticingOrder) (y w : Item) (f : Feature)
+    (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
+    Phenomena.RetroactiveInterference netResponder (fun N x => N.learn order x) id := by
+  obtain ⟨N, c, h1, h2⟩ := Net.learning_can_capture_old_cue order y w f hyw hf
+  exact ⟨N, c, y, w, hyw, h1, h2⟩
+
 end Cog

@@ -66,6 +66,12 @@ theorem oscillation (order : NoticingOrder) (y w : Item) (f : Feature)
       CueSelects after cue (some w) ∧ CueSelects after cue (some y) :=
   cue_can_fail_after_growth order y w f hyw hf
 
+/-- Oscillation as the theory-neutral phenomenon: EPAM's responder has it. -/
+theorem oscillation_phenomenon (order : NoticingOrder) (y w : Item) (f : Feature)
+    (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
+    Cog.Phenomena.Oscillation responder (fun N x => N.learn order x) :=
+  netResponder_oscillation order y w f hyw hf
+
 /-- **Recovery** (D8). Rebuilding the cue from the response's current path
 restores the link for good (it selects the response and nothing else). -/
 theorem recovery (N : Net) (y : Item) (hy : Recognizes N y) :
@@ -79,6 +85,12 @@ theorem retroactive_inhibition (order : NoticingOrder) (y w : Item) (f : Feature
     (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
     ∃ N c, CueSelects N c (some y) ∧ CueSelects (N.learn order w) c (some w) :=
   learning_can_capture_old_cue order y w f hyw hf
+
+/-- Retroactive inhibition as the theory-neutral phenomenon. -/
+theorem retroactive_inhibition_phenomenon (order : NoticingOrder) (y w : Item) (f : Feature)
+    (hyw : y ≠ w) (hf : firstDiff order w y = some f) :
+    Cog.Phenomena.RetroactiveInterference responder (fun N x => N.learn order x) id :=
+  netResponder_retroactiveInterference order y w f hyw hf
 
 /-- **Learning is non-interfering**: learning one item never undoes the
 recognition of another. -/

@@ -15,7 +15,7 @@ theorem about EPAM can be traced to the postulates it uses.
 | F1a Redundancy: more than one difference noticed per confusion (the listing's P2) | `Net.learnK`, `Net.chain` |
 | F1b Noticing order: "the scanning of codes for differences is controlled by a noticing order" | `Cog.NoticingOrder`, `firstDiff`, `diffs` |
 | F2 Association: "storing with the image of X a cue code for Y; i.e., enough of the code for Y, so that D2 can use this cue code to select the image of Y" | `Cog.Cue`, `cueOf`, `cueFor` |
-| R Responder: "apply D2 to X, obtain cue code from image of X, apply D2 to cue code" | `Net.CueSelects`, `Net.cueResults` |
+| R Responder: "apply D2 to X, obtain cue code from image of X, apply D2 to cue code" | `Net.CueSelects`, `Net.cueResults`; as a responder, `netResponder` |
 | D8 Restoration: "add information to the cue code, sufficient to re-establish the link" | `Net.restoration` |
 | (§3.5.1.2) a test with missing information branches at random | `CueSelects.guess0`, `guess1` |
 
@@ -42,5 +42,9 @@ open Cog
 incremental learner: D2 for recognition, F1 for study, under noticing order
 `order` (F1b). -/
 abbrev learner (order : NoticingOrder) : IncrementalLearner Net Item := netLearner order
+
+/-- EPAM's responder (R): a cue code retrieved through the net (D2), with
+random branching where the cue is silent. -/
+abbrev responder : Responder Net Cue Item := netResponder
 
 end Epam

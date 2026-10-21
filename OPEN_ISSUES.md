@@ -2,7 +2,7 @@
 
 ## Library
 
-1. **Theory-neutral oscillation and retroactive interference.** CogLib states these only at the mechanism level (`cue_can_fail_after_growth`, `learning_can_capture_old_cue`). A phenomenon-level statement needs a *responder* interface (a learner that can give a response to a stimulus, possibly nondeterministically), alongside `IncrementalLearner`.
+1. ~~Theory-neutral oscillation and retroactive interference.~~ Done: `Phenomena/Responder.lean` (`Responder`, `ProbResponder`, `Oscillation`, `RetroactiveInterference`); EPAM's `oscillation_phenomenon`, `retroactive_inhibition_phenomenon`.
 2. **Experiments as a layer.** Lift the serial-anticipation machinery (learning schedule, possible responses per trial) out of `EPAM/Epam/Fig41.lean` into `CogLib/Experiments/`.
 
 ## EPAM
@@ -15,5 +15,7 @@
 
 ## Next theories
 
-8. **ACT-R**: the main next target. Real-valued activation and the fan effect; contrast with EPAM, which puts interference in cues (retrieval), not storage (`EPAM/phenomena_learning-to-criteria_narrative.md`, lesson 2). Likely needs Mathlib (`Real.log`) or an abstract ordered field.
-9. Other candidates: Yngve's depth hypothesis (bounded-memory sentence production); a production-system theory.
+8. **Strategy choice** (Siegler & Shrager 1984, the distributions-of-associations model): the next theory, in `StrategyChoice/`. Retrieval by sampling with a confidence criterion and search length is in CogLib (`Process/SampledRetrieval.lean`). Still to do: the full trial (elaboration, counting with errors), learning, the Fig. 9.2A data, and the Python prototype of the learning simulation. Needs the original simulation code (for parameters the chapter leaves open) and a checked transcription of Fig. 9.2A.
+9. **"More peaked" needs a definition.** Moving strength to the correct answer never raises retrieval errors, at any criterion (`stated_share_shift`). But concentrating strength can *raise* overt-strategy use: pointwise in the confidence criterion, and even averaged over the chapter's 12 criteria (.05, .10, .15, .20, .30, ..., 1.00). A Python check found no case under a uniform criterion; the conjecture there is monotonicity in the majorization order.
+10. **ACT-R declarative memory**, after strategy choice, as a rival theory of the same data: its tutorial `siegler-model.lisp` fits the 4-year-olds' answer distributions by partial matching, with no backup strategy, criterion or learning. Needs Mathlib (`Real.log`, `Real.exp`) in an `ACTR/` package only.
+11. Other candidates: Yngve's depth hypothesis (bounded-memory sentence production); a production-system theory; SCADS (Shrager & Siegler 1998), strategy discovery.
