@@ -99,7 +99,7 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 - **Predictions it computes:** exact overt-use predictions for six problems from the chapter's own associative strengths.
 - **The theorems, with complete proofs:** [`StrategyChoice/docs/THEOREMS.md`](StrategyChoice/docs/THEOREMS.md) states every result that holds without reference to specific numerical values, proves each in full, and gives the Lean name of each.
 
-**Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a fast, retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. The predictions, with proofs, are in [`MultiDigit/docs/PREDICTIONS.md`](MultiDigit/docs/PREDICTIONS.md).
+**Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a fast, retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. Column work is built from single-digit DOA trials: carrying adds no error, so a column error is a single-digit error moved to its place. Learning removes a confusion without disturbing anything else, and the problem is then worked out by the columns until its own associations are strengthened. The predictions, with proofs, are in [`MultiDigit/docs/PREDICTIONS.md`](MultiDigit/docs/PREDICTIONS.md).
 
 No `sorry` anywhere; only Lean's standard axioms.
 
@@ -113,8 +113,8 @@ No `sorry` anywhere; only Lean's standard axioms.
    - the distribution of error types;
    - cue codes sized by trial and error;
    - immediate memory.
-3. **Finish strategy choice:** learning (stronger increments for correct answers), the full 25-problem matrix, the learning simulation, and a condition under which peaking does reduce overt strategy use.
-4. **Multi-digit addition:** the column backup built from single-digit DOA trials with carries; learning (EPAM discrimination on confusions, DOA strengthening); a proof that EPAM's learning stores each image once.
+3. **Finish strategy choice:** the learning simulation (A6 is stated), the full 25-problem matrix, and a condition under which peaking does reduce overt strategy use.
+4. **Multi-digit addition:** learning sequences over many trials (discrimination and strengthening together); errors in carrying.
 5. **A rival theory of the same data: ACT-R's declarative memory.** ACT-R's own tutorial fits the same children's answers by partial matching, with no backup strategy, criterion or learning. Stated over the same constructs, the two theories can be compared phenomenon by phenomenon. Its real-valued activation will bring in Mathlib, in that package only.
 6. **Other theories:** a bounded-memory account of sentence production (Yngve's depth hypothesis); a production-system theory; strategy discovery (SCADS, Shrager & Siegler 1998).
 7. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas.

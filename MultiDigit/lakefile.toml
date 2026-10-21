@@ -7,3 +7,7 @@ name = "MultiDigit"
 [[require]]
 name = "coglib"
 path = "../CogLib"
+
+[[require]]
+name = "strategychoice"
+path = "../StrategyChoice"

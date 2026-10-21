@@ -14,7 +14,7 @@ None of the predictions comes from simulation or fitting. There is no table of a
 - the confidence criterion and search length;
 - the backup procedure.
 
-Each prediction is a theorem that holds for every choice of these. Each is proved by composing results already proved for EPAM's discrimination nets and for DOA retrieval. Only one new general lemma was needed (Lemma A below). All proofs are checked in Lean (`MultiDigit/`).
+Each prediction is a theorem that holds for every choice of these. Each is proved by composing results already proved for EPAM's discrimination nets and for DOA retrieval. Only two new general lemmas were needed (Lemmas A and B below). All proofs are checked in Lean (`MultiDigit/`).
 
 ## The model
 
@@ -23,7 +23,8 @@ Children don't add everything column by column. A familiar problem such as 100 +
 1. **Problem code (M1).** A problem a + b is coded as features, with some features for each digit of each addend. Agreeing on all of a digit's features means having the same digit.
 2. **Recognition (M2).** An EPAM discrimination net stores the codes of familiar problems. A problem's code is sorted down the net to a stored code, or to nothing.
 3. **Whole-problem retrieval (M3).** If the problem is recognized as the stored problem q, DOA retrieval runs on q's associations. Each search draws an answer in proportion to strength, and states it if its strength exceeds the criterion c, for up to n searches.
-4. **Column backup (M4).** If the problem is not recognized, or retrieval is exhausted, the answer is computed column by column. Here that procedure is left as an arbitrary distribution of answers.
+4. **Column backup (M4).** If the problem is not recognized, or retrieval is exhausted, the answer is computed column by column: units, tens, then hundreds. Each column's digits are added by a single-digit process, which can be the DOA trial itself, and the tens of each column's result are carried. Predictions 1–8 hold for any backup; Predictions 9–10 are about this one.
+5. **Learning (M5).** EPAM's discrimination learning grows the net when a problem is confused. DOA's postulate A6 strengthens every stated answer, correct answers twice as much.
 
 Write R_q for the chance that one search of q's associations clears the criterion. Call q's associations **sharp** if no answer but q's sum clears the criterion.
 
@@ -34,11 +35,20 @@ The predictions rest on results proved earlier.
 - **From EPAM:** recognition depends only on the features the net examines along the path, and learning one item never disturbs the recognition of another.
 - **From DOA** (see `StrategyChoice/docs/THEOREMS.md`): retrieval is exhausted with probability (1 − R)ⁿ (Theorem 1), and it states an answer with property P with probability Q_P · Gₙ (Theorem 2).
 
-One new lemma about nets was needed.
+Two new lemmas about nets were needed.
 
 **Lemma A (a confusion is with a code that looks the same).** Suppose each image is stored once in the net, the net recognizes y as itself, and it recognizes x as y. Then x and y agree on every feature examined along x's path.
 
 *Proof.* By induction on the net. At a leaf the path is empty. At a test of feature f, suppose x and y go down different branches. Then y would be stored in both branches: x's branch returns y, and so contains it, and so does y's own branch. That contradicts each image being stored once. So they go down the same branch, which means they agree on f, and the induction hypothesis covers the rest of the path. ∎
+
+**Lemma B (EPAM's nets satisfy Lemma A's hypothesis).** Call a net *clean* if each image is stored once and every stored image is recognized as itself. The empty net is clean, and learning keeps a net clean. So every net EPAM learns from an empty one is clean.
+
+*Proof.* By induction on the net, following the definition of learning.
+
+- An empty terminal receives the new image, and is clean.
+- A terminal holding the same image is unchanged.
+- A terminal holding a different image becomes a test on their first noticed difference, with each image on its own side. Both are recognized, and they are distinct. If no difference can be noticed, the terminal is unchanged.
+- At a test, learning changes only the branch the new code takes. In a clean net, every image below a branch takes that branch. The images of the changed branch are its old images plus perhaps the new code, all of which take that branch. So they cannot also appear in the other branch, and each is recognized through its own branch. ∎
 
 ## Predictions
 
@@ -68,7 +78,7 @@ One new lemma about nets was needed.
 
 *Proof.* By Prediction 2, both error probabilities are those of retrieval on q's associations stating an answer other than the common sum. For the commuted problem, the sums agree by commutativity. ∎
 
-**Prediction 6 (near misses).** Suppose each image is stored once, x is recognized as q (which is recognized as itself), and all addends are below 1000.
+**Prediction 6 (near misses).** Suppose each image is stored once, x is recognized as q (which is recognized as itself), and all addends are below 1000. By Lemma B, the first two conditions hold automatically for any net EPAM has learned, so only "x is recognized as q" needs to be assumed.
 
 - If x's path examines all the hundreds-digit features of both addends, then x's answer by confusion, q's sum, is within 200 of x's sum.
 - If the path examines the tens-digit features too, the answer is within 20.
@@ -85,6 +95,30 @@ One new lemma about nets was needed.
 
 *Proof.* This is EPAM's `scanCost_ge_of_agree`, applied to problem codes. ∎
 
+**Prediction 9 (carrying adds no error).** With correct carrying, the column backup's answer is exactly r₀ + 10 r₁ + 100 r₂, where r₀, r₁, r₂ are the single-digit results for the units, tens and hundreds columns. So if every column is added correctly, the problem is answered correctly.
+
+*Proof.* Write s₀ = r₀ and s₁ = r₁ + ⌊s₀/10⌋. The algorithm writes s₀ mod 10, then s₁ mod 10, then r₂ + ⌊s₁/10⌋ in the hundreds. Its value is 100(r₂ + ⌊s₁/10⌋) + 10(s₁ mod 10) + (s₀ mod 10). Since 10⌊s₁/10⌋ + (s₁ mod 10) = s₁, this equals 100 r₂ + 10 s₁ + (s₀ mod 10). Substituting s₁ and using 10⌊s₀/10⌋ + (s₀ mod 10) = s₀ gives 100 r₂ + 10 r₁ + r₀. With correct columns, rᵢ is the sum of the column's digits, and the place-value sum is a + b. ∎
+
+**Prediction 10 (a column error is a single-digit error, moved to its place).** If two columns are certain to be added correctly, the problem is wrong exactly when the third column is, and an error of δ in the column at place 10ʲ makes the answer off by exactly δ · 10ʲ. When DOA adds the columns, the problem's error rate is that single-digit DOA trial's error rate, whatever strategy the trial uses.
+
+*Proof.* By Prediction 9, the answer is the correct sum plus 10ʲ times the column's error, and that is the correct sum exactly when the error is 0. With DOA as the single-digit process, the column's answer is the DOA trial's answer, so its error rate is the trial's. ∎
+
+*What it says.* Column-route errors are copies of single-digit errors, scaled by place. A child whose 2 + 3 sometimes gives 4 (the counting-string error) will sometimes get 120 + 130 = 240: off by exactly 10.
+
+**Prediction 11 (discrimination removes a confusion, and only that).** Suppose x is confused with q in a clean net, and x's code is noticeably different from every stored image. After EPAM learns x:
+
+- x is recognized as itself, and whole-problem retrieval on it uses its own associations;
+- q's trial is exactly what it was;
+- the net is still clean.
+
+*Proof.* EPAM learning makes x recognized (`learn_recognizes`). Prediction 2 then puts whole-problem retrieval on x's own associations. By Lemma B, q is recognized as itself in the clean net, so Prediction 7 leaves its trial unchanged. Lemma B keeps the net clean. ∎
+
+**Prediction 12 (after discrimination, the columns).** A problem recognized as itself, none of whose own associations yet clears the criterion, is worked out by the columns on every trial.
+
+*Proof.* No answer clears the criterion, so R = 0, and by Prediction 1 the columns are used with probability (1 − 0)ⁿ = 1. ∎
+
+*What it says.* Together with Predictions 4 and 11, this gives a sequence that can be looked for. First comes a fast, confident error from confusion. Once the error is noticed and the problem discriminated, slow column work follows, because a newly discriminated problem has only weak associations of its own. Then, as correct answers are stated and strengthened, fluent and correct retrieval follows. By DOA's A6, strengthening a correct answer never raises retrieval errors, whichever strategy produced it (`SC.correct_strengthening_lowers_errors`).
+
 ## What can be tested
 
 | Prediction | Dissociation | Test |
@@ -93,13 +127,15 @@ One new lemma about nets was needed.
 | 3, 6 | which errors | Errors on such problems should be the familiar problem's answer, off in the digits the familiar set never varies on. |
 | 5 | harmless confusions | Confusions between commuted problems (and others with the same sum) should produce no errors. |
 | 7 | no interference | Learning new familiar problems should not change performance on already-familiar ones. |
+| 10 | column errors | Column-route errors should be single-digit errors moved to their place: off by exactly 10 × (a single-digit error) when the tens column errs. |
+| 4, 11, 12 | a learning sequence | On a problem first answered confidently and wrongly, look for fast errors, then slow column work after feedback, then fluent correct retrieval. |
 | 8 | time | Problems sharing their leading digits with a familiar problem should be slower to recognize, when the order scans leading digits first. |
 
 ## What the predictions rest on
 
-- Each familiar problem is stored once in the net. That is how EPAM builds nets, but the property is not yet proved for `learn`; it is a hypothesis of Lemma A and Prediction 6.
 - The criterion and search length do not depend on the route. Prediction 4 needs this.
-- The backup is any distribution of answers. Predictions about the columns themselves need it built from single-digit DOA trials with carries, which is the next stage.
+- Predictions 1–8 hold for any backup. Predictions 9–10 assume error-free carrying, and columns added independently of one another.
+- Predictions 11 and 12 assume the confused problem is noticeably different from every stored image, so that EPAM can learn it.
 - Associations belong to stored problems. An unfamiliar problem has none of its own, so it can only borrow those of what it is recognized as.
 
 ## Lean
@@ -109,14 +145,20 @@ One new lemma about nets was needed.
 | Here | Lean name | File |
 |---|---|---|
 | Lemma A | `Cog.Net.confusion_agrees_on_path`, `select_mem_images` | `CogLib/CogLib/Memory/DiscriminationNet.lean` |
+| Lemma B | `Cog.Net.Clean`, `learn_clean`, `learnAll_clean`, `clean_empty` | `CogLib/CogLib/Process/DiscriminationLearning.lean` |
 | Prediction 1 | `MD.columns_prob` | `MultiDigit/MultiDigit/Phenomena.lean` |
 | Prediction 2 | `MD.whole_depends_only_on_route`, `same_route_same_retrieval` | same |
 | Prediction 3 | `MD.confusion_gives_neighbours_answer` | same |
 | Prediction 4 | `MD.confident_errors`, `wrong_eq_whole_of_sharp` | same |
 | Prediction 5 | `MD.same_sum_confusion_harmless`, `commuted_confusion_harmless` | same |
-| Prediction 6 | `MD.near_miss_200`, `near_miss_20`, `confused_digit` | same |
+| Prediction 6 | `MD.near_miss_200`, `near_miss_20`, `confused_digit`; for learned nets `near_miss_200_learned`, `near_miss_20_learned` | same; `MultiDigit/MultiDigit/Learning.lean` |
 | Prediction 7 | `MD.learning_preserves_trial` | same |
 | Prediction 8 | `MD.similar_problems_cost_time` | same |
+| Prediction 9 | `MD.columns_place_value`, `columns_exact` | `MultiDigit/MultiDigit/Columns.lean` |
+| Prediction 10 | `MD.one_column_errs`, `doaFact_wrong`, `column_error_is_doa_error` | same |
+| Prediction 11 | `MD.discrimination_removes_confusion` | `MultiDigit/MultiDigit/Learning.lean` |
+| Prediction 12 | `MD.discrimination_then_columns` | same |
+| DOA A6 | `SC.strengthen`, `SC.correct_strengthening_lowers_errors` | `StrategyChoice/StrategyChoice/` |
 | A worked case | `MD.Example.*` | `MultiDigit/MultiDigit/Example.lean` |
 
-The worked case is a check that the theorems apply, not evidence. A net learns 100 + 100 and 100 + 200. It then examines only the second addend's hundreds digit, and recognizes the unfamiliar 150 + 100 as 100 + 100. Whole-problem retrieval answers 200, and never 250. With search length 1, the problem is answered 200 with probability 45/46, and correctly by the columns with probability 1/46.
+The worked case is a check that the theorems apply, not evidence. A net learns 100 + 100 and 100 + 200. It then examines only the second addend's hundreds digit, and recognizes the unfamiliar 150 + 100 as 100 + 100. Whole-problem retrieval answers 200, and never 250. With search length 1, the problem is answered 200 with probability 45/46, and correctly by the columns with probability 1/46. A second check runs the column algorithm, with carries, on 234 + 578 = 812.

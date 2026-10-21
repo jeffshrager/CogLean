@@ -109,6 +109,15 @@ theorem prob_bind_split (d : Dist α) (f : α → Dist β) (e : β → Bool) (g�
     simp only [prob]
     by_cases h₁ : g₁ a <;> by_cases h₂ : g₂ a <;> simp [h₁, h₂] <;> grind
 
+/-- Drawing from a certain distribution is just applying the second stage. -/
+theorem bind_pure_left (a : α) (f : α → Dist β) : bind (pure a) f = f a := by
+  simp only [bind, pure, List.append_nil]
+  conv => rhs; rw [← List.map_id (f a)]
+  apply List.map_congr_left
+  intro x _
+  obtain ⟨b, q⟩ := x
+  simp [Rat.one_mul]
+
 /-- **Relabelling.** Drawing from `d` and then certainly giving `g a` is
 drawing from `d` and asking of `g a`. -/
 theorem prob_bind_pure (d : Dist α) (g : α → β) (e : β → Bool) :

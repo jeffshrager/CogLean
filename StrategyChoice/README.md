@@ -21,7 +21,7 @@ python3 analysis/closed_form.py
 | A3 Retrieval in proportion to strength; an answer is stated if its strength exceeds the criterion; up to the search length (p. 240) | `Cog.sample`, `Cog.above`, `Cog.search` (`Process/SampledRetrieval`) |
 | A4 Elaboration: fingers add strength to the answer equal to the number of objects, renormalized (p. 242, fn. 4) | `SC.elaborate` |
 | A5 Counting, with chances of skipping and of double-counting an object (p. 273) | `SC.count` |
-| A6 Learning: stated answers are strengthened, correct ones twice as much (p. 273) | not yet stated |
+| A6 Learning: stated answers are strengthened, correct ones twice as much (p. 273) | `SC.strengthen` |
 
 A trial (`SC.trial`, Fig. 9.2B) is retrieval, then if nothing is stated the backup strategies (`SC.backup`): fingers, then counting fingers. Its result is a distribution over (strategy, answer).
 
@@ -45,6 +45,7 @@ The model's phenomena (`StrategyChoice/Phenomena.lean`):
 | Errors on counting trials are unaffected by the distribution of associations (p. 245, the "nonintuitive prediction") | `counting_error_share` |
 | A more peaked distribution gives fewer errors (p. 245) | `peaking_lowers_retrieval_errors`, when strength moves to the correct answer |
 | A more peaked distribution gives less overt strategy use (p. 245) | **not in general**: `peaking_can_raise_overt_use` |
+| Learning from a correct answer, by any strategy, never raises retrieval errors (A6) | `correct_strengthening_lowers_errors` |
 
 The last is a finding. Moving .01 of strength to the correct answer, already the strongest, can raise predicted overt strategy use. In the example, (.38, .31, .31) becomes (.39, .30, .31), and the mean over the chapter's twelve criteria rises from 7/12 to 73/120 with search length 1. The cause is that a wrong answer falls to a criterion and so below it. In a Python check of random distributions, no such case appeared when the criterion was spread uniformly; there, the conjecture is monotonicity in the majorization order (`../OPEN_ISSUES.md`).
 
@@ -60,7 +61,7 @@ The last is a finding. Moving .01 of strength to the correct answer, already the
 
 See `../OPEN_ISSUES.md`:
 
-- learning (A6) and the learning simulation;
+- the learning simulation (A6 is stated, with its effect on retrieval errors);
 - the full 25-problem matrix;
 - solution times;
 - the comparison with ACT-R's account of the same data.

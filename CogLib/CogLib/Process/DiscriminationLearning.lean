@@ -173,6 +173,112 @@ theorem learned_test_is_first_noticed_difference (order : NoticingOrder)
   simp only [learn, hzx, ite_false, hf]
   cases x.feat f <;> exact ⟨_, _, rfl⟩
 
+/-- A net is *clean* when each image is stored once and every stored image is
+recognized as itself. -/
+def Clean (N : Net) : Prop := N.images.Nodup ∧ ∀ z ∈ N.images, N.select z = some z
+
+/-- In a clean net, the images below each branch of a test are clean, and
+take that branch. -/
+theorem clean_test {f : Feature} {n0 n1 : Net} (h : Clean (test f n0 n1)) :
+    Clean n0 ∧ Clean n1 ∧ (∀ z ∈ n0.images, z.feat f = false) ∧
+      (∀ z ∈ n1.images, z.feat f = true) := by
+  obtain ⟨hnd, hsel⟩ := h
+  simp only [images, List.nodup_append] at hnd
+  obtain ⟨hnd0, hnd1, hdisj⟩ := hnd
+  have side0 : ∀ z ∈ n0.images, z.feat f = false ∧ n0.select z = some z := by
+    intro z hz
+    have hs := hsel z (by simp [images, hz])
+    simp only [select] at hs
+    cases hzf : z.feat f
+    · simp [hzf] at hs; exact ⟨rfl, hs⟩
+    · simp [hzf] at hs
+      exact absurd rfl (hdisj z hz z (select_mem_images n1 z z hs))
+  have side1 : ∀ z ∈ n1.images, z.feat f = true ∧ n1.select z = some z := by
+    intro z hz
+    have hs := hsel z (by simp [images, hz])
+    simp only [select] at hs
+    cases hzf : z.feat f
+    · simp [hzf] at hs
+      exact absurd rfl (hdisj z (select_mem_images n0 z z hs) z hz)
+    · simp [hzf] at hs; exact ⟨rfl, hs⟩
+  exact ⟨⟨hnd0, fun z hz => (side0 z hz).2⟩, ⟨hnd1, fun z hz => (side1 z hz).2⟩,
+    fun z hz => (side0 z hz).1, fun z hz => (side1 z hz).1⟩
+
+/-- **Learning keeps a net clean.** -/
+theorem learn_clean (order : NoticingOrder) (N : Net) (x : Item) (h : Clean N) :
+    Clean (N.learn order x) := by
+  induction N with
+  | leaf img =>
+    cases img with
+    | none => exact ⟨by simp [learn, images], by simp [learn, images, select]⟩
+    | some z =>
+      by_cases hzx : z = x
+      · simpa [learn, hzx] using h
+      · simp only [learn, hzx, ite_false]
+        cases hf : firstDiff order x z with
+        | none => exact h
+        | some f =>
+          have hd := firstDiff_differs hf
+          have hxz : x ≠ z := Ne.symm hzx
+          cases hx : x.feat f <;> cases hz : z.feat f <;> simp_all [Clean, images, select]
+  | test f n0 n1 ih0 ih1 =>
+    obtain ⟨c0, c1, s0, s1⟩ := clean_test h
+    cases hxf : x.feat f with
+    | true =>
+      simp only [learn, hxf, ite_true]
+      have cL := ih1 c1
+      refine ⟨?_, ?_⟩
+      · simp only [images, List.nodup_append]
+        refine ⟨c0.1, cL.1, ?_⟩
+        intro w hw w' hw' hww'
+        subst hww'
+        have h0 := s0 w hw
+        rcases images_learn_subset order n1 x w hw' with h' | h'
+        · subst h'; rw [hxf] at h0; cases h0
+        · rw [s1 w h'] at h0; cases h0
+      · intro z hz
+        simp only [images, List.mem_append] at hz
+        rcases hz with hz | hz
+        · simp [select, s0 z hz, c0.2 z hz]
+        · have hzf : z.feat f = true := by
+            rcases images_learn_subset order n1 x z hz with h' | h'
+            · subst h'; exact hxf
+            · exact s1 z h'
+          simp [select, hzf, cL.2 z hz]
+    | false =>
+      simp only [learn, hxf, Bool.false_eq_true, ite_false]
+      have cL := ih0 c0
+      refine ⟨?_, ?_⟩
+      · simp only [images, List.nodup_append]
+        refine ⟨cL.1, c1.1, ?_⟩
+        intro w hw w' hw' hww'
+        subst hww'
+        have h1 := s1 w hw'
+        rcases images_learn_subset order n0 x w hw with h' | h'
+        · subst h'; rw [hxf] at h1; cases h1
+        · rw [s0 w h'] at h1; cases h1
+      · intro z hz
+        simp only [images, List.mem_append] at hz
+        rcases hz with hz | hz
+        · have hzf : z.feat f = false := by
+            rcases images_learn_subset order n0 x z hz with h' | h'
+            · subst h'; exact hxf
+            · exact s0 z h'
+          simp [select, hzf, cL.2 z hz]
+        · simp [select, s1 z hz, c1.2 z hz]
+
+/-- **Every net EPAM learns from an empty one is clean**: each image is stored
+once, and recognized as itself. -/
+theorem learnAll_clean (order : NoticingOrder) (xs : List Item) :
+    ∀ N, Clean N → Clean (learnAll order N xs) := by
+  induction xs with
+  | nil => intro N h; simpa [learnAll] using h
+  | cons a rest ih =>
+    intro N h
+    simpa [learnAll] using ih (N.learn order a) (learn_clean order N a h)
+
+theorem clean_empty : Clean (leaf none) := ⟨by simp [images], by simp [images]⟩
+
 /-- Redundant tests on the features `fs`: `x` goes down its own branch of
 each, and the other branch gets a null image. -/
 def chain : List Feature → Item → Net

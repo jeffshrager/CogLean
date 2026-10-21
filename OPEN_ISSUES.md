@@ -16,11 +16,17 @@
 ## Next theories
 
 8. **Strategy choice** (Siegler & Shrager 1984), in `StrategyChoice/`. Done: postulates A1-A5, the trial, the closed-form phenomena, six rows of Fig. 9.2A with exact predictions. To do:
-   - A6 learning, and the learning simulation (Python prototype, checked against the chapter: after 2000 trials 1+4 has 77% of its strength at 5 vs 46% for 2+3; 4+1 peaks at .80 vs .51 for 3+2). Needs the original simulation code for what the chapter leaves open: the size of the counting-string prime, the increment, the skip and double-count probabilities, how the criterion and search length are drawn.
+   - The learning simulation (A6 itself is now stated: `SC.strengthen`, `correct_strengthening_lowers_errors`) (Python prototype, checked against the chapter: after 2000 trials 1+4 has 77% of its strength at 5 vs 46% for 2+3; 4+1 peaks at .80 vs .51 for 3+2). Needs the original simulation code for what the chapter leaves open: the size of the counting-string prime, the increment, the skip and double-count probabilities, how the criterion and search length are drawn.
    - The full 25-problem Fig. 9.2A (the OCR of the scan is garbled; transcribe and check, or take from the code).
    - Solution times (expected searches) and the strategies' time ordering.
    - A theory-neutral statement of strategy-choice phenomena in `CogLib/Phenomena/` (a strategy-chooser interface), so ACT-R can be tested against the same statements.
 9. **"More peaked" needs a definition.** Moving strength to the correct answer never raises retrieval errors, at any criterion (`peaking_lowers_retrieval_errors`). But concentrating strength can *raise* overt-strategy use: pointwise in the confidence criterion, and even averaged over the chapter's 12 criteria (`peaking_can_raise_overt_use`). A Python check (3000 random cases) found no case under a uniform criterion; the conjecture there is that mean overt use is monotone in the majorization order. Proving it needs an integral over the criterion, or a fine uniform grid with a limit argument.
 10. **ACT-R declarative memory**, after strategy choice, as a rival theory of the same data: its tutorial `siegler-model.lisp` fits the 4-year-olds' answer distributions by partial matching, with no backup strategy, criterion or learning. Needs Mathlib (`Real.log`, `Real.exp`) in an `ACTR/` package only.
 11. Other candidates: Yngve's depth hypothesis (bounded-memory sentence production); a production-system theory; SCADS (Shrager & Siegler 1998), strategy discovery.
-12. **Multi-digit addition** (`MultiDigit/`, EPAM + DOA). Done: postulates M1-M4, predictions 1-8 (`docs/PREDICTIONS.md`), a worked case. To do: the column backup as single-digit DOA trials chained by carries (predictions about column and carry errors); learning (discrimination on confusions, strengthening); prove that `Net.learn` from an empty net stores each image once (now a hypothesis of `confusion_agrees_on_path`).
+12. **Multi-digit addition** (`MultiDigit/`, EPAM + DOA). Done:
+    - postulates M1-M5 and predictions 1-12 (`docs/PREDICTIONS.md`);
+    - the column backup from single-digit DOA trials;
+    - discrimination after confusion;
+    - nets learned by EPAM are clean (`learnAll_clean`).
+
+    To do: learning sequences over many trials; carrying with errors; columns that are not independent.

@@ -14,7 +14,7 @@ below are the chapter's.
 | A3 Retrieval: "the probability of any given answer's being retrieved ... is proportional to [its] associative strength"; stated "if [its] associative strength exceeds the confidence criterion"; repeated up to the search length (p. 240) | `Cog.sample`, `Cog.above`, `Cog.search` |
 | A4 Elaboration: putting up fingers adds an association to the answer equal to the number of objects; the new strengths are the sums divided by one plus the added strength (p. 242, fn. 4); one more retrieval | `elaborate`, then `Cog.sample` once |
 | A5 Counting: count the objects and state the last number; each count can skip an object or count it twice, with fixed probabilities (p. 273, item 5) | `count` |
-| A6 Learning: "every time the system advances an answer, the association between that answer and the problem increases"; twice as much for correct answers (p. 273, item 6) | not yet stated |
+| A6 Learning: "every time the system advances an answer, the association between that answer and the problem increases"; twice as much for correct answers (p. 273, item 6) | `strengthen` |
 
 Simplifications:
 * Only the three strategies of the chapter's simulation: retrieval, fingers,
@@ -88,6 +88,11 @@ def trial (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : Rat) (n : 
   Dist.bind (search as s cc 0 n) fun
     | .stated a _ => Dist.pure (.retrieval, a)
     | .exhausted => backup as s bk cc p
+
+/-- **A6 Learning.** Stating an answer adds `inc` to its strength, or `2 inc`
+if it is correct, whichever strategy produced it. -/
+def strengthen (s : Answer → Rat) (inc : Rat) (correct stated : Answer) : Answer → Rat :=
+  fun a => if a = stated then s a + (if stated = correct then 2 * inc else inc) else s a
 
 /-! ### Events -/
 

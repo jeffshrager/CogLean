@@ -19,6 +19,7 @@ probability 45/46.
 -/
 
 import MultiDigit.Phenomena
+import MultiDigit.Columns
 
 namespace MD.Example
 
@@ -140,6 +141,11 @@ probability 1/46. -/
 theorem example_values :
     prob (trial bcd net str answers (1 / 2) 1 backup x) (wholeSuch (· == 200)) = 45 / 46 ∧
       prob (trial bcd net str answers (1 / 2) 1 backup x) (fun o => o.2 == 250) = 1 / 46 := by
+  decide +kernel
+
+/-- The column algorithm with exact single-digit facts, carrying: 234 + 578. -/
+theorem example_columns :
+    columns (fun d e => Dist.pure (d + e)) ⟨234, 578⟩ = Dist.pure 812 := by
   decide +kernel
 
 end MD.Example

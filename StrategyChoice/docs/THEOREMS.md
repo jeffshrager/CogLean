@@ -4,7 +4,7 @@ Jeff Shrager, 2026-10-21
 
 ## Introduction
 
-The distributions-of-associations model of strategy choice (Siegler & Shrager, 1984) entails eleven results that hold for **every** set of associative strengths, confidence criterion, search length, elaboration strength and counting-error rate. This document states each one and proves it in full. Every proof here has also been checked by the Lean 4 proof assistant, in the CogLean library.
+The distributions-of-associations model of strategy choice (Siegler & Shrager, 1984) entails twelve results that hold for **every** set of associative strengths, confidence criterion, search length, elaboration strength and counting-error rate. This document states each one and proves it in full. Every proof here has also been checked by the Lean 4 proof assistant, in the CogLean library.
 
 The chapter derives its predictions by putting the strengths of Fig. 9.2A into equations (p. 250). The theorems below need no numbers. They say what follows from the *form* of the model: sampling in proportion to strength, a criterion that a retrieved answer must exceed, a limit on searches, and backup strategies that run only when retrieval fails. They are of four kinds:
 
@@ -231,8 +231,19 @@ Every lemma and theorem above, except the Proposition, is proved in Lean 4.35 in
 | Theorem 9 | `SC.prob_trial_counting`, `SC.counting_error_share` | `StrategyChoice/StrategyChoice/Phenomena.lean` |
 | Theorem 10 | `stated_share_shift` | `CogLib/CogLib/Process/SampledRetrieval.lean` |
 | Theorem 11 | `aboveShare_shift`, `SC.peaking_lowers_retrieval_errors` | `CogLib/CogLib/Process/SampledRetrieval.lean`, `StrategyChoice/StrategyChoice/Phenomena.lean` |
+| Theorem 12 | `SC.strengthen`, `SC.correct_strengthening_lowers_errors` | `StrategyChoice/StrategyChoice/Postulates.lean`, `StrategyChoice/StrategyChoice/Phenomena.lean` |
 
 The postulates themselves, with page citations, are in `StrategyChoice/StrategyChoice/Postulates.lean`. Names without a prefix are in the namespace `Cog`. Lean states Lemma 1 one list element at a time, and derives the sum form by induction inside Lemma 2.
+
+## Learning from stated answers
+
+The chapter's simulation learns by strengthening every answer it states (A6, p. 273): by inc, or by 2·inc if the answer is correct, whichever strategy produced it.
+
+**Theorem 12 (learning from a correct answer never raises retrieval errors).** Let s ≥ 0 and inc ≥ 0, and suppose some answer clears the criterion c under s. After the correct answer σ is stated and strengthened, the error rate on retrieval trials at criterion c is no larger than before.
+
+*Proof.* Strengthening σ gives σ at least its old strength and leaves every other answer unchanged. Every answer above c before is still above c, so some answer clears c afterwards too. Theorem 11 then applies. ∎
+
+This is how backup strategies improve later retrieval in the model. A correct answer reached by counting fingers is strengthened like any other, and by Theorem 12 that can only lower later retrieval errors. Executing the backup strategies does not itself improve: their error rates are fixed (A5).
 
 ## Which results are psychologically substantive
 

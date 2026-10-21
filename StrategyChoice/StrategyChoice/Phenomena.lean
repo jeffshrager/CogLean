@@ -20,6 +20,9 @@ search length, and find its limits.
   chapter's "nonintuitive prediction" (p. 245).
 * `peaking_lowers_retrieval_errors`: moving strength to the correct answer
   never raises the error share among retrieval trials, at any criterion.
+* `correct_strengthening_lowers_errors`: learning from a correct answer
+  (A6), however it was reached, never raises the error share on retrieval
+  trials.
 * `peaking_can_raise_overt_use`: but making a distribution more peaked can
   *raise* overt strategy use, even averaged over the chapter's twelve
   confidence criteria. "A peaked distribution results in less frequent use
@@ -186,6 +189,29 @@ theorem peaking_lowers_retrieval_errors (as : List Answer) (s s' : Answer → Ra
     aboveShare as s' cc (fun a => a != p.sum) ≤ aboveShare as s cc (fun a => a != p.sum) :=
   aboveShare_shift as s s' cc p.sum hs hs' hc hother hA hA'
 
+/-- **Learning from a correct answer never raises retrieval errors** (A6).
+After the correct answer is stated, by any strategy (retrieval, fingers or
+counting), and strengthened, the error share on retrieval trials is no larger
+at any criterion. This is how backup strategies improve later retrieval. -/
+theorem correct_strengthening_lowers_errors (as : List Answer) (s : Answer → Rat) (inc cc : Rat)
+    (p : Problem) (hs : ∀ a, 0 ≤ s a) (hinc : 0 ≤ inc) (hA : 0 < strengthIn as s (above s cc)) :
+    aboveShare as (strengthen s inc p.sum p.sum) cc (fun a => a != p.sum) ≤
+      aboveShare as s cc (fun a => a != p.sum) := by
+  have hge : ∀ a, s a ≤ strengthen s inc p.sum p.sum a := by
+    intro a; simp only [strengthen]; split <;> grind
+  have hs' : ∀ a, 0 ≤ strengthen s inc p.sum p.sum a := fun a => Rat.le_trans (hs a) (hge a)
+  have hA' : 0 < strengthIn as (strengthen s inc p.sum p.sum) (above (strengthen s inc p.sum p.sum) cc) := by
+    have hmono : strengthIn as s (above s cc) ≤
+        strengthIn as (strengthen s inc p.sum p.sum) (above (strengthen s inc p.sum p.sum) cc) := by
+      apply strengthIn_mono as _ s _ _ hs'
+      intro a ha
+      simp only [above, decide_eq_true_eq] at ha ⊢
+      have := hge a
+      exact ⟨by grind, this⟩
+    grind
+  apply peaking_lowers_retrieval_errors as s _ cc p hs hs' (hge p.sum) _ hA hA'
+  intro a ha; simp [strengthen, ha]
+
 /-! ### Peakedness and overt strategy use -/
 
 /-- The twelve confidence criteria of the mathematical model (p. 250). -/
@@ -219,7 +245,7 @@ theorem peaking_can_raise_overt_use :
   refine ⟨by decide +kernel, ?_, by decide +kernel, by decide +kernel⟩
   intro a ha
   have h2 : a ≠ 2 := ha
-  simp only [peaked, flatter, h2, if_false]
+  simp only [peaked, flatter, h2, ite_false]
   split <;> decide +kernel
 
 end SC
