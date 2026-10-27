@@ -72,6 +72,10 @@ def digitOf (n : Nat) : Place → Nat
 
 def Problem.digit (p : Problem) (i : Addend) (j : Place) : Nat := digitOf (p.addend i) j
 
+/-- A digit is less than 10. -/
+theorem digit_lt (p : Problem) (i : Addend) (j : Place) : p.digit i j < 10 := by
+  cases j <;> simp only [Problem.digit, digitOf] <;> exact Nat.mod_lt _ (by decide)
+
 /-- **M1 Problem code.** Each digit of each addend has its own features, and
 agreeing on a digit's features means having the same digit. -/
 structure Encoding where

@@ -197,8 +197,8 @@ theorem confused_digit (x q : Problem) (i : Addend) (j : Place) (hnd : N.images.
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hcover : ∀ f ∈ E.features i j, f ∈ N.path (E.code x)) :
     x.digit i j = q.digit i j :=
-  E.determines x q i j fun f hf =>
-    Net.confusion_agrees_on_path N _ _ hnd hq hx f (hcover f hf)
+  Net.confusion_preserves N E.code _ (fun p => p.digit i j) (fun p q => E.determines p q i j)
+    x q hnd hq hx hcover
 
 /-- **Near misses: within 200.** If each image is stored once, `x` is confused
 with `q`, and `x`'s path tests the hundreds digits of both addends, then the

@@ -16,6 +16,8 @@ Results:
   recognized as a stored image agrees with it on every feature its path
   examines. A confusion is always a confusion with a code that looks the
   same to the net.
+* `confusion_preserves`: so a confusion preserves every property that the
+  features on the path determine.
 -/
 
 import CogLib.Rep.Features
@@ -126,6 +128,16 @@ theorem confusion_agrees_on_path (N : Net) (x y : Item) (hnd : N.images.Nodup)
     · rcases hg with rfl | hg
       · rw [hxf, hyf]
       · exact ih1 hnd1 hy hx g hg
+
+/-- **A confusion preserves what the path determines.** If each image is
+stored once, `x` is recognized as the stored code of `q`, and the features
+`fs`, all examined on `x`'s path, determine a property `P`, then `x` and `q`
+agree on `P`. -/
+theorem confusion_preserves {α β : Type} (N : Net) (code : α → Item) (fs : List Feature)
+    (P : α → β) (hD : Determines code fs P) (x q : α) (hnd : N.images.Nodup)
+    (hq : N.select (code q) = some (code q)) (hx : N.select (code x) = some (code q))
+    (hcover : ∀ f ∈ fs, f ∈ N.path (code x)) : P x = P q :=
+  hD x q fun f hf => confusion_agrees_on_path N _ _ hnd hq hx f (hcover f hf)
 
 end Net
 end Cog

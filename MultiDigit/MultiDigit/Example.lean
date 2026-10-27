@@ -66,9 +66,6 @@ theorem feat_bcdCode (p : Problem) (i : Addend) (j : Place) (k : Nat) (hk : k < 
     rw [hp']; cases j <;> rfl
   rw [hk', ha, hp]
 
-theorem digit_lt (p : Problem) (i : Addend) (j : Place) : p.digit i j < 10 := by
-  cases j <;> simp only [Problem.digit, digitOf] <;> exact Nat.mod_lt _ (by decide)
-
 theorem bits_determine : ∀ d, d < 10 → ∀ e, e < 10 → (∀ k, k < 4 → bit d k = bit e k) → d = e := by
   decide
 

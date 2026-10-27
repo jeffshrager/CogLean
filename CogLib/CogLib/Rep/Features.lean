@@ -18,4 +18,9 @@ abbrev Item := List Bool
 /-- The value of feature `f` of code `x`. -/
 def Item.feat (x : Item) (f : Feature) : Bool := x.getD f false
 
+/-- The features `fs` of a code *determine* a property `P` of what is coded:
+two things whose codes agree on `fs` agree on `P`. -/
+def Determines {α β : Type} (code : α → Item) (fs : List Feature) (P : α → β) : Prop :=
+  ∀ p q, (∀ f ∈ fs, (code p).feat f = (code q).feat f) → P p = P q
+
 end Cog
