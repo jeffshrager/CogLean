@@ -30,4 +30,9 @@
     - nets learned by EPAM are clean (`learnAll_clean`);
     - further features (M1a–M1c: zeros, magnitude, column facts) and Predictions 13–18 (`FeaturePhenomena.lean`).
 
+    - a blind Python simulation (`MultiDigit/sim/`), checked against preregistered predictions and Lean's exact distributions: no failures (`sim/README.md`).
+
     To do: learning sequences over many trials; carrying with errors; columns that are not independent.
+13. **Coverage hypotheses are too strong for learned nets** (found by `MultiDigit/sim`). Predictions 6, 14, 17 and 18 need the path to test every feature of a digit or column, and no EPAM-learned net in the simulation ever did. Restate them in terms of the features that are tested: the tested bits of a digit restrict it to a set; a tested fact feature that reads 1 fixes the fact.
+14. **Zero total strength** (found by `MultiDigit/sim`). `Cog.sample` divides by the total, so with total 0 a trial has mass 0. The theorems assume total ≠ 0. The model's natural reading is "retrieval exhausted". Define search with total 0 as exhausted, so that a newly discriminated problem with no associations is covered.
+15. **Initial associations of a discriminated problem** (O2 in `MultiDigit/sim/SPEC.md`). The predicted sequence (confident error, then columns, then fluent retrieval) holds when they are empty, is skipped when they hold the correct answer, and fails when they copy the neighbour's associations. The model must say which, and the sequence should then be proved.

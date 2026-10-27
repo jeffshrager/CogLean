@@ -18,4 +18,5 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 - Commit after every successful major change without asking. Push only when asked.
 - Session summaries: a new file per checkpoint, `seshsums/YYYYMMDD_HHMM_seshsum.md`, then commit (and push when asked).
 - Prototype in Python with semantics identical to the Lean definitions when iterating on experiments (see `EPAM/analysis/robustness.py`), then certify in Lean with `decide`.
+- Blind simulations are a different thing (`MultiDigit/sim/`): the prose spec goes to a fresh agent with no access to the Lean code, and the predictions are preregistered and committed before the simulator exists. Don't edit the delivered simulator; record disagreements in its `README.md` and `OPEN_ISSUES.md`.
 - Open work is tracked in `OPEN_ISSUES.md`.
