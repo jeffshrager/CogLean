@@ -16,7 +16,7 @@ python3 gen_matrix.py           # regenerates MATRIX.md from the cells
 - `CogMatrix/Families/Minerva.lean`: the global-matching family (MINERVA 2). Every study stores a trace; a probe activates all traces by the cube of their similarity, and memory returns the echo, their weighted sum read feature by feature.
 - `CogMatrix/Families/Strength.lean`: the strength family (after the distributions-of-associations model). Strengths only add, the probe samples in proportion to strength discounted by mismatch, and a criterion and a search length apply. The other two families come from CogLib: discrimination nets (`netRetriever`) and activation (`actRetriever`, ACT-R with decay 1 and temperature 1).
 - `CogMatrix/Matrix/*.lean`: the cells, one file per family. `Common.lean` is the small universe the counterexamples use: the eight 3-bit codes.
-- [`MATRIX.md`](MATRIX.md): the matrix, generated.
+- [`MATRIX.md`](MATRIX.md): the matrix, generated. It also shows a row for people, from `evidence.json` (a judgment of what experiments show, with sources, kept apart from the theorems), and how well each family fits it.
 
 ## What the matrix shows
 
@@ -27,6 +27,16 @@ Every law is had by some family and lacked by another, and every family has its 
 - **Global matching** is order-free, and retrieves what was never studied: probed with the centre of three studied variants, it returns the centre (schema abstraction).
 
 Global matching was added as a test of the first four laws, which were chosen with the other three families in view. They failed the test: on them, global matching has exactly the row of strength memory. Stored-only retrieval, the law that separates the two, says what is distinctive about global matching, that its output is a blend. It was found by asking what the laws missed. A fifth family is the next such test.
+
+## Against the evidence
+
+With the evidence as recorded in `evidence.json`, no family fits:
+- people lack certainty, order-freedom and stored-only retrieval, and have recency; stability is mixed (it fails in recall but may hold in recognition);
+- activation comes closest: it conflicts only on stored-only retrieval, which people violate (prototypes, false memories).
+
+ACT-R with blended retrieval is the natural next family. See `../PROSPECTUS.md`, "What is true here", for what this row is and is not.
+
+The discrimination family here is EPAM's recognition net. EPAM's paired-associate memory, with cue codes (`CogLib/Process/Association.lean`), shows retroactive interference (`netResponder_retroactiveInterference`). So it would not have stability: the law depends on which part of a theory is put in the matrix.
 
 ## What a cell does and does not say
 

@@ -14,3 +14,37 @@ Each cell is a theorem: **has** (a general proof, under the family's stated cond
 Every law is had by some family and lacked by another.
 
 Every family has its own row.
+
+## Against the evidence about people
+
+This row is different in kind from the theorem cells above. It is a judgment of what experiments show about people, from `evidence.json`, with sources below. A family **fits** a law when its cell agrees with the evidence; `mixed` evidence counts neither way.
+
+| | Certainty | Stability | Order-freedom | Recency | Stored-only |
+|---|---|---|---|---|---|
+| People | *lacks* | *mixed* | *lacks* | *has* | *lacks* |
+
+| Family | Fits | Conflicts with the evidence on |
+|---|---|---|
+| Discrimination (EPAM) | 1 of 4 | Certainty, Recency, Stored-only |
+| Activation (ACT-R, d = 1, s = 1) | 3 of 4 | Stored-only |
+| Strength with a criterion (DOA) | 1 of 4 | Order-freedom, Recency, Stored-only |
+| Global matching (MINERVA 2) | 2 of 4 | Order-freedom, Recency |
+
+No family is consistent with all the settled evidence.
+
+### Evidence
+
+- **Certainty** (*lacks*). Items just studied can be available but not accessible: cued recall retrieves words that free recall missed.
+  - Tulving, E., & Pearlstone, Z. (1966). Availability versus accessibility of information in memory for words. Journal of Verbal Learning and Verbal Behavior, 5, 381-391.
+- **Stability** (*mixed*). In recall, learning new material impairs old (retroactive interference). In recognition, strengthening other list items does not impair an item (the null list-strength effect).
+  - McGeoch, J. A. (1932). Forgetting and the law of disuse. Psychological Review, 39, 352-370.
+  - Barnes, J. M., & Underwood, B. J. (1959). 'Fate' of first-list associations in transfer theory. Journal of Experimental Psychology, 58, 97-105.
+  - Ratcliff, R., Clark, S. E., & Shiffrin, R. M. (1990). List-strength effect: I. Data and discussion. Journal of Experimental Psychology: Learning, Memory, and Cognition, 16, 163-178.
+- **Order-freedom** (*lacks*). Recall depends on serial position (primacy and recency), so the order of study matters.
+  - Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.
+- **Recency** (*has*). On an immediate test, the last items studied are recalled best. A filled delay removes the advantage, so this holds for the immediate test only.
+  - Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.
+  - Glanzer, M., & Cunitz, A. R. (1966). Two storage mechanisms in free recall. Journal of Verbal Learning and Verbal Behavior, 5, 351-360.
+- **Stored-only** (*lacks*). People endorse a category prototype they never saw, and falsely recall an unpresented word associated with the list.
+  - Posner, M. I., & Keele, S. W. (1968). On the genesis of abstract ideas. Journal of Experimental Psychology, 77, 353-363.
+  - Roediger, H. L., & McDermott, K. B. (1995). Creating false memories: Remembering words not presented in lists. Journal of Experimental Psychology: Learning, Memory, and Cognition, 21, 803-814.

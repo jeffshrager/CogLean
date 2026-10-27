@@ -47,7 +47,8 @@
     - Check against PyACTUp itself (https://cmu-psych-fms.github.io/fms/pyactup/) on shared instances. `blend` uses the Boltzmann weights, so it can match exactly. `retrieve` takes the argmax under logistic noise, which softmax only approximates, so check it within 4σ, as `MultiDigit/sim/compare.py` does.
     - ACT-R for M3 too: the answer associations, as in Lebiere's model of arithmetic.
 17. **The theory matrix** (`CogMatrix/`, `PROSPECTUS.md`). Done: 5 laws × 4 families (discrimination, activation, strength, global matching), all 20 cells proved, and every family with its own row. Global matching tested the first four laws and matched strength memory on all of them; the fifth law, stored-only retrieval, separates the two. To do:
-    - Further families as further tests: REM (likelihood-based global matching), a distributed or connectionist memory, CHREST.
+    - Further families as further tests: ACT-R with blended retrieval (closest to the evidence: activation conflicts only on stored-only retrieval), REM, a distributed or connectionist memory, CHREST, and EPAM's paired-associate memory with cue codes (which would lack stability).
+    - The evidence row (`CogMatrix/evidence.json`) is a judgment. Have it checked by someone who knows the literature, and add laws' settings (recall vs recognition, immediate vs delayed test).
     - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty, and global matching with few traces may.
     - Certainty and stability have the same row (only discrimination has them). Find what separates them, or merge them.
     - Graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit/docs/PREDICTIONS.md`'s table is read off the matrix.

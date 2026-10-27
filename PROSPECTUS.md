@@ -45,6 +45,34 @@ A law enters the library only with a *witness on each side*: a family that has i
 ### 5. Relations between families
 Some families are limiting cases of others. With no noise and an unbounded mismatch penalty, activation-based retrieval becomes exact-match retrieval of stored items. A theorem relating two families transfers laws between them without re-proving. The matrix then has structure: implications between laws, and refinements between families.
 
+## What is true here
+
+In mathematics, once something is proved it is true, and the library builds on it. Cognitive science has no such body of accepted truths: there are competing theories, and none is settled. So what can a library of cognitive theory build on?
+
+**On conditional results, which are permanent.** "Family F has law L", "law L entails prediction P", and "with these parameters EPAM answers 200 with probability 45/46" are mathematical facts. They stay true whichever theory of memory turns out to be right, even if every family in the library is refuted. Mathlib is in this position more often than it looks. It doesn't assert that space is Euclidean. It proves facts about Euclidean and non-Euclidean geometry side by side, and leaves to physics the question of which one physical space satisfies.
+
+That is why the library is built on laws rather than theories. A theory is a large, contested bundle of commitments. A law is small enough to be tested on its own. Three kinds of claim are kept apart:
+
+| Claim | Example | Status |
+|---|---|---|
+| A law entails a prediction | stability ⇒ practiced problems stay practiced | proved, permanent |
+| A family has or lacks a law | discrimination nets have stability | proved, permanent |
+| People have or lack a law | people lack stability in recall (retroactive interference) | empirical, revisable, judged law by law |
+
+Which theory is right is not a claim the library makes. It follows from the second and third rows together. **A refutation spreads.** If people lack a law, every family that has it is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. Without formalization, a refuted assumption lingers in theories that never said they depended on it.
+
+The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `CogMatrix/MATRIX.md`). With the evidence as recorded there, no family fits:
+- People show recency, and only activation has it.
+- People retrieve what they never studied: a category's prototype (Posner & Keele 1968), a word associated with the list (Roediger & McDermott 1995). Only global matching does that.
+
+Activation conflicts only on stored-only retrieval. That points to a specific next family, ACT-R with blended retrieval, which produces blends.
+
+**Where this is weaker than mathematics.**
+- **The definitions are contestable.** A family is one formalization of a theory. If it misrepresents the theory, its cells say nothing about the theory itself. Blind simulations and checks against community implementations (`MultiDigit/sim/`, PyACTUp) test that link. A change of definition means the results that depend on it must be proved again.
+- **The laws are idealizations.** Mapping an experiment onto a law is a judgment. A law may hold in some tasks and not others: stability fails in recall but may hold in recognition, and recency holds only on an immediate test. Each law is therefore stated relative to a setting, and part of the empirical work is finding which settings matter.
+- **Families are flexible.** A family may have a law in one region of its parameters and lack it in another. Then the informative, permanent fact is the region, "activation has certainty only when the failure weight is 0", not a single counterexample.
+- **Evidence is never final.** The third row will change. The first two won't, and when the third changes, the matrix says at once what follows.
+
 ## Where the library stands
 
 **The matrix exists at small scale** (`CogMatrix/`, generated table in `CogMatrix/MATRIX.md`): 5 laws × 4 families, 20 cells, every one a theorem.

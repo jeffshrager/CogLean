@@ -3,7 +3,7 @@
 A cell is a theorem named after a law (`certainty`) when the family has the
 law, or `not_<law>` when it lacks it. Run from CogMatrix/.
 """
-import re, pathlib
+import re, pathlib, json
 
 LAWS = ["certainty", "stability", "orderFree", "recency", "storedOnly"]
 LAW_NAMES = {"certainty": "Certainty", "stability": "Stability",
@@ -44,5 +44,26 @@ for fam, title in FAMILIES:
 same = [ts for ts in rows.values() if len(ts) > 1]
 out += ["", "Every family has its own row." if not same else
         "Families the laws do not separate: " + "; ".join(", ".join(ts) for ts in same) + "."]
+ev = json.loads(pathlib.Path("evidence.json").read_text())
+out += ["", "## Against the evidence about people", "",
+        "This row is different in kind from the theorem cells above. It is a judgment of what experiments "
+        "show about people, from `evidence.json`, with sources below. A family **fits** a law when its cell "
+        "agrees with the evidence; `mixed` evidence counts neither way.", "",
+        "| | " + " | ".join(LAW_NAMES[l] for l in LAWS) + " |",
+        "|---|" + "---|" * len(LAWS),
+        "| People | " + " | ".join(f"*{ev[l]['status']}*" for l in LAWS) + " |", "",
+        "| Family | Fits | Conflicts with the evidence on |", "|---|---|---|"]
+settled = [l for l in LAWS if ev[l]["status"] in ("has", "lacks")]
+for fam, title in FAMILIES:
+    bad = [LAW_NAMES[l] for l in settled if cells[(fam, l)][0] != ev[l]["status"]]
+    out.append(f"| {title} | {len(settled) - len(bad)} of {len(settled)} | {', '.join(bad) or 'none'} |")
+fits = [t for f, t in FAMILIES if all(cells[(f, l)][0] == ev[l]["status"] for l in settled)]
+out += ["", ("Families consistent with all the settled evidence: " + "; ".join(fits) + ".") if fits
+        else "No family is consistent with all the settled evidence."]
+out += ["", "### Evidence", ""]
+for l in LAWS:
+    out.append(f"- **{LAW_NAMES[l]}** (*{ev[l]['status']}*). {ev[l]['summary']}")
+    for src in ev[l]["sources"]:
+        out.append(f"  - {src}")
 pathlib.Path("MATRIX.md").write_text("\n".join(out) + "\n")
 print("\n".join(out))

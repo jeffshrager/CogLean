@@ -1,0 +1,38 @@
+{
+  "_note": "What the evidence says about people, law by law. Each verdict is a judgment that maps experiments onto an idealized law. It is not a theorem. 'lacks' means people violate the law in some setting, which is all a counterexample needs. 'has' means people satisfy it in the typical setting; the formal law claims every setting. 'mixed' means the evidence is divided.",
+  "certainty": {
+    "status": "lacks",
+    "summary": "Items just studied can be available but not accessible: cued recall retrieves words that free recall missed.",
+    "sources": ["Tulving, E., & Pearlstone, Z. (1966). Availability versus accessibility of information in memory for words. Journal of Verbal Learning and Verbal Behavior, 5, 381-391."]
+  },
+  "stability": {
+    "status": "mixed",
+    "summary": "In recall, learning new material impairs old (retroactive interference). In recognition, strengthening other list items does not impair an item (the null list-strength effect).",
+    "sources": [
+      "McGeoch, J. A. (1932). Forgetting and the law of disuse. Psychological Review, 39, 352-370.",
+      "Barnes, J. M., & Underwood, B. J. (1959). 'Fate' of first-list associations in transfer theory. Journal of Experimental Psychology, 58, 97-105.",
+      "Ratcliff, R., Clark, S. E., & Shiffrin, R. M. (1990). List-strength effect: I. Data and discussion. Journal of Experimental Psychology: Learning, Memory, and Cognition, 16, 163-178."
+    ]
+  },
+  "orderFree": {
+    "status": "lacks",
+    "summary": "Recall depends on serial position (primacy and recency), so the order of study matters.",
+    "sources": ["Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488."]
+  },
+  "recency": {
+    "status": "has",
+    "summary": "On an immediate test, the last items studied are recalled best. A filled delay removes the advantage, so this holds for the immediate test only.",
+    "sources": [
+      "Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.",
+      "Glanzer, M., & Cunitz, A. R. (1966). Two storage mechanisms in free recall. Journal of Verbal Learning and Verbal Behavior, 5, 351-360."
+    ]
+  },
+  "storedOnly": {
+    "status": "lacks",
+    "summary": "People endorse a category prototype they never saw, and falsely recall an unpresented word associated with the list.",
+    "sources": [
+      "Posner, M. I., & Keele, S. W. (1968). On the genesis of abstract ideas. Journal of Experimental Psychology, 77, 353-363.",
+      "Roediger, H. L., & McDermott, K. B. (1995). Creating false memories: Remembering words not presented in lists. Journal of Experimental Psychology: Learning, Memory, and Cognition, 21, 803-814."
+    ]
+  }
+}
