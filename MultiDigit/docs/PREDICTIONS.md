@@ -179,22 +179,14 @@ Lemma A with M1 gave Prediction 6, since a digit's features determine the digit.
 
 M2 can be any memory: `trialWith` takes a `retrieve`, which says what a code calls up, with probabilities (`MultiDigit/MultiDigit/AnyMemory.lean`). Each prediction is proved there with the law of memory it needs, and the EPAM version follows by supplying the law from the net.
 
-| Prediction | Law of memory | EPAM | ACT-R declarative memory (`Cog.actRetriever`) |
+| Prediction | Law of memory | EPAM | A memory with noisy, similarity-based retrieval and decay (ACT-R) |
 |---|---|---|---|
-| 1, and whole-problem answers | none: retrieval-weighted mixtures (`AnyMemory.columns_prob`, `whole_prob`) | holds | holds (`ExampleACTR.act_columns`) |
-| 2–5 | a code retrieves a stored problem for certain | holds: retrieval is deterministic | never applies: nothing is retrieved for certain (`Act.retrieve_not_certain`). Confusion is graded (`act_values`), and a practiced problem errs (`act_practiced_not_certain`) |
-| 6 (near misses), 13–18 | `AgreesOn`: what a code retrieves agrees with it on the digit's (or fact's) features | holds: `net_agreesOn` (Lemma A) | fails: partial matching retrieves problems differing on any feature (`act_not_agreesOn`) |
-| 7 (practiced problems stay practiced) | `StableRetrieval` | holds: `netRetriever_stableRetrieval` (learning is local) | the law holds only vacuously (`actRetriever_stableRetrieval`), and the prediction fails: studying 100 + 300 raises the errors on 100 + 100 (`act_interference`) |
+| 1, and whole-problem answers | none: retrieval-weighted mixtures (`AnyMemory.columns_prob`, `whole_prob`) | holds | holds |
+| 2–5 | a code calls up a stored problem for certain | holds: retrieval is deterministic | not as stated: a mixture, with confusions graded by similarity |
+| 6 (near misses), 13–18 | `AgreesOn`: what a code calls up agrees with it on the digit's (or fact's) features | holds: `net_agreesOn` (Lemma A) | fails: partial matching can retrieve a chunk differing on any feature |
+| 7 (practiced problems stay practiced) | `StableRetrieval` | holds: `netRetriever_stableRetrieval` (learning is local) | fails: decay, and competition from new chunks |
 
-The predictions in the last three rows are the ones that tell the memory theories apart. The ACT-R entries are for decay 1 and temperature 1, where its retrieval probabilities are rational. The failures are shown on the worked case in `MultiDigit/MultiDigit/ExampleACTR.lean`, the same problems as `Example.lean`:
-
-| | EPAM | ACT-R |
-|---|---|---|
-| 150 + 100 answered 200 (the neighbour's sum) | 45/46 | 225/529 |
-| 150 + 100 answered 300 | 0 | 225/1058 |
-| 150 + 100 answered correctly | 1/46 | 383/1058 |
-| errors on the practiced 100 + 100 | 0 | 225/782 |
-| the same, after also studying 100 + 300 | 0 | 3375/5842 |
+The predictions in the last three rows are the ones that can tell the memory theories apart. The ACT-R side is not yet proved (`OPEN_ISSUES.md` #16).
 
 ## What the predictions rest on
 
@@ -236,9 +228,7 @@ The predictions in the last three rows are the ones that tell the memory theorie
 | DOA A6 | `SC.strengthen`, `SC.correct_strengthening_lowers_errors` | `StrategyChoice/StrategyChoice/` |
 | A worked case | `MD.Example.*` | `MultiDigit/MultiDigit/Example.lean` |
 | A worked case, further features | `MD.Example2.*` | `MultiDigit/MultiDigit/Example2.lean` |
-| The worked case with ACT-R's memory | `Cog.actRetriever`, `Act.retrieve_not_certain`; `MD.ExampleACTR.*` | `CogLib/CogLib/Memory/Activation.lean`, `MultiDigit/MultiDigit/ExampleACTR.lean` |
 
 The worked case is a check that the theorems apply, not evidence. A net learns 100 + 100 and 100 + 200. It then examines only the second addend's hundreds digit, and recognizes the unfamiliar 150 + 100 as 100 + 100. Whole-problem retrieval answers 200, and never 250. With search length 1, the problem is answered 200 with probability 45/46, and correctly by the columns with probability 1/46. A second check runs the column algorithm, with carries, on 234 + 578 = 812.
 
 The second worked case uses an encoding with zero flags, thresholds and column facts (360 features), and satisfies all three laws. A net learned from 100 + 100 and 120 + 100 tests the first addend's tens zero flag, and takes 150 + 100 for 120 + 100, not for 100 + 100. A net learned from 700 + 100 and 800 + 100 takes 600 + 100 for its neighbour 700 + 100 (off by 100); the binary-coded net learned from the same problems takes it for 800 + 100 (off by 200).
-	

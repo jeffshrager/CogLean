@@ -61,6 +61,7 @@ The pieces exist at small scale.
   - interference from new practice.
 
 It also shows why point 4 is needed: `StableRetrieval` holds for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain (`OPEN_ISSUES.md` #16).
+- `CogMatrix/` is the first matrix: 4 laws (certainty, stability, order-freedom, recency) × 3 families (discrimination, activation, strength), 12 cells, every one a theorem. Every law is had by some family and lacked by another. See `CogMatrix/MATRIX.md`.
 
 ## Program
 

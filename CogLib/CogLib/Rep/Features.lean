@@ -23,4 +23,8 @@ two things whose codes agree on `fs` agree on `P`. -/
 def Determines {α β : Type} (code : α → Item) (fs : List Feature) (P : α → β) : Prop :=
   ∀ p q, (∀ f ∈ fs, (code p).feat f = (code q).feat f) → P p = P q
 
+/-- The number of features in `fs` on which two codes differ. -/
+def mismatches (fs : List Feature) (x y : Item) : Nat :=
+  (fs.filter fun f => x.feat f != y.feat f).length
+
 end Cog

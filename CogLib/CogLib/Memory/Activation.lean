@@ -56,10 +56,6 @@ open Dist
 def baseWeight (now : Nat) (uses : List Nat) : Rat :=
   (uses.map fun t => 1 / ((now - t : Nat) : Rat)).sum
 
-/-- The number of features in `fs` on which two codes differ. -/
-def mismatches (fs : List Feature) (x y : Item) : Nat :=
-  (fs.filter fun f => x.feat f != y.feat f).length
-
 /-- `e^A` for a chunk's activation `A` given the probe `x`. -/
 def chunkWeight (P : ActParams) (now : Nat) (x : Item) (c : Chunk) : Rat :=
   baseWeight now c.uses * P.mu ^ mismatches P.fs x c.code

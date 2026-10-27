@@ -105,7 +105,7 @@ No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
 
-The direction for making the library general, as a hierarchy of laws, model families as instances, and a theory-by-law matrix, is set out in [`PROSPECTUS.md`](PROSPECTUS.md).
+The direction for making the library general, as a hierarchy of laws, model families as instances, and a theory-by-law matrix, is set out in [`PROSPECTUS.md`](PROSPECTUS.md). Its first matrix (4 laws × 3 memory families, every cell a theorem) is in [`CogMatrix/`](CogMatrix/README.md).
 
 1. **Library structure.** Done in outline: `CogLib/` with `Rep`, `Memory`, `Control`, `Process` and `Phenomena` layers, imported by `EPAM/` and `StrategyChoice/`. Still to do:
    - experiments as their own layer (`Experiments/SerialAnticipation`), lifted from EPAM's Fig. 4.1 machinery.

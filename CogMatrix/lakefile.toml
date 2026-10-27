@@ -1,0 +1,9 @@
+name = "cogmatrix"
+defaultTargets = ["CogMatrix"]
+
+[[lean_lib]]
+name = "CogMatrix"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"
