@@ -14,6 +14,7 @@ in which nothing is ever certain.
 * `OrderFree`: the order of study doesn't matter to retrieval.
 * `Recency`: of two stimuli studied last, and equally similar to the probe,
   the later is retrieved more often.
+* `StoredOnly`: nothing is retrieved that was not studied.
 -/
 
 import CogLib
@@ -60,6 +61,11 @@ def Recency (fs : List Feature) (R : Retriever S Item) (s0 : S) (U : List Item) 
   ∀ xs : List Item, (∀ x ∈ xs, x ∈ U) → ∀ a ∈ U, ∀ b ∈ U, a ≠ b → a ∉ xs → b ∉ xs →
     ∀ x, mismatches fs x a = mismatches fs x b →
       pRet R (R.studyAll s0 (xs ++ [a, b])) x a < pRet R (R.studyAll s0 (xs ++ [a, b])) x b
+
+/-- **Stored-only retrieval.** From `s0`, a stimulus that was never studied is
+never retrieved, by any probe. -/
+def StoredOnly (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ xs : List Item, (∀ x ∈ xs, x ∈ U) → ∀ x y, y ∉ xs → pRet R (R.studyAll s0 xs) x y = 0
 
 end Laws
 end Cog

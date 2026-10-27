@@ -5,12 +5,14 @@ law, or `not_<law>` when it lacks it. Run from CogMatrix/.
 """
 import re, pathlib
 
-LAWS = ["certainty", "stability", "orderFree", "recency"]
+LAWS = ["certainty", "stability", "orderFree", "recency", "storedOnly"]
 LAW_NAMES = {"certainty": "Certainty", "stability": "Stability",
-             "orderFree": "Order-freedom", "recency": "Recency"}
+             "orderFree": "Order-freedom", "recency": "Recency",
+             "storedOnly": "Stored-only"}
 FAMILIES = [("Discrimination", "Discrimination (EPAM)"),
             ("Activation", "Activation (ACT-R, d = 1, s = 1)"),
-            ("Strength", "Strength with a criterion (DOA)")]
+            ("Strength", "Strength with a criterion (DOA)"),
+            ("Minerva", "Global matching (MINERVA 2)")]
 
 cells = {}
 for fam, _ in FAMILIES:
@@ -36,5 +38,11 @@ missing = [(f, l) for f, _ in FAMILIES for l in LAWS if (f, l) not in cells]
 out += ["", "Every law is had by some family and lacked by another." if not missing
         and all(len({cells[(f, l)][0] for f, _ in FAMILIES}) == 2 for l in LAWS)
         else "Some laws do not yet discriminate, or have open cells."]
+rows = {}
+for fam, title in FAMILIES:
+    rows.setdefault(tuple(cells.get((fam, l), ("open",))[0] for l in LAWS), []).append(title)
+same = [ts for ts in rows.values() if len(ts) > 1]
+out += ["", "Every family has its own row." if not same else
+        "Families the laws do not separate: " + "; ".join(", ".join(ts) for ts in same) + "."]
 pathlib.Path("MATRIX.md").write_text("\n".join(out) + "\n")
 print("\n".join(out))

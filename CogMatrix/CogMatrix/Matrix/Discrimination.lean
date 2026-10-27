@@ -8,6 +8,7 @@ noticeably different (for `Certainty`), or any set (for `Stability`).
 * `stability`: has it. Learning is local.
 * `not_orderFree`: lacks it. The net depends on the order of learning.
 * `not_recency`: lacks it. Nothing in a net records when learning happened.
+* `storedOnly`: has it. A probe retrieves a stored image or nothing.
 -/
 
 import CogMatrix.Matrix.Common
@@ -102,5 +103,21 @@ theorem not_recency : ¬ Recency F3 (netRetriever F3) (Net.leaf none) U3 := by
     (by decide) (bits 2) (by decide)
   revert this
   decide +kernel
+
+/-- **Discrimination retrieves only what was learned.** -/
+theorem storedOnly (U : List Item) : StoredOnly (netRetriever order) (Net.leaf none) U := by
+  intro xs _ x y hy
+  show pRet _ (Net.learnAll order (Net.leaf none) xs) x y = 0
+  rw [pRet_net]
+  cases h : (Net.learnAll order (Net.leaf none) xs).select x with
+  | none => rfl
+  | some w =>
+    have hw := Net.select_mem_images _ x w h
+    have hwx : w ∈ xs := by
+      rcases images_learnAll order xs _ w hw with h' | h'
+      · simp [Net.images] at h'
+      · exact h'
+    have hwy : w ≠ y := fun e => hy (e ▸ hwx)
+    simp [hwy]
 
 end Cog.Matrix.Discrimination

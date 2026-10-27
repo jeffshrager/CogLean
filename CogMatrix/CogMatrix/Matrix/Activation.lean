@@ -10,6 +10,8 @@ positive discount `μ` per mismatch.
 * `not_certainty`: lacks it. Retrieval can fail.
 * `not_stability`: lacks it. Uses decay, and new chunks compete.
 * `not_orderFree`: lacks it. The order of study sets the ages of the uses.
+* `storedOnly`: has it, for every choice of parameters. Only chunks are
+  retrieved, and a chunk is made only by study.
 -/
 
 import CogMatrix.Matrix.Common
@@ -256,6 +258,27 @@ theorem recency (U : List Item) (hμ : 0 < Q.mu) (hθ : 0 < Q.theta) :
   have hT' : 0 < T⁻¹ := Rat.inv_pos.mpr hT
   have : 1 / 2 * w < w := by grind
   exact Rat.mul_lt_mul_of_pos_right this hT'
+
+/-- **Activation retrieves only what was studied**, for every choice of
+parameters. -/
+theorem storedOnly (U : List Item) : StoredOnly (actRetriever Q) empty U := by
+  intro xs _ x y hy
+  show prob (Act.retrieve Q _ x) _ = 0
+  rw [Act.prob_retrieve]
+  have hz : strengthIn (Act.outcomes ((actRetriever Q).studyAll empty xs))
+      (Act.weight Q ((actRetriever Q).studyAll empty xs) x) (· == some y) = 0 := by
+    apply strengthIn_none
+    intro o ho
+    simp only [Act.outcomes, List.mem_cons, List.mem_map] at ho
+    rcases ho with rfl | ⟨c, hc, rfl⟩
+    · rfl
+    · have hcx : c.code ∈ xs := by
+        rcases codes_studyAll Q xs empty c.code (List.mem_map.mpr ⟨c, hc, rfl⟩) with h | h
+        · simp [codes, empty] at h
+        · exact h
+      have : c.code ≠ y := fun e => hy (e ▸ hcx)
+      simpa using this
+  rw [hz, Rat.div_def, Rat.zero_mul]
 
 end Recency
 

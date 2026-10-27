@@ -46,10 +46,9 @@
     - General decay d and temperature s, in an `ACTR/` package with Mathlib (`Real.rpow`, `exp`). Prove that the rational case is its special case.
     - Check against PyACTUp itself (https://cmu-psych-fms.github.io/fms/pyactup/) on shared instances. `blend` uses the Boltzmann weights, so it can match exactly. `retrieve` takes the argmax under logistic noise, which softmax only approximates, so check it within 4σ, as `MultiDigit/sim/compare.py` does.
     - ACT-R for M3 too: the answer associations, as in Lebiere's model of arithmetic.
-17. **The theory matrix** (`CogMatrix/`, `PROSPECTUS.md`). Done: 4 laws × 3 families, all 12 cells proved. To do:
-    - A fourth family, global matching (MINERVA 2 or REM), as a test of the laws chosen so far.
-    - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty.
-    - Laws that separate activation from strength other than by time (certainty and stability don't), and graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16).
-    - Move MultiDigit's predictions onto these laws, so that `MultiDigit/docs/PREDICTIONS.md`'s table is read off the matrix.
+17. **The theory matrix** (`CogMatrix/`, `PROSPECTUS.md`). Done: 5 laws × 4 families (discrimination, activation, strength, global matching), all 20 cells proved, and every family with its own row. Global matching tested the first four laws and matched strength memory on all of them; the fifth law, stored-only retrieval, separates the two. To do:
+    - Further families as further tests: REM (likelihood-based global matching), a distributed or connectionist memory, CHREST.
+    - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty, and global matching with few traces may.
+    - Certainty and stability have the same row (only discrimination has them). Find what separates them, or merge them.
+    - Graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit/docs/PREDICTIONS.md`'s table is read off the matrix.
     - More interfaces: strategy choice (#8), then production systems.
-
