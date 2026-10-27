@@ -24,10 +24,13 @@ Results:
   difference in noticing order.
 * As phenomena (`netLearner`): non-interference, learning to criterion, and
   stimulus generalization.
+* As a retriever (`netRetriever`): stable retrieval, and agreement on the
+  features a probe's path tests (`net_agreesOn`).
 -/
 
 import CogLib.Memory.DiscriminationNet
 import CogLib.Control.Attention
+import CogLib.Phenomena.Retriever
 import CogLib.Phenomena.Learning
 
 namespace Cog
@@ -344,5 +347,42 @@ theorem netLearner_generalizes (order : NoticingOrder) (N : Net) (x y : Item)
   show N.select y = some x
   rw [Net.select_depends_only_on_noticed_features N x y hagree]
   exact hx
+
+/-! ### Discrimination nets as retrievers -/
+
+/-- What a net's probe calls up: the image it sorts to, for certain. -/
+def Net.retrieve (N : Net) : Item → Dist (Option Item) := fun y => Dist.pure (N.select y)
+
+/-- A discrimination net with one-test learning, as a retriever. -/
+def netRetriever (order : NoticingOrder) : Retriever Net Item := (netLearner order).toRetriever
+
+theorem netRetriever_retrieve (order : NoticingOrder) (N : Net) :
+    (netRetriever order).retrieve N = N.retrieve := rfl
+
+/-- **Discrimination learning has stable retrieval.** -/
+theorem netRetriever_stableRetrieval (order : NoticingOrder) :
+    Phenomena.StableRetrieval (netRetriever order) :=
+  Phenomena.stableRetrieval_of_nonInterference _ (netLearner_nonInterference order)
+
+/-- **A net agrees on the features a path tests.** If each image is stored
+once, and `x` is recognized as the stored image `y`, which the net itself
+recognizes, then whatever `x` calls up agrees with it on every feature in
+`fs`, when `fs` lies on `x`'s path. -/
+theorem net_agreesOn (N : Net) (x y : Item) (fs : List Feature) (hnd : N.images.Nodup)
+    (hy : N.select y = some y) (hx : N.select x = some y) (hcover : ∀ f ∈ fs, f ∈ N.path x) :
+    Phenomena.AgreesOn N.retrieve x fs := by
+  intro y' hy' f hf
+  have h' : some y' = N.select x := Dist.possible_pure.mp hy'
+  rw [hx] at h'
+  cases h'
+  exact Net.confusion_agrees_on_path N x y hnd hy hx f (hcover f hf)
+
+theorem Net.retrieve_of_select (N : Net) (x : Item) (r : Option Item) (h : N.select x = r) :
+    N.retrieve x = Dist.pure r := by
+  rw [← h]; rfl
+
+theorem Net.possible_retrieve (N : Net) (x y : Item) (hx : N.select x = some y) :
+    (N.retrieve x).Possible (some y) :=
+  Dist.possible_pure.mpr (by simp [hx])
 
 end Cog

@@ -8,7 +8,7 @@ probabilities, exact rationals. Outcomes may repeat: the probability of an
 event is the total weight of the outcomes in it.
 
 Results:
-* `prob_bind`: the probability of an event after a two-stage process is the
+* `prob_bind_sum`: the probability of an event after a two-stage process is the
   first stage's probabilities times the second's, summed.
 * `prob_bind_ite`: when the second stage's probability takes one value on
   one set of first-stage outcomes and another off it, the whole is a mix of
@@ -142,6 +142,27 @@ theorem prob_congr (d : Dist α) (e e' : α → Bool) (h : ∀ a, e a = e' a) :
     prob d e = prob d e' := by
   have : e = e' := funext h
   rw [this]
+
+/-- **A mixture.** The probability of an event after a two-stage process is
+the sum, over first-stage outcomes, of each one's probability times the
+event's probability after it. -/
+theorem prob_bind_sum (d : Dist α) (f : α → Dist β) (e : β → Bool) :
+    prob (bind d f) e = (d.map fun ap => ap.2 * prob (f ap.1) e).sum := by
+  induction d with
+  | nil => simp [bind, prob]
+  | cons x d ih => obtain ⟨a, p⟩ := x; rw [prob_bind_cons, ih]; simp
+
+theorem pure_inj {a b : α} (h : pure a = pure b) : a = b := by
+  simp [pure] at h; exact h
+
+/-- Only `a` can occur in the distribution certain of `a`. -/
+theorem possible_pure {a b : α} : Possible (pure a) b ↔ b = a := by
+  constructor
+  · rintro ⟨p, hp, _⟩
+    simp [pure] at hp
+    exact hp.1
+  · intro h
+    exact ⟨1, by simp [pure, h], by decide⟩
 
 /-! ### Sampling in proportion to strength -/
 

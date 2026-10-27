@@ -1,4 +1,5 @@
 import MultiDigit.Postulates
+import MultiDigit.AnyMemory
 import MultiDigit.Phenomena
 import MultiDigit.Columns
 import MultiDigit.Learning

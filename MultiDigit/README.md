@@ -8,8 +8,14 @@ The predictions are **deduced**, not simulated. Every postulate is a parameter: 
 cd MultiDigit && lake build    # builds CogLib too; core Lean only
 ```
 
-- `MultiDigit/Postulates.lean`: the postulates M1–M4 and the trial.
-- `MultiDigit/Phenomena.lean`: the predictions, among them:
+- `MultiDigit/Postulates.lean`: the postulates M1–M4 and the trial. `trialWith` is the trial with any memory in place of the net (M2 left open: `retrieve` says what a code calls up, with probabilities). The EPAM trial is `trialWith` with the net's retrieval (`trial_eq_trialWith`).
+- `MultiDigit/AnyMemory.lean`: the predictions for any memory, each with the law of memory it needs, if any:
+  - none: column use and whole-problem answers are retrieval-weighted mixtures (`columns_prob`, `whole_prob`); confident errors, neighbour's answer and harmless confusions, for a code that calls up a stored problem for certain;
+  - `AgreesOn` (what a code calls up agrees with it on the digit's features): near misses;
+  - `StableRetrieval` (studying one problem leaves another's retrieval unchanged): practiced problems stay practiced.
+
+  A memory that lacks a law, such as ACT-R's declarative memory with noise, partial matching and decay, need not have the prediction. These are the predictions that can tell memory theories apart.
+- `MultiDigit/Phenomena.lean`: the predictions with EPAM's net, each derived from `AnyMemory.lean` (the net supplies `AgreesOn` by `net_agreesOn` and `StableRetrieval` by `netRetriever_stableRetrieval`), among them:
   - confident errors, which confusion produces and DOA alone cannot: a retrieved, wrong answer with no extra backup use;
   - a confused problem gets its neighbour's answer;
   - same-sum and commuted confusions are harmless;
@@ -22,4 +28,4 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
 - [`sim/`](sim/README.md): a blind Python simulation of the model, written from a prose spec alone, and checked against preregistered predictions and Lean's exact distributions (`Export.lean`).
 - [`docs/PREDICTIONS.md`](docs/PREDICTIONS.md): every prediction with its full proof, the test it suggests and what it rests on.
 
-Next: a learning sequence over many trials (discrimination and strengthening together); errors in carrying.
+Next: an ACT-R declarative-memory instance of `trialWith` (`../OPEN_ISSUES.md` #16); a learning sequence over many trials (discrimination and strengthening together); errors in carrying.

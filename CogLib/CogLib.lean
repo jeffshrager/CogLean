@@ -9,5 +9,6 @@ import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
+import CogLib.Phenomena.Retriever
 import CogLib.Phenomena.Responder
 import CogLib.Phenomena.SerialPosition

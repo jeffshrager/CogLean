@@ -2,8 +2,11 @@
 What the combined model predicts, deduced from its postulates.
 
 Every theorem holds for any encoding, net, strengths, criterion, search
-length and backup. Each is proved by composing results already proved for
-EPAM's discrimination nets and for DOA retrieval (in CogLib).
+length and backup. Each is the theorem of the same name in `AnyMemory.lean`,
+which holds for any memory, applied to a discrimination net's retrieval
+(`trial_eq_trialWith`). Where the general theorem needs a law of memory, the
+net supplies it: `net_agreesOn` (a confusion agrees on the features its path
+tests) and `netRetriever_stableRetrieval` (learning is local).
 
 * `columns_prob` (strategy nesting): the column backup is used with
   probability 1 if the problem is not recognized, and `(1 - R_y)^n` if it is
@@ -26,7 +29,7 @@ EPAM's discrimination nets and for DOA retrieval (in CogLib).
   studied problem is answered.
 -/
 
-import MultiDigit.Postulates
+import MultiDigit.AnyMemory
 
 namespace MD
 
@@ -34,13 +37,6 @@ open Cog Dist
 
 variable (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat) (cc : Rat) (n : Nat)
   (backup : Problem → Dist Nat)
-
-/-- The column backup, as part of a trial, makes every outcome a column
-outcome. -/
-theorem prob_backup_part (x : Problem) (e : Route × Nat → Bool) :
-    prob (Dist.bind (backup x) fun r => Dist.pure (Route.columns, r)) e =
-      prob (backup x) (fun r => e (.columns, r)) :=
-  prob_bind_pure _ _ _
 
 /-- **Strategy nesting.** With a proper backup, the column route is taken with
 probability 1 when the problem is not recognized, and `(1 - R_y)^n` when it
@@ -52,24 +48,10 @@ theorem columns_prob (x : Problem) (hb : mass (backup x) = 1)
       match N.select (E.code x) with
       | none => 1
       | some y => (1 - reach as (str y) cc) ^ n := by
-  unfold trial
-  cases h : N.select (E.code x) with
-  | none =>
-    simp only
-    rw [prob_backup_part]
-    simpa [isColumns, mass] using hb
-  | some y =>
-    simp only
-    rw [prob_bind_split _ _ _ (fun _ => false) Retrieval.isExhausted 1]
-    · rw [prob_false, prob_exhausted as (str y) cc (hT y)]; grind
-    · intro r
-      cases r with
-      | stated a k => simp [prob_pure, isColumns, Retrieval.isExhausted]; grind
-      | exhausted =>
-        simp only [Retrieval.isExhausted]
-        rw [prob_backup_part]
-        simp only [isColumns, Route.columns_beq_columns, mass] at hb ⊢
-        rw [hb]; grind
+  rw [trial_eq_trialWith]
+  cases h : N.select (E.code x) <;>
+    exact AnyMemory.columns_prob_certain N.retrieve E str as cc n backup x _
+      (N.retrieve_of_select _ _ h) hb hT
 
 /-- **Whole-problem retrieval depends only on the route.** If `x` is recognized
 as `y`, whole-problem retrieval on `x` states an answer with property `P`
@@ -78,20 +60,9 @@ theorem whole_depends_only_on_route (x : Problem) (y : Item) (P : Nat → Bool)
     (h : N.select (E.code x) = some y) :
     prob (trial E N str as cc n backup x) (wholeSuch P) =
       prob (search as (str y) cc 0 n) (Retrieval.statedSuch P) := by
-  unfold trial
-  rw [h]
-  simp only
-  rw [prob_bind_split _ _ _ (Retrieval.statedSuch P) (fun _ => false) 0]
-  · rw [prob_false]; grind
-  · intro r
-    cases r with
-    | stated a k =>
-      by_cases hp : P a <;> simp [prob_pure, wholeSuch, Retrieval.statedSuch, hp] <;> grind
-    | exhausted =>
-      simp only [Retrieval.statedSuch]
-      rw [prob_backup_part]
-      simp only [wholeSuch, Route.columns_beq_whole, Bool.false_and]
-      rw [prob_false]; grind
+  rw [trial_eq_trialWith]
+  exact AnyMemory.whole_depends_only_on_route N.retrieve E str as cc n backup x y P
+    (N.retrieve_of_select _ _ h)
 
 /-- Two problems recognized as the same stored problem are answered alike by
 whole-problem retrieval. -/
@@ -99,16 +70,9 @@ theorem same_route_same_retrieval (x x' : Problem) (y : Item) (P : Nat → Bool)
     (h : N.select (E.code x) = some y) (h' : N.select (E.code x') = some y) :
     prob (trial E N str as cc n backup x) (wholeSuch P) =
       prob (trial E N str as cc n backup x') (wholeSuch P) := by
-  rw [whole_depends_only_on_route E N str as cc n backup x y P h,
-    whole_depends_only_on_route E N str as cc n backup x' y P h']
-
-/-- The stored problem `q`'s associations are *sharp* at criterion `cc`: no
-answer but `q`'s sum clears it. -/
-def Sharp (str : Item → Nat → Rat) (cc : Rat) (y : Item) (q : Problem) : Prop :=
-  ∀ a, above (str y) cc a = true → a = q.sum
-
-theorem isWhole_eq : isWhole = wholeSuch (fun _ => true) := by
-  funext o; simp [isWhole, wholeSuch]
+  simp only [trial_eq_trialWith]
+  exact AnyMemory.same_route_same_retrieval N.retrieve E str as cc n backup x x' y P
+    (N.retrieve_of_select _ _ h) (N.retrieve_of_select _ _ h')
 
 /-- **A confused problem gets its neighbour's answer.** If `x` is recognized as
 the stored `code q`, and `q`'s associations are sharp, then every answer
@@ -117,15 +81,9 @@ sum have probability 0. -/
 theorem confusion_gives_neighbours_answer (x q : Problem) (hT : total as (str (E.code q)) ≠ 0)
     (h : N.select (E.code x) = some (E.code q)) (hs : Sharp str cc (E.code q) q) :
     prob (trial E N str as cc n backup x) (wholeSuch fun a => a != q.sum) = 0 := by
-  rw [whole_depends_only_on_route E N str as cc n backup x _ _ h, prob_stated _ _ _ _ hT]
-  have : reachSuch as (str (E.code q)) cc (fun a => a != q.sum) = 0 := by
-    simp only [reachSuch]
-    rw [prob_congr _ _ (fun _ => false), prob_false]
-    intro a
-    by_cases ha : above (str (E.code q)) cc a
-    · simp [hs a ha]
-    · simp [ha]
-  rw [this]; grind
+  rw [trial_eq_trialWith]
+  exact AnyMemory.confusion_gives_neighbours_answer N.retrieve E str as cc n backup x q hT
+    (N.retrieve_of_select _ _ h) hs
 
 /-- Retrieval on a sharp stored problem states a wrong answer for `x` exactly
 as often as it states any answer, when `x`'s sum is not `q`'s. -/
@@ -133,17 +91,9 @@ theorem wrong_eq_whole_of_sharp (x q : Problem) (y : Item) (hT : total as (str y
     (h : N.select (E.code x) = some y) (hs : Sharp str cc y q) (hne : x.sum ≠ q.sum) :
     prob (trial E N str as cc n backup x) (wholeWrong x) =
       prob (trial E N str as cc n backup x) isWhole := by
-  rw [wholeWrong, isWhole_eq, whole_depends_only_on_route E N str as cc n backup x y _ h,
-    whole_depends_only_on_route E N str as cc n backup x y _ h,
-    prob_stated _ _ _ _ hT, prob_stated _ _ _ _ hT]
-  congr 1
-  simp only [reachSuch]
-  apply prob_congr
-  intro a
-  by_cases ha : above (str y) cc a
-  · have := hs a ha
-    simp [this, Ne.symm hne]
-  · simp [ha]
+  rw [trial_eq_trialWith]
+  exact AnyMemory.wrong_eq_whole_of_sharp N.retrieve E str as cc n backup x q y hT
+    (N.retrieve_of_select _ _ h) hs hne
 
 /-- **Confident errors.** Let `q` be a stored problem that the net
 recognizes, with sharp associations, and let `x` (with a different sum) be
@@ -165,10 +115,9 @@ theorem confident_errors (x q : Problem) (hT : ∀ y, total as (str y) ≠ 0)
         prob (trial E N str as cc n backup x) isWhole ∧
       prob (trial E N str as cc n backup x) isColumns =
         prob (trial E N str as cc n backup q) isColumns := by
-  refine ⟨confusion_gives_neighbours_answer E N str as cc n backup q q (hT _) hq hs,
-    wrong_eq_whole_of_sharp E N str as cc n backup x q _ (hT _) hx hs hne, ?_⟩
-  rw [columns_prob E N str as cc n backup x hbx hT, columns_prob E N str as cc n backup q hbq hT,
-    hx, hq]
+  simp only [trial_eq_trialWith]
+  exact AnyMemory.confident_errors N.retrieve E str as cc n backup x q hT hbx hbq
+    (N.retrieve_of_select _ _ hq) (N.retrieve_of_select _ _ hx) hs hne
 
 /-- **Confusion with a problem of the same sum is harmless.** If `x` is
 recognized as the stored `code q`, which the net recognizes as itself, and
@@ -179,8 +128,9 @@ theorem same_sum_confusion_harmless (x q : Problem)
     (hsum : x.sum = q.sum) :
     prob (trial E N str as cc n backup x) (wholeWrong x) =
       prob (trial E N str as cc n backup q) (wholeWrong q) := by
-  rw [wholeWrong, wholeWrong, hsum]
-  exact same_route_same_retrieval E N str as cc n backup x q _ _ hx hq
+  simp only [trial_eq_trialWith]
+  exact AnyMemory.same_sum_confusion_harmless N.retrieve E str as cc n backup x q
+    (N.retrieve_of_select _ _ hq) (N.retrieve_of_select _ _ hx) hsum
 
 /-- **Commuted confusions are harmless**: confusing `a + b` with `b + a`. -/
 theorem commuted_confusion_harmless (x : Problem)
@@ -197,8 +147,8 @@ theorem confused_digit (x q : Problem) (i : Addend) (j : Place) (hnd : N.images.
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hcover : ∀ f ∈ E.features i j, f ∈ N.path (E.code x)) :
     x.digit i j = q.digit i j :=
-  Net.confusion_preserves N E.code _ (fun p => p.digit i j) (fun p q => E.determines p q i j)
-    x q hnd hq hx hcover
+  AnyMemory.confused_digit N.retrieve E x q i j (net_agreesOn N _ _ _ hnd hq hx hcover)
+    (N.possible_retrieve _ _ hx)
 
 /-- **Near misses: within 200.** If each image is stored once, `x` is confused
 with `q`, and `x`'s path tests the hundreds digits of both addends, then the
@@ -207,26 +157,19 @@ theorem near_miss_200 (x q : Problem) (hnd : N.images.Nodup)
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hcover : ∀ i, ∀ f ∈ E.features i .hundreds, f ∈ N.path (E.code x))
     (hxa : x.a < 1000) (hxb : x.b < 1000) (hqa : q.a < 1000) (hqb : q.b < 1000) :
-    q.sum < x.sum + 200 ∧ x.sum < q.sum + 200 := by
-  have h1 := confused_digit E N x q .first .hundreds hnd hq hx (hcover .first)
-  have h2 := confused_digit E N x q .second .hundreds hnd hq hx (hcover .second)
-  simp only [Problem.digit, Problem.addend, digitOf] at h1 h2
-  simp only [Problem.sum]
-  omega
+    q.sum < x.sum + 200 ∧ x.sum < q.sum + 200 :=
+  AnyMemory.near_miss_200 N.retrieve E x q (fun i => net_agreesOn N _ _ _ hnd hq hx (hcover i))
+    (N.possible_retrieve _ _ hx) hxa hxb hqa hqb
 
 /-- **Near misses: within 20**, when the path also tests the tens digits. -/
 theorem near_miss_20 (x q : Problem) (hnd : N.images.Nodup)
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hcover : ∀ i, ∀ j, j ≠ Place.units → ∀ f ∈ E.features i j, f ∈ N.path (E.code x))
     (hxa : x.a < 1000) (hxb : x.b < 1000) (hqa : q.a < 1000) (hqb : q.b < 1000) :
-    q.sum < x.sum + 20 ∧ x.sum < q.sum + 20 := by
-  have h1 := confused_digit E N x q .first .hundreds hnd hq hx (hcover .first _ (by decide))
-  have h2 := confused_digit E N x q .second .hundreds hnd hq hx (hcover .second _ (by decide))
-  have h3 := confused_digit E N x q .first .tens hnd hq hx (hcover .first _ (by decide))
-  have h4 := confused_digit E N x q .second .tens hnd hq hx (hcover .second _ (by decide))
-  simp only [Problem.digit, Problem.addend, digitOf] at h1 h2 h3 h4
-  simp only [Problem.sum]
-  omega
+    q.sum < x.sum + 20 ∧ x.sum < q.sum + 20 :=
+  AnyMemory.near_miss_20 N.retrieve E x q
+    (fun i j hj => net_agreesOn N _ _ _ hnd hq hx (hcover i j hj))
+    (N.possible_retrieve _ _ hx) hxa hxb hqa hqb
 
 /-- **Practiced problems stay practiced.** Learning a new problem (EPAM F1)
 never changes how a studied problem is answered: its whole trial is the
@@ -234,10 +177,9 @@ same before and after. -/
 theorem learning_preserves_trial (order : NoticingOrder) (q : Problem) (z : Item)
     (hq : Net.Recognizes N (E.code q)) (hz : E.code q ≠ z) :
     trial E (N.learn order z) str as cc n backup q = trial E N str as cc n backup q := by
-  have h' : Net.Recognizes (N.learn order z) (E.code q) := Net.learn_preserves order N z _ hq hz
-  unfold trial
-  unfold Net.Recognizes at hq h'
-  rw [hq, h']
+  simp only [trial_eq_trialWith]
+  exact AnyMemory.learning_preserves_trial E str as cc n backup (netRetriever order)
+    (netRetriever_stableRetrieval order) N q z (N.retrieve_of_select _ _ hq) hz
 
 /-- **Similar problems take longer to recognize.** Codes that agree on the
 first `k` features of the noticing order cost at least `k` scanning steps to

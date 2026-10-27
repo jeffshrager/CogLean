@@ -175,6 +175,19 @@ Lemma A with M1 gave Prediction 6, since a digit's features determine the digit.
 | 17, 18 | column facts | Confusions between problems with the same column facts (e.g. 120 + 340 and 140 + 320) should cost nothing. With the low columns tested, errors should be multiples of 100. |
 | 8 | time | Problems sharing their leading digits with a familiar problem should be slower to recognize, when the order scans leading digits first. |
 
+## Which predictions need EPAM
+
+M2 can be any memory: `trialWith` takes a `retrieve`, which says what a code calls up, with probabilities (`MultiDigit/MultiDigit/AnyMemory.lean`). Each prediction is proved there with the law of memory it needs, and the EPAM version follows by supplying the law from the net.
+
+| Prediction | Law of memory | EPAM | A memory with noisy, similarity-based retrieval and decay (ACT-R) |
+|---|---|---|---|
+| 1, and whole-problem answers | none: retrieval-weighted mixtures (`AnyMemory.columns_prob`, `whole_prob`) | holds | holds |
+| 2–5 | a code calls up a stored problem for certain | holds: retrieval is deterministic | not as stated: a mixture, with confusions graded by similarity |
+| 6 (near misses), 13–18 | `AgreesOn`: what a code calls up agrees with it on the digit's (or fact's) features | holds: `net_agreesOn` (Lemma A) | fails: partial matching can retrieve a chunk differing on any feature |
+| 7 (practiced problems stay practiced) | `StableRetrieval` | holds: `netRetriever_stableRetrieval` (learning is local) | fails: decay, and competition from new chunks |
+
+The predictions in the last three rows are the ones that can tell the memory theories apart. The ACT-R side is not yet proved (`OPEN_ISSUES.md` #16).
+
 ## What the predictions rest on
 
 - The criterion and search length do not depend on the route. Prediction 4 needs this.
@@ -202,6 +215,8 @@ Lemma A with M1 gave Prediction 6, since a digit's features determine the digit.
 | Prediction 10 | `MD.one_column_errs`, `doaFact_wrong`, `column_error_is_doa_error` | same |
 | Prediction 11 | `MD.discrimination_removes_confusion` | `MultiDigit/MultiDigit/Learning.lean` |
 | Prediction 12 | `MD.discrimination_then_columns` | same |
+| Laws of memory | `Cog.Retriever`, `Phenomena.StableRetrieval`, `Phenomena.AgreesOn`, `Phenomena.confusion_preserves_of`; EPAM: `Net.retrieve`, `netRetriever_stableRetrieval`, `net_agreesOn` | `CogLib/CogLib/Phenomena/Retriever.lean`, `Process/DiscriminationLearning.lean` |
+| Any memory | `MD.trialWith`, `MD.trial_eq_trialWith`; `MD.AnyMemory.*` | `MultiDigit/MultiDigit/Postulates.lean`, `AnyMemory.lean` |
 | Lemma C | `Cog.Determines`, `Cog.Net.confusion_preserves` | `CogLib/CogLib/Rep/Features.lean`, `Memory/DiscriminationNet.lean` |
 | M1a–M1c | `MD.Zeros`, `MD.Magnitude`, `MD.ColumnFacts` | `MultiDigit/MultiDigit/Features.lean` |
 | Prediction 13 | `MD.confusion_keeps_zeros` | `MultiDigit/MultiDigit/FeaturePhenomena.lean` |

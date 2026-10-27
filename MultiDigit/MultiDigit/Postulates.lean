@@ -15,7 +15,7 @@ nests the distributions-of-associations architecture one level up:
 | Postulate | CogLib |
 |---|---|
 | M1 Problem code: features for each digit of each addend | `Encoding`: `code`, `features`, `determines` |
-| M2 Recognition: a discrimination net of familiar problems (EPAM D2) | `Cog.Net`, `Net.select` |
+| M2 Recognition: a discrimination net of familiar problems (EPAM D2) | `Cog.Net`, `Net.select`; for any memory, `trialWith` and a `retrieve` |
 | M3 Whole-problem retrieval: the recognized problem's associations, a confidence criterion and a search length (DOA A1-A3) | `Cog.search` |
 | M4 Column backup, when M2 or M3 fails | `backup`, a distribution of answers per problem |
 | M1a-M1c Further features: zeros, magnitude, column facts | `Features.lean`: `Zeros`, `Magnitude`, `ColumnFacts` |
@@ -102,6 +102,34 @@ def trial (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat) 
   | some y => Dist.bind (search as (str y) cc 0 n) fun
       | .stated a _ => Dist.pure (.whole, a)
       | .exhausted => Dist.bind (backup x) fun r => Dist.pure (.columns, r)
+
+/-- What follows recognition: retrieval on the stored code called up, with
+the column backup when it is exhausted, or when nothing is called up. -/
+def afterRetrieval (str : Item → Nat → Rat) (as : List Nat) (cc : Rat) (n : Nat)
+    (backup : Problem → Dist Nat) (x : Problem) : Option Item → Dist (Route × Nat)
+  | none => Dist.bind (backup x) fun r => Dist.pure (.columns, r)
+  | some y => Dist.bind (search as (str y) cc 0 n) fun
+      | .stated a _ => Dist.pure (.whole, a)
+      | .exhausted => Dist.bind (backup x) fun r => Dist.pure (.columns, r)
+
+/-- **A trial with any memory** (M2 left open). `retrieve` says what a
+problem's code calls up: a stored code, or nothing, with probabilities. A
+discrimination net calls up one code for certain (`trial_eq_trialWith`); a
+memory with noisy retrieval, such as ACT-R's declarative memory, calls up a
+distribution of them. -/
+def trialWith (retrieve : Item → Dist (Option Item)) (E : Encoding) (str : Item → Nat → Rat)
+    (as : List Nat) (cc : Rat) (n : Nat) (backup : Problem → Dist Nat) (x : Problem) :
+    Dist (Route × Nat) :=
+  Dist.bind (retrieve (E.code x)) (afterRetrieval str as cc n backup x)
+
+/-- The EPAM trial is the trial with a discrimination net's retrieval. -/
+theorem trial_eq_trialWith (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat)
+    (cc : Rat) (n : Nat) (backup : Problem → Dist Nat) (x : Problem) :
+    trial E N str as cc n backup x = trialWith N.retrieve E str as cc n backup x := by
+  unfold trialWith Net.retrieve
+  rw [bind_pure_left]
+  unfold trial
+  cases N.select (E.code x) <;> rfl
 
 @[simp] theorem Route.whole_beq_whole : (Route.whole == Route.whole) = true := rfl
 @[simp] theorem Route.columns_beq_columns : (Route.columns == Route.columns) = true := rfl
