@@ -1,0 +1,324 @@
+This document specifies a model of how a child adds two 3-digit numbers. Implement it as a stochastic simulation in Python. It is self-contained: everything you need is here, and where the model leaves something open, that is said explicitly (section 8).
+
+\subsection{Problems}\label{problems}
+
+A problem is a + b, with whole numbers 0 $\le$ a, b $\le$ 999. Its correct answer is a + b.
+
+\begin{itemize}
+\tightlist
+\item
+  Each addend has three digits: hundreds, tens and units. A number below 100 has hundreds digit 0, and so on.
+\item
+  A \textbf{column} is a place (hundreds, tens or units) together with the two digits of the addends in that place.
+\item
+  Write problems as strings \texttt{"a+b"}, e.g.~\texttt{"150+100"}.
+\end{itemize}
+
+\subsection{Codes}\label{codes}
+
+A problem reaches the child as a \textbf{code}: a vector of bits, called features, indexed from 0. A feature beyond the end of a code reads as 0. There are two encodings. Addends are numbered first = 0 and second = 1; places are numbered hundreds = 0, tens = 1 and units = 2.
+
+\subsubsection{\texorpdfstring{\texttt{bcd} (24 features)}{bcd (24 features)}}\label{bcd-24-features}
+
+\begin{itemize}
+\tightlist
+\item
+  Feature \texttt{addend*12\ +\ place*4\ +\ k}, for k = 0..3, is bit k of that digit in binary. Bit 0 is the least significant.
+\item
+  Example: the digit 6 = 0110 has bit 0 = 0, bit 1 = 1, bit 2 = 1 and bit 3 = 0.
+\end{itemize}
+
+\subsubsection{\texorpdfstring{\texttt{rich} (360 features)}{rich (360 features)}}\label{rich-360-features}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Digit blocks.} For each digit, a block of 10 features starting at \texttt{(addend*3\ +\ place)*10}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    offset 0: 1 if the digit is 0 (the \textbf{zero flag});
+  \item
+    offset 1 + k, for k = 0..8: 1 if the digit is greater than k (a \textbf{threshold}).
+  \end{itemize}
+\item
+  \textbf{Column facts.} For each place, 100 features starting at \texttt{60\ +\ place*100}. Exactly one is 1: the one at offset \texttt{min*10\ +\ max}, where min and max are the smaller and the larger of the column's two digits. So 3+4 and 4+3 in a column set the same feature.
+\end{itemize}
+
+\subsubsection{Noticing orders}\label{noticing-orders}
+
+A \textbf{noticing order} is a list of feature indices: the order in which features are scanned for a difference (section 3). The parameter file gives it as an explicit list, or as one of these names:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{bcd\_hundreds\_first}. For place = hundreds, tens, units (in that order); then addend = first, second; then k = 0..3: the bcd feature for (addend, place, k).
+\item
+  \texttt{rich\_default}, the concatenation of three lists:
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    The zero flags. For place = hundreds, tens, units; then addend = first, second.
+  \item
+    The thresholds. For place = hundreds, tens, units; then addend = first, second; then k = 0..8.
+  \item
+    The column facts. For place = hundreds, tens, units; then offset 0..99.
+  \end{enumerate}
+\end{itemize}
+
+\subsection{Recognition: a discrimination net}\label{recognition-a-discrimination-net}
+
+The child's memory of familiar problems is a \textbf{discrimination net} (EPAM). It is a binary tree:
+
+\begin{itemize}
+\tightlist
+\item
+  A \textbf{terminal} holds an image (a stored code) or nothing.
+\item
+  A \textbf{test} names one feature and has two branches, one for 0 and one for 1.
+\end{itemize}
+
+\textbf{Recognition} sorts a code down the net: at each test, take the branch given by the code's value on that feature. The result is the image at the terminal reached, which may be nothing. The \textbf{path} is the list of features tested on the way down. The problem is \textbf{recognized as} the problem whose code that image is. Images are always codes of problems, so keep track of which problem each image came from.
+
+\textbf{Learning a code x} into the net:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Sort x down the net to a terminal.
+\item
+  If the terminal holds nothing, put x there.
+\item
+  If it holds x itself, do nothing.
+\item
+  If it holds a different image z, scan the noticing order for the first feature f on which x and z differ.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If there is one, replace the terminal by a test on f, whose two branches are terminals holding x and z, each on the side of its own value of f.
+  \item
+    If no feature in the order differs, do nothing.
+  \end{itemize}
+\end{enumerate}
+
+Nothing else in the net changes. The net starts empty (one terminal holding nothing). The \textbf{familiar problems} in the parameter file are learned into it in the order given.
+
+\subsection{Retrieval from a distribution of associations}\label{retrieval-from-a-distribution-of-associations}
+
+Retrieval works on \textbf{associations}: a finite list of possible answers, each with a strength $\ge$ 0, with total strength T \textgreater{} 0. It also uses a \textbf{confidence criterion} c and a \textbf{search length} n.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{A search} draws one answer, each with probability strength/T.
+\item
+  If the drawn answer's strength is strictly greater than c, it is \textbf{stated}, and retrieval ends.
+\item
+  Otherwise search again, up to n searches in all.
+\item
+  If no answer is stated after n searches, retrieval is \textbf{exhausted}.
+\end{itemize}
+
+\subsection{Single-digit addition (used in each column)}\label{single-digit-addition-used-in-each-column}
+
+Adding two digits d + e uses the associations of the single-digit problem d + e (its answer list and strengths), a criterion c1 and a search length n1. It proceeds in three stages; the \textbf{strategy} is the one that produces the answer.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Retrieval}: as in section 4. If an answer is stated, that is the answer.
+\item
+  \textbf{Fingers}: if retrieval is exhausted, the child puts up d + e fingers.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Add strength \texttt{elab} to the answer d + e.
+  \item
+    Then divide every strength (including that one) by 1 + \texttt{elab}.
+  \item
+    Make exactly one search with these new strengths. If the drawn answer's new strength exceeds c1, state it.
+  \item
+    These new strengths are used for this one search only; nothing is changed permanently.
+  \end{itemize}
+\item
+  \textbf{Counting}: otherwise the child counts the d + e fingers.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Each of the d + e objects is skipped with probability \texttt{qs}, counted twice with probability \texttt{qd}, and counted once otherwise, independently.
+  \item
+    The answer is the total count.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{A trial on a 3-digit problem x}\label{a-trial-on-a-3-digit-problem-x}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Recognize x's code in the net.
+\item
+  If x is recognized as a stored problem y, retrieve (section 4) using \textbf{y's} whole-problem associations, with criterion c and search length n.~If an answer is stated, that is the trial's answer, by the \textbf{whole} route.
+\item
+  If nothing is recognized, or retrieval is exhausted, work x out by the \textbf{columns} route:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Add the units column's digits (section 5); call the result r0. Write r0 mod 10, and carry $\lfloor$r0 / 10$\rfloor$.
+  \item
+    Add the tens column's digits; call the result r1. Add the carry: s1 = r1 + $\lfloor$r0 / 10$\rfloor$. Write s1 mod 10, and carry $\lfloor$s1 / 10$\rfloor$.
+  \item
+    Add the hundreds column's digits; call the result r2. Write r2 + $\lfloor$s1 / 10$\rfloor$ as the hundreds (it may exceed 9).
+  \item
+    The answer is the number written. Note that column results can exceed 18 through counting errors; the carry rule handles any size.
+  \end{itemize}
+\end{enumerate}
+
+Each column uses its own single-digit problem's associations, and the three columns are added independently.
+
+\subsection{Learning (between trials)}\label{learning-between-trials}
+
+When learning is on, after each trial:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Strengthening (single-digit).} For each column added in the trial, the stated single-digit answer's strength in that single-digit problem's associations increases by \texttt{inc1}, or by \texttt{2*inc1} if that answer is correct for the column (d + e). This happens whichever strategy produced it. If the answer isn't yet in the answer list, add it with strength 0 first.
+\item
+  \textbf{Strengthening (whole problem).} If the answer came by the whole route, the stated answer's strength in the associations that were used increases by \texttt{inc}, or \texttt{2*inc} if it is correct. ``Correct'' here is subject to open choice O1.
+\item
+  \textbf{Discrimination.} If the answer came by the whole route and was wrong (feedback tells the child), learn x's code into the net (section 3), with new associations for x (open choice O2).
+\item
+  \textbf{Column answers and whole associations} (open choice O3).
+\end{enumerate}
+
+\subsection{Open choices}\label{open-choices}
+
+The model doesn't settle these. Choose a default, document it in \texttt{IMPLEMENTATION\_NOTES.md}, and expose each as a parameter.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{O1.} In whole-route strengthening, is ``correct'' judged against the true sum of x, or against the sum of the problem y whose associations were used?
+\item
+  \textbf{O2.} What are the initial associations of a newly discriminated problem: its answer list, its strengths?
+\item
+  \textbf{O3.} Does a columns-route answer change the whole-problem associations of x? If so, how, and only when x is stored in the net?
+\item
+  \textbf{O4.} Anything else you find underdetermined. List it.
+\end{itemize}
+
+\subsection{Interface}\label{interface}
+
+\subsubsection{Program}\label{program}
+
+Write \texttt{mdsim.py}: Python 3, standard library only, with \texttt{fractions.Fraction} for all strengths and probabilities. Floating point may be used only to compare against random draws.
+
+\begin{itemize}
+\tightlist
+\item
+  Command line: \texttt{python3\ mdsim.py\ PARAMS.json\ -\/-out\ LOG.jsonl}
+\item
+  Library: \texttt{simulate(params:\ dict)\ -\textgreater{}\ Iterator{[}dict{]}}, which yields the same records.
+\item
+  Use \texttt{random.Random(seed)} for all randomness.
+\end{itemize}
+
+\subsubsection{Parameter file (JSON)}\label{parameter-file-json}
+
+Fractions are strings such as \texttt{"9/10"}, or numbers.
+
+\begin{Verbatim}[breaklines,breakanywhere,fontsize=\footnotesize]
+{
+  "encoding": "bcd" | "rich",
+  "order": "bcd_hundreds_first" | "rich_default" | [feature indices],
+  "familiar": ["100+100", "100+200"],
+  "answers": [200, 250, 300],
+  "whole": {"100+100": {"200": "9/10", "250": "1/100", "300": "1/100"}, "...": {}},
+  "c": "1/2",
+  "n": 1,
+  "single": {"answers": [0, 1, ..., 18], "default": {"correct": "1/2", "other": "1/50"},
+             "overrides": {"2+3": {"4": "3/10", "5": "1/2"}}},
+  "c1": "1/2",
+  "n1": 1,
+  "elab": "1/20",
+  "qs": "1/20",
+  "qd": "1/20",
+  "learning": false,
+  "inc": "1/20",
+  "inc1": "1/20",
+  "open_choices": {"O1": "...", "O2": "...", "O3": "..."},
+  "schedule": ["150+100", "100+100"],
+  "repeats": 1000,
+  "seed": 1
+}
+\end{Verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{whole}}: the whole-problem associations of each familiar problem, over \texttt{answers}. An answer missing from a problem's table has strength 0.
+\item
+  \textbf{\texttt{single}}: associations for every d + e (d, e = 0..9).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Over \texttt{answers}, the correct answer d + e has strength \texttt{default.correct} and every other answer \texttt{default.other}.
+  \item
+    \texttt{overrides} replaces the given entries for a given single-digit problem.
+  \end{itemize}
+\item
+  \textbf{\texttt{schedule}}: the run is \texttt{repeats} passes through the schedule, one trial per problem per pass, in order.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    With learning off, the net and all strengths stay fixed throughout.
+  \item
+    With learning on, they change as in section 7.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Log (JSON lines, one record per trial)}\label{log-json-lines-one-record-per-trial}
+
+\begin{Verbatim}[breaklines,breakanywhere,fontsize=\footnotesize]
+{"trial": 0, "pass": 0, "problem": "150+100",
+ "recognized_as": "100+100" | null, "path": [features tested],
+ "route": "whole" | "columns",
+ "searches": number of whole-route searches made,
+ "columns": [{"place": "units", "digits": [0, 0], "strategy": "retrieval" | "fingers" | "counting", "answer": 0}, ...] | [],
+ "answer": 200, "correct": false,
+ "net_learned": true | false}
+\end{Verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{columns} lists the units, tens and hundreds entries when the columns route is used, and is empty otherwise.
+\item
+  \texttt{net\_learned} says whether discrimination changed the net after this trial.
+\end{itemize}
+
+\subsection{Deliverables}\label{deliverables}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{mdsim.py}.
+\item
+  \texttt{IMPLEMENTATION\_NOTES.md}: your choices for O1--O4, anything you found ambiguous, and a list of every file you read while working.
+\item
+  A smoke test: \texttt{python3\ mdsim.py\ example.json\ -\/-out\ /dev/stdout\ \textbar{}\ head}, with an \texttt{example.json} of your own.
+\end{itemize}

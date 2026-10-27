@@ -8,12 +8,14 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{enumitem}
+\usepackage{fvextra}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric,arrows.meta,positioning}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[hidelinks]{hyperref}
 
 \newcommand{\code}[1]{\texttt{#1}}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 \title{Proving Cognitive Theories in Lean:\\EPAM, Strategy Choice, and Their Combination}
 \author{Jeff Shrager}
@@ -255,7 +257,7 @@ Lean guarantees that the theorems follow from the definitions, not that the defi
 \subsection{Method}
 
 \begin{enumerate}
-  \item \textbf{Specification.} We wrote the model as a 10\,KB prose specification, with no Lean names, theorems or predictions. Points the prose leaves open are listed as open choices for the implementer to settle and document:
+  \item \textbf{Specification.} We wrote the model as a 10\,KB prose specification (Appendix~\ref{app:spec}), with no Lean names, theorems or predictions. Points the prose leaves open are listed as open choices for the implementer to settle and document:
   \begin{itemize}
     \item O1: how correctness is judged when strengthening after a confusion;
     \item O2: the initial associations of a newly discriminated problem;
@@ -358,5 +360,15 @@ The blind simulation borrows from N-version programming~\cite{avizienis1985}, wh
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
+
+\appendix
+\section{The prose specification}
+\label{app:spec}
+
+This is the specification given to the blind implementer (Section~\ref{sec:blind}), verbatim except for layout: its sections 1--10 are numbered A.1--A.10 here, and references in it to ``section $N$'' mean A.$N$.
+
+{\small\sloppy
+\input{spec}
+}
 
 \end{document}
