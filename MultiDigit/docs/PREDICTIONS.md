@@ -21,6 +21,7 @@ Each prediction is a theorem that holds for every choice of these. Each is prove
 Children don't add everything column by column. A familiar problem such as 100 + 100 is recognized, and its answer is simply known. The model nests DOA's own architecture one level up.
 
 1. **Problem code (M1).** A problem a + b is coded as features, with some features for each digit of each addend. Agreeing on all of a digit's features means having the same digit.
+   A code may carry more (M1a–M1c, below): whether each digit is 0, each digit's size as nine thresholds, and each column's single-digit fact.
 2. **Recognition (M2).** An EPAM discrimination net stores the codes of familiar problems. A problem's code is sorted down the net to a stored code, or to nothing.
 3. **Whole-problem retrieval (M3).** If the problem is recognized as the stored problem q, DOA retrieval runs on q's associations. Each search draws an answer in proportion to strength, and states it if its strength exceeds the criterion c, for up to n searches.
 4. **Column backup (M4).** If the problem is not recognized, or retrieval is exhausted, the answer is computed column by column: units, tens, then hundreds. Each column's digits are added by a single-digit process, which can be the DOA trial itself, and the tens of each column's result are carried. Predictions 1–8 hold for any backup; Predictions 9–10 are about this one.
@@ -119,6 +120,46 @@ Two new lemmas about nets were needed.
 
 *What it says.* Together with Predictions 4 and 11, this gives a sequence that can be looked for. First comes a fast, confident error from confusion. Once the error is noticed and the problem discriminated, slow column work follows, because a newly discriminated problem has only weak associations of its own. Then, as correct answers are stated and strengthened, fluent and correct retrieval follows. By DOA's A6, strengthening a correct answer never raises retrieval errors, whichever strategy produced it (`SC.correct_strengthening_lowers_errors`).
 
+## Further features (M1a–M1c)
+
+The net can test only the features a problem's code carries. Three further kinds are stated as laws that an encoding may satisfy:
+
+- **Zeros (M1a).** For each digit, a feature that says whether it is 0.
+- **Magnitude (M1b).** For each digit d, nine thresholds: the k-th (k < 9) says whether d > k. Close digits share most of these features.
+- **Column facts (M1c).** For each column, features that identify its single-digit fact, and so determine the column's sum. The fact is unordered: 3 + 4 and 4 + 3 are the same fact.
+
+One general lemma covers all three.
+
+**Lemma C (a confusion keeps what its path determines).** Say features F *determine* a property P of problems when two problems whose codes agree on F agree on P. If each image is stored once, x is recognized as q (which is recognized as itself), and every feature in F is on x's path, then x and q agree on P.
+
+*Proof.* By Lemma A, x and q agree on every feature on x's path, so on F. ∎
+
+Lemma A with M1 gave Prediction 6, since a digit's features determine the digit. Predictions 13–18 come from Lemma C in the same way. Each also holds for every net EPAM learns, with no hypothesis on the net (Lemma B).
+
+**Prediction 13 (confusions keep zeros).** If x's path tests whether a digit is 0, x has a 0 there exactly when q does.
+
+**Prediction 14 (confusion with a round problem is exact).** Let q be round: 0 in the tens and units of both addends, such as 100 + 200. If x's path tests the zeros of the tens and units and the hundreds digits, a problem confused with q is q. So the confusion is harmless.
+
+*Proof.* By Prediction 13, x has the same zeros in the tens and units, so it is round too. By Prediction 6, it has q's hundreds digits. A 3-digit problem is fixed by its digits. ∎
+
+*What it says.* Under binary-coded digits, 150 + 100 was confused with 100 + 100. Once the net has had to test the tens' zero flag, it can't be: it goes to some non-round problem instead.
+
+**Prediction 15 (errors within the gap).** If x's path tests the threshold k of a digit, x's digit is on the same side of k as q's. If it tests thresholds lo and hi, and q's digit is above lo and at most hi, so is x's, and the two differ by less than hi − lo.
+
+**Prediction 16 (close digits share features).** Two digits d and e differ on exactly |d − e| of the nine thresholds.
+
+*What it says.* With Prediction 8, problems whose digits are close agree on more features, so they are harder to tell apart, and are the ones confused. Under thresholds, confusions are with numerical neighbours. Under binary-coded digits they are not: 7 = 0111 and 8 = 1000 differ in every bit.
+
+**Prediction 17 (tested column facts make confusions harmless).** If x's path tests all three column facts, x and q have the same column sums, so the same sum, and whole-problem retrieval errs on x exactly as often as on q.
+
+*Proof.* Lemma C gives equal column sums. The sum is units + 10 · tens + 100 · hundreds column sums (as in Prediction 9). Prediction 5 does the rest. ∎
+
+**Prediction 18 (tested low columns fix the low digits).** If x's path tests the tens' and units' facts, the error of a confusion is a multiple of 100. With only the units' fact, it is a multiple of 10.
+
+*Proof.* A sum mod 100 depends only on 10 · tens + units column sums, and mod 10 only on the units column sum. ∎
+
+*What it says.* Column facts tie whole-problem recognition to the single-digit facts. A net that has learned to tell problems apart by their column facts makes confusions only between problems that the column backup would answer the same way, in the columns it tests.
+
 ## What can be tested
 
 | Prediction | Dissociation | Test |
@@ -129,6 +170,9 @@ Two new lemmas about nets were needed.
 | 7 | no interference | Learning new familiar problems should not change performance on already-familiar ones. |
 | 10 | column errors | Column-route errors should be single-digit errors moved to their place: off by exactly 10 × (a single-digit error) when the tens column errs. |
 | 4, 11, 12 | a learning sequence | On a problem first answered confidently and wrongly, look for fast errors, then slow column work after feedback, then fluent correct retrieval. |
+| 13, 14 | zeros | Unfamiliar problems should not be confused with round ones once the familiar set has forced the net to test zeros. |
+| 15, 16 | which neighbours | Under a magnitude code, confusions should be with problems whose digits are numerically close. |
+| 17, 18 | column facts | Confusions between problems with the same column facts (e.g. 120 + 340 and 140 + 320) should cost nothing. With the low columns tested, errors should be multiples of 100. |
 | 8 | time | Problems sharing their leading digits with a familiar problem should be slower to recognize, when the order scans leading digits first. |
 
 ## What the predictions rest on
@@ -158,7 +202,18 @@ Two new lemmas about nets were needed.
 | Prediction 10 | `MD.one_column_errs`, `doaFact_wrong`, `column_error_is_doa_error` | same |
 | Prediction 11 | `MD.discrimination_removes_confusion` | `MultiDigit/MultiDigit/Learning.lean` |
 | Prediction 12 | `MD.discrimination_then_columns` | same |
+| Lemma C | `Cog.Determines`, `Cog.Net.confusion_preserves` | `CogLib/CogLib/Rep/Features.lean`, `Memory/DiscriminationNet.lean` |
+| M1a–M1c | `MD.Zeros`, `MD.Magnitude`, `MD.ColumnFacts` | `MultiDigit/MultiDigit/Features.lean` |
+| Prediction 13 | `MD.confusion_keeps_zeros` | `MultiDigit/MultiDigit/FeaturePhenomena.lean` |
+| Prediction 14 | `MD.round_confusion_exact`, `round_confusion_harmless`, `round_confusion_exact_learned` | same |
+| Prediction 15 | `MD.confusion_same_side`, `confusion_within_gap` | same |
+| Prediction 16 | `MD.threshold_diffs`, `Magnitude.diffs` | `MultiDigit/MultiDigit/Features.lean` |
+| Prediction 17 | `MD.facts_same_sum`, `facts_tested_harmless`, `facts_same_sum_learned` | `MultiDigit/MultiDigit/FeaturePhenomena.lean` |
+| Prediction 18 | `MD.facts_mod_100`, `facts_mod_10` | same |
 | DOA A6 | `SC.strengthen`, `SC.correct_strengthening_lowers_errors` | `StrategyChoice/StrategyChoice/` |
 | A worked case | `MD.Example.*` | `MultiDigit/MultiDigit/Example.lean` |
+| A worked case, further features | `MD.Example2.*` | `MultiDigit/MultiDigit/Example2.lean` |
 
 The worked case is a check that the theorems apply, not evidence. A net learns 100 + 100 and 100 + 200. It then examines only the second addend's hundreds digit, and recognizes the unfamiliar 150 + 100 as 100 + 100. Whole-problem retrieval answers 200, and never 250. With search length 1, the problem is answered 200 with probability 45/46, and correctly by the columns with probability 1/46. A second check runs the column algorithm, with carries, on 234 + 578 = 812.
+
+The second worked case uses an encoding with zero flags, thresholds and column facts (360 features), and satisfies all three laws. A net learned from 100 + 100 and 120 + 100 tests the first addend's tens zero flag, and takes 150 + 100 for 120 + 100, not for 100 + 100. A net learned from 700 + 100 and 800 + 100 takes 600 + 100 for its neighbour 700 + 100 (off by 100); the binary-coded net learned from the same problems takes it for 800 + 100 (off by 200).

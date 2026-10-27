@@ -99,24 +99,26 @@ theorem round_confusion_harmless (Z : Zeros E) (x q : Problem) (hnd : N.images.N
 /-- **Confusions keep the side of a tested threshold.** -/
 theorem confusion_same_side (M : Magnitude E) (x q : Problem) (i : Addend) (j : Place) (k : Nat)
     (hnd : N.images.Nodup) (hq : N.select (E.code q) = some (E.code q))
-    (hx : N.select (E.code x) = some (E.code q)) (hcover : M.above i j k ∈ N.path (E.code x)) :
+    (hx : N.select (E.code x) = some (E.code q)) (hk : k < 9)
+    (hcover : M.above i j k ∈ N.path (E.code x)) :
     k < x.digit i j ↔ k < q.digit i j := by
-  have := Net.confusion_preserves N E.code _ _ (M.determines i j k) x q hnd hq hx
+  have := Net.confusion_preserves N E.code _ _ (M.determines i j k hk) x q hnd hq hx
     (by simpa using hcover)
   simpa [decide_eq_decide] using this
 
-/-- **Errors within the gap.** If `x`'s path tests thresholds `lo` and `hi`,
+/-- **Errors within the gap.** If `x`'s path tests thresholds `lo` and `hi` (each below 9),
 and `q`'s digit lies above `lo` and at most `hi`, so does `x`'s; the two
 digits differ by less than `hi - lo`. -/
 theorem confusion_within_gap (M : Magnitude E) (x q : Problem) (i : Addend) (j : Place)
     (lo hi : Nat) (hnd : N.images.Nodup) (hq : N.select (E.code q) = some (E.code q))
     (hx : N.select (E.code x) = some (E.code q))
+    (hlo9 : lo < 9) (hhi9 : hi < 9)
     (hlo : M.above i j lo ∈ N.path (E.code x)) (hhi : M.above i j hi ∈ N.path (E.code x))
     (hql : lo < q.digit i j) (hqh : q.digit i j ≤ hi) :
     lo < x.digit i j ∧ x.digit i j ≤ hi ∧
       x.digit i j - q.digit i j + (q.digit i j - x.digit i j) < hi - lo := by
-  have h1 := (confusion_same_side N M x q i j lo hnd hq hx hlo).2 hql
-  have h2 := confusion_same_side N M x q i j hi hnd hq hx hhi
+  have h1 := (confusion_same_side N M x q i j lo hnd hq hx hlo9 hlo).2 hql
+  have h2 := confusion_same_side N M x q i j hi hnd hq hx hhi9 hhi
   have h3 : x.digit i j ≤ hi := Nat.le_of_not_lt fun h => absurd (h2.1 h) (by omega)
   omega
 

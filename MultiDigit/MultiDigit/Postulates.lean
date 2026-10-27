@@ -18,6 +18,7 @@ nests the distributions-of-associations architecture one level up:
 | M2 Recognition: a discrimination net of familiar problems (EPAM D2) | `Cog.Net`, `Net.select` |
 | M3 Whole-problem retrieval: the recognized problem's associations, a confidence criterion and a search length (DOA A1-A3) | `Cog.search` |
 | M4 Column backup, when M2 or M3 fails | `backup`, a distribution of answers per problem |
+| M1a-M1c Further features: zeros, magnitude, column facts | `Features.lean`: `Zeros`, `Magnitude`, `ColumnFacts` |
 
 Nothing here is a table of numbers. The encoding, the net, the strengths,
 the criterion, the search length and the backup are all parameters, and the

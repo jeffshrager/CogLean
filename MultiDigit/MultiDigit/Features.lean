@@ -45,7 +45,7 @@ structure Zeros (E : Encoding) where
 whether the digit exceeds `k` (a thermometer code). -/
 structure Magnitude (E : Encoding) where
   above : Addend → Place → Nat → Feature
-  reads : ∀ p i j k, (E.code p).feat (above i j k) = decide (k < p.digit i j)
+  reads : ∀ p i j k, k < 9 → (E.code p).feat (above i j k) = decide (k < p.digit i j)
 
 /-- **M1c Column facts.** For each column, features that identify its
 single-digit fact, and so determine the column's sum. -/
@@ -62,11 +62,11 @@ theorem Zeros.determines (Z : Zeros E) (i : Addend) (j : Place) :
   rw [← Z.reads p i j, ← Z.reads q i j]
   exact h _ (List.mem_singleton_self _)
 
-theorem Magnitude.determines (M : Magnitude E) (i : Addend) (j : Place) (k : Nat) :
+theorem Magnitude.determines (M : Magnitude E) (i : Addend) (j : Place) (k : Nat) (hk : k < 9) :
     Determines E.code [M.above i j k] (fun p => decide (k < p.digit i j)) := by
   intro p q h
   dsimp only
-  rw [← M.reads p i j k, ← M.reads q i j k]
+  rw [← M.reads p i j k hk, ← M.reads q i j k hk]
   exact h _ (List.mem_singleton_self _)
 
 /-- The thresholds at which digits `d` and `e` differ. -/
@@ -85,7 +85,12 @@ theorem Magnitude.diffs (M : Magnitude E) (p q : Problem) (i : Addend) (j : Plac
     ((List.range 9).filter fun k =>
         (E.code p).feat (M.above i j k) != (E.code q).feat (M.above i j k)).length =
       (p.digit i j - q.digit i j) + (q.digit i j - p.digit i j) := by
-  simp only [M.reads]
+  have : ∀ k ∈ List.range 9,
+      ((E.code p).feat (M.above i j k) != (E.code q).feat (M.above i j k)) =
+        (decide (k < p.digit i j) != decide (k < q.digit i j)) := by
+    intro k hk
+    rw [M.reads p i j k (List.mem_range.mp hk), M.reads q i j k (List.mem_range.mp hk)]
+  rw [List.filter_congr this]
   exact threshold_diffs _ (digit_lt p i j) _ (digit_lt q i j)
 
 end MD

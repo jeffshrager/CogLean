@@ -27,6 +27,7 @@
     - postulates M1-M5 and predictions 1-12 (`docs/PREDICTIONS.md`);
     - the column backup from single-digit DOA trials;
     - discrimination after confusion;
-    - nets learned by EPAM are clean (`learnAll_clean`).
+    - nets learned by EPAM are clean (`learnAll_clean`);
+    - further features (M1a–M1c: zeros, magnitude, column facts) and Predictions 13–18 (`FeaturePhenomena.lean`).
 
     To do: learning sequences over many trials; carrying with errors; columns that are not independent.

@@ -17,7 +17,8 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
   - no interference with practiced problems.
 - `MultiDigit/Columns.lean`: the column backup, built from single-digit facts with carries, which can be DOA trials. Carrying adds no error, and a column error is a single-digit error moved to its place.
 - `MultiDigit/Learning.lean`: discrimination after a confusion removes it, and only it, and the problem is then worked out by the columns until its own associations are strengthened. The near-miss predictions hold for every net EPAM learns.
-- `MultiDigit/Example.lean`: worked cases, a check that the theorems apply.
+- `MultiDigit/Features.lean`, `MultiDigit/FeaturePhenomena.lean`: further features a code may carry (zeros, magnitude as thresholds, column facts), and what confusions then keep: no confusion with a round problem once its zeros are tested; confused digits between the same tested thresholds; harmless confusions, or errors in multiples of 100, once column facts are tested.
+- `MultiDigit/Example.lean`, `MultiDigit/Example2.lean`: worked cases, a check that the theorems apply.
 - [`docs/PREDICTIONS.md`](docs/PREDICTIONS.md): every prediction with its full proof, the test it suggests and what it rests on.
 
 Next: a learning sequence over many trials (discrimination and strengthening together); errors in carrying.
