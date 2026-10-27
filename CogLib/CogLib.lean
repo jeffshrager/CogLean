@@ -2,6 +2,7 @@ import CogLib.Rep.Features
 import CogLib.Rep.Distribution
 import CogLib.Memory.DiscriminationNet
 import CogLib.Memory.Cue
+import CogLib.Memory.Activation
 import CogLib.Control.Attention
 import CogLib.Control.Serial
 import CogLib.Process.DiscriminationLearning

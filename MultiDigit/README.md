@@ -25,7 +25,8 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
 - `MultiDigit/Learning.lean`: discrimination after a confusion removes it, and only it, and the problem is then worked out by the columns until its own associations are strengthened. The near-miss predictions hold for every net EPAM learns.
 - `MultiDigit/Features.lean`, `MultiDigit/FeaturePhenomena.lean`: further features a code may carry (zeros, magnitude as thresholds, column facts), and what confusions then keep: no confusion with a round problem once its zeros are tested; confused digits between the same tested thresholds; harmless confusions, or errors in multiples of 100, once column facts are tested.
 - `MultiDigit/Example.lean`, `MultiDigit/Example2.lean`: worked cases, a check that the theorems apply.
+- `MultiDigit/ExampleACTR.lean`: the first worked case with ACT-R's declarative memory (`Cog.actRetriever`) in place of the net. Confusion is graded; no problem, not even a practiced one, is retrieved for certain; `AgreesOn` fails; and studying a new problem raises the errors on a practiced one. See the table in `docs/PREDICTIONS.md`.
 - [`sim/`](sim/README.md): a blind Python simulation of the model, written from a prose spec alone, and checked against preregistered predictions and Lean's exact distributions (`Export.lean`).
 - [`docs/PREDICTIONS.md`](docs/PREDICTIONS.md): every prediction with its full proof, the test it suggests and what it rests on.
 
-Next: an ACT-R declarative-memory instance of `trialWith` (`../OPEN_ISSUES.md` #16); a learning sequence over many trials (discrimination and strengthening together); errors in carrying.
+Next: ACT-R with general decay and temperature, and a check against PyACTUp (`../OPEN_ISSUES.md` #16); a learning sequence over many trials (discrimination and strengthening together); errors in carrying.

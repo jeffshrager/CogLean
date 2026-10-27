@@ -4,7 +4,9 @@ What the further problem features (M1a-M1c) predict about confusions.
 Every theorem holds for any encoding satisfying the law in question, and any
 net, strengths, criterion, search length and backup. Each says that a
 confused problem agrees with what it is confused with on whatever the
-features its path tests determine (`Net.confusion_preserves`).
+features its path tests determine. The three basic ones (`confusion_keeps_zeros`,
+`confusion_same_side`, `confused_colSum`) are proved for any memory with
+`AgreesOn` (`AnyMemory.*`), and the net supplies it (`net_agreesOn`).
 
 * Zeros: `confusion_keeps_zeros`; `round_confusion_exact`,
   `round_confusion_harmless`: a problem confused with a round one, by a net
@@ -32,16 +34,19 @@ open Cog Dist
 variable {E : Encoding} (N : Net) (str : Item → Nat → Rat) (as : List Nat) (cc : Rat) (n : Nat)
   (backup : Problem → Dist Nat)
 
-/-! ### Zeros (M1a) -/
+/-! ### With any memory that agrees on the features concerned -/
 
-/-- **Confusions keep zeros.** If `x`'s path tests whether a digit is 0, `x`
-has a 0 there exactly when `q` does. -/
+namespace AnyMemory
+
+variable (retrieve : Item → Dist (Option Item))
+
+/-- **Confusions keep zeros**, with any memory that agrees on the digit's
+zero feature. -/
 theorem confusion_keeps_zeros (Z : Zeros E) (x q : Problem) (i : Addend) (j : Place)
-    (hnd : N.images.Nodup) (hq : N.select (E.code q) = some (E.code q))
-    (hx : N.select (E.code x) = some (E.code q)) (hcover : Z.zero i j ∈ N.path (E.code x)) :
+    (hagree : Phenomena.AgreesOn retrieve (E.code x) [Z.zero i j])
+    (hx : (retrieve (E.code x)).Possible (some (E.code q))) :
     x.digit i j = 0 ↔ q.digit i j = 0 := by
-  have := Net.confusion_preserves N E.code _ _ (Z.determines i j) x q hnd hq hx
-    (by simpa using hcover)
+  have := Phenomena.confusion_preserves_of retrieve E.code _ _ (Z.determines i j) x q hagree hx
   have hb : (x.digit i j == 0) = (q.digit i j == 0) := this
   constructor
   · intro h
@@ -50,6 +55,36 @@ theorem confusion_keeps_zeros (Z : Zeros E) (x q : Problem) (i : Addend) (j : Pl
   · intro h
     have h' : (x.digit i j == 0) = true := by rw [hb]; simp [h]
     simpa using h'
+
+/-- **Confusions keep the side of a threshold**, with any memory that agrees
+on it. -/
+theorem confusion_same_side (M : Magnitude E) (x q : Problem) (i : Addend) (j : Place) (k : Nat)
+    (hk : k < 9) (hagree : Phenomena.AgreesOn retrieve (E.code x) [M.above i j k])
+    (hx : (retrieve (E.code x)).Possible (some (E.code q))) :
+    k < x.digit i j ↔ k < q.digit i j := by
+  have := Phenomena.confusion_preserves_of retrieve E.code _ _ (M.determines i j k hk) x q
+    hagree hx
+  simpa [decide_eq_decide] using this
+
+/-- **Confusions keep a column's sum**, with any memory that agrees on its
+fact features. -/
+theorem confused_colSum (C : ColumnFacts E) (x q : Problem) (j : Place)
+    (hagree : Phenomena.AgreesOn retrieve (E.code x) (C.fact j))
+    (hx : (retrieve (E.code x)).Possible (some (E.code q))) : x.colSum j = q.colSum j :=
+  Phenomena.confusion_preserves_of retrieve E.code _ _ (C.determines j) x q hagree hx
+
+end AnyMemory
+
+/-! ### Zeros (M1a) -/
+
+/-- **Confusions keep zeros.** If `x`'s path tests whether a digit is 0, `x`
+has a 0 there exactly when `q` does. -/
+theorem confusion_keeps_zeros (Z : Zeros E) (x q : Problem) (i : Addend) (j : Place)
+    (hnd : N.images.Nodup) (hq : N.select (E.code q) = some (E.code q))
+    (hx : N.select (E.code x) = some (E.code q)) (hcover : Z.zero i j ∈ N.path (E.code x)) :
+    x.digit i j = 0 ↔ q.digit i j = 0 :=
+  AnyMemory.confusion_keeps_zeros N.retrieve Z x q i j
+    (net_agreesOn N _ _ _ hnd hq hx (by simpa using hcover)) (N.possible_retrieve _ _ hx)
 
 /-- A problem is fixed by its digits. -/
 theorem Problem.eq_of_digits (x q : Problem) (h : ∀ i j, x.digit i j = q.digit i j)
@@ -101,10 +136,9 @@ theorem confusion_same_side (M : Magnitude E) (x q : Problem) (i : Addend) (j : 
     (hnd : N.images.Nodup) (hq : N.select (E.code q) = some (E.code q))
     (hx : N.select (E.code x) = some (E.code q)) (hk : k < 9)
     (hcover : M.above i j k ∈ N.path (E.code x)) :
-    k < x.digit i j ↔ k < q.digit i j := by
-  have := Net.confusion_preserves N E.code _ _ (M.determines i j k hk) x q hnd hq hx
-    (by simpa using hcover)
-  simpa [decide_eq_decide] using this
+    k < x.digit i j ↔ k < q.digit i j :=
+  AnyMemory.confusion_same_side N.retrieve M x q i j k hk
+    (net_agreesOn N _ _ _ hnd hq hx (by simpa using hcover)) (N.possible_retrieve _ _ hx)
 
 /-- **Errors within the gap.** If `x`'s path tests thresholds `lo` and `hi` (each below 9),
 and `q`'s digit lies above `lo` and at most `hi`, so does `x`'s; the two
@@ -127,7 +161,8 @@ theorem confusion_within_gap (M : Magnitude E) (x q : Problem) (i : Addend) (j :
 theorem confused_colSum (C : ColumnFacts E) (x q : Problem) (j : Place) (hnd : N.images.Nodup)
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hcover : ∀ f ∈ C.fact j, f ∈ N.path (E.code x)) : x.colSum j = q.colSum j :=
-  Net.confusion_preserves N E.code _ _ (C.determines j) x q hnd hq hx hcover
+  AnyMemory.confused_colSum N.retrieve C x q j (net_agreesOn N _ _ _ hnd hq hx hcover)
+    (N.possible_retrieve _ _ hx)
 
 /-- An addend's last two digits, in terms of its tens and units. -/
 theorem addend_mod_100 (p : Problem) (i : Addend) :
