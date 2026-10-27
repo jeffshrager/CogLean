@@ -47,37 +47,41 @@ Some families are limiting cases of others. With no noise and an unbounded misma
 
 ## Where the library stands
 
-The pieces exist at small scale.
-- `CogLib/Phenomena/` states phenomena over interfaces:
-  - `IncrementalLearner` with `NonInterference` and `ReachesCriterion`;
-  - `Responder`;
-  - `Retriever` with `StableRetrieval` and `AgreesOn`.
-- `CogLib/Process/DiscriminationLearning.lean` proves that discrimination nets have them.
-- `CogLib/Memory/Activation.lean` is a first strength-family member: ACT-R retrieval with decay 1 and temperature 1, where all of its quantities are rational.
-- `MultiDigit/MultiDigit/AnyMemory.lean` proves the multi-digit predictions for *any* memory, each with the laws it needs. The EPAM versions are corollaries.
-- `MultiDigit/MultiDigit/ExampleACTR.lean` shows the two memories diverging on the same problems:
-  - graded rather than all-or-none confusion;
-  - errors on practiced problems;
-  - interference from new practice.
+**The matrix exists at small scale** (`CogMatrix/`, generated table in `CogMatrix/MATRIX.md`): 5 laws × 4 families, 20 cells, every one a theorem.
 
-It also shows why point 4 is needed: `StableRetrieval` holds for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain (`OPEN_ISSUES.md` #16).
-- `CogMatrix/` is the first matrix: 5 laws (certainty, stability, order-freedom, recency, stored-only retrieval) × 4 families (discrimination, activation, strength, global matching), 20 cells, every one a theorem. Every law is had by some family and lacked by another, and every family has its own row. Global matching was added as a test of the first four laws. It matched strength memory on all of them, which forced the fifth. See `CogMatrix/MATRIX.md`.
+| Family | Certainty | Stability | Order-freedom | Recency | Stored-only |
+|---|---|---|---|---|---|
+| Discrimination (EPAM) | has | has | lacks | lacks | has |
+| Activation (ACT-R, decay 1, temperature 1) | lacks | lacks | lacks | has | has |
+| Strength with a criterion (DOA) | lacks | lacks | has | lacks | has |
+| Global matching (MINERVA 2) | lacks | lacks | has | lacks | lacks |
+
+- The laws are stated over CogLib's `Retriever` interface (study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Each is relative to a starting state and a set of stimuli.
+- Every **has** cell is a general proof for every parameter choice meeting its stated conditions. Every **lacks** cell is a counterexample.
+- Every law is had by some family and lacked by another, and every family has its own row. The generator checks both.
+
+**Point 4 has already done work twice.**
+- In the multi-digit model, the all-or-none law `StableRetrieval` turned out to hold for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain. That is why the matrix's laws are probabilistic.
+- Global matching was added as a test of the first four laws, chosen with the other three families in view. It matched strength memory on all four. The fifth law, stored-only retrieval, separates them, and it names what is distinctive about global matching: its output is a blend, which can be a prototype never studied.
+
+**A theory uses the laws.** `MultiDigit/` states its recognition step for any memory (`trialWith`, `AnyMemory.lean`), proving each prediction from the laws it needs. EPAM's versions follow as corollaries. `ExampleACTR.lean` runs the same problems with ACT-R's memory. There confusion is graded, practiced problems err, and new practice interferes, where EPAM predicts none of these. The multi-digit laws (`StableRetrieval`, `AgreesOn`) are not yet the matrix's laws.
 
 ## Program
 
-1. **Graded laws for `Retriever`:**
-   - frequency monotonicity;
-   - recency monotonicity;
-   - similarity-graded confusion;
-   - graded non-interference;
-   - graded feature agreement.
-
-   Restate the existing all-or-none laws as their special cases.
-2. **Two full columns.** For each law, a general proof or a counterexample for the discrimination family and for the strength family. General means not just a worked example.
-3. **The matrix as an artifact.** A generated table (law × family, with theorem names), and the differential predictions it implies, each with the experiment that would test it.
-4. **A third family.** Global matching (MINERVA 2 or REM) tests whether the laws chosen so far are the right ones.
-5. **Beyond memory.** The same treatment for strategy choice (a strategy-chooser interface, `OPEN_ISSUES.md` #8) and for production systems.
-6. **Reference implementations.** Where a community implementation exists (PyACTUp for ACT-R), check the formalized family against it on shared instances, as `MultiDigit/sim/` does for the blind simulator.
+1. **More families, as tests of the laws.** Each new family should either fit the existing laws or force a new one, as global matching did. Candidates:
+   - REM (likelihood-based global matching);
+   - a distributed or connectionist memory;
+   - CHREST (discrimination with chunking).
+2. **Map the "lacks" cells.** Each is one counterexample. Find the parameter regions where the family does have the law. For example, strength memory with no generalization may have certainty.
+3. **Sharpen the laws.**
+   - Certainty and stability have the same row: separate them or merge them.
+   - Add the graded laws not yet stated: frequency monotonicity, similarity-graded confusion.
+   - Add implications between laws. Some laws may entail others (does certainty plus stability imply stored-only retrieval?).
+4. **Connect theories to the matrix.** Restate the multi-digit laws as matrix laws, so that a theory's differential predictions are read off the matrix. Pair each with the experiment that would test it.
+5. **Beyond memory.** The same treatment for strategy choice (a strategy-chooser interface, `OPEN_ISSUES.md` #8), then production systems. The Common Model of Cognition's modules are a checklist of which interfaces are needed.
+6. **General parameters and reference implementations.**
+   - ACT-R with arbitrary decay and temperature needs real exponentials, so it goes in a Mathlib package; the rational case stays in core.
+   - Check formalized families against community implementations (PyACTUp for ACT-R) on shared instances, as `MultiDigit/sim/` does.
 
 ## Risks
 
