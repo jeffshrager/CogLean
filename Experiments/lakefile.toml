@@ -1,0 +1,9 @@
+name = "experiments"
+defaultTargets = ["Experiments"]
+
+[[lean_lib]]
+name = "Experiments"
+
+[[require]]
+name = "cogmatrix"
+path = "../CogMatrix"

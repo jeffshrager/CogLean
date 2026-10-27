@@ -3,7 +3,10 @@
 ## Library
 
 1. ~~Theory-neutral oscillation and retroactive interference.~~ Done: `Phenomena/Responder.lean` (`Responder`, `ProbResponder`, `Oscillation`, `RetroactiveInterference`); EPAM's `oscillation_phenomenon`, `retroactive_inhibition_phenomenon`.
-2. **Experiments as a layer.** Lift the serial-anticipation machinery (learning schedule, possible responses per trial) out of `EPAM/Epam/Fig41.lean` into `CogLib/Experiments/`.
+2. **Experiments as a layer.** Begun in `Experiments/`: study-test experiments, written once against `Retriever` and run with any memory family (`PrototypeDemo.lean`: EPAM, ACT-R, strength and MINERVA on one experiment, every number a theorem; `curve_flat`, an experiment property from laws). To do:
+   - feedback-driven learning (respond, feedback, update), with exact runs for short sequences, sampled runs for long ones, and statements over all runs; multi-digit addition as the target (#12);
+   - lift EPAM's serial-anticipation machinery (`EPAM/Epam/Fig41.lean`) into the layer;
+   - a recognition decision on familiarity, which needs a richer interface than `Retriever`.
 
 ## EPAM
 

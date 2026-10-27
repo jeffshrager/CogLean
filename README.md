@@ -105,6 +105,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **The theory matrix** (`CogMatrix/`): 5 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem that the family has or lacks the law. Every law separates some families, and every family has its own row ([`CogMatrix/MATRIX.md`](CogMatrix/MATRIX.md)). This is the direction for the library as a whole ([`PROSPECTUS.md`](PROSPECTUS.md)).
 
+**Experiments** (`Experiments/`): an experiment is written once against the memory interface, and any family plugs in. The first one, a study-test experiment with a prototype lure, is run with all four families. Its serial-position curves and lure responses differ as the families' laws predict, and every number is a theorem ([`Experiments/README.md`](Experiments/README.md)).
+
 No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
