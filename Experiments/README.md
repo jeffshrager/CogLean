@@ -51,6 +51,26 @@ The usual workflow is reversed: start from two laws that disagree and derive the
 
 EPAM's order effects come from the shape of the net, not from time. From an empty net, both orders grow the same test. After 000, whichever item is learned first is discriminated from 000, and the probe then always retrieves it: Δ = −2, the most extreme primacy possible. So the same counterbalanced experiment gives recency (ACT-R), no effect (strength, MINERVA), and primacy (EPAM, with a suitable prior list).
 
+## A second task through the same composition (`FaceNaming.lean`)
+
+The composition extracted from multi-digit addition (`Cog.recognizeRetrieve`: recognize, then retrieve, else back up) is used for a task with no arithmetic. A face is recognized as a familiar person's, that person's name associations are searched, and the backup is "don't know". Ann (000) and Bob (110) are familiar; the stranger Carl (100) is one feature from each.
+
+- **EPAM.** The net recognizes Carl as Bob, and `Cog.RR.confident_errors` gives *confident misnaming*, for every search length (`epam_confident_misnaming`):
+  - Bob is never misnamed;
+  - every name Carl is given is wrong;
+  - Carl says "don't know" exactly as rarely as Bob.
+
+  The theorem is inherited, not reproved.
+- **ACT-R.** Misnaming is graded (`act_values`): Carl is named Bob 225/391 of the time and Ann 225/782. He says "don't know" more often than Bob (107/782 vs 229/2254, `act_more_dont_know`), and Bob himself is sometimes called Ann.
+
+| | EPAM | ACT-R |
+|---|---|---|
+| Carl named Bob | 45/46 | 225/391 |
+| Carl named Ann | 0 | 225/782 |
+| Carl: "don't know" | 1/46 | 107/782 |
+| Bob: "don't know" | 1/46 | 229/2254 |
+| Bob named Ann | 0 | 225/2254 |
+
 ## Limits, and next
 
 - **Representation artifact.** With `±1` features, a trace opposite to the probe gets activation −1 in MINERVA, enough to drive the echo's intensity negative and make retrieval fail. That is why the study list leaves out 000. Hintzman's features also take the value 0.
