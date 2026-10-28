@@ -1,6 +1,6 @@
 # Experiments: written once, run with any memory
 
-The experiment layer (`../OPEN_ISSUES.md` #2), begun with the simplest case. An experiment is written against CogLib's `Retriever` interface, and any memory family plugs in: discrimination (EPAM), activation (ACT-R), strength (DOA) or global matching (MINERVA 2). Properties of an experiment can be proved from the laws of `../CogMatrix/`, and then hold for every family with those laws.
+The experiment layer (`../notes/OPEN_ISSUES.md` #2), begun with the simplest case. An experiment is written against CogLib's `Retriever` interface, and any memory family plugs in: discrimination (EPAM), activation (ACT-R), strength (DOA) or global matching (MINERVA 2). Properties of an experiment can be proved from the laws of `../CogMatrix/`, and then hold for every family with those laws.
 
 ```sh
 cd Experiments && lake build    # builds CogLib and CogMatrix too; core Lean only
@@ -29,4 +29,4 @@ Every number is a theorem. EPAM's flat curve is proved from its laws (`epam_curv
 
 - **Representation artifact.** With `±1` features, a trace opposite to the probe gets activation −1 in MINERVA, enough to drive the echo's intensity negative and make retrieval fail. That is why the study list leaves out 000. Hintzman's features also take the value 0.
 - **"Called old" is a crude recognition rule** (retrieved something studied). A recognition decision on familiarity (MINERVA's intensity, ACT-R's activation) needs a richer interface than `Retriever`.
-- **Next:** feedback-driven learning (respond, feedback, update), with exact runs for short sequences, sampled runs for long ones, and statements over all runs. Multi-digit addition is the target (`../OPEN_ISSUES.md` #12).
+- **Next:** feedback-driven learning (respond, feedback, update), with exact runs for short sequences, sampled runs for long ones, and statements over all runs. Multi-digit addition is the target (`../notes/OPEN_ISSUES.md` #12).

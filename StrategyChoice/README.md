@@ -47,7 +47,7 @@ The model's phenomena (`StrategyChoice/Phenomena.lean`):
 | A more peaked distribution gives less overt strategy use (p. 245) | **not in general**: `peaking_can_raise_overt_use` |
 | Learning from a correct answer, by any strategy, never raises retrieval errors (A6) | `correct_strengthening_lowers_errors` |
 
-The last is a finding. Moving .01 of strength to the correct answer, already the strongest, can raise predicted overt strategy use. In the example, (.38, .31, .31) becomes (.39, .30, .31), and the mean over the chapter's twelve criteria rises from 7/12 to 73/120 with search length 1. The cause is that a wrong answer falls to a criterion and so below it. In a Python check of random distributions, no such case appeared when the criterion was spread uniformly; there, the conjecture is monotonicity in the majorization order (`../OPEN_ISSUES.md`).
+The last is a finding. Moving .01 of strength to the correct answer, already the strongest, can raise predicted overt strategy use. In the example, (.38, .31, .31) becomes (.39, .30, .31), and the mean over the chapter's twelve criteria rises from 7/12 to 73/120 with search length 1. The cause is that a wrong answer falls to a criterion and so below it. In a Python check of random distributions, no such case appeared when the criterion was spread uniformly; there, the conjecture is monotonicity in the majorization order (`../notes/OPEN_ISSUES.md`).
 
 ## Data and predictions
 
@@ -59,7 +59,7 @@ The last is a finding. Moving .01 of strength to the correct answer, already the
 
 ## Not yet done
 
-See `../OPEN_ISSUES.md`:
+See `../notes/OPEN_ISSUES.md`:
 
 - the learning simulation (A6 is stated, with its effect on retrieval errors);
 - the full 25-problem matrix;

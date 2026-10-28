@@ -1,4 +1,4 @@
-"""Generate MATRIX.md from the cells in CogMatrix/Matrix/*.lean.
+"""Generate ../notes/MATRIX.md from the cells in CogMatrix/Matrix/*.lean.
 
 A cell is a theorem named after a law (`certainty`) when the family has the
 law, or `not_<law>` when it lacks it. Run from CogMatrix/.
@@ -65,5 +65,5 @@ for l in LAWS:
     out.append(f"- **{LAW_NAMES[l]}** (*{ev[l]['status']}*). {ev[l]['summary']}")
     for src in ev[l]["sources"]:
         out.append(f"  - {src}")
-pathlib.Path("MATRIX.md").write_text("\n".join(out) + "\n")
+pathlib.Path("../notes/MATRIX.md").write_text("\n".join(out) + "\n")
 print("\n".join(out))

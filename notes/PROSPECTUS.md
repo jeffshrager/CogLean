@@ -2,7 +2,7 @@
 
 ## The problem
 
-CogLean aims to be general (`README.md`): one library in which the constructs of cognitive science are defined once and theories are compared on common ground. But there are a great many specific models of memory, learning and choice, and new ones keep appearing:
+CogLean aims to be general (`../README.md`): one library in which the constructs of cognitive science are defined once and theories are compared on common ground. But there are a great many specific models of memory, learning and choice, and new ones keep appearing:
 - discrimination nets (EPAM, CHREST);
 - ACT-R's declarative memory;
 - SAM, REM, MINERVA 2 and TODAM;
@@ -61,7 +61,7 @@ That is why the library is built on laws rather than theories. A theory is a lar
 
 Which theory is right is not a claim the library makes. It follows from the second and third rows together. **A refutation spreads.** If people lack a law, every family that has it is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. Without formalization, a refuted assumption lingers in theories that never said they depended on it.
 
-The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `CogMatrix/MATRIX.md`). With the evidence as recorded there, no family fits:
+The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `notes/MATRIX.md`). With the evidence as recorded there, no family fits:
 - People show recency, and only activation has it.
 - People retrieve what they never studied: a category's prototype (Posner & Keele 1968), a word associated with the list (Roediger & McDermott 1995). Only global matching does that.
 
@@ -75,7 +75,7 @@ Activation conflicts only on stored-only retrieval. That points to a specific ne
 
 ## Where the library stands
 
-**The matrix exists at small scale** (`CogMatrix/`, generated table in `CogMatrix/MATRIX.md`): 5 laws × 4 families, 20 cells, every one a theorem.
+**The matrix exists at small scale** (`CogMatrix/`, generated table in `notes/MATRIX.md`): 5 laws × 4 families, 20 cells, every one a theorem.
 
 | Family | Certainty | Stability | Order-freedom | Recency | Stored-only |
 |---|---|---|---|---|---|

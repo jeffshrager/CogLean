@@ -27,7 +27,7 @@
 10. **ACT-R declarative memory**, after strategy choice, as a rival theory of the same data: its tutorial `siegler-model.lisp` fits the 4-year-olds' answer distributions by partial matching, with no backup strategy, criterion or learning. Needs Mathlib (`Real.log`, `Real.exp`) in an `ACTR/` package only.
 11. Other candidates: Yngve's depth hypothesis (bounded-memory sentence production); a production-system theory; SCADS (Shrager & Siegler 1998), strategy discovery.
 12. **Multi-digit addition** (`MultiDigit/`, EPAM + DOA). Done:
-    - postulates M1-M5 and predictions 1-12 (`docs/PREDICTIONS.md`);
+    - postulates M1-M5 and predictions 1-12 (`MultiDigit_PREDICTIONS.md`);
     - the column backup from single-digit DOA trials;
     - discrimination after confusion;
     - nets learned by EPAM are clean (`learnAll_clean`);
@@ -41,7 +41,7 @@
 15. **Initial associations of a discriminated problem** (O2 in `MultiDigit/sim/SPEC.md`). The predicted sequence (confident error, then columns, then fluent retrieval) holds when they are empty, is skipped when they hold the correct answer, and fails when they copy the neighbour's associations. The model must say which, and the sequence should then be proved.
 16. **ACT-R declarative memory as a second memory for `MultiDigit`** (cf. #10). Done:
     - `CogLib/Memory/Activation.lean`: `actRetriever`, ACT-R retrieval for decay 1 and temperature 1 (rational: base level `Σ 1/(t - t_k)`, times `μ^mismatches`, with failure weight `θ`). `Act.retrieve_not_certain`.
-    - `MultiDigit/ExampleACTR.lean`: the worked case with ACT-R. The differences are proved there: graded confusion, no certain retrieval, `¬ AgreesOn`, interference with a practiced problem (`docs/PREDICTIONS.md`, "Which predictions need EPAM").
+    - `MultiDigit/ExampleACTR.lean`: the worked case with ACT-R. The differences are proved there: graded confusion, no certain retrieval, `¬ AgreesOn`, interference with a practiced problem (`MultiDigit_PREDICTIONS.md`, "Which predictions need EPAM").
 
     To do:
     - General results, not just the worked case. Frequency and recency raise retrieval probability; each mismatch lowers it; `¬ AgreesOn` whenever μ > 0 and a stored chunk differs on a feature.
@@ -54,5 +54,5 @@
     - The evidence row (`CogMatrix/evidence.json`) is a judgment. Have it checked by someone who knows the literature, and add laws' settings (recall vs recognition, immediate vs delayed test).
     - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty, and global matching with few traces may.
     - Certainty and stability have the same row (only discrimination has them). Find what separates them, or merge them.
-    - Graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit/docs/PREDICTIONS.md`'s table is read off the matrix.
+    - Graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit_PREDICTIONS.md`'s table is read off the matrix.
     - More interfaces: strategy choice (#8), then production systems.

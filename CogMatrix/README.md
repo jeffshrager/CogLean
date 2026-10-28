@@ -1,10 +1,10 @@
 # CogMatrix: laws of memory, model families, and the theory matrix
 
-The direction in `../PROSPECTUS.md`, begun with retrieval. Laws are theory-neutral properties of a `Retriever` (CogLib's interface: study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Model families are formalized once, with their parameters free. Each cell of the matrix is a theorem: the family has the law, under stated conditions, or it lacks it, by a counterexample.
+The direction in `../notes/PROSPECTUS.md`, begun with retrieval. Laws are theory-neutral properties of a `Retriever` (CogLib's interface: study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Model families are formalized once, with their parameters free. Each cell of the matrix is a theorem: the family has the law, under stated conditions, or it lacks it, by a counterexample.
 
 ```sh
 cd CogMatrix && lake build     # builds CogLib too; core Lean only
-python3 gen_matrix.py           # regenerates MATRIX.md from the cells
+python3 gen_matrix.py           # regenerates ../notes/MATRIX.md from the cells
 ```
 
 - `CogMatrix/Laws.lean`: the laws. Each is stated relative to a starting state `s0` and a set `U` of stimuli that may be studied.
@@ -16,7 +16,7 @@ python3 gen_matrix.py           # regenerates MATRIX.md from the cells
 - `CogMatrix/Families/Minerva.lean`: the global-matching family (MINERVA 2). Every study stores a trace; a probe activates all traces by the cube of their similarity, and memory returns the echo, their weighted sum read feature by feature.
 - `CogMatrix/Families/Strength.lean`: the strength family (after the distributions-of-associations model). Strengths only add, the probe samples in proportion to strength discounted by mismatch, and a criterion and a search length apply. The other two families come from CogLib: discrimination nets (`netRetriever`) and activation (`actRetriever`, ACT-R with decay 1 and temperature 1).
 - `CogMatrix/Matrix/*.lean`: the cells, one file per family. `Common.lean` is the small universe the counterexamples use: the eight 3-bit codes.
-- [`MATRIX.md`](MATRIX.md): the matrix, generated. It also shows a row for people, from `evidence.json` (a judgment of what experiments show, with sources, kept apart from the theorems), and how well each family fits it.
+- [`../notes/MATRIX.md`](../notes/MATRIX.md): the matrix, generated. It also shows a row for people, from `evidence.json` (a judgment of what experiments show, with sources, kept apart from the theorems), and how well each family fits it.
 
 ## What the matrix shows
 
@@ -34,7 +34,7 @@ With the evidence as recorded in `evidence.json`, no family fits:
 - people lack certainty, order-freedom and stored-only retrieval, and have recency; stability is mixed (it fails in recall but may hold in recognition);
 - activation comes closest: it conflicts only on stored-only retrieval, which people violate (prototypes, false memories).
 
-ACT-R with blended retrieval is the natural next family. See `../PROSPECTUS.md`, "What is true here", for what this row is and is not.
+ACT-R with blended retrieval is the natural next family. See `../notes/PROSPECTUS.md`, "What is true here", for what this row is and is not.
 
 The discrimination family here is EPAM's recognition net. EPAM's paired-associate memory, with cue codes (`CogLib/Process/Association.lean`), shows retroactive interference (`netResponder_retroactiveInterference`). So it would not have stability: the law depends on which part of a theory is put in the matrix.
 
@@ -47,4 +47,4 @@ The discrimination family here is EPAM's recognition net. EPAM's paired-associat
   - activation: stored-only retrieval holds always;
   - global matching: order-freedom holds always.
 - **A "lacks" cell is a single counterexample.** It shows the family does not have the law in general. It leaves open whether some region of the parameters has it. For example, strength memory with no generalization (`μ = 0`) may well have certainty. Mapping those regions is further work.
-- **The laws were chosen with these three families in view.** Global matching was one test of that, and it forced a fifth law. Further families are further tests (`../OPEN_ISSUES.md` #17).
+- **The laws were chosen with these three families in view.** Global matching was one test of that, and it forced a fifth law. Further families are further tests (`../notes/OPEN_ISSUES.md` #17).

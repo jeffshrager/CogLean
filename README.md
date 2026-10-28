@@ -86,7 +86,7 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
   - non-interference, and learning to criterion;
   - total time growing with the amount to be learned;
   - the serial position effect.
-- **An experiment it computes:** serial anticipation of a six-syllable list. The responses the postulates make possible are compared trial by trial with a published simulation (33 or 34 of 34 agree, depending on the stimulus codes), and the result's sensitivity to codes, noticing order and parameters is measured (`EPAM/analysis/RESULTS.md`).
+- **An experiment it computes:** serial anticipation of a six-syllable list. The responses the postulates make possible are compared trial by trial with a published simulation (33 or 34 of 34 agree, depending on the stimulus codes), and the result's sensitivity to codes, noticing order and parameters is measured (`notes/EPAM_robustness_RESULTS.md`).
 
 **Strategy choice** (`StrategyChoice/`), the second: the distributions-of-associations model (Siegler & Shrager 1984), in which children's errors, solution times and use of overt strategies on addition problems all depend on the distribution of associations between each problem and its possible answers.
 
@@ -97,13 +97,13 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
   - moving strength to the correct answer never raises the error share on retrieval trials.
 - **A limit it finds:** making a distribution more peaked can *raise* overt strategy use, even averaged over the chapter's twelve confidence criteria, so "peaked distributions mean fewer overt strategies" needs a condition the chapter doesn't state.
 - **Predictions it computes:** exact overt-use predictions for six problems from the chapter's own associative strengths.
-- **The theorems, with complete proofs:** [`StrategyChoice/docs/THEOREMS.md`](StrategyChoice/docs/THEOREMS.md) states every result that holds without reference to specific numerical values, proves each in full, and gives the Lean name of each.
+- **The theorems, with complete proofs:** [`notes/StrategyChoice_THEOREMS.md`](notes/StrategyChoice_THEOREMS.md) states every result that holds without reference to specific numerical values, proves each in full, and gives the Lean name of each.
 
-**Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a fast, retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. Column work is built from single-digit DOA trials: carrying adds no error, so a column error is a single-digit error moved to its place. Learning removes a confusion without disturbing anything else, and the problem is then worked out by the columns until its own associations are strengthened. The predictions, with proofs, are in [`MultiDigit/docs/PREDICTIONS.md`](MultiDigit/docs/PREDICTIONS.md).
+**Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a fast, retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. Column work is built from single-digit DOA trials: carrying adds no error, so a column error is a single-digit error moved to its place. Learning removes a confusion without disturbing anything else, and the problem is then worked out by the columns until its own associations are strengthened. The predictions, with proofs, are in [`notes/MultiDigit_PREDICTIONS.md`](notes/MultiDigit_PREDICTIONS.md).
 
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
-**The theory matrix** (`CogMatrix/`): 5 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem that the family has or lacks the law. Every law separates some families, and every family has its own row ([`CogMatrix/MATRIX.md`](CogMatrix/MATRIX.md)). This is the direction for the library as a whole ([`PROSPECTUS.md`](PROSPECTUS.md)).
+**The theory matrix** (`CogMatrix/`): 5 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem that the family has or lacks the law. Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
 
 **Experiments** (`Experiments/`): an experiment is written once against the memory interface, and any family plugs in. The first one, a study-test experiment with a prototype lure, is run with all four families. Its serial-position curves and lure responses differ as the families' laws predict, and every number is a theorem ([`Experiments/README.md`](Experiments/README.md)).
 
@@ -111,7 +111,7 @@ No `sorry` anywhere; only Lean's standard axioms.
 
 ## Roadmap
 
-The direction for making the library general, as a hierarchy of laws, model families as instances, and a theory-by-law matrix, is set out in [`PROSPECTUS.md`](PROSPECTUS.md). Its first matrix (5 laws × 4 memory families, every cell a theorem) is in [`CogMatrix/`](CogMatrix/README.md).
+The direction for making the library general, as a hierarchy of laws, model families as instances, and a theory-by-law matrix, is set out in [`notes/PROSPECTUS.md`](notes/PROSPECTUS.md). Its first matrix (5 laws × 4 memory families, every cell a theorem) is in [`CogMatrix/`](CogMatrix/README.md).
 
 1. **Library structure.** Done in outline: `CogLib/` with `Rep`, `Memory`, `Control`, `Process` and `Phenomena` layers, imported by `EPAM/` and `StrategyChoice/`. Still to do:
    - experiments as their own layer (`Experiments/SerialAnticipation`), lifted from EPAM's Fig. 4.1 machinery.
@@ -123,7 +123,7 @@ The direction for making the library general, as a hierarchy of laws, model fami
    - immediate memory.
 3. **Finish strategy choice:** the learning simulation (A6 is stated), the full 25-problem matrix, and a condition under which peaking does reduce overt strategy use.
 4. **Multi-digit addition:** learning sequences over many trials (discrimination and strengthening together); errors in carrying.
-5. **The matrix** (`PROSPECTUS.md`, Program): more families as tests of the laws; parameter regions of the "lacks" cells; sharper laws; theories' predictions read off the matrix; strategy choice and production systems as further interfaces.
+5. **The matrix** (`notes/PROSPECTUS.md`, Program): more families as tests of the laws; parameter regions of the "lacks" cells; sharper laws; theories' predictions read off the matrix; strategy choice and production systems as further interfaces.
    - **ACT-R as a rival theory of the same data.** ACT-R's tutorial fits the same children's answers by partial matching. Its memory is already a matrix family (the rational case). ACT-R for strategy choice, and with general parameters (Mathlib, in its own package), are still to do.
 6. **Other theories:** a bounded-memory account of sentence production (Yngve's depth hypothesis); a production-system theory; strategy discovery (SCADS, Shrager & Siegler 1998).
 7. **Comparisons:** for each phenomenon, which theories have it, under what conditions, and through which shared lemmas. This is what the matrix generalizes.

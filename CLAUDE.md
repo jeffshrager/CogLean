@@ -5,7 +5,7 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 ## Build
 
 - Lean 4.35.0 via elan in `~/.elan`: `export PATH=$HOME/.elan/bin:$PATH`.
-- `CogLib/` is the general library, a Lake package that imports no theory. Each theory is its own Lake package (currently `EPAM/`, `StrategyChoice/` and `MultiDigit/`) that requires CogLib by path: `cd EPAM && lake build` builds both. `MultiDigit/` combines two theories and also requires `StrategyChoice/`. `CogMatrix/` (laws, model families and the theory matrix; see `PROSPECTUS.md`) requires CogLib. Regenerate its `MATRIX.md` with `python3 gen_matrix.py` after changing a cell. `Experiments/` (experiments written once against `Retriever`, run with any family) requires CogMatrix.
+- `CogLib/` is the general library, a Lake package that imports no theory. Each theory is its own Lake package (currently `EPAM/`, `StrategyChoice/` and `MultiDigit/`) that requires CogLib by path: `cd EPAM && lake build` builds both. `MultiDigit/` combines two theories and also requires `StrategyChoice/`. `CogMatrix/` (laws, model families and the theory matrix; see `notes/PROSPECTUS.md`) requires CogLib. Regenerate the matrix, `notes/MATRIX.md`, with `python3 gen_matrix.py` after changing a cell. `Experiments/` (experiments written once against `Retriever`, run with any family) requires CogMatrix.
 - Keep the split clean: general constructs, general theorems, and theory-neutral phenomena go in CogLib; a theory's directory holds its postulates (as choices of CogLib constructs), its parameters, its experiments, and its phenomena theorems.
 - Core Lean only, no Mathlib. Probabilities are core `Rat`; `decide +kernel` evaluates concrete rationals (plain `decide` gets stuck on them). Mathlib, when ACT-R needs `Real.log`/`exp`, goes in an `ACTR/` package only; CogLib stays core-only.
 - `../ACT-R/` (outside the repo) is the ACT-R 7 standalone build: executables, tutorial (`.content/tutorial/`), docs; no module source.
@@ -18,5 +18,6 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 - Commit after every successful major change without asking. Push only when asked.
 - Session summaries: a new file per checkpoint, `seshsums/YYYYMMDD_HHMM_seshsum.md`, then commit (and push when asked).
 - Prototype in Python with semantics identical to the Lean definitions when iterating on experiments (see `EPAM/analysis/robustness.py`), then certify in Lean with `decide`.
-- Blind simulations are a different thing (`MultiDigit/sim/`): the prose spec goes to a fresh agent with no access to the Lean code, and the predictions are preregistered and committed before the simulator exists. Don't edit the delivered simulator; record disagreements in its `README.md` and `OPEN_ISSUES.md`.
-- Open work is tracked in `OPEN_ISSUES.md`.
+- Blind simulations are a different thing (`MultiDigit/sim/`): the prose spec goes to a fresh agent with no access to the Lean code, and the predictions are preregistered and committed before the simulator exists. Don't edit the delivered simulator; record disagreements in its `README.md` and `notes/OPEN_ISSUES.md`.
+- Open work is tracked in `notes/OPEN_ISSUES.md`.
+- Write-ups that are not a directory's README (the prospectus, open issues, theorem and prediction documents, the generated matrix, analysis results) go in `notes/`. READMEs, seshsums, and `MultiDigit/sim/`'s preregistered files stay where they are.

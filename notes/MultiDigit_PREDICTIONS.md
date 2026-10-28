@@ -34,7 +34,7 @@ Write R_q for the chance that one search of q's associations clears the criterio
 The predictions rest on results proved earlier.
 
 - **From EPAM:** recognition depends only on the features the net examines along the path, and learning one item never disturbs the recognition of another.
-- **From DOA** (see `StrategyChoice/docs/THEOREMS.md`): retrieval is exhausted with probability (1 − R)ⁿ (Theorem 1), and it states an answer with property P with probability Q_P · Gₙ (Theorem 2).
+- **From DOA** (see `StrategyChoice_THEOREMS.md`): retrieval is exhausted with probability (1 − R)ⁿ (Theorem 1), and it states an answer with property P with probability Q_P · Gₙ (Theorem 2).
 
 Two new lemmas about nets were needed.
 
@@ -73,7 +73,7 @@ Two new lemmas about nets were needed.
 
 *Proof.* Part 1 is Prediction 3 for q itself. For part 2, an answer clears the criterion only if it is q's sum, which is not x's sum. So "clears the criterion with a wrong answer for x" and "clears the criterion" are the same event, and by Prediction 2 the error and retrieval probabilities are equal. Part 3 is Prediction 1 for both problems, since both are routed to q. ∎
 
-*Why it matters.* In DOA, a problem's retrieval errors and its backup use come from the same distribution, a flat one, so they rise and fall together (`StrategyChoice/docs/THEOREMS.md`, Theorems 6 and 7). Confusion gives x another problem's distribution: q's low backup use, with all its retrieval trials wrong. So multi-digit performance should contain errors that are fast, retrieved, and not accompanied by any extra backup use. Single-digit DOA performance contains none.
+*Why it matters.* In DOA, a problem's retrieval errors and its backup use come from the same distribution, a flat one, so they rise and fall together (`StrategyChoice_THEOREMS.md`, Theorems 6 and 7). Confusion gives x another problem's distribution: q's low backup use, with all its retrieval trials wrong. So multi-digit performance should contain errors that are fast, retrieved, and not accompanied by any extra backup use. Single-digit DOA performance contains none.
 
 **Prediction 5 (confusion with the same sum is harmless).** If x is recognized as q, q is recognized as itself, and the two have the same sum, then whole-problem retrieval errs on x exactly as often as on q. In particular, confusing a + b with b + a costs nothing.
 
