@@ -9,7 +9,7 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
 ```
 
 - `MultiDigit/Postulates.lean`: the postulates M1–M4 and the trial. `trialWith` is the trial with any memory in place of the net (M2 left open: `retrieve` says what a code calls up, with probabilities). The EPAM trial is `trialWith` with the net's retrieval (`trial_eq_trialWith`).
-- `MultiDigit/AnyMemory.lean`: the predictions for any memory, each with the law of memory it needs, if any:
+- `MultiDigit/AnyMemory.lean`: the predictions for any memory, each with the law of memory it needs, if any. The trial is an instance of CogLib's general composition `Cog.recognizeRetrieve` (recognize, then retrieve, else back up), and the predictions that don't mention digits are proved there, for any problems and answers, and carried here by `prob_trialWith`:
   - none: column use and whole-problem answers are retrieval-weighted mixtures (`columns_prob`, `whole_prob`); confident errors, neighbour's answer and harmless confusions, for a code that calls up a stored problem for certain;
   - `AgreesOn` (what a code calls up agrees with it on the digit's features): near misses;
   - `StableRetrieval` (studying one problem leaves another's retrieval unchanged): practiced problems stay practiced.

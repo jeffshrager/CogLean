@@ -57,4 +57,5 @@
     - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty, and global matching with few traces may.
     - Certainty and stability have the same row (only discrimination has them). Find what separates them, or merge them.
     - ~~Unify the laws.~~ Done: the matrix laws are in `CogLib/Phenomena/RetrievalLaws.lean`, with `stableRetrievalOn_of_stability` and `stableRetrieval_of_neverCertain` relating them to `StableRetrieval`; `AgreesOn` is documented as a per-state confusion property, not a law. Still to do: graded versions of the MultiDigit laws (#16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit_PREDICTIONS.md`'s table is read off the matrix.
+    - ~~Extract the composition.~~ Done: `CogLib/Process/RecognizeRetrieve.lean` (recognize, retrieve, back up; `RR.confident_errors` and the rest), with MultiDigit as an instance (`AnyMemory.prob_trialWith`). Next: a non-arithmetic task through it.
     - More interfaces: strategy choice (#8), then production systems.

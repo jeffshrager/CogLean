@@ -7,6 +7,11 @@ retrieval, encoding, strengths, criterion, search length and backup, and
 says which law of memory, if any, it needs. `Phenomena.lean` derives the
 EPAM versions, with a discrimination net's retrieval.
 
+The trial is an instance of CogLib's general composition,
+`Cog.recognizeRetrieve` (recognize, then retrieve, else back up). The
+theorems that don't mention digits are proved there, for any problems and
+answers, and carried here by `prob_trialWith`.
+
 With no law of memory:
 * `columns_prob` (strategy nesting): the chance of using the columns is the
   average, over what the code calls up, of `1` (nothing) and `(1 - R_y)^n`
@@ -53,59 +58,76 @@ namespace AnyMemory
 variable (retrieve : Item → Dist (Option Item)) (E : Encoding) (str : Item → Nat → Rat)
   (as : List Nat) (cc : Rat) (n : Nat) (backup : Problem → Dist Nat)
 
-/-- The chance of the columns once `r` is called up. -/
-def columnsAfter : Option Item → Rat
-  | none => 1
-  | some y => (1 - reach as (str y) cc) ^ n
+/-! ### The trial as an instance of `Cog.recognizeRetrieve`
 
-/-- The chance of a whole-problem answer with property `P` once `r` is
-called up. -/
-def wholeAfter (P : Nat → Bool) : Option Item → Rat
-  | none => 0
-  | some y => prob (search as (str y) cc 0 n) (Retrieval.statedSuch P)
+The general theorems are proved once, in CogLib, for any problems and
+answers (`CogLib/Process/RecognizeRetrieve.lean`). This trial is that
+composition, with problem codes from the encoding, answers in `Nat`, the
+column backup, and its own route names. `relabel` translates the routes, and
+`prob_trialWith` carries every probability across. -/
+
+/-- The generic routes, in this model's names. -/
+def relabel : Cog.Route × Nat → Route × Nat
+  | (.whole, a) => (.whole, a)
+  | (.backup, a) => (.columns, a)
+
+theorem prob_after (x : Problem) (r : Option Item) (e : Route × Nat → Bool) :
+    prob (afterRetrieval str as cc n backup x r) e =
+      prob (RR.afterRecognition str as cc n backup x r) (fun o => e (relabel o)) := by
+  cases r with
+  | none => simp only [afterRetrieval, RR.afterRecognition, prob_bind_pure]; rfl
+  | some y =>
+    simp only [afterRetrieval, RR.afterRecognition]
+    rw [prob_bind_sum, prob_bind_sum]
+    congr 1
+    apply List.map_congr_left
+    intro rp _
+    obtain ⟨k, p⟩ := rp
+    cases k <;> simp only [prob_pure, prob_bind_pure, relabel]
+
+/-- **Every probability of this trial is a probability of the generic
+composition**, with the routes relabelled. -/
+theorem prob_trialWith (x : Problem) (e : Route × Nat → Bool) :
+    prob (trialWith retrieve E str as cc n backup x) e =
+      prob (recognizeRetrieve E.code retrieve str as cc n backup x) (fun o => e (relabel o)) := by
+  unfold trialWith recognizeRetrieve
+  rw [prob_bind_sum, prob_bind_sum]
+  congr 1
+  apply List.map_congr_left
+  intro rp _
+  rw [prob_after]
+
+theorem isColumns_relabel : (fun o => isColumns (relabel o)) = RR.isBackup (A := Nat) := by
+  funext o; obtain ⟨r, a⟩ := o; cases r <;> rfl
+
+theorem isWhole_relabel : (fun o => isWhole (relabel o)) = RR.isWhole (A := Nat) := by
+  funext o; obtain ⟨r, a⟩ := o; cases r <;> rfl
+
+theorem wholeSuch_relabel (P : Nat → Bool) :
+    (fun o => wholeSuch P (relabel o)) = RR.wholeSuch P := by
+  funext o; obtain ⟨r, a⟩ := o; cases r <;> rfl
+
+theorem wholeWrong_relabel (x : Problem) :
+    (fun o => wholeWrong x (relabel o)) = RR.wholeWrong Problem.sum x := by
+  funext o; obtain ⟨r, a⟩ := o; cases r <;> simp [wholeWrong, RR.wholeWrong, wholeSuch, RR.wholeSuch, relabel]
+
+/-- The chance of the columns once `r` is called up. -/
+abbrev columnsAfter : Option Item → Rat := RR.backupAfter str as cc n
+
+/-- The chance of a whole-problem answer with property `P` once `r` is called
+up. -/
+abbrev wholeAfter (P : Nat → Bool) : Option Item → Rat := RR.wholeAfter str as cc n P
 
 theorem prob_columns_after (x : Problem) (hb : mass (backup x) = 1)
     (hT : ∀ y, total as (str y) ≠ 0) (r : Option Item) :
     prob (afterRetrieval str as cc n backup x r) isColumns = columnsAfter str as cc n r := by
-  cases r with
-  | none =>
-    simp only [afterRetrieval, columnsAfter]
-    rw [prob_backup_part]
-    simpa [isColumns, mass] using hb
-  | some y =>
-    simp only [afterRetrieval, columnsAfter]
-    rw [prob_bind_split _ _ _ (fun _ => false) Retrieval.isExhausted 1]
-    · rw [prob_false, prob_exhausted as (str y) cc (hT y)]; grind
-    · intro r
-      cases r with
-      | stated a k => simp [prob_pure, isColumns, Retrieval.isExhausted]; grind
-      | exhausted =>
-        simp only [Retrieval.isExhausted]
-        rw [prob_backup_part]
-        simp only [isColumns, Route.columns_beq_columns, mass] at hb ⊢
-        rw [hb]; grind
+  rw [prob_after, isColumns_relabel]
+  exact RR.prob_backup_after str as cc n backup x hb hT r
 
 theorem prob_whole_after (x : Problem) (P : Nat → Bool) (r : Option Item) :
     prob (afterRetrieval str as cc n backup x r) (wholeSuch P) = wholeAfter str as cc n P r := by
-  cases r with
-  | none =>
-    simp only [afterRetrieval, wholeAfter]
-    rw [prob_backup_part]
-    simp only [wholeSuch, Route.columns_beq_whole, Bool.false_and]
-    exact prob_false _
-  | some y =>
-    simp only [afterRetrieval, wholeAfter]
-    rw [prob_bind_split _ _ _ (Retrieval.statedSuch P) (fun _ => false) 0]
-    · rw [prob_false]; grind
-    · intro r
-      cases r with
-      | stated a k =>
-        by_cases hp : P a <;> simp [prob_pure, wholeSuch, Retrieval.statedSuch, hp] <;> grind
-      | exhausted =>
-        simp only [Retrieval.statedSuch]
-        rw [prob_backup_part]
-        simp only [wholeSuch, Route.columns_beq_whole, Bool.false_and]
-        rw [prob_false]; grind
+  rw [prob_after, wholeSuch_relabel]
+  exact RR.prob_whole_after str as cc n backup x P r
 
 /-- **Strategy nesting, with any memory.** With a proper backup, the column
 route is taken with the average chance, over what the code calls up, of `1`
@@ -114,18 +136,16 @@ theorem columns_prob (x : Problem) (hb : mass (backup x) = 1)
     (hT : ∀ y, total as (str y) ≠ 0) :
     prob (trialWith retrieve E str as cc n backup x) isColumns =
       ((retrieve (E.code x)).map fun rp => rp.2 * columnsAfter str as cc n rp.1).sum := by
-  unfold trialWith
-  rw [prob_bind_sum]
-  simp only [prob_columns_after str as cc n backup x hb hT]
+  rw [prob_trialWith, isColumns_relabel]
+  exact RR.backup_prob E.code retrieve str as cc n backup x hb hT
 
 /-- **Whole-problem answers, with any memory**: the average, over the stored
 codes called up, of retrieval's chance of stating such an answer. -/
 theorem whole_prob (x : Problem) (P : Nat → Bool) :
     prob (trialWith retrieve E str as cc n backup x) (wholeSuch P) =
       ((retrieve (E.code x)).map fun rp => rp.2 * wholeAfter str as cc n P rp.1).sum := by
-  unfold trialWith
-  rw [prob_bind_sum]
-  simp only [prob_whole_after str as cc n backup x P]
+  rw [prob_trialWith, wholeSuch_relabel]
+  exact RR.whole_prob E.code retrieve str as cc n backup x P
 
 /-- A trial on a code that calls up `r` for certain. -/
 theorem trialWith_certain (x : Problem) (r : Option Item) (h : retrieve (E.code x) = pure r) :
@@ -137,8 +157,8 @@ theorem trialWith_certain (x : Problem) (r : Option Item) (h : retrieve (E.code 
 theorem columns_prob_certain (x : Problem) (r : Option Item) (h : retrieve (E.code x) = pure r)
     (hb : mass (backup x) = 1) (hT : ∀ y, total as (str y) ≠ 0) :
     prob (trialWith retrieve E str as cc n backup x) isColumns = columnsAfter str as cc n r := by
-  rw [trialWith_certain retrieve E str as cc n backup x r h]
-  exact prob_columns_after str as cc n backup x hb hT r
+  rw [prob_trialWith, isColumns_relabel]
+  exact RR.backup_prob_certain E.code retrieve str as cc n backup x r h hb hT
 
 /-- **Whole-problem retrieval depends only on the route.** If `x` calls up
 `y` for certain, whole-problem retrieval on `x` states an answer with
@@ -147,8 +167,8 @@ theorem whole_depends_only_on_route (x : Problem) (y : Item) (P : Nat → Bool)
     (h : retrieve (E.code x) = pure (some y)) :
     prob (trialWith retrieve E str as cc n backup x) (wholeSuch P) =
       prob (search as (str y) cc 0 n) (Retrieval.statedSuch P) := by
-  rw [trialWith_certain retrieve E str as cc n backup x _ h]
-  exact prob_whole_after str as cc n backup x P (some y)
+  rw [prob_trialWith, wholeSuch_relabel]
+  exact RR.whole_depends_only_on_route E.code retrieve str as cc n backup x y P h
 
 /-- Two problems that call up the same stored problem for certain are
 answered alike by whole-problem retrieval. -/
@@ -156,8 +176,8 @@ theorem same_route_same_retrieval (x x' : Problem) (y : Item) (P : Nat → Bool)
     (h : retrieve (E.code x) = pure (some y)) (h' : retrieve (E.code x') = pure (some y)) :
     prob (trialWith retrieve E str as cc n backup x) (wholeSuch P) =
       prob (trialWith retrieve E str as cc n backup x') (wholeSuch P) := by
-  rw [whole_depends_only_on_route retrieve E str as cc n backup x y P h,
-    whole_depends_only_on_route retrieve E str as cc n backup x' y P h']
+  rw [prob_trialWith, prob_trialWith, wholeSuch_relabel]
+  exact RR.same_route_same_retrieval E.code retrieve str as cc n backup x x' y P h h'
 
 /-- **A confused problem gets its neighbour's answer.** If `x` calls up the
 stored `code q` for certain, and `q`'s associations are sharp, then every
@@ -165,15 +185,8 @@ answer whole-problem retrieval gives to `x` is `q`'s sum. -/
 theorem confusion_gives_neighbours_answer (x q : Problem) (hT : total as (str (E.code q)) ≠ 0)
     (h : retrieve (E.code x) = pure (some (E.code q))) (hs : Sharp str cc (E.code q) q) :
     prob (trialWith retrieve E str as cc n backup x) (wholeSuch fun a => a != q.sum) = 0 := by
-  rw [whole_depends_only_on_route retrieve E str as cc n backup x _ _ h, prob_stated _ _ _ _ hT]
-  have : reachSuch as (str (E.code q)) cc (fun a => a != q.sum) = 0 := by
-    simp only [reachSuch]
-    rw [prob_congr _ _ (fun _ => false), prob_false]
-    intro a
-    by_cases ha : above (str (E.code q)) cc a
-    · simp [hs a ha]
-    · simp [ha]
-  rw [this]; grind
+  rw [prob_trialWith, wholeSuch_relabel]
+  exact RR.confusion_gives_neighbours_answer E.code retrieve str as cc n backup Problem.sum x q hT h hs
 
 /-- Retrieval on a sharp stored problem states a wrong answer for `x` exactly
 as often as it states any answer, when `x`'s sum is not `q`'s. -/
@@ -181,22 +194,14 @@ theorem wrong_eq_whole_of_sharp (x q : Problem) (y : Item) (hT : total as (str y
     (h : retrieve (E.code x) = pure (some y)) (hs : Sharp str cc y q) (hne : x.sum ≠ q.sum) :
     prob (trialWith retrieve E str as cc n backup x) (wholeWrong x) =
       prob (trialWith retrieve E str as cc n backup x) isWhole := by
-  rw [wholeWrong, isWhole_eq, whole_depends_only_on_route retrieve E str as cc n backup x y _ h,
-    whole_depends_only_on_route retrieve E str as cc n backup x y _ h,
-    prob_stated _ _ _ _ hT, prob_stated _ _ _ _ hT]
-  congr 1
-  simp only [reachSuch]
-  apply prob_congr
-  intro a
-  by_cases ha : above (str y) cc a
-  · have := hs a ha
-    simp [this, Ne.symm hne]
-  · simp [ha]
+  rw [prob_trialWith, prob_trialWith, wholeWrong_relabel, isWhole_relabel]
+  exact RR.wrong_eq_whole_of_sharp E.code retrieve str as cc n backup Problem.sum x y q.sum hT h hs hne
 
 /-- **Confident errors, with any memory.** Let the stored `q` call up itself
 for certain, with sharp associations, and let `x` (with a different sum)
 call up `q` for certain. Then retrieval never errs on `q`, always errs on
-`x`, and `x` falls back on the columns exactly as rarely as `q` does. -/
+`x`, and `x` falls back on the columns exactly as rarely as `q` does. The
+general theorem is `Cog.RR.confident_errors`. -/
 theorem confident_errors (x q : Problem) (hT : ∀ y, total as (str y) ≠ 0)
     (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
     (hq : retrieve (E.code q) = pure (some (E.code q)))
@@ -207,10 +212,8 @@ theorem confident_errors (x q : Problem) (hT : ∀ y, total as (str y) ≠ 0)
         prob (trialWith retrieve E str as cc n backup x) isWhole ∧
       prob (trialWith retrieve E str as cc n backup x) isColumns =
         prob (trialWith retrieve E str as cc n backup q) isColumns := by
-  refine ⟨confusion_gives_neighbours_answer retrieve E str as cc n backup q q (hT _) hq hs,
-    wrong_eq_whole_of_sharp retrieve E str as cc n backup x q _ (hT _) hx hs hne, ?_⟩
-  rw [columns_prob_certain retrieve E str as cc n backup x _ hx hbx hT,
-    columns_prob_certain retrieve E str as cc n backup q _ hq hbq hT]
+  simp only [prob_trialWith, wholeWrong_relabel, isWhole_relabel, isColumns_relabel]
+  exact RR.confident_errors E.code retrieve str as cc n backup Problem.sum x q hT hbx hbq hq hx hs hne
 
 /-- **Confusion with a problem of the same sum is harmless.** -/
 theorem same_sum_confusion_harmless (x q : Problem)
@@ -218,8 +221,8 @@ theorem same_sum_confusion_harmless (x q : Problem)
     (hx : retrieve (E.code x) = pure (some (E.code q))) (hsum : x.sum = q.sum) :
     prob (trialWith retrieve E str as cc n backup x) (wholeWrong x) =
       prob (trialWith retrieve E str as cc n backup q) (wholeWrong q) := by
-  rw [wholeWrong, wholeWrong, hsum]
-  exact same_route_same_retrieval retrieve E str as cc n backup x q _ _ hx hq
+  rw [prob_trialWith, prob_trialWith, wholeWrong_relabel, wholeWrong_relabel]
+  exact RR.same_correct_confusion_harmless E.code retrieve str as cc n backup Problem.sum x q hq hx hsum
 
 /-- **Commuted confusions are harmless**: confusing `a + b` with `b + a`. -/
 theorem commuted_confusion_harmless (x : Problem)

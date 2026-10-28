@@ -8,6 +8,7 @@ import CogLib.Control.Serial
 import CogLib.Process.DiscriminationLearning
 import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
+import CogLib.Process.RecognizeRetrieve
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
 import CogLib.Phenomena.Retriever
