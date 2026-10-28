@@ -12,9 +12,7 @@
   \titlepage
 \end{frame}
 \note{
-\begin{itemize}
-\item The second detailed talk: how memory families are compared by laws, and how experiments are derived from the laws' disagreements.
-\end{itemize}
+This talk is about comparing families of memory models by proof. I'll describe an abstract memory, six laws a memory may have, and four families of models, then the matrix of which family has which law, how the laws were tested, and what the evidence about people says. Then I'll turn to experiments: one study-test experiment run with four memories, and a counterbalanced experiment derived from two laws that disagree, with a response model that connects it to what participants report.
 }
 
 \begin{frame}{A memory, abstractly}
@@ -29,10 +27,7 @@
   Every law below is a property of this interface. It names no mechanism, but it does assume this representation.
 \end{frame}
 \note{
-\begin{itemize}
-\item Laws are stated relative to a starting state and a set of items that may be studied.
-\item ``Mechanism-neutral, not representation-neutral'' is an important caveat.
-\end{itemize}
+Start with what a memory is, abstractly. You can study an item, which changes the memory's state, and you can retrieve with a probe, which gives a probability distribution over stored items, or nothing. Items are binary feature codes, and similarity is the number of features on which two codes differ. Every law I'll show is a property of this interface. None of them names a mechanism, but they do assume this representation, and that's a limitation I'll come back to.
 }
 
 \begin{frame}{Six laws}
@@ -49,10 +44,7 @@
   \end{tabular}
 \end{frame}
 \note{
-\begin{itemize}
-\item Order-freedom is deliberately narrow: only the last two events are swapped, and only retrieval must agree, not the memory state.
-\item Determinacy is structural as stated, but each ``lacks'' cell exhibits two outcomes with positive probability, so it fails any probabilistic version too.
-\end{itemize}
+To compare memories in general, we need a vocabulary that doesn't mention any mechanism. These are laws: small properties a memory may or may not have. Certainty: something just studied is retrieved for certain. Stability: studying one thing doesn't change another's retrieval. Order-freedom; recency; stored-only, meaning nothing unstudied is ever retrieved; and determinacy, a single outcome. Predictions are then proved from laws, not from particular models.
 }
 
 \begin{frame}{Four families}
@@ -64,9 +56,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Each family is formalized once, with its parameters free. A published model is a choice of parameters within its family.
-\end{itemize}
+And instead of individual models, we formalize families of models, each once, with its parameters free. Discrimination nets, like EPAM. Activation memory, like ACT-R's. Strength memory with a criterion, after the associations model. And global matching, MINERVA 2, where every study leaves a trace and a probe returns a blend of all of them. A published model is then a choice of parameters within its family.
 }
 
 \begin{frame}{The matrix}
@@ -89,10 +79,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Examples of ``has'': EPAM's certainty needs only that the items be noticeably different; ACT-R's recency holds for any positive mismatch discount and failure weight (the later item is retrieved exactly twice as often); strength memory and MINERVA are order-free for every parameter choice.
-\item A ``lacks'' cell says only that the law fails somewhere. Mapping the parameter regions where a family does have it is open.
-\end{itemize}
+Put them together and you get a matrix. Every cell is a theorem: has means a general proof, for every parameter setting that meets stated conditions; lacks means a counterexample. Every law separates some families, and every family has its own row. I'll be candid: some of these laws are stated too narrowly, all-or-none where they should be graded, and fixing that is the next piece of work. But it's the structure I want you to see.
 }
 
 \begin{frame}{The laws were tested, and failed once}
@@ -107,9 +94,7 @@
   Rule: a law enters only with a witness on each side.
 \end{frame}
 \note{
-\begin{itemize}
-\item A law every family satisfies, or satisfies only vacuously, tells theories apart by accident. An earlier all-or-none law, ``stable retrieval'', turned out to hold for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain; that is now a theorem.
-\end{itemize}
+We also test the laws themselves. The first four were chosen with three families in mind. When we added global matching as a test, it looked exactly like strength memory on all four. So the laws were missing something, and what's distinctive about global matching is that it returns a blend. Study three variants of a pattern, probe with their prototype, and MINERVA returns the prototype, which it never saw. That forced the stored-only law. The rule now is that a law enters the library only with a family on each side.
 }
 
 \begin{frame}{Against the evidence}
@@ -130,10 +115,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Sources: Tulving \& Pearlstone 1966 (certainty); McGeoch 1932, Barnes \& Underwood 1959, Ratcliff, Clark \& Shiffrin 1990 (stability: interference in recall, no list-strength effect in recognition); Murdock 1962 and Glanzer \& Cunitz 1966 (order, recency); Posner \& Keele 1968 and Roediger \& McDermott 1995 (stored-only).
-\item Stored-only is mixed because endorsing a prototype as old doesn't show the prototype was retrieved; next slide.
-\end{itemize}
+So the matrix carries a row for people: a judgment, with sources, kept apart from the theorems. Each entry states its bridge, that is, how a measure, which is always a report, is taken to show something about retrieval. For example, endorsing an unseen prototype as old doesn't show you retrieved the prototype; a memory that retrieves a similar studied item would also call it old. As we've judged it, ACT-R fits every settled entry, but those fits are hypotheses until the bridges are formalized.
 }
 
 \begin{frame}{One experiment, four memories: study, then test}
@@ -161,9 +143,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The table shows why the bridge matters: the two families that satisfy stored-only call the unseen prototype old with certainty, and the one that violates it doesn't, under this crude report rule.
-\end{itemize}
+Here is a study-test experiment written once and run with all four memories. Study three items, then probe with each, and with two lures: their prototype, which was never studied, and an item unlike all three. Only one entry here is derived from laws: EPAM's flat curve, because certainty and stability imply a flat curve at one for any memory. Everything else is computed from the mechanisms. And notice the bridge problem: EPAM and strength memory call the unseen prototype old with certainty, by retrieving a studied item, while MINERVA, the one family that retrieves the prototype itself, doesn't call it old under this crude report rule.
 }
 
 \begin{frame}{Reversing the workflow}
@@ -179,9 +159,7 @@
   \end{enumerate}
 \end{frame}
 \note{
-\begin{itemize}
-\item This makes the matrix an experiment generator rather than a scoreboard.
-\end{itemize}
+Laws let us reverse the usual workflow. Instead of choosing an experiment and computing what each model predicts, we start from two laws that disagree, derive a design on which they make incompatible predictions, prove the separation for every memory with either law, and then state the response model that connects it to what participants actually say.
 }
 
 \begin{frame}{Recency against order-freedom}
@@ -198,10 +176,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Recency applied to $(a, b)$ gives $D_{AB} > 0$; applied to $(b, a)$ it gives $D_{BA} < 0$. Order-freedom makes the two conditions' retrieval identical.
-\item These proofs never mention EPAM, ACT-R, or any parameter.
-\end{itemize}
+Recency and order-freedom disagree. Take two new items, A and B, and a probe equally similar to both. Study A then B, or B then A, and then probe. Delta measures how much more B is favoured after AB than after BA. From the laws alone: order-freedom gives a delta of zero, and recency gives a delta greater than zero, so no memory can have both laws. These proofs never mention EPAM, or ACT-R, or any parameter.
 }
 
 \begin{frame}{From retrieval to report}
@@ -218,9 +193,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The bridge carries its own condition, stated in the theorem: laws plus a response model give an observable contrast.
-\end{itemize}
+But participants give reports, not retrievals. So we add a response model: forced choice, guessing B with probability gamma when neither item comes to mind. Then the reported effect is delta plus a bias term. Order-freedom still predicts zero, whatever the bias. But recency's prediction survives only if guessing is unbiased, or if neither item is equally likely to come to mind in both orders. The bridge from theory to data comes with its own condition, and the theorem states it.
 }
 
 \begin{frame}{The same design, four memories}
@@ -245,9 +218,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item One counterbalanced experiment gives recency, no effect, or primacy, depending on the family, and the matrix says in advance which.
-\end{itemize}
+Here is the same design run with four memories. ACT-R shows recency, ten seventeenths, and that holds for any guessing bias. Strength memory and MINERVA show no effect, as their order-freedom requires. EPAM has neither law, and it surprises us: with one prior item, it shows the most extreme primacy possible. Whichever item was learned first always wins, because of the shape of the net, not anything about time.
 }
 
 \begin{frame}{Lessons, and next}
@@ -260,9 +231,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Everything in this talk is in the repository: the laws, the cells, the experiments, and a generated matrix with the evidence and its sources.
-\end{itemize}
+To sum up. The durable results are conditional: laws imply predictions, and families have or lack laws. The empirical row will change, and when it does, the matrix says what is refuted. The main gap is what we might call observational semantics: decision and report models, so that laws about retrieval predict responses. Beyond that: the parameter regions of the lacks cells, graded laws in place of all-or-none ones, more families as tests, such as REM, a connectionist memory and ACT-R with blending, and other domains, such as strategy choice, attention and production systems.
 }
 
 \end{document}

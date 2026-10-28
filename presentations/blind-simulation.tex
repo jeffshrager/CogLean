@@ -12,10 +12,7 @@
   \titlepage
 \end{frame}
 \note{
-\begin{itemize}
-\item A methods talk. The question is one every formal model faces, and the procedure is usable without Lean.
-\item The materials are in \code{MultiDigit/sim/} in the repository: the specification, the preregistration, the delivered simulator, the harness, and the results.
-\end{itemize}
+This is a methods talk about a question every formal model faces: does the formalization say what the theory says? The procedure I'll describe doesn't need Lean or any theorem prover. All the materials, the specification, the preregistration, the delivered simulator, the harness and the results, are in the repository.
 }
 
 \begin{frame}{The question}
@@ -33,10 +30,7 @@
   How can the link between the prose and the formal definitions be checked?
 \end{frame}
 \note{
-\begin{itemize}
-\item This is the first objection a skeptical audience raises, and it is fair: machine-checked proofs move the risk from the derivation to the definitions.
-\item Simulation papers have the same problem in another form: the published description and the code can differ, and readers see only the description.
-\end{itemize}
+A Lean proof shows that a prediction follows from the definitions. It doesn't show that the definitions say what the theory says. The theory lives in prose; the formalization is one reading of that prose, made precise; and every theorem inherits whatever that reading got wrong. This is the first objection a skeptical audience raises, and it's fair: machine-checked proofs move the risk from the derivation to the definitions. Simulation papers have the same problem in another form, since the published description and the code can differ.
 }
 
 \begin{frame}{The idea: two independent readings}
@@ -58,10 +52,7 @@
   N-version programming (Avi\v{z}ienis 1985), applied to a theory. A disagreement means one of three things: the prose is ambiguous, the formalization drifted, or the simulator has a bug.
 \end{frame}
 \note{
-\begin{itemize}
-\item In fault-tolerant software, several teams implement one specification independently, and their disagreements locate the faults. Here the two versions are the Lean formalization and a simulator written without seeing it.
-\item The Lean side also exports exact outcome distributions for shared instances, so some comparisons are exact, not just statistical.
-\end{itemize}
+We borrowed an idea from fault-tolerant software, called N-version programming: build two independent implementations of one specification, and look at where they disagree. Here, one reading of the prose is the Lean formalization, whose theorems give predictions. The other is a Python simulator written without seeing any of the Lean. If they disagree, then either the prose is ambiguous, the formalization drifted, or the simulator has a bug, and in every case we learn something.
 }
 
 \begin{frame}{The procedure}
@@ -76,10 +67,7 @@
   \small Commits, 26 October 2026: specification and preregistration 19:16; simulator, unmodified, 19:21; harness and results 19:31.
 \end{frame}
 \note{
-\begin{itemize}
-\item The commit timestamps are the preregistration's evidence: the checks were fixed before any simulator output existed.
-\item The simulator is committed exactly as delivered. Disagreements are recorded, not fixed in place.
-\end{itemize}
+Concretely: we wrote a prose specification with no Lean in it, and we listed explicitly the points the prose leaves open. We preregistered the predictions, committing them before the simulator existed. Then a fresh AI agent, given only the prose, wrote the simulator in an empty directory, and we audited its tool use to check that it read nothing else. Lean exported exact probability distributions for some shared cases, and a harness compared everything. The commit timestamps show the order: the specification and preregistration first, the simulator five minutes later, the results ten minutes after that.
 }
 
 \begin{frame}{Open choices, declared in advance}
@@ -93,10 +81,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Declaring open choices separates ``the theory doesn't say'' from ``the implementer got it wrong''. Where the theory is silent, every reasonable choice is legitimate, and the comparison can test whether the predictions depend on it.
-\item O2 turned out to matter a great deal.
-\end{itemize}
+A key step was to declare, in advance, the points the prose leaves open, and to require the implementer to choose, document and parameterize each one. For instance: when strengthening after a whole-problem answer, is correctness judged against the problem's true sum, or the sum of the problem whose associations were used? What associations does a newly discriminated problem start with? Does an answer computed by the columns change the whole-problem associations? Declaring these separates the theory not saying from the implementer getting it wrong, and one of them turned out to matter a great deal.
 }
 
 \begin{frame}{How each check is judged}
@@ -110,9 +95,7 @@
   Instances: 4 Lean-exact; 30 random with learning off; 20 random with learning on, across the open choices.
 \end{frame}
 \note{
-\begin{itemize}
-\item The non-vacuity rule is easy to forget and essential: a theorem with an unmet hypothesis ``passes'' every test trivially.
-\end{itemize}
+Each check was judged by a rule fixed in advance. Exact relations allow no violations at all, over every trial whose hypothesis holds. Probabilities pass if the observed frequency is within four standard errors of Lean's value. No-change relations, such as learning other problems leaving a practiced one untouched, are checked exactly. And there's a non-vacuity rule: every check reports how many trials met its hypothesis, and one whose hypothesis never held is reported as vacuous, not as passed. That rule is easy to forget, and it turned out to be essential.
 }
 
 \begin{frame}{Results: no failures}
@@ -140,10 +123,7 @@
   The prose and the formalization agree on recognition, EPAM learning, retrieval, both backups, and carrying.
 \end{frame}
 \note{
-\begin{itemize}
-\item A selection of rows; the full table (22 checks) is in \code{MultiDigit/sim/RESULTS.md}.
-\item ``Lean exact'': 243 outcome frequencies on the four shared instances, each within tolerance of Lean's exact probability.
-\end{itemize}
+The result: no failures. 243 outcome frequencies matched Lean's exact values, and every applicable prediction passed, some of them over tens of thousands of trials. So the prose and the formalization agree on recognition, learning, retrieval, both backups and carrying. But look at the bottom row: five predictions were vacuous.
 }
 
 \begin{frame}{Finding 1: five predictions were never tested}
@@ -156,10 +136,7 @@
   \textit{Lesson.} A theorem can be correct and nearly irrelevant to the models the theory produces. Restate it in terms of what learned nets do test: for example, ``the tested bits of a digit restrict it to a set''.
 \end{frame}
 \note{
-\begin{itemize}
-\item Without the non-vacuity rule, these would have been reported as five passes.
-\item This is a finding about proving things in cognitive science generally: hypotheses that make a proof go through can quietly exclude the cases of interest.
-\end{itemize}
+That is the most interesting finding. Those five predictions needed the net to test every feature of a digit. But EPAM grows only one test per confusion, so in no learned net did that ever happen. The theorems are true, and yet they say almost nothing about the nets EPAM actually produces. That's a general lesson for proving things about cognitive models: the hypotheses that make a proof go through can quietly exclude the cases you care about. Without a rule that reports vacuous checks as vacuous, these would have looked like five passes.
 }
 
 \begin{frame}{Finding 2: a gap in the formalization}
@@ -173,10 +150,7 @@
   A gap in the formalization, not a simulator bug.
 \end{frame}
 \note{
-\begin{itemize}
-\item The fix is to define search with total strength 0 as exhausted. It is recorded as an open issue.
-\item The proofs' hypothesis \code{total $\neq$ 0} was visible all along; the simulation showed that it excludes a case the model needs.
-\end{itemize}
+The second finding is a gap in the formalization. In Lean, sampling divides by the total strength, so with a total of zero a trial has no outcome at all. The theorems avoid this by assuming the total isn't zero. The simulator read it as retrieval exhausted, go to the columns, which is the natural reading of the model. And it matters, because a newly discriminated problem with no associations, the most natural answer to one of the open choices, is exactly this case, and it lies outside every theorem. That's a gap in the formalization, not a bug in the simulator.
 }
 
 \begin{frame}{Finding 3: a prediction depends on an open choice}
@@ -204,10 +178,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item This part was exploratory, not preregistered: learning over many trials is not yet proved in Lean.
-\item The model leaves O2 open, and the prediction depends on it. Which reading is right is a substantive question about the theory, now sharply posed.
-\end{itemize}
+Another finding concerns learning. The model predicts a sequence: a confident error, then column work after feedback, then fluent, correct retrieval. But the model doesn't say what associations a newly discriminated problem starts with; that was one of the open choices we declared. And the sequence depends on it. Starting with no associations, the predicted sequence appears in 40 of 48 cases. Starting with only the correct answer, the column phase is often skipped. Copying the neighbour's associations perpetuates the error. So a substantive question about the theory has become sharp.
 }
 
 \begin{frame}{Finding 4: ambiguities resolved the same way, blind}
@@ -220,9 +191,7 @@
   Agreement found independently is evidence that these are the natural readings, and it should have been in the specification.
 \end{frame}
 \note{
-\begin{itemize}
-\item The implementer's notes (\code{IMPLEMENTATION\_NOTES.md}) list every choice it made; these two were compared with the Lean definitions after the fact.
-\end{itemize}
+The fourth finding is reassuring. The implementer met two ambiguities that the specification didn't flag: whether single-digit associations belong to ordered pairs, so that 3 plus 5 and 5 plus 3 are separate, and whether strengthening applies to the associations that were actually retrieved from. It resolved both exactly as the Lean formalization does. Agreement reached independently is some evidence that these are the natural readings, though they should have been in the specification.
 }
 
 \begin{frame}{Limits}
@@ -234,9 +203,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The procedure's strength is that its weak points are explicit: anyone can see what was blind, what was preregistered, and when.
-\end{itemize}
+The limits, stated plainly. Blindness here is procedural: it rests on instructions and an audit of the agent's tool calls, not on anything that physically prevents reading. The implementer was a model of the same family as the one that wrote the specification and the formalization, so shared misreadings are possible; a human implementer, or community code, would be stronger. It covered one model, in one round, before memory became a plug-in. And simulation covers instances: it can expose a mismatch, but it can't certify the definitions in general.
 }
 
 \begin{frame}{Next}
@@ -250,9 +217,7 @@
   \small The recipe (spec, open choices, preregistration, blind implementer, non-vacuity) needs no theorem prover. Any modelling group can use it.
 \end{frame}
 \note{
-\begin{itemize}
-\item PyACTUp's retrieval samples logistic noise and takes the most active chunk; the Lean memory uses the Boltzmann (softmax) form, which approximates it. Blending uses the Boltzmann weights directly, so that comparison can be exact.
-\end{itemize}
+Next, a second round for ACT-R's memory: a prose specification of the activation family, a blind implementation, and preregistered checks from the matrix. Then community code as the second version: compare our ACT-R memory with PyACTUp, CMU's implementation, where blended retrieval should match exactly and noisy retrieval within tolerance. We'd like a human implementer for at least one round, and to make this standard practice for every theory in the library. And the recipe, a specification with declared open choices, a preregistration, a blind implementer and a non-vacuity rule, needs no theorem prover, so any modelling group can use it.
 }
 
 \end{document}

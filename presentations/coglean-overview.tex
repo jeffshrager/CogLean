@@ -12,11 +12,7 @@
   \titlepage
 \end{frame}
 \note{
-\begin{itemize}
-\item This talk is about a way of stating cognitive theories so that what follows from them can be checked, compared, and accumulated.
-\item The vehicle is Lean, a programming language that is also a proof checker. You don't need to know Lean to follow this talk.
-\item The library is open source: github.com/jeffshrager/CogLean.
-\end{itemize}
+This talk is about CogLean, a way of stating cognitive theories so that what follows from them can be checked, compared and accumulated. The vehicle is Lean, a programming language that is also a proof checker, but you won't need to read any Lean today. I'll describe the problem, what the library contains, how it is organized around laws rather than individual models, two examples, a related approach, and where it falls short of mathematics. The library is open source, on GitHub.
 }
 
 \begin{frame}{The problem}
@@ -29,11 +25,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Most modelling evidence is a fit: one model, one set of parameters, compared with data.
-\item That's valuable, but it leaves three questions open: which assumptions did the work, is the result robust, and does it discriminate between theories?
-\item The rest of the talk is about answering those questions with proofs.
-\end{itemize}
+Most of our theories live in prose, in simulation code, or as equations fitted to data. When we evaluate them, we usually run a model with particular parameters on particular stimuli and compare the output with data. That tells us the theory can produce a result. It doesn't tell us which of the theory's assumptions produced it, whether it would survive a different choice of parameters, or whether a rival theory would produce it just as well. Those are exactly the questions we care about when we compare theories, and they are rarely answered.
 }
 
 \begin{frame}{Three kinds of evidence a theory can give}
@@ -52,10 +44,7 @@
   CogLean is built around the third kind, and keeps the other two in the same language.
 \end{frame}
 \note{
-\begin{itemize}
-\item A theorem quantified over every model satisfying the postulates says which assumptions matter (the proof uses some and not others), what is robust, and whether a claim is possibility or necessity.
-\item Simulation is still essential: it explores, suggests conjectures, and fits data. Proof settles which conjectures follow from which assumptions. Experiments with people decide whether the assumptions are right.
-\end{itemize}
+It helps to separate three kinds of evidence. One run: one model, one parameter setting; the theory can do it. Every run: one model in all its executions, by exhaustive search or parameter sweeps; that model always does it. And every model the theory allows: the postulates entail it. That third kind is a proof, and it's what CogLean is built around. A proof tells you which assumptions matter, because it uses some postulates and not others, and it distinguishes what a theory can do from what it must do. Simulation stays essential for exploring and fitting, and experiments with people still decide whether the assumptions are right.
 }
 
 \begin{frame}{Why Lean}
@@ -69,10 +58,7 @@
   \textit{The guarantee is relative.} Lean checks that a theorem follows from the definitions, not that the definitions capture the theory, still less that the theory is true of people.
 \end{frame}
 \note{
-\begin{itemize}
-\item Mathlib is a single, shared, machine-checked library of mathematics. CogLean aims at the same thing for cognitive theory.
-\item The caveat on this slide matters and will come back: proofs are only as faithful as the formal definitions.
-\end{itemize}
+We use Lean, which is both a programming language and a proof checker. That matters because the same definition, say of a discrimination net, can be run on an experiment's stimuli and proved about for all stimuli, so the simulation and the theory can't drift apart. Every proof step is checked by a small trusted kernel. Theorems can quantify over all parameter values. And the library is cumulative: definitions are made once and reused. One caution, which I'll come back to: Lean checks that theorems follow from the definitions, not that the definitions capture the theory.
 }
 
 \begin{frame}{What is in the library}
@@ -84,10 +70,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Every theorem is fully proved, with no gaps, and uses only Lean's standard axioms.
-\item The peakedness result is a good example of what proof buys: an intuitive claim from the original chapter needs a condition the chapter doesn't state.
-\end{itemize}
+Here's what is in the library now. CogLib holds the shared constructs: feature codes, exact probability distributions, discrimination nets, sampled retrieval and attention, along with phenomena stated without reference to any theory. On top of it sit three theories. EPAM, Feigenbaum's discrimination-net model, where stimulus generalization, oscillation, retroactive inhibition, learning to criterion and the serial position effect are all proved, and a published simulation run is reproduced. The distributions-of-associations model of strategy choice, where proof turned up something surprising: a more peaked distribution can actually raise overt strategy use. And a model of multi-digit addition that combines the two.
 }
 
 \begin{frame}{The generality problem}
@@ -100,9 +83,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item This is the central design question. The answer on the next slides is to organize the library around laws, the way Mathlib organizes algebra.
-\end{itemize}
+Everything so far is about one model. But there are a great many models, such as EPAM, ACT-R, SAM, REM, MINERVA and connectionist networks, and formalizing them one at a time doesn't scale. Worse, a pile of formalized models doesn't tell you what any two of them disagree about. And unlike mathematics, none of them is simply true. So the question is how a general library should be organized.
 }
 
 \begin{frame}{Laws and families}
@@ -130,10 +111,7 @@
   \end{columns}
 \end{frame}
 \note{
-\begin{itemize}
-\item Mathlib doesn't formalize every group; it proves theorems once per law (monoid, group, ring), and particular structures inherit them.
-\item Here, a prediction reads ``any memory with stability predicts no interference with practiced items'', not ``EPAM predicts\ldots''.
-\end{itemize}
+The answer is to organize the library the way Mathlib organizes algebra. Mathlib doesn't formalize every group; it states laws, like those of a monoid or a ring, proves theorems once per law, and lets particular structures inherit them. For memory, the laws are small properties a memory may or may not have: certainty, stability, order-freedom, recency, stored-only retrieval and determinacy. The families are mechanisms, each formalized once with its parameters free: discrimination, activation, strength with a criterion, and global matching. Predictions are then proved from laws, not from particular models.
 }
 
 \begin{frame}{The theory matrix}
@@ -154,11 +132,7 @@
   Every law separates some families, and every family has its own row.
 \end{frame}
 \note{
-\begin{itemize}
-\item ``Has'' cells hold for every parameter choice meeting stated conditions. ``Lacks'' cells are single counterexamples on small stimulus sets; where in its parameter space a family does have a law is further work.
-\item Global matching was added as a test. On the first four laws it looked exactly like strength memory, which forced the stored-only law: global matching's output is a blend, which can be a prototype never studied.
-\item The activation family here is ACT-R with decay 1 and temperature 1, where all its quantities are rational and exactly computable.
-\end{itemize}
+Put the two together and you get a matrix. Every cell is a theorem: has means a general proof for every parameter setting that meets the stated conditions, and lacks means a counterexample. Every law separates some families, and every family has its own row. Global matching was added as a test of the laws, and on the first four it looked exactly like strength memory, which forced the stored-only law. I should add that some of these laws are stated too narrowly, all-or-none where they should be graded; fixing that is the next piece of work.
 }
 
 \begin{frame}{What is true here?}
@@ -180,10 +154,7 @@
   Which theory is right follows from the second and third rows together.
 \end{frame}
 \note{
-\begin{itemize}
-\item The conditional results don't expire. They stay true even if every family in the library is refuted.
-\item Mathlib is in the same position more often than it seems: it proves facts about Euclidean and non-Euclidean geometry alike, and leaves to physics which one space is.
-\end{itemize}
+In mathematics, a proved theorem is true. Here we have competing theories, so what is true? There are three kinds of claim. That a law entails a prediction is proved, and permanent. That a family has a law is proved, and permanent. Whether people have a law is empirical, and revisable. Which theory is right follows from the second and third together, and the first two never expire, even if every model in the library is refuted.
 }
 
 \begin{frame}{A refutation spreads}
@@ -196,10 +167,7 @@
   \textit{Example.} People endorse a prototype they never saw. That does not show they \emph{retrieved} it: a memory that returns a similar studied item also calls the prototype ``old''. The bridge is the missing piece.
 \end{frame}
 \note{
-\begin{itemize}
-\item As judged now: people lack certainty and order-freedom, have recency; stability and stored-only are mixed. Activation fits every settled entry; but each fit is a hypothesis, because the bridges are unformalized.
-\item The lesson: the next step for theory comparison is often not more data but an explicit response model.
-\end{itemize}
+This structure has a useful property: a refutation spreads. If the evidence shows that people lack a law, every family that has the law is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. So the matrix carries an evidence row for people, kept apart from the theorems. Each entry states its bridge, the assumption that connects what an experiment measures, which is a report, to what a law is about, which is retrieval. Endorsing a prototype you never saw, for instance, doesn't show you retrieved it. Often the next step in comparing theories is not more data but an explicit response model.
 }
 
 \begin{frame}{Example 1: confident errors, inherited}
@@ -223,11 +191,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The distributions-of-associations model alone can't produce these errors: there, errors and backup use come from the same distribution and rise together. Confusion gives a problem another problem's distribution.
-\item With ACT-R's memory, the errors are graded instead, and strangers say ``don't know'' more often.
-\item The evidence judges that people lack certainty, so a graded version of the theorem is what would explain confident errors in people.
-\end{itemize}
+Here is the first example. This composition, recognize with any memory, then search the recognized item's associations, else fall back on a backup, comes from our model of multi-digit addition. For it we proved a theorem about confident errors: a stranger taken for a familiar item with sharp associations is answered wrongly every time an answer is retrieved, with no more backup use than the familiar item itself. It's proved once and inherited by two tasks: 150 plus 100 taken for 100 plus 100, and a stranger misnamed as a familiar person. And from laws: any memory with determinacy, certainty and stability gives it, which in the matrix means only discrimination.
 }
 
 \begin{frame}{Example 2: an experiment derived from laws}
@@ -250,10 +214,7 @@
   \end{tabular}
 \end{frame}
 \note{
-\begin{itemize}
-\item This reverses the usual workflow: start from a formal disagreement, derive the experiment, prove the separation.
-\item EPAM has neither law. Its order effect comes from the shape of the net, not from time: after a suitable prior item, whichever of A and B is learned first always wins.
-\end{itemize}
+The second example derives an experiment from laws. Recency and order-freedom disagree, so take two new items and a probe equally similar to both, study them in either order, and measure how much more the later item is favoured. From the laws alone, order-freedom predicts no effect, recency predicts a positive one, and no memory can have both. With a forced-choice response model, recency's prediction survives only if guessing is unbiased. And across the four families: ACT-R shows recency, strength and MINERVA show nothing, and EPAM, which has neither law, can show the most extreme primacy.
 }
 
 \begin{frame}{A related approach: SFT-GMA}
@@ -279,12 +240,7 @@
   \end{columns}
 \end{frame}
 \note{
-\begin{itemize}
-\item Their result: ACT-R's core assumptions rule out most parallel SFT models of perceptual processing. That has the shape of a ``lacks'' cell derived from core assumptions.
-\item SFT is ahead where CogLean is weakest: it comes with a measurement theory (the double-factorial paradigm and its diagnostic contrasts), so its classes connect to data.
-\item A natural joint step: formalize SFT's model classes as laws in CogLean, with ACT-R's architecture as a family, and borrow SFT's diagnostics as bridges.
-\item Source: mathpsych.org/presentation/1440 (Virtual MathPsych/ICCM 2024); see \code{notes/literature.md}.
-\end{itemize}
+We're not alone in wanting this. Fisher, Houpt, Larue and Schmidt, at MathPsych and ICCM in 2024, derived critical tests of ACT-R from its core assumptions, using systems factorial technology with global model analysis, and found that ACT-R rules out most parallel models of perceptual processing. Like us, they separate core from auxiliary assumptions and derive tests from what the core forbids. From their abstract, the differences: they constrain processing structure seen in response times, we constrain what memory retrieves and learns; their model space comes with its own paradigm and diagnostics, so its link to data is already there, and ours isn't yet; they analyze one architecture, we compare families; and our results are machine-checked. In the long run, I think executable, machine-checked, and a library that accumulates will win out, but only if it connects to data as well as SFT does. So I expect convergence: methods like SFT-GMA becoming parts of a library like this one.
 }
 
 \begin{frame}{Where this is weaker than mathematics}
@@ -296,9 +252,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The blind simulation: a fresh agent wrote a Python simulator from a prose specification alone, against predictions preregistered before it existed. It agreed with Lean's exact distributions on every test, and exposed gaps in the formalization.
-\end{itemize}
+Let me be clear about where this is weaker than mathematics. The definitions are contestable, which is why we do blind checks. The laws are idealizations, and they assume a representation. The families are flexible, so the most informative facts are about regions of their parameters, not single counterexamples. And the evidence is never final. But when it changes, the matrix tells you immediately what has been refuted.
 }
 
 \begin{frame}{Next}
@@ -311,9 +265,7 @@
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The Common Model of Cognition is a useful checklist for which interfaces to add, not a foundation to impose.
-\end{itemize}
+Next steps: learning across trials, where memory states themselves become random; graded laws, which will also tell us where in its parameters each family has each law; more families as tests, such as REM, a connectionist memory, and ACT-R with blending; decision and report components, so that laws about retrieval predict responses; and beyond memory, to strategy choice and production systems.
 }
 
 \begin{frame}{Take-home}
@@ -327,9 +279,7 @@
   \centering\small github.com/jeffshrager/CogLean
 \end{frame}
 \note{
-\begin{itemize}
-\item Two detailed talks follow up: one on recognition, retrieval and confident errors; one on the laws, the matrix and experiments derived from laws.
-\end{itemize}
+So, the take-home. Cognitive theories can be stated so that their consequences are proved, for every parameter setting. The durable content is conditional: laws entail predictions, and families have or lack laws. A matrix of families against laws tells you which experiments are worth running and what a result refutes. And the real value isn't that each theory can be formalized; it's that results about one component can be combined with results about another into predictions that no single model anticipated. Thank you.
 }
 
 \end{document}

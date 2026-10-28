@@ -13,10 +13,7 @@
   \titlepage
 \end{frame}
 \note{
-\begin{itemize}
-\item This deck walks through the actual Lean code behind the companion talk. Code is quoted from the repository, lightly trimmed; ``-- ...'' marks omissions.
-\item The point is architecture: how one behavioral theorem, confident errors, is assembled from small, general pieces, and then inherited.
-\end{itemize}
+This talk walks through the actual Lean code behind the talk on recognition, retrieval and confident errors. Each code slide is preceded by a slide that says the same thing in English, so you can follow the argument without reading Lean; read in order, the English slides give the whole proof. The point is architecture: how one behavioral theorem is assembled from small, general pieces, and then inherited.
 }
 
 \begin{frame}{The proof, layer by layer}
@@ -31,10 +28,7 @@
   \end{tikzpicture}
 \end{frame}
 \note{
-\begin{itemize}
-\item Each layer imports only the ones below it. CogLib (the bottom five) imports no theory.
-\item The top-level theorem's proof is a few lines because the work is factored into these layers, the way Mathlib factors algebra.
-\end{itemize}
+Here's the proof layer by layer, from the bottom. Exact finite distributions and the two-stage lemma. Discrimination nets and Lemma A. The search process from the distributions-of-associations model, with its closed forms. The composition of recognition and retrieval, where confident errors is proved. The laws, from which its hypotheses follow. And the instances, multi-digit addition and face naming. Each layer imports only the ones below it, and the bottom five are the shared library, which imports no theory.
 }
 
 \begin{frame}{In words: Exact distributions}
@@ -45,6 +39,10 @@
     \item \textbf{Probability of an event}: add up the probabilities of the outcomes in the event.
   \end{itemize}
 \end{frame}
+\note{
+Everything rests on exact probability distributions. A distribution is a finite list of outcomes, each with an exact rational probability. The certain distribution has one outcome with probability one. A two-stage process draws a first outcome, then draws from a second distribution that depends on it, multiplying the probabilities. And the probability of an event adds up the probabilities of its outcomes.
+}
+
 
 \begin{frame}[fragile]{Exact distributions}
 \begin{Verbatim}
@@ -66,11 +64,7 @@ def prob : Dist α → (α → Bool) → Rat
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item A distribution is a list of outcomes with exact rational probabilities. No floating point, no measure theory, no Mathlib.
-\item Outcomes may repeat; an event's probability sums them. That keeps \code{bind} simple, at the cost of long lists when runs are computed.
-\item Because everything is computable, the same definitions are run (\code{\#eval}) and proved about.
-\end{itemize}
+And here are those definitions in Lean. A distribution is literally a list of pairs of an outcome and a rational number. Bind, the two-stage process, multiplies each second-stage probability by the first-stage one and appends the results. There's no floating point, no measure theory, and no Mathlib. Because it's all computable, the same definitions are both run and proved about.
 }
 
 \begin{frame}{In words: The two-stage lemma}
@@ -85,6 +79,10 @@ def prob : Dist α → (α → Bool) → Rat
   \bigskip
   Two special cases are used throughout: relabelling the outcomes relabels the event; and a second stage that is certain on one set of outcomes and has a fixed probability on another.
 \end{frame}
+\note{
+The first lemma says that the probability of an event after a two-stage process is a weighted average: for each first-stage outcome, its probability times the event's probability after it. The proof is an induction on the first-stage list: empty gives zero on both sides, and adding an outcome adds its weighted branch to the rest. Two special cases are used everywhere later: relabelling outcomes, and a second stage that is certain on one set and constant on another.
+}
+
 
 \begin{frame}[fragile]{The two-stage lemma}
 \begin{Verbatim}
@@ -105,10 +103,7 @@ theorem prob_bind_sum (d : Dist α) (f : α → Dist β) (e : β → Bool) :
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Induction on the list. The cons case uses \code{prob\_bind\_cons} (probability of the first outcome's branch, scaled, plus the rest), then the induction hypothesis.
-\item Nearly every probabilistic proof in the talk reduces to this lemma or one of its specializations.
-\end{itemize}
+In Lean, that's three lines of proof: induction on the list, the empty case by simplification, and the other case by the one-step lemma and the induction hypothesis. Almost every probabilistic argument in the rest of the talk reduces to this lemma or one of its two specializations.
 }
 
 \begin{frame}{In words: Discrimination nets}
@@ -119,6 +114,10 @@ theorem prob_bind_sum (d : Dist α) (f : α → Dist β) (e : β → Bool) :
     \item A net \textbf{recognizes} a code when the code selects its own image.
   \end{itemize}
 \end{frame}
+\note{
+Next, EPAM's discrimination nets. A net is either a terminal, which holds a stored image or nothing, or a test on one feature with two subnets. To select a code, follow the branch its feature says at each test and return the image you reach. The path is the list of features tested on the way. And a net recognizes a code when the code selects its own image.
+}
+
 
 \begin{frame}[fragile]{Discrimination nets}
 \begin{Verbatim}
@@ -138,10 +137,7 @@ def path : Net → Item → List Feature
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item EPAM's net, directly: a terminal holds an image or nothing; a test branches on one binary feature.
-\item Learning (\code{Net.learn}, not shown) replaces a confused terminal by a test on the first noticed difference.
-\end{itemize}
+In Lean, the net is an inductive type with two constructors, leaf and test, and select and path are defined by recursion on it, exactly as described. Learning, which isn't shown here, replaces a confused terminal with a test on the first noticed difference.
 }
 
 \begin{frame}{In words: Lemma A}
@@ -158,6 +154,10 @@ def path : Net → Item → List Feature
     \end{itemize}
   \end{itemize}
 \end{frame}
+\note{
+Lemma A is the key fact about confusions. If each image is stored only once, the net recognizes y, and x selects y's image, then x agrees with y on every feature tested along x's path. The proof is an induction on the net. At a terminal there's no path. At a test, if x and y go the same way they agree on that feature, and the induction hypothesis handles the rest; if they went different ways, y's image would be reachable on both sides, stored twice, which is a contradiction.
+}
+
 
 \begin{frame}[fragile]{Lemma A: a confusion agrees on the path}
 \begin{Verbatim}
@@ -179,12 +179,7 @@ theorem confusion_agrees_on_path (N : Net) (x y : Item) (hnd : N.images.Nodup)
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item Structural induction on the net. At a test, case on the tested feature for $x$ and for $y$.
-\item If they go the same way, the feature agrees and the induction hypothesis covers the rest of the path.
-\item If they go different ways, $y$ would be stored on both sides, contradicting \code{Nodup} of the images. That hypothesis (each image stored once) is what EPAM's learning guarantees: \code{learnAll\_clean}.
-\item This lemma is behind every near-miss prediction, and behind EPAM's \code{AgreesOn} law.
-\end{itemize}
+Here is the Lean, abbreviated. It's a structural induction: at a test, it cases on the tested feature for x and for y, which gives four cases. In the two where they go the same way, the tested feature agrees and the induction hypothesis covers the rest of the path. In the two where they diverge, the disjointness of the subtrees' images gives a contradiction. The hypothesis that each image is stored once is exactly what EPAM's learning guarantees.
 }
 
 \begin{frame}{In words: DOA search, and a closed form}
@@ -200,6 +195,10 @@ theorem confusion_agrees_on_path (N : Net) (x y : Item) (hnd : N.images.Nodup)
     \item One more try: a sample that clears the criterion ends the search, which is then not exhausted. One that doesn't (probability $1-R$) leads to a search exhausted with probability $(1-R)^n$, by induction. So the total is $(1-R)\cdot(1-R)^n$.
   \end{itemize}
 \end{frame}
+\note{
+Now the search from the distributions-of-associations model. With n tries, sample an answer in proportion to strength, state it if it clears the criterion, and otherwise try again; with no tries left, retrieval is exhausted. The theorem: if the total strength isn't zero, retrieval is exhausted with probability one minus R to the n, where R is the chance that one sample clears the criterion. By induction on n: a successful sample ends the search, and an unsuccessful one, with probability one minus R, leads to a search that is exhausted with probability one minus R to the n.
+}
+
 
 \begin{frame}[fragile]{DOA search, and a closed form}
 \begin{Verbatim}
@@ -225,11 +224,7 @@ theorem prob_exhausted (as : List α) (s : α → Rat) (cc : Rat) (hT : total as
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item Search is a recursive distribution: sample, state if above criterion, otherwise search again.
-\item The closed form is proved by induction on the search length, splitting each step with \code{prob\_bind\_split}: above criterion ends the search (never exhausted), below it continues (exhausted with probability $(1-R)^n$ by induction).
-\item The hypothesis \code{total $\neq$ 0} is real: with zero total strength, \code{sample} divides by zero. The blind simulation found that gap.
-\end{itemize}
+The Lean definition of search is a recursive distribution, and the closed form is proved by induction on the number of tries, splitting each step with the second special case of the two-stage lemma. Notice the hypothesis that the total strength isn't zero. It's real: with zero total, sampling divides by zero, and the blind simulation found that this excludes a case the model needs.
 }
 
 \begin{frame}{In words: The composition}
@@ -244,6 +239,10 @@ theorem prob_exhausted (as : List α) (s : α → Rat) (cc : Rat) (hT : total as
 
   Nothing here mentions arithmetic, EPAM, or ACT-R: the problems, the answers and the memory are all parameters.
 \end{frame}
+\note{
+Now the composition. After recognition, if memory calls up nothing, use the backup; if it calls up a stored code, search that code's associations, and if the search is exhausted, use the backup. The whole trial is a two-stage process: first what memory calls up for the problem's code, then that step. Nothing in it mentions arithmetic, EPAM or ACT-R; the problems, the answers and the memory are all parameters.
+}
+
 
 \begin{frame}[fragile]{The composition}
 \begin{Verbatim}
@@ -264,10 +263,7 @@ def recognizeRetrieve (code : P → Item) (retrieve : Item → Dist (Option Item
   Generic in the problem type \code{P}, the answer type \code{A}, and the memory (\code{retrieve}).
 \end{frame}
 \note{
-\begin{itemize}
-\item The composition is just \code{bind}: what memory calls up, then what follows.
-\item Neither arithmetic nor EPAM appears here. Memory is any function from a probe to a distribution over stored codes.
-\end{itemize}
+In Lean, after-recognition is a function of what memory called up, and the composition is a single bind. It's generic in the problem type, the answer type and the memory, which is any function from a probe to a distribution over stored codes.
 }
 
 \begin{frame}{In words: Confident errors: the proof is a composition}
@@ -287,6 +283,10 @@ def recognizeRetrieve (code : P → Item) (retrieve : Item → Dist (Option Item
     \item (3): both problems search the same associations, so each uses the backup with probability $(1-R_q)^n$.
   \end{itemize}
 \end{frame}
+\note{
+Here is the theorem this talk is about. Suppose a familiar problem q calls up its own code for certain, a stranger x calls up q's code for certain, q's associations are sharp, and x's correct answer differs. Then q is never given a wrong whole answer, every whole answer given to x is wrong, and x and q use the backup equally often. The proof has three parts, each a lemma: the neighbour's-answer lemma applied to q itself; the fact that on sharp associations every stated answer is q's correct answer, which is wrong for x; and equal backup use, because both search the same associations.
+}
+
 
 \begin{frame}[fragile]{Confident errors: the proof is a composition}
 \begin{Verbatim}
@@ -307,10 +307,7 @@ theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (st
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item Three conjuncts, three earlier lemmas. The first is the neighbour's-answer lemma applied to $q$ itself; the second says that on sharp associations, every stated answer to $x$ is wrong; the third rewrites both backup probabilities to the same closed form $(1-R_q)^n$, after which the goal is an identity.
-\item Note the hypotheses: retrieval is certain (\code{= pure (some \ldots)}). That is exactly what ACT-R never satisfies, and what the laws later supply.
-\end{itemize}
+And here is the actual Lean. You don't need to read it in detail. The statement at the top is the theorem I just described, and the proof is the last five lines, which assemble those three lemmas. It's that short because the real work sits in general lemmas underneath: about probability distributions, about the search process, about nets. That's the point I want to make with this slide. In a library, a behavioral theorem is assembled from reusable parts, the way Mathlib assembles algebra.
 }
 
 \begin{frame}{In words: One supporting lemma}
@@ -324,6 +321,10 @@ theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (st
     \item No answer other than $q$'s clears the criterion, so that chance is 0.
   \end{enumerate}
 \end{frame}
+\note{
+The neighbour's-answer lemma: if x calls up q's code for certain and q's associations are sharp, x is never given a whole answer other than q's correct answer. First, since x's recognition is certain, x's whole answers come from searching q's associations. Second, the chance of stating an answer with some property is the chance that one sample clears the criterion and has the property, times a geometric factor. Third, no answer other than q's clears the criterion, so that chance is zero.
+}
+
 
 \begin{frame}[fragile]{One supporting lemma}
 \begin{Verbatim}
@@ -345,11 +346,7 @@ theorem confusion_gives_neighbours_answer (correct : P → A) (x q : P)
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item Step 1: whole-problem retrieval on $x$ is retrieval on $q$'s associations (\code{whole\_depends\_only\_on\_route}, itself from \code{recognizeRetrieve\_certain} and \code{bind\_pure\_left}).
-\item Step 2: DOA's closed form for stating an answer with a property (\code{prob\_stated}): reach-with-property times a geometric factor.
-\item Step 3: the reach for ``an answer other than $q$'s'' is zero, because sharpness says only $q$'s answer clears the criterion. Pointwise reasoning, then \code{prob\_false}.
-\end{itemize}
+In Lean, those three steps are two rewrites and a pointwise argument. The first rewrite says whole-problem retrieval on x is retrieval on q's associations; the second applies the closed form for stating an answer. The remaining goal, that the chance of reaching an answer other than q's is zero, is proved one answer at a time, using sharpness.
 }
 
 \begin{frame}{In words: Memory as an interface}
@@ -360,6 +357,10 @@ theorem confusion_gives_neighbours_answer (correct : P → A) (x q : P)
     \item \textbf{Theorem.} ACT-R never retrieves anything for certain, because failure is always among the outcomes.
   \end{itemize}
 \end{frame}
+\note{
+Memory is an interface: studying changes the state, and retrieving with a probe gives a distribution over stored items. EPAM's net retrieves the image it selects, for certain. ACT-R's declarative memory, with decay one and temperature one, retrieves each chunk in proportion to its weight, which is the sum over its uses of one over age, times mu for each mismatching feature, with failure always possible. And so a theorem: ACT-R never retrieves anything for certain.
+}
+
 
 \begin{frame}[fragile]{Memory as an interface}
 \begin{Verbatim}
@@ -383,10 +384,7 @@ theorem retrieve_not_certain (P : ActParams) (s : ActState) (x y : Item) :
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item ACT-R's weight for a chunk is $\sum_k 1/(t - t_k)$ times $\mu^{\text{mismatches}}$, with a failure weight $\theta$: Boltzmann retrieval with decay 1 and temperature 1, exactly rational.
-\item \code{retrieve\_not\_certain} is a one-line \code{simp}: the outcome list starts with \code{none}, so it can never equal \code{[(some y, 1)]}.
-\end{itemize}
+In Lean, a retriever is a structure with two fields, study and retrieve. EPAM's retrieval wraps the net's selection in a certain distribution; ACT-R's is a sample over failure and the stored chunks. The proof that ACT-R is never certain is a single simplification: its list of outcomes begins with failure, so it can never equal the certain distribution on a chunk.
 }
 
 \begin{frame}{In words: The bridge to multi-digit addition}
@@ -398,6 +396,10 @@ theorem retrieve_not_certain (P : ActParams) (s : ActState) (x y : Item) :
     \item So each multi-digit theorem is: rewrite with the bridge, then apply the general theorem.
   \end{itemize}
 \end{frame}
+\note{
+The multi-digit model keeps its own names, calling the backup the column route. A relabelling translates the general composition's routes into its names, and a bridge lemma says every probability of a multi-digit trial equals the probability of the relabelled event in the general composition: expand both sides with the two-stage lemma and compare them outcome by outcome. Then each multi-digit theorem is a rewrite with the bridge followed by the general theorem.
+}
+
 
 \begin{frame}[fragile]{The bridge to multi-digit addition}
 \begin{Verbatim}
@@ -423,10 +425,7 @@ theorem confident_errors ... := by
 \end{Verbatim}
 \end{frame}
 \note{
-\begin{itemize}
-\item The multi-digit model keeps its own definitions and route names (so its exported numbers are byte-identical). One lemma carries every probability across, by the two-stage lemma on both sides.
-\item Event identities (\code{isColumns} after relabelling is \code{isBackup}, and so on) are \code{funext} plus \code{cases}, closed by \code{rfl}.
-\end{itemize}
+Here's the relabelling, the bridge lemma and its proof, which unfolds both definitions, applies the two-stage lemma on each side and compares them pointwise. At the bottom you can see the multi-digit confident-errors theorem: rewrite with the bridge and the event identities, then apply the general theorem. Keeping the model's own definitions meant its exported numbers didn't change at all.
 }
 
 \begin{frame}{In words: Laws}
@@ -438,6 +437,10 @@ theorem confident_errors ... := by
     \item \textbf{Lemma.} Under determinacy, a positive chance of retrieving $y$ means $y$ is retrieved for certain; so does a chance of 1.
   \end{itemize}
 \end{frame}
+\note{
+The laws quantify over states reachable from a starting state by studying items from a set. Certainty: an item just studied retrieves itself with probability one. Stability: studying a different item never changes the chance that an item retrieves itself. Determinacy: every retrieval has a single outcome. And a lemma: under determinacy, a positive chance of retrieving y means that y is retrieved for certain.
+}
+
 
 \begin{frame}[fragile]{Laws}
 \begin{Verbatim}
@@ -459,10 +462,7 @@ theorem retrieve_of_pRet_pos (R : Retriever S Item) (s0 : S) (U : List Item)
   \small \code{pRet R s x y}: the chance that probe \code{x} retrieves \code{y}. \code{Reachable}: reached from \code{s0} by studying items of \code{U}.
 \end{frame}
 \note{
-\begin{itemize}
-\item Laws are \code{Prop}-valued definitions over the interface: no mechanism appears.
-\item Each matrix cell is a theorem that a family's retriever has a law, or its negation.
-\end{itemize}
+In Lean, each law is a definition of a proposition over the retriever interface, with no mechanism mentioned. Each cell of the matrix is then a theorem that a particular family's retriever has the law, or that it doesn't.
 }
 
 \begin{frame}{In words: Studied items retrieve themselves}
@@ -475,6 +475,10 @@ theorem retrieve_of_pRet_pos (R : Retriever S Item) (s0 : S) (U : List Item)
     \item Every later item differs from $y$, since there are no repeats. By stability, each later study leaves the probability at 1 (by induction, one item at a time).
   \end{itemize}
 \end{frame}
+\note{
+Next, a theorem: with certainty and stability, after studying a list with no repeats, every item on the list retrieves itself with probability one. Split the list at the item: just after it's studied, certainty gives probability one; every later item is different, since there are no repeats, and stability, applied one item at a time, keeps the probability at one. This is also the whole content of the flat serial-position curve in our study-test experiment.
+}
+
 
 \begin{frame}[fragile]{Studied items retrieve themselves}
 \begin{Verbatim}
@@ -493,10 +497,7 @@ theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
   \code{stable\_after} is an induction on \code{post}, applying stability once per item.
 \end{frame}
 \note{
-\begin{itemize}
-\item Split the study list at $y$. Certainty gives probability 1 just after $y$ is studied; stability, applied item by item to everything studied later (none of which is $y$, by \code{Nodup}), keeps it at 1.
-\item This is also the whole content of the flat serial-position curve in the study-test experiment.
-\end{itemize}
+The Lean proof splits the list using a library lemma, rewrites the study history as the part up to and including y followed by the rest, applies stability to the rest by an inner induction, and finishes with certainty. The comments on the right mark each step.
 }
 
 \begin{frame}{In words: Confident errors from laws}
@@ -511,6 +512,10 @@ theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
     \item These are exactly the hypotheses of the confident-errors theorem.
   \end{enumerate}
 \end{frame}
+\note{
+Now the theorem that connects the two halves. Any memory with determinacy, certainty and stability produces confident errors: after studying a list without repeats that includes q, if a stranger x can be taken for q with positive probability, the three conclusions hold. The memory's state is reachable, so the laws apply. q retrieves itself with probability one by the previous theorem, hence for certain; x retrieves q with positive probability, hence also for certain. Those are exactly the hypotheses of confident errors.
+}
+
 
 \begin{frame}[fragile]{Confident errors from laws}
 \begin{Verbatim}
@@ -531,10 +536,7 @@ theorem confident_errors_of_laws (R : Retriever S Item) (s0 : S) (U : List Item)
   Laws supply the two certain-retrieval hypotheses; the composition theorem does the rest.
 \end{frame}
 \note{
-\begin{itemize}
-\item This is where the matrix and the composition meet: \code{hq'} and \code{hx'} were per-state assumptions; now they are consequences of three laws and one observable fact (the stranger can be taken for $q$).
-\item Only the discrimination family has all three laws.
-\end{itemize}
+In Lean, the proof is four lines: establish reachability, derive the two certain-retrieval facts from the laws, and apply the confident-errors theorem. What were assumptions about one state are now consequences of three laws and one observable fact.
 }
 
 \begin{frame}{In words: Using it: confident misnaming}
@@ -550,6 +552,10 @@ theorem confident_errors_of_laws (R : Retriever S Item) (s0 : S) (U : List Item)
     \end{itemize}
   \end{itemize}
 \end{frame}
+\note{
+Applying it to faces: EPAM's net, with Ann and Bob studied, has determinacy, certainty, because the three-bit faces can all be told apart, and stability, which are three results from the matrix. One fact is computed: Carl's face can be taken for Bob's. So, for every search length, Bob is never misnamed, every name Carl is given is wrong, and Carl says don't know exactly as rarely as Bob.
+}
+
 
 \begin{frame}[fragile]{Using it: confident misnaming}
 \begin{Verbatim}
@@ -568,9 +574,7 @@ theorem epam_confident_misnaming_of_laws (n : Nat) : ... :=
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The instance proof is a single application. The \code{by decide} side conditions are finite checks (list membership, no repeats, names differ).
-\end{itemize}
+In Lean, that instance is a single application of the general theorem. It cites EPAM's three matrix cells by name, and the side conditions, such as the faces being distinct and Carl being taken for Bob, are finite checks closed by decide. There's no proof script at all.
 }
 
 \begin{frame}{In words: Computing inside the proof checker}
@@ -581,6 +585,10 @@ theorem epam_confident_misnaming_of_laws (n : Nat) : ... :=
     \item The ``lacks'' cells of the matrix are proved this way, on small examples.
   \end{itemize}
 \end{frame}
+\note{
+Some facts are about particular numbers, for instance that with these parameters 150 plus 100 is answered 200 with probability 45 over 46. These are proved by evaluation: Lean's kernel runs the definitions and checks the resulting equation. The same definitions also run as ordinary programs, and they produced the exact distributions the blind simulation was checked against. The counterexample cells of the matrix are proved this way too.
+}
+
 
 \begin{frame}[fragile]{Computing inside the proof checker}
 \begin{Verbatim}
@@ -597,10 +605,7 @@ theorem example_values :
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item Kernel evaluation is slow but trusted: no compiler or external solver is in the trusted base.
-\item Because \code{Dist} doesn't merge duplicate outcomes, long computations grow; the exporter merges them, and needs a large stack.
-\end{itemize}
+Here's such a theorem, proved by decide with the kernel: the kernel evaluates both probabilities and checks that they are 45 over 46 and 1 over 46. Plain decide gets stuck on rational numbers, which is why we use the kernel. It's slow, but it's trusted: no compiler or external solver is part of the trusted base.
 }
 
 \begin{frame}{In words: What is checked, and what is not}
@@ -609,6 +614,10 @@ theorem example_values :
     \item What proof cannot check is whether the definitions say what EPAM, DOA or ACT-R say. That needs other kinds of evidence: a prose specification, an independent implementation, comparison with community code.
   \end{itemize}
 \end{frame}
+\note{
+Finally, what is and isn't checked. Every theorem is fully proved, and Lean reports exactly which axioms each one depends on: here, only its three standard ones. What proof can't check is whether the definitions say what EPAM, the associations model or ACT-R say. That needs other evidence, such as a prose specification, an independent implementation, and comparison with community code.
+}
+
 
 \begin{frame}[fragile]{What is checked, and what is not}
 \begin{Verbatim}
@@ -623,10 +632,7 @@ theorem example_values :
   \end{itemize}
 \end{frame}
 \note{
-\begin{itemize}
-\item The three axioms are those every Lean development uses: propositional extensionality, choice, and quotient soundness.
-\item Code: \code{CogLib/CogLib/Rep/Distribution.lean}, \code{Memory/DiscriminationNet.lean}, \code{Process/SampledRetrieval.lean}, \code{Process/RecognizeRetrieve.lean}, \code{Phenomena/RetrievalLaws.lean}; \code{MultiDigit/MultiDigit/AnyMemory.lean}; \code{Experiments/Experiments/FaceNaming.lean}.
-\end{itemize}
+What does all this guarantee? Lean will tell you exactly which axioms a theorem rests on. Here it's only Lean's three standard ones, with no unproved steps anywhere. We use core Lean without Mathlib, so everything also computes. What Lean can't check is whether the definitions say what EPAM, or the associations model, or ACT-R actually say. That is a different kind of question, and the next part is about how we tested it.
 }
 
 \end{document}

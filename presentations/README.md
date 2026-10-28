@@ -1,6 +1,6 @@
 # Presentations
 
-Six Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide).
+Six Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide). The notes are a spoken script: a paragraph per slide, written to be said more or less as is.
 
 | Deck | Audience | Slides |
 |---|---|---|
