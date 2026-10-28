@@ -28,6 +28,29 @@ Every number is a theorem, but of two different kinds, which should not be confl
 
 "Called old" is a report, and stored-only is about what memory returns. EPAM and strength memory satisfy stored-only and still call the prototype old with probability 1, because they return a studied item. MINERVA returns the prototype itself and so, by this crude rule, does not call it old. Connecting reports to retrievals needs an explicit decision model.
 
+## An experiment derived from laws (`Counterbalanced.lean`, `OrderEffect.lean`)
+
+The usual workflow is reversed: start from two laws that disagree and derive the experiment that separates them. Recency and order-freedom disagree. Take two new items `a`, `b` and a probe `x` equally similar to both. Condition AB studies `a` then `b`, condition BA studies `b` then `a` (after the same prior list), and both probe with `x`. The order effect is `Δ = D_AB − D_BA`, where `D = P(retrieve b) − P(retrieve a)`.
+
+- **From laws alone,** for any memory:
+  - order-freedom gives `Δ = 0` (`orderFree_delta_zero`);
+  - recency gives `Δ > 0` (`recency_delta_pos`);
+  - so no memory has both (`orderFree_recency_inconsistent`).
+- **From retrieval to report.** Under forced choice (report the retrieved item if it is `a` or `b`, otherwise guess B with probability `γ`), the reported effect is `Δ + (2γ − 1)(o_AB − o_BA)`, where `o` is the chance of retrieving neither (`delta_report`). So:
+  - order-freedom predicts a reported effect of 0 for every `γ` (`forcedChoice_orderFree`);
+  - recency predicts a positive one only with unbiased guessing, or when "neither" is equally likely in both orders (`forcedChoice_recency`).
+
+  A biased guesser can mask or reverse the recency prediction. The bridge's condition is part of the theorem.
+
+| Memory | Δ, no prior list (000, 110; probe 010) | Δ, prior list [000] (100, 010; probe 110) | Why |
+|---|---|---|---|
+| Activation (ACT-R) | 10/17 | | recency, so Δ > 0 from laws; reported 10/17 for every `γ` |
+| Strength (DOA) | 0 | 0 | order-free, so Δ = 0 from laws |
+| Global matching (MINERVA 2) | 0 | 0 | order-free, so Δ = 0 from laws |
+| Discrimination (EPAM) | 0 | −2 | neither law: computed |
+
+EPAM's order effects come from the shape of the net, not from time. From an empty net, both orders grow the same test. After 000, whichever item is learned first is discriminated from 000, and the probe then always retrieves it: Δ = −2, the most extreme primacy possible. So the same counterbalanced experiment gives recency (ACT-R), no effect (strength, MINERVA), and primacy (EPAM, with a suitable prior list).
+
 ## Limits, and next
 
 - **Representation artifact.** With `±1` features, a trace opposite to the probe gets activation −1 in MINERVA, enough to drive the echo's intensity negative and make retrieval fail. That is why the study list leaves out 000. Hintzman's features also take the value 0.

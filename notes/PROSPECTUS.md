@@ -105,7 +105,7 @@ With the judgments as they stand, activation fits every law on which the evidenc
    - Certainty and stability have the same row: separate them or merge them.
    - Add the graded laws not yet stated: frequency monotonicity, similarity-graded confusion.
    - Add implications between laws. Some laws may entail others (does certainty plus stability imply stored-only retrieval?).
-4. **Connect theories and experiments to the matrix.**
+4. **Connect theories and experiments to the matrix.** First law-derived experiment done: `Experiments/Counterbalanced.lean` proves that order-freedom gives no order effect and recency a positive one, and, through a forced-choice response model, when the reported effect keeps that sign (unbiased guessing, or equal chances of retrieving neither item). Still to do:
    - Restate the multi-digit laws as matrix laws, so that a theory's differential predictions are read off the matrix.
    - Add decision and report components, so that laws about retrieval yield predictions about observable responses. Then derive experiments from incompatible laws. For example, recency and order-freedom are jointly inconsistent wherever recency's conditions can be met, and a counterbalanced AB/BA study list with a probe equally similar to A and B separates them (`notes/20261027_CogLean_Direction.md`, §4).
 5. **Beyond memory.** The same treatment for strategy choice (a strategy-chooser interface, `OPEN_ISSUES.md` #8), then production systems. The Common Model of Cognition's modules are a checklist of which interfaces are needed.
