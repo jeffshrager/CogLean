@@ -1,4 +1,4 @@
-DECKS = coglean-overview recognition-retrieval recognition-retrieval-lean laws-matrix-experiments
+DECKS = coglean-overview recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation
 
 all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 
