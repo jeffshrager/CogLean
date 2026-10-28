@@ -1,4 +1,4 @@
-DECKS = coglean-overview recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation
+DECKS = coglean-overview recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation coglean-story
 
 all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 
@@ -9,6 +9,9 @@ all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 %-notes.pdf: %.tex preamble.tex
 	pdflatex -interaction=nonstopmode -jobname=$*-notes "\def\withnotes{}\input{$*.tex}" > /dev/null
 	pdflatex -interaction=nonstopmode -jobname=$*-notes "\def\withnotes{}\input{$*.tex}" > /dev/null
+
+coglean-story.tex: gen_story.py coglean-overview.tex recognition-retrieval.tex recognition-retrieval-lean.tex blind-simulation.tex laws-matrix-experiments.tex
+	python3 gen_story.py
 
 clean:
 	rm -f *.aux *.log *.nav *.out *.snm *.toc *.vrb
