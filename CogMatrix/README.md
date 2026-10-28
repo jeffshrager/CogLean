@@ -13,6 +13,7 @@ python3 gen_matrix.py           # regenerates ../notes/MATRIX.md from the cells
   - `OrderFree`: the order of study doesn't matter.
   - `Recency`: of two stimuli studied last and equally similar to the probe, the later is retrieved more often.
   - `StoredOnly`: nothing is retrieved that was not studied.
+  - `Determinate`: every retrieval has a single outcome. Structural as stated, but each "lacks" cell shows two outcomes with positive probability, so it fails any probabilistic version too.
 - `CogMatrix/Families/Minerva.lean`: the global-matching family (MINERVA 2). Every study stores a trace; a probe activates all traces by the cube of their similarity, and memory returns the echo, their weighted sum read feature by feature.
 - `CogMatrix/Families/Strength.lean`: the strength family (after the distributions-of-associations model). Strengths only add, the probe samples in proportion to strength discounted by mismatch, and a criterion and a search length apply. The other two families come from CogLib: discrimination nets (`netRetriever`) and activation (`actRetriever`, ACT-R with decay 1 and temperature 1).
 - `CogMatrix/Matrix/*.lean`: the cells, one file per family. `Common.lean` is the small universe the counterexamples use: the eight 3-bit codes.
@@ -27,6 +28,12 @@ Every law is had by some family and lacked by another, and every family has its 
 - **Global matching** is order-free, and retrieves what was never studied: probed with the centre of three studied variants, it returns the centre (schema abstraction).
 
 Global matching was added as a test of the first four laws, which were chosen with the other three families in view. They failed the test: on them, global matching has exactly the row of strength memory. Stored-only retrieval, the law that separates the two, says what is distinctive about global matching, that its output is a blend. It was found by asking what the laws missed. A fifth family is the next such test.
+
+## What the laws buy: confident errors
+
+`Cog.RR.confident_errors_of_laws` (`CogLib/Process/RecognizeRetrieve.lean`) derives confident errors in the recognize-retrieve composition from three laws: determinacy, certainty and stability. Any memory with all three gives every stranger who can be taken for a studied item a confidently wrong answer, with no extra backup use. In the matrix, only discrimination has all three. Face naming derives its confident misnaming this way, from EPAM's cells (`Experiments/FaceNaming.lean`, `epam_confident_misnaming_of_laws`).
+
+The evidence row judges that people lack certainty. So the law-level route to confident errors, as stated, does not apply to people. If people make confident errors, a graded version (certainty and determinacy with high probability, not probability 1) is what would explain them. That theorem is still to be proved.
 
 ## Against the evidence
 

@@ -9,6 +9,7 @@ noticeably different (for `Certainty`), or any set (for `Stability`).
 * `not_orderFree`: lacks it. The net depends on the order of learning.
 * `not_recency`: lacks it. Nothing in a net records when learning happened.
 * `storedOnly`: has it. A probe retrieves a stored image or nothing.
+* `determinate`: has it. A net sorts a probe to one terminal.
 -/
 
 import CogMatrix.Matrix.Common
@@ -125,5 +126,9 @@ theorem storedOnly (U : List Item) : StoredOnly (netRetriever order) (Net.leaf n
       · exact h'
     have hwy : w ≠ y := fun e => hy (e ▸ hwx)
     simp [hwy]
+
+/-- **Discrimination is determinate.** -/
+theorem determinate (U : List Item) : Determinate (netRetriever order) (Net.leaf none) U :=
+  determinate_of_deterministic _ _ _ (netRetriever_deterministic order)
 
 end Cog.Matrix.Discrimination

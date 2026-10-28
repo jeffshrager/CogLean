@@ -84,6 +84,8 @@ With the judgments as they stand, activation fits every law on which the evidenc
 | Strength with a criterion (DOA) | lacks | lacks | has | lacks | has |
 | Global matching (MINERVA 2) | lacks | lacks | has | lacks | lacks |
 
+(A sixth law, determinacy, is now in the generated matrix: discrimination and global matching have it, activation and strength lack it.)
+
 - The laws are in CogLib (`Phenomena/RetrievalLaws.lean`), stated over its `Retriever` interface (study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Each is relative to a starting state and a set of stimuli. The older all-or-none `StableRetrieval` is related to them by theorem: stability gives it for deterministic memories, and it holds vacuously for memories in which nothing is certain.
 - Every **has** cell is a general proof for every parameter choice meeting its stated conditions. Every **lacks** cell is a counterexample.
 - Every law is had by some family and lacked by another, and every family has its own row. The generator checks both.
@@ -91,6 +93,8 @@ With the judgments as they stand, activation fits every law on which the evidenc
 **Point 4 has already done work twice.**
 - In the multi-digit model, the all-or-none law `StableRetrieval` turned out to hold for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain. That is why the matrix's laws are probabilistic.
 - Global matching was added as a test of the first four laws, chosen with the other three families in view. It matched strength memory on all four. The fifth law, stored-only retrieval, separates them, and it names what is distinctive about global matching: its output is a blend, which can be a prototype never studied.
+
+**The two demonstrations meet.** `RR.confident_errors_of_laws` derives the composition's confident errors from three matrix laws (determinacy, certainty, stability), so the matrix says which families produce them: only discrimination. Face naming gets its confident misnaming this way, from EPAM's cells. The evidence row judges that people lack certainty, so a graded version is what would be needed to explain confident errors in people.
 
 **A composition is reusable.** `CogLib/Process/RecognizeRetrieve.lean` is the composition of recognition (any memory) with associative retrieval and a backup, over any problems and answers. Its theorems, among them `confident_errors`, are proved once there. Multi-digit addition is an instance and inherits them, and so is a task with no arithmetic: naming familiar people (`Experiments/FaceNaming.lean`), where the inherited theorem is confident misnaming of a stranger.
 

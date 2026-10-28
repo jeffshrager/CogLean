@@ -10,6 +10,8 @@ positive discount `μ` per mismatch.
 * `not_certainty`: lacks it. Retrieval can fail.
 * `not_stability`: lacks it. Uses decay, and new chunks compete.
 * `not_orderFree`: lacks it. The order of study sets the ages of the uses.
+* `not_determinate`: lacks it. After 000 and 100, the probe 000 retrieves each
+  with positive probability.
 * `storedOnly`: has it, for every choice of parameters. Only chunks are
   retrieved, and a chunk is made only by study.
 -/
@@ -53,6 +55,11 @@ theorem not_orderFree : ¬ OrderFree (actRetriever P) empty U3 := by
   have := h empty ⟨[], by decide, rfl⟩ (bits 0) (by decide) (bits 1) (by decide) (bits 0)
   revert this
   decide +kernel
+
+/-- **Activation is not determinate.** -/
+theorem not_determinate : ¬ Determinate (actRetriever P) empty U3 :=
+  not_determinate_of_two _ _ _ _ ⟨[bits 0, bits 1], by decide, rfl⟩ (bits 0) (bits 0) (bits 1)
+    (by decide) (by decide +kernel) (by decide +kernel)
 
 /-! ### Recency, in general -/
 

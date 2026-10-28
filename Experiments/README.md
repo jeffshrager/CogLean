@@ -9,7 +9,7 @@ cd Experiments && lake build    # builds CogLib and CogMatrix too; core Lean onl
 - `Experiments/StudyTest.lean`: the layer.
   - A study-test experiment: a study list, studied once each in order with no feedback, then probes; testing doesn't change memory.
   - Measures: accuracy by serial position (`curve`), the chance a probe retrieves some studied item (`claimsOld`), and the chance a probe retrieves itself (`retrievesItself`).
-  - `curve_flat`: any memory with certainty and stability gives a flat serial-position curve at 1.
+  - `curve_flat`: any memory with certainty and stability gives a flat serial-position curve at 1 (a corollary of `Laws.studied_selfRetrieval` in CogLib).
 - `Experiments/PrototypeDemo.lean`: one experiment, four memories. Study 110, 101 and 011. Test each, then the lure 111 (their prototype, never studied) and the lure 000 (unlike all three).
 
 | Memory | Serial-position curve | 111 called old | 111 retrieves itself | 000 called old |
@@ -61,6 +61,7 @@ The composition extracted from multi-digit addition (`Cog.recognizeRetrieve`: re
   - Carl says "don't know" exactly as rarely as Bob.
 
   The theorem is inherited, not reproved.
+- **The same, from laws** (`epam_confident_misnaming_of_laws`): by `Cog.RR.confident_errors_of_laws`, from EPAM's matrix cells (determinate, certain, stable) plus one computed fact, that Carl can be taken for Bob.
 - **ACT-R.** Misnaming is graded (`act_values`): Carl is named Bob 225/391 of the time and Ann 225/782. He says "don't know" more often than Bob (107/782 vs 229/2254, `act_more_dont_know`), and Bob himself is sometimes called Ann.
 
 | | EPAM | ACT-R |

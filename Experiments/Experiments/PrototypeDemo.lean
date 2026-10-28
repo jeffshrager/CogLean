@@ -48,12 +48,6 @@ def E : StudyTest := ⟨[bits 3, bits 5, bits 6], [bits 7, bits 0]⟩
 def epam := netRetriever F3
 def epam0 : Net := .leaf none
 
-/-- Any two different 3-bit codes differ on a feature EPAM notices. -/
-theorem noticeable_U3 : PairwiseNoticeable F3 U3 := by
-  have h : ∀ x ∈ U3, ∀ z ∈ U3, z ≠ x → (firstDiff F3 x z).isSome = true := by decide
-  intro x hx z hz hzx
-  exact Option.isSome_iff_exists.mp (h x hx z hz hzx)
-
 /-- **EPAM's flat curve, from laws alone.** -/
 theorem epam_curve_flat : ∀ r ∈ E.curve epam epam0, r = 1 :=
   curve_flat epam epam0 U3 (Discrimination.certainty F3 U3 noticeable_U3)

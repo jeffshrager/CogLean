@@ -43,5 +43,11 @@
       "Posner, M. I., & Keele, S. W. (1968). On the genesis of abstract ideas. Journal of Experimental Psychology, 77, 353-363.",
       "Roediger, H. L., & McDermott, K. B. (1995). Creating false memories: Remembering words not presented in lists. Journal of Experimental Psychology: Learning, Memory, and Cognition, 21, 803-814."
     ]
+  },
+  "determinate": {
+    "status": "mixed",
+    "summary": "People's responses to the same cue vary from one occasion to another, which suggests that retrieval is not determinate. But the variation could arise in encoding, in context, or at report, so the evidence does not settle what memory itself retrieves. No source is cited here yet.",
+    "bridge": "Unformalized: response variability must be separated from retrieval variability by a response model.",
+    "sources": []
   }
 }

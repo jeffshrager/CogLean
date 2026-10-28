@@ -27,6 +27,11 @@ With no law of memory:
     associations are sharp, errs on every whole-problem answer, with no more
     backup use than the familiar problem;
   - `same_correct_confusion_harmless`.
+
+From laws of memory (`Phenomena/RetrievalLaws`):
+* `confident_errors_of_laws`: any memory with determinate retrieval,
+  certainty and stability produces confident errors whenever a stranger can
+  be taken for a studied item with sharp associations.
 -/
 
 import CogLib.Process.SampledRetrieval
@@ -266,6 +271,35 @@ theorem same_correct_confusion_harmless (correct : P → A) (x q : P)
       prob (recognizeRetrieve code retrieve str as cc n backup q) (wholeWrong correct q) := by
   rw [wholeWrong, wholeWrong, hsum]
   exact same_route_same_retrieval code retrieve str as cc n backup x q _ _ hx hq
+
+/-- **Confident errors, from laws of memory.** For any memory with
+determinate retrieval, certainty and stability: after a study list without
+repeats, if a stranger `x` can be taken for a studied `q` (with positive
+probability), and `q`'s associations are sharp, then `confident_errors`
+holds. The matrix (`CogMatrix/`) says which memory families have the three
+laws. -/
+theorem confident_errors_of_laws {S : Type} (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hdet : Laws.Determinate R s0 U) (hcert : Laws.Certainty R s0 U)
+    (hstab : Laws.Stability R s0 U) (xs : List Item) (hxs : ∀ y ∈ xs, y ∈ U) (hnd : xs.Nodup)
+    (correct : P → A) (x q : P) (hq : code q ∈ xs)
+    (hconf : 0 < Laws.pRet R (R.studyAll s0 xs) (code x) (code q))
+    (hT : ∀ y, total as (str y) ≠ 0) (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup q)
+        (wholeWrong correct q) = 0 ∧
+      prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
+          (wholeWrong correct x) =
+        prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
+          isWhole ∧
+      prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
+          isBackup =
+        prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup q)
+          isBackup := by
+  have hr : Laws.Reachable R s0 U (R.studyAll s0 xs) := ⟨xs, hxs, rfl⟩
+  have hq' := Laws.retrieve_of_pRet_one R s0 U hdet _ hr (code q) (code q)
+    (Laws.studied_selfRetrieval R s0 U hcert hstab xs hxs hnd (code q) hq)
+  have hx' := Laws.retrieve_of_pRet_pos R s0 U hdet _ hr (code x) (code q) hconf
+  exact confident_errors code _ str as cc n backup correct x q hT hbx hbq hq' hx' hs hne
 
 end RR
 end Cog

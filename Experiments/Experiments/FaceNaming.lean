@@ -23,6 +23,9 @@ strength .90, and other names .01; criterion .50. The stranger Carl (face
   This is the multi-digit confident error, with no arithmetic: a retrieved,
   wrong name with no extra "don't know", which comes from recognizing the
   wrong person, not from uncertain memory.
+* **The same, from laws** (`epam_confident_misnaming_of_laws`), by
+  `Cog.RR.confident_errors_of_laws`, from EPAM's matrix cells (determinate,
+  certain, stable) and one computed fact: Carl can be taken for Bob.
 * **Graded misnaming with ACT-R's memory** (`act_values`), same task, same
   associations, search length 1:
 
@@ -116,6 +119,27 @@ theorem epam_confident_misnaming (n : Nat) :
           RR.isBackup :=
   RR.confident_errors Person.face net.retrieve str names (1 / 2) n backup Person.name carl bob
     total_ne (mass_backup carl) (mass_backup bob) net_bob net_carl sharp_bob (by decide)
+
+/-- **Confident misnaming, from EPAM's laws.** The same conclusion, derived
+from matrix cells: discrimination is determinate, certain (on the 3-bit
+codes, which it can tell apart) and stable. The only computed fact is that
+Carl can be taken for Bob. -/
+theorem epam_confident_misnaming_of_laws (n : Nat) :
+    prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
+        bob) (RR.wholeWrong Person.name bob) = 0 ∧
+      prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
+          carl) (RR.wholeWrong Person.name carl) =
+        prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n
+          backup carl) RR.isWhole ∧
+      prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
+          carl) RR.isBackup =
+        prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n
+          backup bob) RR.isBackup :=
+  RR.confident_errors_of_laws Person.face str names (1 / 2) n backup (netRetriever F3) (Net.leaf none)
+    U3 (Discrimination.determinate F3 U3) (Discrimination.certainty F3 U3 noticeable_U3)
+    (Discrimination.stability F3 U3) [ann.face, bob.face] (by decide) (by decide) Person.name carl bob
+    (by decide) (by decide +kernel) total_ne (mass_backup carl) (mass_backup bob) sharp_bob
+    (by decide)
 
 /-! ### Both memories, search length 1 -/
 

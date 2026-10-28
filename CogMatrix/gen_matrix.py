@@ -5,10 +5,10 @@ law, or `not_<law>` when it lacks it. Run from CogMatrix/.
 """
 import re, pathlib, json
 
-LAWS = ["certainty", "stability", "orderFree", "recency", "storedOnly"]
+LAWS = ["certainty", "stability", "orderFree", "recency", "storedOnly", "determinate"]
 LAW_NAMES = {"certainty": "Certainty", "stability": "Stability",
              "orderFree": "Order-freedom", "recency": "Recency",
-             "storedOnly": "Stored-only"}
+             "storedOnly": "Stored-only", "determinate": "Determinate"}
 FAMILIES = [("Discrimination", "Discrimination (EPAM)"),
             ("Activation", "Activation (ACT-R, d = 1, s = 1)"),
             ("Strength", "Strength with a criterion (DOA)"),

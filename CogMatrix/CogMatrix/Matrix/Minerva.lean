@@ -6,6 +6,7 @@ The global-matching family (MINERVA 2) against the laws.
 * `not_certainty`, `not_stability`: lacks them. Enough traces of a neighbour
   outweigh a stimulus's own.
 * `not_recency`: lacks it. Nothing records when study happened.
+* `determinate`: has it, for every width. The echo is a single code.
 * `not_storedOnly`: lacks it. Probed with the centre of three studied
   variants, memory returns the centre, never studied.
 
@@ -79,5 +80,15 @@ theorem not_storedOnly : ¬ StoredOnly (minRetriever P) [] U3 := by
   have := h [bits 3, bits 5, bits 6] (by decide) (bits 7) (bits 7) (by decide)
   revert this
   decide +kernel
+
+/-- **Global matching is determinate**, for every width, from every state. -/
+theorem determinate (P : MinParams) (s0 : MinState) (U : List Item) :
+    Determinate (minRetriever P) s0 U := by
+  intro s _ x
+  show ∃ r, retrieve P s x = Dist.pure r
+  unfold retrieve
+  split
+  · exact ⟨_, rfl⟩
+  · exact ⟨_, rfl⟩
 
 end Cog.Matrix.Minerva

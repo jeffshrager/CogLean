@@ -29,6 +29,15 @@ How they relate to the all-or-none `StableRetrieval` (`Phenomena/Retriever`):
   `Stability` gives `StableRetrieval` on the reachable states.
 * `stableRetrieval_of_neverCertain`: a retriever that never retrieves
   anything for certain has `StableRetrieval` trivially.
+
+Determinate retrieval (`Determinate`: every retrieval has a single outcome),
+and what follows for studied items:
+* `studied_selfRetrieval`: with certainty and stability, every item of a
+  study list retrieves itself with probability 1;
+* `retrieve_of_pRet_pos`, `retrieve_of_pRet_one`: under determinacy, a
+  positive chance, or a chance of 1, is certainty.
+These are what the recognize-retrieve composition needs
+(`Process/RecognizeRetrieve`, `RR.confident_errors_of_laws`).
 -/
 
 import CogLib.Phenomena.Retriever
@@ -123,6 +132,102 @@ theorem stableRetrievalOn_of_stability (R : Retriever S Item) (s0 : S) (U : List
 theorem stableRetrieval_of_neverCertain (R : Retriever S Item)
     (h : ∀ s x y, R.retrieve s x ≠ Dist.pure (some y)) : Phenomena.StableRetrieval R :=
   fun s _ y hy _ => absurd hy (h s y y)
+
+/-! ### Determinate retrieval, and what studied items retrieve -/
+
+/-- **Determinate retrieval.** In every reachable state, every probe's
+retrieval has a single outcome. As stated, this is structural; a family lacks
+it when some probe has two different outcomes, each with positive
+probability (`not_determinate_of_two`), which fails any probabilistic version
+too. -/
+def Determinate (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ s, Reachable R s0 U s → ∀ x, ∃ r, R.retrieve s x = Dist.pure r
+
+theorem determinate_of_deterministic (R : Retriever S Item) (s0 : S) (U : List Item)
+    (h : Deterministic R) : Determinate R s0 U :=
+  fun s _ x => h s x
+
+/-- Under determinacy, a positive chance of retrieving `y` is certainty. -/
+theorem retrieve_of_pRet_pos (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hd : Determinate R s0 U) (s : S) (hs : Reachable R s0 U s) (x y : Item)
+    (h : 0 < pRet R s x y) : R.retrieve s x = Dist.pure (some y) := by
+  obtain ⟨r, hr⟩ := hd s hs x
+  rw [pRet_pure R s x y r hr] at h
+  rw [hr]
+  cases hb : (r == some y)
+  · rw [hb] at h; exact absurd h (by decide)
+  · have : r = some y := by simpa using hb
+    rw [this]
+
+theorem retrieve_of_pRet_one (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hd : Determinate R s0 U) (s : S) (hs : Reachable R s0 U s) (x y : Item)
+    (h : pRet R s x y = 1) : R.retrieve s x = Dist.pure (some y) :=
+  retrieve_of_pRet_pos R s0 U hd s hs x y (by rw [h]; decide)
+
+/-- A family lacks determinacy when some probe, in some reachable state, has
+two different outcomes with positive probability. -/
+theorem not_determinate_of_two (R : Retriever S Item) (s0 : S) (U : List Item) (s : S)
+    (hs : Reachable R s0 U s) (x y1 y2 : Item) (hne : y1 ≠ y2)
+    (h1 : 0 < pRet R s x y1) (h2 : 0 < pRet R s x y2) : ¬ Determinate R s0 U := by
+  intro hd
+  have e1 := retrieve_of_pRet_pos R s0 U hd s hs x y1 h1
+  have e2 := retrieve_of_pRet_pos R s0 U hd s hs x y2 h2
+  rw [e1] at e2
+  have := Dist.pure_inj e2
+  simp only [Option.some.injEq] at this
+  exact hne this
+
+theorem studyAll_append (R : Retriever S Item) (s : S) (xs ys : List Item) :
+    R.studyAll s (xs ++ ys) = R.studyAll (R.studyAll s xs) ys := by
+  simp [Retriever.studyAll, List.foldl_append]
+
+/-- Under stability, studying other items leaves an item's chance of
+retrieving itself unchanged. -/
+theorem stable_after (R : Retriever S Item) (s0 : S) (U : List Item) (hs : Stability R s0 U)
+    (y : Item) (hy : y ∈ U) :
+    ∀ (post pre : List Item), (∀ x ∈ pre, x ∈ U) → (∀ z ∈ post, z ∈ U ∧ z ≠ y) →
+      pRet R (R.studyAll s0 (pre ++ post)) y y = pRet R (R.studyAll s0 pre) y y := by
+  intro post
+  induction post with
+  | nil => intro pre _ _; simp
+  | cons z post ih =>
+    intro pre hpre hpost
+    have hz := hpost z (List.mem_cons_self ..)
+    have e : pre ++ z :: post = (pre ++ [z]) ++ post := by simp
+    rw [e, ih (pre ++ [z]) (by
+        intro x hx
+        rcases List.mem_append.mp hx with h | h
+        · exact hpre x h
+        · simp at h; exact h ▸ hz.1)
+      (fun w hw => hpost w (List.mem_cons_of_mem z hw)),
+      studyAll_append]
+    exact hs _ ⟨pre, hpre, rfl⟩ y hy z hz.1 hz.2
+
+/-- **Studied items retrieve themselves.** With certainty and stability, after
+studying a list without repeats, every item on it retrieves itself with
+probability 1. -/
+theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hc : Certainty R s0 U) (hs : Stability R s0 U) (xs : List Item)
+    (hU : ∀ x ∈ xs, x ∈ U) (hnd : xs.Nodup) (y : Item) (hy : y ∈ xs) :
+    pRet R (R.studyAll s0 xs) y y = 1 := by
+  obtain ⟨pre, post, hsplit⟩ := List.append_of_mem hy
+  have hyU := hU y hy
+  have hpre : ∀ x ∈ pre, x ∈ U := fun x hx => hU x (by rw [hsplit]; simp [hx])
+  have hnd' := hnd
+  rw [hsplit] at hnd'
+  have hyp : y ∉ post := by
+    rw [List.nodup_append] at hnd'
+    exact (List.nodup_cons.mp hnd'.2.1).1
+  have hpost : ∀ z ∈ post, z ∈ U ∧ z ≠ y := fun z hz =>
+    ⟨hU z (by rw [hsplit]; simp [hz]), fun e => hyp (e ▸ hz)⟩
+  rw [hsplit, show pre ++ y :: post = (pre ++ [y]) ++ post by simp,
+    stable_after R s0 U hs y hyU post (pre ++ [y]) (by
+      intro x hx
+      rcases List.mem_append.mp hx with h | h
+      · exact hpre x h
+      · simp at h; exact h ▸ hyU) hpost,
+    studyAll_append]
+  exact hc _ ⟨pre, hpre, rfl⟩ y hyU
 
 end Laws
 end Cog

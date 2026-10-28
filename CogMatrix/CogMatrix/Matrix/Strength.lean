@@ -6,6 +6,8 @@ laws.
 * `not_certainty`, `not_stability`: lacks them. A similar stimulus competes
   for retrieval.
 * `not_recency`: lacks it. Nothing records when study happened.
+* `not_determinate`: lacks it. After 000 and 100, the probe 000 states each
+  with positive probability.
 * `storedOnly`: has it, for every choice of parameters. Only stimuli with
   strength are sampled, and only study gives strength.
 -/
@@ -64,6 +66,11 @@ theorem not_recency : ¬ Recency F3 (strRetriever P) s0 U3 := by
     (by decide) (bits 2) (by decide)
   revert this
   decide +kernel
+
+/-- **Strength memory is not determinate.** -/
+theorem not_determinate : ¬ Determinate (strRetriever P) s0 U3 :=
+  not_determinate_of_two _ _ _ _ ⟨[bits 0, bits 1], by decide, rfl⟩ (bits 0) (bits 0) (bits 1)
+    (by decide) (by decide +kernel) (by decide +kernel)
 
 theorem sum_zero (l : List Rat) (h : ∀ r ∈ l, r = 0) : l.sum = 0 := by
   induction l with
