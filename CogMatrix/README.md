@@ -7,6 +7,8 @@ cd CogMatrix && lake build     # builds CogLib too; core Lean only
 python3 gen_matrix.py           # regenerates ../notes/MATRIX.md from the cells
 ```
 
+`gen_matrix.py` builds the package, then runs `#print axioms` on every cell. A cell that depends on `sorry` (`sorryAx`) or on any axiom beyond `propext`, `Classical.choice` and `Quot.sound` is marked **unproved** in the matrix, and the script exits with an error. So a generated matrix with no such marks certifies that every verdict is proved.
+
 - The laws are in CogLib (`../CogLib/CogLib/Phenomena/RetrievalLaws.lean`), next to the `Retriever` interface. Each is stated relative to a starting state `s0` and a set `U` of stimuli that may be studied.
   - `Certainty`: a stimulus just studied is retrieved for certain.
   - `Stability`: studying one stimulus leaves another's chance of retrieving itself unchanged.

@@ -11,6 +11,8 @@ Each cell is a theorem: **has** (a general proof, under the family's stated cond
 | Strength with a criterion (DOA) | **lacks** `Strength.not_certainty` | **lacks** `Strength.not_stability` | **has** `Strength.orderFree` | **lacks** `Strength.not_recency` | **has** `Strength.storedOnly` | **lacks** `Strength.not_determinate` |
 | Global matching (MINERVA 2) | **lacks** `Minerva.not_certainty` | **lacks** `Minerva.not_stability` | **has** `Minerva.orderFree` | **lacks** `Minerva.not_recency` | **lacks** `Minerva.not_storedOnly` | **has** `Minerva.determinate` |
 
+Every cell is checked with `#print axioms` when this file is generated: each depends only on Lean's standard axioms (`propext`, `Classical.choice`, `Quot.sound`), so none uses `sorry`.
+
 Every law is had by some family and lacked by another.
 
 Every family has its own row.
