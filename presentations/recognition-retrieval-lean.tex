@@ -37,6 +37,15 @@
 \end{itemize}
 }
 
+\begin{frame}{In words: Exact distributions}
+  \begin{itemize}
+    \item A \textbf{distribution} is a finite list of outcomes, each with an exact rational probability.
+    \item \textbf{Certain}: the distribution certain of $a$ has the single outcome $a$, with probability 1.
+    \item \textbf{Two stages} (\emph{bind}): draw $a$ from the first distribution, then draw from a second distribution that depends on $a$. Each second-stage probability is multiplied by the probability of the $a$ that led to it.
+    \item \textbf{Probability of an event}: add up the probabilities of the outcomes in the event.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Exact distributions}
 \begin{Verbatim}
 abbrev Dist (α : Type) := List (α × Rat)
@@ -64,6 +73,19 @@ def prob : Dist α → (α → Bool) → Rat
 \end{itemize}
 }
 
+\begin{frame}{In words: The two-stage lemma}
+  \textbf{Lemma (two stages).} The probability of an event after a two-stage process is the sum, over first-stage outcomes, of each outcome's probability times the event's probability after it.
+  \bigskip
+
+  \textbf{Proof}, by induction on the list of first-stage outcomes.
+  \begin{itemize}
+    \item No outcomes: both sides are 0.
+    \item One more outcome: the event's probability in that outcome's branch, scaled by the outcome's probability, plus the rest, which is the induction hypothesis.
+  \end{itemize}
+  \bigskip
+  Two special cases are used throughout: relabelling the outcomes relabels the event; and a second stage that is certain on one set of outcomes and has a fixed probability on another.
+\end{frame}
+
 \begin{frame}[fragile]{The two-stage lemma}
 \begin{Verbatim}
 /-- A mixture: the probability of an event after a two-stage process is the
@@ -89,6 +111,15 @@ theorem prob_bind_sum (d : Dist α) (f : α → Dist β) (e : β → Bool) :
 \end{itemize}
 }
 
+\begin{frame}{In words: Discrimination nets}
+  \begin{itemize}
+    \item A \textbf{net} is either a terminal, holding a stored image or nothing, or a test on one feature with two subnets.
+    \item \textbf{Selecting} a code: at each test, follow the branch the code's feature says; return the image at the terminal reached.
+    \item The \textbf{path} of a code: the features tested on the way down.
+    \item A net \textbf{recognizes} a code when the code selects its own image.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Discrimination nets}
 \begin{Verbatim}
 inductive Net where
@@ -112,6 +143,21 @@ def path : Net → Item → List Feature
 \item Learning (\code{Net.learn}, not shown) replaces a confused terminal by a test on the first noticed difference.
 \end{itemize}
 }
+
+\begin{frame}{In words: Lemma A}
+  \textbf{Lemma A.} Suppose each image is stored only once, the net recognizes $y$, and $x$ selects $y$'s image. Then $x$ agrees with $y$ on every feature tested along $x$'s path.
+  \bigskip
+
+  \textbf{Proof}, by induction on the net.
+  \begin{itemize}
+    \item At a terminal there is no path, so there is nothing to show.
+    \item At a test, $x$ and $y$ each go one way.
+    \begin{itemize}
+      \item The same way: they agree on the tested feature, and the rest of the path is the induction hypothesis.
+      \item Different ways: $y$'s image would be selected on both sides, so it would be stored twice. Contradiction.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{Lemma A: a confusion agrees on the path}
 \begin{Verbatim}
@@ -140,6 +186,20 @@ theorem confusion_agrees_on_path (N : Net) (x y : Item) (hnd : N.images.Nodup)
 \item This lemma is behind every near-miss prediction, and behind EPAM's \code{AgreesOn} law.
 \end{itemize}
 }
+
+\begin{frame}{In words: DOA search, and a closed form}
+  \textbf{Search} with $n$ tries: sample an answer in proportion to strength. If it clears the criterion, state it; otherwise search again with one try fewer. With no tries left, retrieval is exhausted.
+  \bigskip
+
+  \textbf{Theorem.} If the total strength is not 0, retrieval is exhausted with probability $(1-R)^n$, where $R$ is the chance that one sample clears the criterion.
+  \bigskip
+
+  \textbf{Proof}, by induction on $n$.
+  \begin{itemize}
+    \item No tries: exhausted for certain, and $(1-R)^0 = 1$.
+    \item One more try: a sample that clears the criterion ends the search, which is then not exhausted. One that doesn't (probability $1-R$) leads to a search exhausted with probability $(1-R)^n$, by induction. So the total is $(1-R)\cdot(1-R)^n$.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{DOA search, and a closed form}
 \begin{Verbatim}
@@ -172,6 +232,19 @@ theorem prob_exhausted (as : List α) (s : α → Rat) (cc : Rat) (hT : total as
 \end{itemize}
 }
 
+\begin{frame}{In words: The composition}
+  \textbf{After recognition:}
+  \begin{itemize}
+    \item if memory calls up nothing, use the backup;
+    \item if it calls up a stored code $y$, search $y$'s associations. A stated answer is a \emph{whole-problem} answer; if the search is exhausted, use the backup.
+  \end{itemize}
+  \bigskip
+  \textbf{Recognize, then retrieve, else back up}: a two-stage process. First, what memory calls up for the problem's code (a distribution); then the step above.
+  \bigskip
+
+  Nothing here mentions arithmetic, EPAM, or ACT-R: the problems, the answers and the memory are all parameters.
+\end{frame}
+
 \begin{frame}[fragile]{The composition}
 \begin{Verbatim}
 def afterRecognition (str : Item → A → Rat) (as : List A) (cc : Rat) (n : Nat)
@@ -197,6 +270,24 @@ def recognizeRetrieve (code : P → Item) (retrieve : Item → Dist (Option Item
 \end{itemize}
 }
 
+\begin{frame}{In words: Confident errors: the proof is a composition}
+  \textbf{Theorem (confident errors).} Suppose:
+  \begin{itemize}\small
+    \item a familiar problem $q$ calls up its own code for certain, and a stranger $x$ calls up $q$'s code for certain;
+    \item $q$'s associations are \emph{sharp}: only $q$'s correct answer clears the criterion;
+    \item $x$'s correct answer is different; no association set has total strength 0; the backups are proper distributions.
+  \end{itemize}
+  Then (1) $q$ is never given a wrong whole answer; (2) every whole answer given to $x$ is wrong; (3) $x$ and $q$ use the backup equally often.
+  \medskip
+
+  \textbf{Proof.}
+  \begin{itemize}\small
+    \item (1) is the next lemma, applied to $q$ itself.
+    \item (2): on sharp associations every stated answer is $q$'s correct answer, which is wrong for $x$.
+    \item (3): both problems search the same associations, so each uses the backup with probability $(1-R_q)^n$.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Confident errors: the proof is a composition}
 \begin{Verbatim}
 theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (str y) ≠ 0)
@@ -221,6 +312,18 @@ theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (st
 \item Note the hypotheses: retrieval is certain (\code{= pure (some \ldots)}). That is exactly what ACT-R never satisfies, and what the laws later supply.
 \end{itemize}
 }
+
+\begin{frame}{In words: One supporting lemma}
+  \textbf{Lemma (the neighbour's answer).} If $x$ calls up $q$'s code for certain, and $q$'s associations are sharp, then $x$ is never given a whole answer other than $q$'s correct answer.
+  \bigskip
+
+  \textbf{Proof.}
+  \begin{enumerate}
+    \item Because $x$'s recognition is certain, $x$'s whole answers come from searching $q$'s associations.
+    \item The chance that a search states an answer with some property is (the chance that one sample clears the criterion and has the property) times a geometric factor.
+    \item No answer other than $q$'s clears the criterion, so that chance is 0.
+  \end{enumerate}
+\end{frame}
 
 \begin{frame}[fragile]{One supporting lemma}
 \begin{Verbatim}
@@ -249,6 +352,15 @@ theorem confusion_gives_neighbours_answer (correct : P → A) (x q : P)
 \end{itemize}
 }
 
+\begin{frame}{In words: Memory as an interface}
+  \begin{itemize}
+    \item A \textbf{memory}: studying an item changes its state; retrieving with a probe gives a distribution over stored items, or nothing.
+    \item \textbf{EPAM's net} as a memory: a probe calls up the image it selects, for certain.
+    \item \textbf{ACT-R's declarative memory} (decay 1, temperature 1): a probe calls up each chunk with probability proportional to its weight. A chunk's weight is the sum, over its uses, of 1/age, times $\mu$ for each mismatching feature. Failure always has weight $\theta$.
+    \item \textbf{Theorem.} ACT-R never retrieves anything for certain, because failure is always among the outcomes.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Memory as an interface}
 \begin{Verbatim}
 structure Retriever (State Stim : Type) where
@@ -276,6 +388,16 @@ theorem retrieve_not_certain (P : ActParams) (s : ActState) (x y : Item) :
 \item \code{retrieve\_not\_certain} is a one-line \code{simp}: the outcome list starts with \code{none}, so it can never equal \code{[(some y, 1)]}.
 \end{itemize}
 }
+
+\begin{frame}{In words: The bridge to multi-digit addition}
+  \begin{itemize}
+    \item The multi-digit model keeps its own names: the backup is the \emph{column} route.
+    \item \textbf{Relabelling} translates the general composition's routes into the model's.
+    \item \textbf{Lemma (the bridge).} Every probability of a multi-digit trial equals the probability of the relabelled event in the general composition.
+    \item \textbf{Proof}: expand both sides with the two-stage lemma, and compare them outcome by outcome.
+    \item So each multi-digit theorem is: rewrite with the bridge, then apply the general theorem.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{The bridge to multi-digit addition}
 \begin{Verbatim}
@@ -307,6 +429,16 @@ theorem confident_errors ... := by
 \end{itemize}
 }
 
+\begin{frame}{In words: Laws}
+  The \textbf{laws} quantify over the states reachable from a starting state by studying items from a set $U$.
+  \begin{itemize}
+    \item \textbf{Certainty}: an item just studied retrieves itself with probability 1.
+    \item \textbf{Stability}: studying a different item never changes the chance that an item retrieves itself.
+    \item \textbf{Determinacy}: every retrieval has a single outcome.
+    \item \textbf{Lemma.} Under determinacy, a positive chance of retrieving $y$ means $y$ is retrieved for certain; so does a chance of 1.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Laws}
 \begin{Verbatim}
 def Certainty (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
@@ -333,6 +465,17 @@ theorem retrieve_of_pRet_pos (R : Retriever S Item) (s0 : S) (U : List Item)
 \end{itemize}
 }
 
+\begin{frame}{In words: Studied items retrieve themselves}
+  \textbf{Theorem.} With certainty and stability, after studying a list with no repeats, every item on the list retrieves itself with probability 1.
+  \bigskip
+
+  \textbf{Proof.} Take an item $y$ on the list, and split the list there: the items before $y$, then $y$, then the items after.
+  \begin{itemize}
+    \item Just after $y$ is studied, certainty gives probability 1.
+    \item Every later item differs from $y$, since there are no repeats. By stability, each later study leaves the probability at 1 (by induction, one item at a time).
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Studied items retrieve themselves}
 \begin{Verbatim}
 theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
@@ -355,6 +498,19 @@ theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
 \item This is also the whole content of the flat serial-position curve in the study-test experiment.
 \end{itemize}
 }
+
+\begin{frame}{In words: Confident errors from laws}
+  \textbf{Theorem.} Any memory with determinacy, certainty and stability produces confident errors. After studying a list with no repeats that includes $q$, if a stranger $x$ can be taken for $q$ (with positive probability), the three conclusions of confident errors hold.
+  \bigskip
+
+  \textbf{Proof.}
+  \begin{enumerate}
+    \item The memory's state is reachable, so the laws apply to it.
+    \item $q$ retrieves itself with probability 1 (the previous theorem), hence for certain (determinacy).
+    \item $x$ retrieves $q$ with positive probability, hence for certain (determinacy).
+    \item These are exactly the hypotheses of the confident-errors theorem.
+  \end{enumerate}
+\end{frame}
 
 \begin{frame}[fragile]{Confident errors from laws}
 \begin{Verbatim}
@@ -381,6 +537,20 @@ theorem confident_errors_of_laws (R : Retriever S Item) (s0 : S) (U : List Item)
 \end{itemize}
 }
 
+\begin{frame}{In words: Using it: confident misnaming}
+  \textbf{Face naming.} Ann's and Bob's faces have been studied; Carl is a stranger.
+  \begin{itemize}
+    \item EPAM's net has determinacy, certainty (the 3-bit faces can all be told apart) and stability: three results from the matrix.
+    \item One fact is computed: Carl's face can be taken for Bob's.
+    \item So, for every search length:
+    \begin{itemize}
+      \item Bob is never misnamed;
+      \item every name Carl is given is wrong;
+      \item Carl says ``don't know'' exactly as rarely as Bob.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Using it: confident misnaming}
 \begin{Verbatim}
 theorem epam_confident_misnaming_of_laws (n : Nat) : ... :=
@@ -403,6 +573,15 @@ theorem epam_confident_misnaming_of_laws (n : Nat) : ... :=
 \end{itemize}
 }
 
+\begin{frame}{In words: Computing inside the proof checker}
+  \begin{itemize}
+    \item Some facts are about particular numbers. For example, with these parameters, $150+100$ is answered 200 with probability $45/46$.
+    \item These are proved by \textbf{evaluation}: Lean's kernel runs the definitions and checks the resulting equation.
+    \item The same definitions also run as ordinary programs. They produced the exact distributions that the blind simulation was checked against.
+    \item The ``lacks'' cells of the matrix are proved this way, on small examples.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Computing inside the proof checker}
 \begin{Verbatim}
 theorem example_values :
@@ -423,6 +602,13 @@ theorem example_values :
 \item Because \code{Dist} doesn't merge duplicate outcomes, long computations grow; the exporter merges them, and needs a large stack.
 \end{itemize}
 }
+
+\begin{frame}{In words: What is checked, and what is not}
+  \begin{itemize}
+    \item Every theorem is fully proved. Lean reports which axioms a theorem depends on; here, only its three standard ones.
+    \item What proof cannot check is whether the definitions say what EPAM, DOA or ACT-R say. That needs other kinds of evidence: a prose specification, an independent implementation, comparison with community code.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{What is checked, and what is not}
 \begin{Verbatim}
