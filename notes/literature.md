@@ -15,3 +15,5 @@ Fisher, C. R., Houpt, J., Larue, O., & Schmidt, K. D. (2024, June). *Deriving cr
 - **Qualitative model classes.** SFT-GMA's model space (architecture, stopping rule, dependence, workload capacity) plays the role CogLean's laws play: a theory-neutral space in which a theory's core assumptions rule some classes in and others out. Their finding that ACT-R is incompatible with most parallel SFT models has the shape of a "lacks" cell derived from core assumptions.
 - **Critical tests from theory.** Both derive experiments from what the theory's core forbids. SFT supplies its own experimental paradigm and diagnostic contrasts; compare CogLean's AB/BA design derived from recency and order-freedom.
 - **Theorem-based.** SFT's diagnostics rest on proved results about processing models (Townsend & Nozawa 1995). A natural question is whether SFT's model classes and diagnostics could be formalized in CogLean as laws, with ACT-R's architecture as a family.
+
+Presented in `presentations/coglean-overview` and `coglean-story` (slide "A related approach: SFT-GMA").
