@@ -1,0 +1,268 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{preamble}
+
+\title{Laws, the theory matrix, and experiments derived from laws}
+\subtitle{Memory families compared by proof}
+\author{Jeff Shrager}
+\date{October 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+\begin{itemize}
+\item The second detailed talk: how memory families are compared by laws, and how experiments are derived from the laws' disagreements.
+\end{itemize}
+}
+
+\begin{frame}{A memory, abstractly}
+  \begin{itemize}
+    \item \textbf{Study} an item: the memory's state changes.
+    \item \textbf{Retrieve} with a probe: a probability distribution over stored items, or nothing.
+  \end{itemize}
+  \bigskip
+  Items are binary feature codes; similarity is the number of mismatching features.
+  \bigskip
+
+  Every law below is a property of this interface. It names no mechanism, but it does assume this representation.
+\end{frame}
+\note{
+\begin{itemize}
+\item Laws are stated relative to a starting state and a set of items that may be studied.
+\item ``Mechanism-neutral, not representation-neutral'' is an important caveat.
+\end{itemize}
+}
+
+\begin{frame}{Six laws}
+  \small
+  \begin{tabular}{p{0.18\linewidth}p{0.74\linewidth}}
+    \toprule
+    Certainty & An item just studied is retrieved by itself with probability 1.\\
+    Stability & Studying $z$ leaves the chance that $y$ retrieves itself unchanged.\\
+    Order-freedom & Swapping the last two study events leaves retrieval unchanged, for every probe.\\
+    Recency & Of two new items studied last, a probe equally similar to both retrieves the later more often.\\
+    Stored-only & Nothing is retrieved that was never studied.\\
+    Determinacy & Every retrieval has a single outcome.\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+\begin{itemize}
+\item Order-freedom is deliberately narrow: only the last two events are swapped, and only retrieval must agree, not the memory state.
+\item Determinacy is structural as stated, but each ``lacks'' cell exhibits two outcomes with positive probability, so it fails any probabilistic version too.
+\end{itemize}
+}
+
+\begin{frame}{Four families}
+  \begin{itemize}
+    \item \textbf{Discrimination} (EPAM): a net of feature tests; learning grows a test where codes are confused.
+    \item \textbf{Activation} (ACT-R declarative memory): each use adds activation that decays; partial matching; a failure weight. Decay 1, temperature 1: exactly rational.
+    \item \textbf{Strength with a criterion} (after DOA): strengths only add; sample by strength, discounted by mismatch; state if above criterion.
+    \item \textbf{Global matching} (MINERVA~2): every study stores a trace; a probe activates all traces by the cube of similarity; memory returns the \emph{echo}, their weighted blend.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item Each family is formalized once, with its parameters free. A published model is a choice of parameters within its family.
+\end{itemize}
+}
+
+\begin{frame}{The matrix}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    & Certainty & Stability & Order-free & Recency & Stored-only & Determinate\\
+    \midrule
+    Discrimination & \has & \has & \lacks & \lacks & \has & \has\\
+    Activation & \lacks & \lacks & \lacks & \has & \has & \lacks\\
+    Strength & \lacks & \lacks & \has & \lacks & \has & \lacks\\
+    Global matching & \lacks & \lacks & \has & \lacks & \lacks & \has\\
+    \bottomrule
+  \end{tabular}
+  \bigskip
+  \begin{itemize}\small
+    \item \has: a general proof, for every parameter choice meeting stated conditions.
+    \item \lacks: a counterexample, computed exactly on the eight 3-bit codes.
+    \item Every law is had by some family and lacked by another; every family has its own row. A script checks both.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item Examples of ``has'': EPAM's certainty needs only that the items be noticeably different; ACT-R's recency holds for any positive mismatch discount and failure weight (the later item is retrieved exactly twice as often); strength memory and MINERVA are order-free for every parameter choice.
+\item A ``lacks'' cell says only that the law fails somewhere. Mapping the parameter regions where a family does have it is open.
+\end{itemize}
+}
+
+\begin{frame}{The laws were tested, and failed once}
+  \begin{itemize}
+    \item The first four laws were chosen with three families in view.
+    \item Global matching was added as a test. On those four laws, it had \emph{exactly} the row of strength memory.
+    \item So the laws missed something. What is distinctive about global matching? Its output is a blend.
+    \item Study $110$, $101$, $011$; probe with $111$ (their prototype, never studied): MINERVA returns $111$.
+    \item Hence the stored-only law, which separates them.
+  \end{itemize}
+  \bigskip
+  Rule: a law enters only with a witness on each side.
+\end{frame}
+\note{
+\begin{itemize}
+\item A law every family satisfies, or satisfies only vacuously, tells theories apart by accident. An earlier all-or-none law, ``stable retrieval'', turned out to hold for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain; that is now a theorem.
+\end{itemize}
+}
+
+\begin{frame}{Against the evidence}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    & Certainty & Stability & Order-free & Recency & Stored-only & Determinate\\
+    \midrule
+    People (judged) & \emph{lacks} & \emph{mixed} & \emph{lacks} & \emph{has} & \emph{mixed} & \emph{mixed}\\
+    \bottomrule
+  \end{tabular}
+  \bigskip
+  \normalsize
+  \begin{itemize}
+    \item A judgment, not a theorem, with sources, kept apart from the proofs.
+    \item Each entry states its \textbf{bridge}: how a measure (a report) is taken to show a law (about retrieval).
+    \item Activation fits every settled entry, but each fit rests on unformalized bridges.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item Sources: Tulving \& Pearlstone 1966 (certainty); McGeoch 1932, Barnes \& Underwood 1959, Ratcliff, Clark \& Shiffrin 1990 (stability: interference in recall, no list-strength effect in recognition); Murdock 1962 and Glanzer \& Cunitz 1966 (order, recency); Posner \& Keele 1968 and Roediger \& McDermott 1995 (stored-only).
+\item Stored-only is mixed because endorsing a prototype as old doesn't show the prototype was retrieved; next slide.
+\end{itemize}
+}
+
+\begin{frame}{One experiment, four memories: study, then test}
+  Study $110$, $101$, $011$. Probe each; then the lures $111$ (prototype) and $000$.
+  \medskip
+  \small
+  \begin{center}
+  \begin{tabular}{lcccc}
+    \toprule
+    Memory & curve by position & 111 called old & 111 retrieves itself & 000 called old\\
+    \midrule
+    EPAM & $1,1,1$ & $1$ & $0$ & $1$\\
+    ACT-R & $\tfrac{40}{97},\tfrac{15}{28},\tfrac{120}{157}$ & $\tfrac{55}{61}$ & $0$ & $\tfrac{55}{67}$\\
+    Strength & $\tfrac{8}{17},\tfrac{8}{17},\tfrac{8}{17}$ & $1$ & $0$ & $1$\\
+    MINERVA & $1,1,1$ & $0$ & $1$ & $0$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \medskip
+  \normalsize
+  \begin{itemize}\small
+    \item Derived from laws: EPAM's flat curve (certainty + stability $\Rightarrow$ flat at 1, for any memory).
+    \item Computed: everything else. Recency does not imply a rising self-retrieval curve.
+    \item ``Called old'' is a report; stored-only is about retrieval. EPAM calls the prototype old by retrieving a studied item.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item The table shows why the bridge matters: the two families that satisfy stored-only call the unseen prototype old with certainty, and the one that violates it doesn't, under this crude report rule.
+\end{itemize}
+}
+
+\begin{frame}{Reversing the workflow}
+  Usually: choose an experiment, compute each theory's predictions.
+  \bigskip
+
+  Instead:
+  \begin{enumerate}
+    \item find two laws that disagree;
+    \item derive a design on which they make incompatible predictions;
+    \item prove the separation, for every memory with either law;
+    \item state the response model that connects it to what participants say.
+  \end{enumerate}
+\end{frame}
+\note{
+\begin{itemize}
+\item This makes the matrix an experiment generator rather than a scoreboard.
+\end{itemize}
+}
+
+\begin{frame}{Recency against order-freedom}
+  \textbf{Design.} Two new items $a$, $b$; a probe $x$ equally similar to both.
+  Condition AB studies $a$ then $b$; condition BA studies $b$ then $a$; both probe with $x$.
+  \[
+  D = P(\text{retrieve } b) - P(\text{retrieve } a), \qquad \Delta = D_{AB} - D_{BA}.
+  \]
+  \textbf{Theorems}, for any memory:
+  \begin{itemize}
+    \item order-freedom $\Rightarrow \Delta = 0$;
+    \item recency $\Rightarrow \Delta > 0$;
+    \item so no memory has both laws, wherever such a design exists.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item Recency applied to $(a, b)$ gives $D_{AB} > 0$; applied to $(b, a)$ it gives $D_{BA} < 0$. Order-freedom makes the two conditions' retrieval identical.
+\item These proofs never mention EPAM, ACT-R, or any parameter.
+\end{itemize}
+}
+
+\begin{frame}{From retrieval to report}
+  \textbf{Forced choice}: report A if $a$ is retrieved, B if $b$ is; otherwise guess B with probability $\gamma$.
+  \[
+  \Delta_{\text{report}} = \Delta + (2\gamma - 1)\,(o_{AB} - o_{BA}),
+  \]
+  where $o$ is the chance of retrieving neither item.
+  \bigskip
+  \begin{itemize}
+    \item Order-freedom: $\Delta_{\text{report}} = 0$, for every $\gamma$.
+    \item Recency: $\Delta_{\text{report}} > 0$ with unbiased guessing, or when ``neither'' is equally likely in both orders.
+    \item A biased guesser can mask or reverse the recency prediction.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item The bridge carries its own condition, stated in the theorem: laws plus a response model give an observable contrast.
+\end{itemize}
+}
+
+\begin{frame}{The same design, four memories}
+  \small
+  \begin{center}
+  \begin{tabular}{lccl}
+    \toprule
+    Memory & $\Delta$, no prior item & $\Delta$, after 000 & why\\
+    \midrule
+    ACT-R & $10/17$ & & recency, so $\Delta > 0$\\
+    Strength & $0$ & $0$ & order-free\\
+    MINERVA & $0$ & $0$ & order-free\\
+    EPAM & $0$ & $-2$ & neither law: computed\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \bigskip
+  \normalsize
+  \begin{itemize}
+    \item ACT-R's reported effect is $10/17$ for every guessing bias: both orders leave the same chance of ``neither''.
+    \item EPAM shows the most extreme \emph{primacy} possible. After 000, whichever item is learned first is discriminated from it, and the probe always retrieves that one. Its order effects come from the shape of the net, not from time.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item One counterbalanced experiment gives recency, no effect, or primacy, depending on the family, and the matrix says in advance which.
+\end{itemize}
+}
+
+\begin{frame}{Lessons, and next}
+  \begin{itemize}
+    \item The durable results are conditional: laws $\Rightarrow$ predictions, families $\Rightarrow$ laws.
+    \item The empirical row will change; when it does, the matrix says what is refuted.
+    \item \textbf{Observational semantics} is the main gap: decision and report models, so retrieval laws predict responses.
+    \item \textbf{Parameter regions} of the ``lacks'' cells; \textbf{graded laws}; \textbf{more families} as tests (REM, connectionist memory, ACT-R with blending).
+    \item \textbf{Beyond memory}: strategy choice, attention, production systems.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item Everything in this talk is in the repository: the laws, the cells, the experiments, and a generated matrix with the evidence and its sources.
+\end{itemize}
+}
+
+\end{document}

@@ -1,0 +1,254 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{preamble}
+
+\title{Recognition, retrieval and confident errors}
+\subtitle{Multi-digit addition, a blind simulation, swapping memories, and a second task}
+\author{Jeff Shrager}
+\date{October 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+\begin{itemize}
+\item The first detailed talk. It follows one model, multi-digit addition, from its postulates to a theorem that two different tasks inherit.
+\item Everything quoted here is a Lean theorem or an exact computation checked by Lean, unless marked otherwise.
+\end{itemize}
+}
+
+\begin{frame}{Two theories, combined}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \textbf{EPAM} (Feigenbaum 1959)
+    \begin{itemize}\small
+      \item Stimuli are feature codes.
+      \item A discrimination net sorts a code by testing features, down to a stored image.
+      \item Learning grows a test only where two codes are confused, on the first difference noticed.
+      \item So an unfamiliar code that agrees on every tested feature is \emph{recognized as} a familiar one.
+    \end{itemize}
+    \column{0.5\textwidth}
+    \textbf{Distributions of associations} (Siegler \& Shrager 1984)
+    \begin{itemize}\small
+      \item Each problem has associations to answers, with strengths.
+      \item Sample an answer in proportion to strength; state it if it clears a confidence criterion; try up to $n$ times.
+      \item Otherwise, use a backup strategy.
+      \item Retrieval is used with probability $1-(1-R)^n$.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+\begin{itemize}
+\item $R$ is the chance that one search clears the criterion. Both theories' phenomena are already proved in the library.
+\item In DOA, a flat distribution raises both errors and backup use; they go together. That fact is what the next slides break.
+\end{itemize}
+}
+
+\begin{frame}{The multi-digit model}
+  \begin{center}
+  \begin{tikzpicture}[node distance=9mm]
+    \node[box] (p) {$150+100$};
+    \node[box, right=of p] (r) {EPAM net:\\recognized as $100+100$};
+    \node[box, right=of r] (s) {search $100+100$'s\\associations};
+    \node[box, below=8mm of s] (b) {column backup\\(single-digit DOA, carries)};
+    \node[box, right=of s] (a) {answer};
+    \draw[arr] (p) -- (r); \draw[arr] (r) -- (s); \draw[arr] (s) -- (a);
+    \draw[arr] (r) |- node[pos=0.25, left]{\scriptsize not recognized} (b);
+    \draw[arr] (s) -- node[right]{\scriptsize exhausted} (b);
+    \draw[arr] (b) -| (a);
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}\small
+    \item Every postulate is a parameter: the encoding, the net, the strengths, the criterion, the search length, the backup.
+    \item 18 predictions, each proved for every choice of them.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item The column backup is built from single-digit DOA trials chained by carries. Carrying adds no error: a column error is a single-digit error moved to its place.
+\item The predictions include near misses (within 200 or 20, depending on which digits the net tests), harmless confusions (same sum, commuted problems), and no interference with practiced problems.
+\end{itemize}
+}
+
+\begin{frame}{Confident errors}
+  Let a familiar problem $q$ have \emph{sharp} associations (only its correct sum clears the criterion), and let $x$, with a different sum, be recognized as $q$. Then:
+  \begin{enumerate}
+    \item on $q$, whole-problem retrieval never errs;
+    \item on $x$, every whole-problem answer is wrong;
+    \item $x$ uses the backup exactly as rarely as $q$ does: $(1-R_q)^n$.
+  \end{enumerate}
+  \bigskip
+  In DOA alone, errors and backup use rise together. Confusion breaks the tie: a retrieved, wrong answer with no extra backup use.
+\end{frame}
+\note{
+\begin{itemize}
+\item This is the prediction neither theory makes alone.
+\item Two cautions. The model has no timing, so ``fast'' would need a timing model. And the errors are frequent only if retrieval on $q$ usually succeeds ($R_q$ near 1); if $R_q = 0$, every trial uses the backup.
+\end{itemize}
+}
+
+\begin{frame}{A worked case}
+  \begin{itemize}
+    \item Encoding: each digit in four bits (24 features). The net learns $100+100$ and $100+200$, which differ only in the second addend's hundreds digit, so that is all it tests.
+    \item Associations: $.90$ on each problem's sum, $.01$ elsewhere; criterion $.50$; search length 1.
+    \item $150+100$ is recognized as $100+100$.
+  \end{itemize}
+  \bigskip
+  \begin{center}
+  \begin{tabular}{lc}
+    \toprule
+    $150+100$ answered $200$, by retrieval & $45/46$\\
+    $150+100$ answered $250$, by the columns & $1/46$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+\note{
+\begin{itemize}
+\item These numbers are for illustration, computed exactly by the Lean kernel. The structural result, confident errors, holds for every parameter choice.
+\end{itemize}
+}
+
+\begin{frame}{Checking the formalization: a blind simulation}
+  The proofs show the predictions follow from the Lean definitions, not that the definitions say what the prose model says.
+  \medskip
+  \begin{enumerate}\small
+    \item A prose specification, with no Lean names or predictions.
+    \item Predictions \textbf{preregistered} and committed before the simulator existed.
+    \item A fresh AI agent, given only the prose, wrote a Python simulator. Its tool use was audited.
+    \item A harness compared it with the preregistered predictions and with Lean's exact distributions.
+  \end{enumerate}
+  \medskip
+  \textbf{Result}: no failures. 243 outcome frequencies on 4 instances matched Lean's exact values, and every applicable prediction passed.
+\end{frame}
+\note{
+\begin{itemize}
+\item This is N-version programming applied to a theory: two independent implementations of one specification.
+\item Five predictions were vacuous: their hypotheses (a path testing every feature of a digit) never held in nets EPAM actually learns. True theorems that say little about real nets: a finding.
+\item It also found a gap (zero total strength gives a trial no mass in Lean; the natural reading is ``retrieval exhausted''), and that the learning sequence depends on a choice the model leaves open: what a newly discriminated problem starts with.
+\end{itemize}
+}
+
+\begin{frame}{Memory as a parameter}
+  The recognition step is now an interface: memory takes a probe and returns a \emph{distribution} over stored items (or nothing).
+  \medskip
+  \begin{itemize}\small
+    \item EPAM's net is one memory: deterministic.
+    \item ACT-R's declarative memory is another: base-level activation that decays, partial matching, a retrieval threshold.
+    \item With decay 1 and temperature 1, ACT-R's retrieval probabilities are exactly rational, so Lean computes them exactly.
+  \end{itemize}
+  \medskip
+  Each prediction now states the law of memory it needs. Swap the memory and keep every theorem whose laws still hold.
+\end{frame}
+\note{
+\begin{itemize}
+\item Other decay rates and temperatures need real exponentials; they would go in a separate package with Mathlib.
+\end{itemize}
+}
+
+\begin{frame}{The same problems, two memories}
+  \small
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    & EPAM & ACT-R\\
+    \midrule
+    $150+100$ answered $200$ (the neighbour's sum) & $45/46$ & $225/529$\\
+    $150+100$ answered $300$ (differs on a tested digit) & $0$ & $225/1058$\\
+    $150+100$ answered correctly & $1/46$ & $383/1058$\\
+    errors on the practiced $100+100$ & $0$ & $225/782$\\
+    the same, after also studying $100+300$ & $0$ & $3375/5842$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \normalsize
+  ACT-R: confusion is graded, nothing is retrieved for certain, and new practice interferes with old.
+\end{frame}
+\note{
+\begin{itemize}
+\item EPAM's zeros are theorems (no interference; near misses bounded by the tested digits). ACT-R's departures are proved on this instance and explained by laws it lacks.
+\end{itemize}
+}
+
+\begin{frame}{The composition, extracted}
+  The model's trial is one case of a general composition, now in the shared library:
+  \medskip
+  \begin{center}
+  \begin{tikzpicture}[node distance=9mm]
+    \node[box] (r) {recognize\\(any memory)};
+    \node[box, right=of r] (s) {search the\\associations};
+    \node[box, right=of s] (b) {else\\back up};
+    \draw[arr] (r) -- (s); \draw[arr] (s) -- (b);
+  \end{tikzpicture}
+  \end{center}
+  \begin{itemize}\small
+    \item Over any problems and any answers, with ``the correct answer'' a parameter.
+    \item Confident errors, and the rest, are proved once for the composition.
+    \item Multi-digit addition is an instance: one bridge lemma carries every probability across, and its theorems keep their names.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item The multi-digit definitions were left untouched, so the Lean export used by the simulation and the paper is byte-identical.
+\end{itemize}
+}
+
+\begin{frame}{A second task: naming people}
+  Faces are codes; familiar Ann (000) and Bob (110); stranger Carl (100), one feature from each. The backup is ``don't know''.
+  \medskip
+  \small
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    & EPAM & ACT-R\\
+    \midrule
+    Carl named Bob & $45/46$ & $225/391$\\
+    Carl named Ann & $0$ & $225/782$\\
+    Carl: ``don't know'' & $1/46$ & $107/782$\\
+    Bob: ``don't know'' & $1/46$ & $229/2254$\\
+    Bob named Ann & $0$ & $225/2254$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \medskip
+  \normalsize
+  With EPAM, \emph{confident misnaming} is inherited from the composition's theorem, for every search length. No arithmetic anywhere.
+\end{frame}
+\note{
+\begin{itemize}
+\item With ACT-R, the theorem's hypothesis (Carl's face calls up Bob's for certain) fails, and so does its conclusion: Carl says ``don't know'' more often than Bob.
+\end{itemize}
+}
+
+\begin{frame}{From laws: which memories give confident errors?}
+  \textbf{Theorem.} Any memory with three laws (\emph{determinacy}, \emph{certainty}, \emph{stability}) produces confident errors whenever a stranger can be taken for a studied item with sharp associations.
+  \bigskip
+  \begin{itemize}
+    \item In the matrix of memory families, only discrimination (EPAM) has all three.
+    \item Face naming's confident misnaming is derived this way, from EPAM's matrix cells plus one computed fact (Carl can be taken for Bob).
+    \item The evidence judges that people lack certainty. So explaining confident errors in people needs a graded version: these laws with high probability, not probability 1.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item This is where the composition and the law matrix meet: the matrix now says which families produce the phenomenon.
+\item The graded theorem is open.
+\end{itemize}
+}
+
+\begin{frame}{Limits, and next}
+  \begin{itemize}
+    \item \textbf{No timing.} ``Retrieved, with no extra backup use'' is what is proved; ``fast'' needs a timing model.
+    \item \textbf{One trial at a time.} Learning across trials (feedback, discrimination, strengthening) makes memory states random; the predicted sequence (confident error, then column work, then fluent retrieval) is the next target.
+    \item \textbf{Formal fidelity.} ACT-R here is one restricted formalization; checking it against PyACTUp, the community implementation, is planned.
+    \item \textbf{A graded confident-errors theorem}, for memories without certainty.
+  \end{itemize}
+\end{frame}
+\note{
+\begin{itemize}
+\item The blind simulation found that the learning sequence depends on what a newly discriminated problem starts with: no associations gives the predicted sequence in 40 of 48 cases; copying the neighbour's associations can trap the error.
+\end{itemize}
+}
+
+\end{document}
