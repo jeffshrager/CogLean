@@ -16,7 +16,7 @@ Measures:
 
 Result:
 * `curve_flat`: any memory with certainty and stability (laws in
-  `CogMatrix/Laws.lean`) gives a flat serial-position curve at 1. This is a
+  `CogLib/Phenomena/RetrievalLaws.lean`) gives a flat serial-position curve at 1. This is a
   property of the experiment that follows from laws alone, so every family
   with those laws has it.
 -/

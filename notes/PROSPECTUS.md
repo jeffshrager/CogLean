@@ -84,7 +84,7 @@ With the judgments as they stand, activation fits every law on which the evidenc
 | Strength with a criterion (DOA) | lacks | lacks | has | lacks | has |
 | Global matching (MINERVA 2) | lacks | lacks | has | lacks | lacks |
 
-- The laws are stated over CogLib's `Retriever` interface (study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Each is relative to a starting state and a set of stimuli.
+- The laws are in CogLib (`Phenomena/RetrievalLaws.lean`), stated over its `Retriever` interface (study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Each is relative to a starting state and a set of stimuli. The older all-or-none `StableRetrieval` is related to them by theorem: stability gives it for deterministic memories, and it holds vacuously for memories in which nothing is certain.
 - Every **has** cell is a general proof for every parameter choice meeting its stated conditions. Every **lacks** cell is a counterexample.
 - Every law is had by some family and lacked by another, and every family has its own row. The generator checks both.
 

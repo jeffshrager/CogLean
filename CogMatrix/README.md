@@ -7,7 +7,7 @@ cd CogMatrix && lake build     # builds CogLib too; core Lean only
 python3 gen_matrix.py           # regenerates ../notes/MATRIX.md from the cells
 ```
 
-- `CogMatrix/Laws.lean`: the laws. Each is stated relative to a starting state `s0` and a set `U` of stimuli that may be studied.
+- The laws are in CogLib (`../CogLib/CogLib/Phenomena/RetrievalLaws.lean`), next to the `Retriever` interface. Each is stated relative to a starting state `s0` and a set `U` of stimuli that may be studied.
   - `Certainty`: a stimulus just studied is retrieved for certain.
   - `Stability`: studying one stimulus leaves another's chance of retrieving itself unchanged.
   - `OrderFree`: the order of study doesn't matter.

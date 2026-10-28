@@ -12,6 +12,8 @@ is not of that form.
 Laws a retriever may have, stated theory-neutrally:
 * `StableRetrieval`: studying one stimulus leaves unchanged the retrieval of
   another that was retrieved for certain (non-interference, for retrieval).
+  All-or-none; the probabilistic laws are in `Phenomena/RetrievalLaws`, with
+  how they relate to this one.
 * `AgreesOn`: whatever a probe can call up agrees with it on given features.
 
 Results:
@@ -48,7 +50,10 @@ def StableRetrieval (R : Retriever State Stim) : Prop :=
   ∀ s x y, R.retrieve s y = Dist.pure (some y) → y ≠ x → R.retrieve (R.study s x) y = R.retrieve s y
 
 /-- **Agreement on features.** Whatever the probe `x` can call up agrees with
-`x` on every feature in `fs`. -/
+`x` on every feature in `fs`. This is a property of one state and one probe,
+used as a hypothesis (by MultiDigit's near misses), not a law of a memory
+family: it is EPAM's confusion lemma (`Net.confusion_agrees_on_path`) in
+theory-neutral form. -/
 def AgreesOn (retrieve : Item → Dist (Option Item)) (x : Item) (fs : List Feature) : Prop :=
   ∀ y, (retrieve x).Possible (some y) → ∀ f ∈ fs, x.feat f = y.feat f
 

@@ -56,5 +56,5 @@
     - The evidence row (`CogMatrix/evidence.json`) is a judgment. Have it checked by someone who knows the literature, and add laws' settings (recall vs recognition, immediate vs delayed test).
     - Map the parameter regions of the "lacks" cells. Each is one counterexample; e.g. strength memory with `μ = 0` may have certainty, and global matching with few traces may.
     - Certainty and stability have the same row (only discrimination has them). Find what separates them, or merge them.
-    - Graded versions of the MultiDigit laws (`StableRetrieval`, `AgreesOn`; #16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit_PREDICTIONS.md`'s table is read off the matrix.
+    - ~~Unify the laws.~~ Done: the matrix laws are in `CogLib/Phenomena/RetrievalLaws.lean`, with `stableRetrievalOn_of_stability` and `stableRetrieval_of_neverCertain` relating them to `StableRetrieval`; `AgreesOn` is documented as a per-state confusion property, not a law. Still to do: graded versions of the MultiDigit laws (#16). Then move MultiDigit's predictions onto these laws, so that `MultiDigit_PREDICTIONS.md`'s table is read off the matrix.
     - More interfaces: strategy choice (#8), then production systems.

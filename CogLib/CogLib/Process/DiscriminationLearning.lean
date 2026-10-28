@@ -30,7 +30,7 @@ Results:
 
 import CogLib.Memory.DiscriminationNet
 import CogLib.Control.Attention
-import CogLib.Phenomena.Retriever
+import CogLib.Phenomena.RetrievalLaws
 import CogLib.Phenomena.Learning
 
 namespace Cog
@@ -376,6 +376,11 @@ theorem net_agreesOn (N : Net) (x y : Item) (fs : List Feature) (hnd : N.images.
   rw [hx] at h'
   cases h'
   exact Net.confusion_agrees_on_path N x y hnd hy hx f (hcover f hf)
+
+/-- **A discrimination net retrieves deterministically.** -/
+theorem netRetriever_deterministic (order : NoticingOrder) :
+    Laws.Deterministic (netRetriever order) :=
+  fun N x => ⟨N.select x, rfl⟩
 
 theorem Net.retrieve_of_select (N : Net) (x : Item) (r : Option Item) (h : N.select x = r) :
     N.retrieve x = Dist.pure r := by

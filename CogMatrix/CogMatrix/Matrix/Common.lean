@@ -3,7 +3,7 @@ The small universe the counterexamples use: the eight 3-bit codes, all
 features compared, scanned in order.
 -/
 
-import CogMatrix.Laws
+import CogLib
 
 namespace Cog.Matrix
 

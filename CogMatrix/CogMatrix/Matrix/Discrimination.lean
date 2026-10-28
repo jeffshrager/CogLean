@@ -85,6 +85,12 @@ theorem stability (U : List Item) : Stability (netRetriever order) (Net.leaf non
       · exact hyi h'
     rw [select_ne N y hyi, select_ne _ y hyi']
 
+/-- The all-or-none stable retrieval follows, since nets retrieve
+deterministically. -/
+theorem stableRetrievalOn (U : List Item) :
+    StableRetrievalOn (netRetriever order) (Net.leaf none) U :=
+  stableRetrievalOn_of_stability _ _ _ (netRetriever_deterministic order) (stability order U)
+
 /-- **Discrimination is not order-free.** After 000, learning 100 then 010
 gives a different net from learning 010 then 100, and the probe 110 is
 retrieved differently. -/

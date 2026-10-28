@@ -402,7 +402,7 @@ The ultimate value proposition is not merely that EPAM, ACT-R, DOA, Soar, and ma
 - [CogLean repository](https://github.com/jeffshrager/CogLean)
 - [PROSPECTUS.md — Laws, families, theory matrix, and "What is true here"](https://github.com/jeffshrager/CogLean/blob/main/notes/PROSPECTUS.md)
 - [notes/MATRIX.md — Generated matrix and evidence](https://github.com/jeffshrager/CogLean/blob/main/notes/MATRIX.md)
-- [CogMatrix/Laws.lean — Exact law definitions](https://github.com/jeffshrager/CogLean/blob/main/CogMatrix/CogMatrix/Laws.lean)
+- [CogLib/Phenomena/RetrievalLaws.lean — Exact law definitions](https://github.com/jeffshrager/CogLean/blob/main/CogLib/CogLib/Phenomena/RetrievalLaws.lean)
 - [CogMatrix/README.md — Family and cell qualifications](https://github.com/jeffshrager/CogLean/blob/main/CogMatrix/README.md)
 - [Experiments/README.md — Study–test demonstration](https://github.com/jeffshrager/CogLean/blob/main/Experiments/README.md)
 - [Experiments/StudyTest.lean — `curve_flat` theorem](https://github.com/jeffshrager/CogLean/blob/main/Experiments/Experiments/StudyTest.lean)

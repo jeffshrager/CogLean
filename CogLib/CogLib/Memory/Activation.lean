@@ -24,7 +24,7 @@ Results:
 
 import CogLib.Rep.Distribution
 import CogLib.Rep.Features
-import CogLib.Phenomena.Retriever
+import CogLib.Phenomena.RetrievalLaws
 
 namespace Cog
 
@@ -99,6 +99,6 @@ def actRetriever (P : ActParams) : Retriever ActState Item := ⟨Act.study, Act.
 /-- Stable retrieval holds vacuously: no chunk is ever retrieved for certain. -/
 theorem actRetriever_stableRetrieval (P : ActParams) :
     Phenomena.StableRetrieval (actRetriever P) :=
-  fun s _ y h _ => absurd h (Act.retrieve_not_certain P s y y)
+  Laws.stableRetrieval_of_neverCertain _ (Act.retrieve_not_certain P)
 
 end Cog
