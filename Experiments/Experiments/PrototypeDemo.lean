@@ -18,18 +18,20 @@ are those of the matrix's counterexamples (`CogMatrix/Matrix/*.lean`).
 | Strength (DOA) | 8/17, 8/17, 8/17 | 1 | 0 | 1 |
 | Global matching (MINERVA 2) | 1, 1, 1 | 0 | 1 | 0 |
 
-"Called old" means the probe retrieved some studied item. Each row follows
-the family's laws:
-* EPAM's flat curve follows from certainty and stability alone
-  (`epam_curve_flat`, by `curve_flat`). EPAM has no recency, and confuses every
-  lure with a studied item.
-* ACT-R's curve rises with serial position: recency. No item is retrieved for
-  certain, because ACT-R lacks certainty.
-* Strength memory's curve is flat but low. It is order-free, so position
-  can't matter, and similar items compete.
-* MINERVA returns the prototype itself, never studied: it lacks stored-only
-  retrieval. It rejects the dissimilar lure, whose echo has no positive
-  intensity.
+"Called old" means the probe retrieved some studied item. The numbers are of
+two kinds:
+* Derived from laws: EPAM's flat curve follows from certainty and stability
+  alone (`epam_curve_flat`, by `curve_flat`), for any memory with them.
+* Computed from a mechanism, with these parameters: everything else. The
+  laws do not predict these. ACT-R's rising curve is not implied by the
+  recency law, which concerns a probe equally similar to two items. Strength
+  memory's flat curve comes from the symmetry of the three items, not from
+  order-freedom. MINERVA's returning the prototype witnesses that it lacks
+  stored-only retrieval.
+
+"Called old" is a report, and stored-only retrieval is about what memory
+returns. EPAM and strength memory call the prototype old by returning a
+studied item.
 -/
 
 import Experiments.StudyTest

@@ -30,11 +30,12 @@ Global matching was added as a test of the first four laws, which were chosen wi
 
 ## Against the evidence
 
-With the evidence as recorded in `evidence.json`, no family fits:
-- people lack certainty, order-freedom and stored-only retrieval, and have recency; stability is mixed (it fails in recall but may hold in recognition);
-- activation comes closest: it conflicts only on stored-only retrieval, which people violate (prototypes, false memories).
+As recorded in `evidence.json`:
+- people lack certainty and order-freedom, and have recency;
+- stability is mixed: it fails in recall but may hold in recognition;
+- stored-only retrieval is mixed. Calling an unseen prototype old doesn't show it was retrieved; discrimination and strength memory call it old by retrieving a studied item.
 
-ACT-R with blended retrieval is the natural next family. See `../notes/PROSPECTUS.md`, "What is true here", for what this row is and is not.
+Activation fits every settled entry. But each judgment rests on an unformalized bridge from what experiments measure (reports) to what laws are about (retrieval), and the stored-only bridge is the one that would decide. Decision and report components are the missing piece. ACT-R with blended retrieval is still a natural next family. See `../notes/PROSPECTUS.md`, "What is true here", for what this row is and is not.
 
 The discrimination family here is EPAM's recognition net. EPAM's paired-associate memory, with cue codes (`CogLib/Process/Association.lean`), shows retroactive interference (`netResponder_retroactiveInterference`). So it would not have stability: the law depends on which part of a theory is put in the matrix.
 

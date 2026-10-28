@@ -27,7 +27,7 @@
 \begin{abstract}
 We state cognitive theories as postulates in the Lean theorem prover and prove their phenomena as theorems that hold for every choice of the theories' parameters. CogLean is a library of general constructs and theory-neutral phenomena. EPAM (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager, 1984) are its first two instances.
 
-Combining the two theories in a model of 3-digit addition yields 18 predictions that neither makes alone, each proved by composing results already proved for the parts. The most distinctive is the \emph{confident error}: a fast, retrieved, wrong answer with no more backup use than on a familiar problem. Distributions of associations alone cannot produce it.
+Combining the two theories in a model of 3-digit addition yields 18 predictions that neither makes alone, each proved by composing results already proved for the parts. The most distinctive is the \emph{confident error}: a retrieved, wrong answer with no more backup use than on a familiar problem. Distributions of associations alone cannot produce it.
 
 To check that the formal model says what its prose says, a fresh agent wrote a simulator from a prose specification alone, and we tested it against preregistered predictions and Lean's exact distributions. Every check whose hypothesis arose passed. The comparison also showed that five predictions are vacuous for the nets EPAM actually learns, exposed a gap in the formalization, and isolated an open choice on which the predicted learning sequence depends.
 \end{abstract}
@@ -177,7 +177,7 @@ The combined model nests DOA's architecture one level up. A child adding two 3-d
   \node[dec, right=6mm of net] (rec) {Recognized?};
   \node[box, right=20mm of rec, very thick] (ret) {\textbf{DOA retrieval}\\on $q$'s associations};
   \node[box, below=16mm of rec] (cols) {\textbf{Column backup}\\each column a single-digit\\DOA trial, carrying};
-  \node[box, below=16mm of ret] (whole) {\textbf{Whole answer}\\$q$'s answer, fast};
+  \node[box, below=16mm of ret] (whole) {\textbf{Whole answer}\\$q$'s answer};
   \draw[arr] (code) -- (net);
   \draw[arr] (net) -- (rec);
   \draw[arr] (rec) -- node[lab, above] {yes, as $q$} (ret);
@@ -235,7 +235,7 @@ Table~\ref{tab:predictions} lists the predictions. Prediction~4 is the one neith
 
 Together, Predictions 4, 11 and 12 predict a learning sequence that can be looked for:
 \begin{enumerate}
-  \item a fast, confident error;
+  \item a confident error, retrieved with no extra backup use;
   \item after feedback and discrimination, slow column work;
   \item as correct answers are strengthened, fluent and correct retrieval.
 \end{enumerate}

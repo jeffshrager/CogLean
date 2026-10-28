@@ -58,11 +58,14 @@ for fam, title in FAMILIES:
     bad = [LAW_NAMES[l] for l in settled if cells[(fam, l)][0] != ev[l]["status"]]
     out.append(f"| {title} | {len(settled) - len(bad)} of {len(settled)} | {', '.join(bad) or 'none'} |")
 fits = [t for f, t in FAMILIES if all(cells[(f, l)][0] == ev[l]["status"] for l in settled)]
-out += ["", ("Families consistent with all the settled evidence: " + "; ".join(fits) + ".") if fits
-        else "No family is consistent with all the settled evidence."]
+out += ["", ("Families consistent with all the evidence judged settled: " + "; ".join(fits) + ".") if fits
+        else "No family is consistent with all the evidence judged settled.",
+        "", "Each judgment rests on a bridge from what an experiment measures (reports, decisions) to what a law "
+        "is about (what memory retrieves). The bridges are stated below and are not formalized, so a fit here is a "
+        "hypothesis, not a result."]
 out += ["", "### Evidence", ""]
 for l in LAWS:
-    out.append(f"- **{LAW_NAMES[l]}** (*{ev[l]['status']}*). {ev[l]['summary']}")
+    out.append(f"- **{LAW_NAMES[l]}** (*{ev[l]['status']}*). {ev[l]['summary']} *Bridge:* {ev[l]['bridge']}")
     for src in ev[l]["sources"]:
         out.append(f"  - {src}")
 pathlib.Path("../notes/MATRIX.md").write_text("\n".join(out) + "\n")

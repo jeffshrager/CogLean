@@ -1,9 +1,12 @@
 {
-  "_note": "What the evidence says about people, law by law. Each verdict is a judgment that maps experiments onto an idealized law. It is not a theorem. 'lacks' means people violate the law in some setting, which is all a counterexample needs. 'has' means people satisfy it in the typical setting; the formal law claims every setting. 'mixed' means the evidence is divided.",
+  "_note": "What the evidence says about people, law by law. Each verdict is a judgment that maps experiments onto an idealized law. It is not a theorem. 'lacks' means people violate the law in some setting, which is all a counterexample needs. 'has' means people satisfy it in the typical setting; the formal law claims every setting. 'mixed' means the evidence is divided. Each entry also states its 'bridge': the unformalized assumption that connects the experiment's measure to the law. The laws are about what memory retrieves; the experiments measure reports and decisions.",
   "certainty": {
     "status": "lacks",
     "summary": "Items just studied can be available but not accessible: cued recall retrieves words that free recall missed.",
-    "sources": ["Tulving, E., & Pearlstone, Z. (1966). Availability versus accessibility of information in memory for words. Journal of Verbal Learning and Verbal Behavior, 5, 381-391."]
+    "sources": [
+      "Tulving, E., & Pearlstone, Z. (1966). Availability versus accessibility of information in memory for words. Journal of Verbal Learning and Verbal Behavior, 5, 381-391."
+    ],
+    "bridge": "Free and cued recall are taken to show what a probe retrieves. Recall failure is read as retrieval failure, not as a failure at report."
   },
   "stability": {
     "status": "mixed",
@@ -12,12 +15,16 @@
       "McGeoch, J. A. (1932). Forgetting and the law of disuse. Psychological Review, 39, 352-370.",
       "Barnes, J. M., & Underwood, B. J. (1959). 'Fate' of first-list associations in transfer theory. Journal of Experimental Psychology, 58, 97-105.",
       "Ratcliff, R., Clark, S. E., & Shiffrin, R. M. (1990). List-strength effect: I. Data and discussion. Journal of Experimental Psychology: Learning, Memory, and Cognition, 16, 163-178."
-    ]
+    ],
+    "bridge": "Recall and recognition accuracy are taken as measures of an item's retrieval by itself as probe."
   },
   "orderFree": {
     "status": "lacks",
     "summary": "Recall depends on serial position (primacy and recency), so the order of study matters.",
-    "sources": ["Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488."]
+    "sources": [
+      "Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488."
+    ],
+    "bridge": "Free recall by serial position is taken to reflect the retrieval distribution after a given study order. The law itself concerns swapping the last two study events."
   },
   "recency": {
     "status": "has",
@@ -25,11 +32,13 @@
     "sources": [
       "Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.",
       "Glanzer, M., & Cunitz, A. R. (1966). Two storage mechanisms in free recall. Journal of Verbal Learning and Verbal Behavior, 5, 351-360."
-    ]
+    ],
+    "bridge": "Free recall is taken to reflect probe-based retrieval. The law concerns two items equally similar to a probe; free recall has no explicit probe."
   },
   "storedOnly": {
-    "status": "lacks",
-    "summary": "People endorse a category prototype they never saw, and falsely recall an unpresented word associated with the list.",
+    "status": "mixed",
+    "summary": "The law concerns the representation memory returns; the experiments measure reports. Endorsing an unseen prototype as old does not show that the prototype itself was retrieved: a memory that returns a similar studied item (as discrimination and strength memory do) also calls it old. False recall of an unpresented word is stronger evidence, but it could be built by a response stage working on retrieved studied material.",
+    "bridge": "Unformalized, and decisive here. A report must be linked to the retrieved representation by an explicit decision and response model.",
     "sources": [
       "Posner, M. I., & Keele, S. W. (1968). On the genesis of abstract ideas. Journal of Experimental Psychology, 77, 353-363.",
       "Roediger, H. L., & McDermott, K. B. (1995). Creating false memories: Remembering words not presented in lists. Journal of Experimental Psychology: Learning, Memory, and Cognition, 21, 803-814."

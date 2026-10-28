@@ -73,7 +73,7 @@ Two new lemmas about nets were needed.
 
 *Proof.* Part 1 is Prediction 3 for q itself. For part 2, an answer clears the criterion only if it is q's sum, which is not x's sum. So "clears the criterion with a wrong answer for x" and "clears the criterion" are the same event, and by Prediction 2 the error and retrieval probabilities are equal. Part 3 is Prediction 1 for both problems, since both are routed to q. ∎
 
-*Why it matters.* In DOA, a problem's retrieval errors and its backup use come from the same distribution, a flat one, so they rise and fall together (`StrategyChoice_THEOREMS.md`, Theorems 6 and 7). Confusion gives x another problem's distribution: q's low backup use, with all its retrieval trials wrong. So multi-digit performance should contain errors that are fast, retrieved, and not accompanied by any extra backup use. Single-digit DOA performance contains none.
+*Why it matters.* In DOA, a problem's retrieval errors and its backup use come from the same distribution, a flat one, so they rise and fall together (`StrategyChoice_THEOREMS.md`, Theorems 6 and 7). Confusion gives x another problem's distribution: q's low backup use, with all its retrieval trials wrong. So multi-digit performance should contain errors that are retrieved and not accompanied by any extra backup use. (They are often called fast, but the model has no timing. It also predicts such errors are frequent only if retrieval on q usually succeeds, R_q near 1.) Single-digit DOA performance contains none.
 
 **Prediction 5 (confusion with the same sum is harmless).** If x is recognized as q, q is recognized as itself, and the two have the same sum, then whole-problem retrieval errs on x exactly as often as on q. In particular, confusing a + b with b + a costs nothing.
 
@@ -118,7 +118,7 @@ Two new lemmas about nets were needed.
 
 *Proof.* No answer clears the criterion, so R = 0, and by Prediction 1 the columns are used with probability (1 − 0)ⁿ = 1. ∎
 
-*What it says.* Together with Predictions 4 and 11, this gives a sequence that can be looked for. First comes a fast, confident error from confusion. Once the error is noticed and the problem discriminated, slow column work follows, because a newly discriminated problem has only weak associations of its own. Then, as correct answers are stated and strengthened, fluent and correct retrieval follows. By DOA's A6, strengthening a correct answer never raises retrieval errors, whichever strategy produced it (`SC.correct_strengthening_lowers_errors`).
+*What it says.* Together with Predictions 4 and 11, this gives a sequence that can be looked for. First comes a confident error from confusion, retrieved with no extra backup use. Once the error is noticed and the problem discriminated, slow column work follows, because a newly discriminated problem has only weak associations of its own. Then, as correct answers are stated and strengthened, fluent and correct retrieval follows. By DOA's A6, strengthening a correct answer never raises retrieval errors, whichever strategy produced it (`SC.correct_strengthening_lowers_errors`).
 
 ## Further features (M1a–M1c)
 
@@ -164,12 +164,12 @@ Lemma A with M1 gave Prediction 6, since a digit's features determine the digit.
 
 | Prediction | Dissociation | Test |
 |---|---|---|
-| 4 | errors without backup use | Look for fast, retrieved errors on unfamiliar problems that resemble a familiar one. They should not be accompanied by more finger use or written column work than on the familiar problem. |
+| 4 | errors without backup use | Look for retrieved errors on unfamiliar problems that resemble a familiar one. They should not be accompanied by more finger use or written column work than on the familiar problem. |
 | 3, 6 | which errors | Errors on such problems should be the familiar problem's answer, off in the digits the familiar set never varies on. |
 | 5 | harmless confusions | Confusions between commuted problems (and others with the same sum) should produce no errors. |
 | 7 | no interference | Learning new familiar problems should not change performance on already-familiar ones. |
 | 10 | column errors | Column-route errors should be single-digit errors moved to their place: off by exactly 10 × (a single-digit error) when the tens column errs. |
-| 4, 11, 12 | a learning sequence | On a problem first answered confidently and wrongly, look for fast errors, then slow column work after feedback, then fluent correct retrieval. |
+| 4, 11, 12 | a learning sequence | On a problem first answered confidently and wrongly, look for retrieved errors, then column work after feedback, then fluent correct retrieval. |
 | 13, 14 | zeros | Unfamiliar problems should not be confused with round ones once the familiar set has forced the net to test zeros. |
 | 15, 16 | which neighbours | Under a magnitude code, confusions should be with problems whose digits are numerically close. |
 | 17, 18 | column facts | Confusions between problems with the same column facts (e.g. 120 + 340 and 140 + 320) should cost nothing. With the low columns tested, errors should be multiples of 100. |

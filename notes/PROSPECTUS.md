@@ -61,15 +61,15 @@ That is why the library is built on laws rather than theories. A theory is a lar
 
 Which theory is right is not a claim the library makes. It follows from the second and third rows together. **A refutation spreads.** If people lack a law, every family that has it is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. Without formalization, a refuted assumption lingers in theories that never said they depended on it.
 
-The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `notes/MATRIX.md`). With the evidence as recorded there, no family fits:
-- People show recency, and only activation has it.
-- People retrieve what they never studied: a category's prototype (Posner & Keele 1968), a word associated with the list (Roediger & McDermott 1995). Only global matching does that.
+The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `notes/MATRIX.md`). Each judgment rests on a **bridge**: an assumption connecting what an experiment measures (reports and decisions) to what a law is about (what memory retrieves). The bridges are not yet formalized, and they matter:
+- People show recency in free recall, and only activation has the recency law. The bridge is that free recall reflects probe-based retrieval.
+- People endorse a category prototype they never saw (Posner & Keele 1968). This does not show they *retrieved* the prototype: a memory that returns a similar studied item, as discrimination and strength memory do, also calls the prototype old. False recall of an unpresented word (Roediger & McDermott 1995) is stronger, but it could be built by a response stage working on stored material. So stored-only retrieval is judged mixed.
 
-Activation conflicts only on stored-only retrieval. That points to a specific next family, ACT-R with blended retrieval, which produces blends.
+With the judgments as they stand, activation fits every law on which the evidence is settled. The law that would decide between it and global matching is stored-only retrieval, and its bridge is the one that is missing. The next step is not more data but **observational semantics**: decision and report components, so that a law about retrieval yields a prediction about what participants say (Program 4).
 
 **Where this is weaker than mathematics.**
 - **The definitions are contestable.** A family is one formalization of a theory. If it misrepresents the theory, its cells say nothing about the theory itself. Blind simulations and checks against community implementations (`MultiDigit/sim/`, PyACTUp) test that link. A change of definition means the results that depend on it must be proved again.
-- **The laws are idealizations.** Mapping an experiment onto a law is a judgment. A law may hold in some tasks and not others: stability fails in recall but may hold in recognition, and recency holds only on an immediate test. Each law is therefore stated relative to a setting, and part of the empirical work is finding which settings matter.
+- **The laws are idealizations, and they presuppose a representation.** They are neutral about mechanism but not about representation: items are binary codes, similarity is a count of mismatching features. Mapping an experiment onto a law is a judgment that passes through a bridge (above). A law may hold in some tasks and not others: stability fails in recall but may hold in recognition, and recency holds only on an immediate test. Each law is therefore stated relative to a setting, and part of the empirical work is finding which settings matter.
 - **Families are flexible.** A family may have a law in one region of its parameters and lack it in another. Then the informative, permanent fact is the region, "activation has certainty only when the failure weight is 0", not a single counterexample.
 - **Evidence is never final.** The third row will change. The first two won't, and when the third changes, the matrix says at once what follows.
 
@@ -105,7 +105,9 @@ Activation conflicts only on stored-only retrieval. That points to a specific ne
    - Certainty and stability have the same row: separate them or merge them.
    - Add the graded laws not yet stated: frequency monotonicity, similarity-graded confusion.
    - Add implications between laws. Some laws may entail others (does certainty plus stability imply stored-only retrieval?).
-4. **Connect theories to the matrix.** Restate the multi-digit laws as matrix laws, so that a theory's differential predictions are read off the matrix. Pair each with the experiment that would test it.
+4. **Connect theories and experiments to the matrix.**
+   - Restate the multi-digit laws as matrix laws, so that a theory's differential predictions are read off the matrix.
+   - Add decision and report components, so that laws about retrieval yield predictions about observable responses. Then derive experiments from incompatible laws. For example, recency and order-freedom are jointly inconsistent wherever recency's conditions can be met, and a counterbalanced AB/BA study list with a probe equally similar to A and B separates them (`notes/20261027_CogLean_Direction.md`, §4).
 5. **Beyond memory.** The same treatment for strategy choice (a strategy-chooser interface, `OPEN_ISSUES.md` #8), then production systems. The Common Model of Cognition's modules are a checklist of which interfaces are needed.
 6. **General parameters and reference implementations.**
    - ACT-R with arbitrary decay and temperature needs real exponentials, so it goes in a Mathlib package; the rational case stays in core.

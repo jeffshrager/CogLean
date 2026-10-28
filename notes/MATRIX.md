@@ -21,30 +21,32 @@ This row is different in kind from the theorem cells above. It is a judgment of 
 
 | | Certainty | Stability | Order-freedom | Recency | Stored-only |
 |---|---|---|---|---|---|
-| People | *lacks* | *mixed* | *lacks* | *has* | *lacks* |
+| People | *lacks* | *mixed* | *lacks* | *has* | *mixed* |
 
 | Family | Fits | Conflicts with the evidence on |
 |---|---|---|
-| Discrimination (EPAM) | 1 of 4 | Certainty, Recency, Stored-only |
-| Activation (ACT-R, d = 1, s = 1) | 3 of 4 | Stored-only |
-| Strength with a criterion (DOA) | 1 of 4 | Order-freedom, Recency, Stored-only |
-| Global matching (MINERVA 2) | 2 of 4 | Order-freedom, Recency |
+| Discrimination (EPAM) | 1 of 3 | Certainty, Recency |
+| Activation (ACT-R, d = 1, s = 1) | 3 of 3 | none |
+| Strength with a criterion (DOA) | 1 of 3 | Order-freedom, Recency |
+| Global matching (MINERVA 2) | 1 of 3 | Order-freedom, Recency |
 
-No family is consistent with all the settled evidence.
+Families consistent with all the evidence judged settled: Activation (ACT-R, d = 1, s = 1).
+
+Each judgment rests on a bridge from what an experiment measures (reports, decisions) to what a law is about (what memory retrieves). The bridges are stated below and are not formalized, so a fit here is a hypothesis, not a result.
 
 ### Evidence
 
-- **Certainty** (*lacks*). Items just studied can be available but not accessible: cued recall retrieves words that free recall missed.
+- **Certainty** (*lacks*). Items just studied can be available but not accessible: cued recall retrieves words that free recall missed. *Bridge:* Free and cued recall are taken to show what a probe retrieves. Recall failure is read as retrieval failure, not as a failure at report.
   - Tulving, E., & Pearlstone, Z. (1966). Availability versus accessibility of information in memory for words. Journal of Verbal Learning and Verbal Behavior, 5, 381-391.
-- **Stability** (*mixed*). In recall, learning new material impairs old (retroactive interference). In recognition, strengthening other list items does not impair an item (the null list-strength effect).
+- **Stability** (*mixed*). In recall, learning new material impairs old (retroactive interference). In recognition, strengthening other list items does not impair an item (the null list-strength effect). *Bridge:* Recall and recognition accuracy are taken as measures of an item's retrieval by itself as probe.
   - McGeoch, J. A. (1932). Forgetting and the law of disuse. Psychological Review, 39, 352-370.
   - Barnes, J. M., & Underwood, B. J. (1959). 'Fate' of first-list associations in transfer theory. Journal of Experimental Psychology, 58, 97-105.
   - Ratcliff, R., Clark, S. E., & Shiffrin, R. M. (1990). List-strength effect: I. Data and discussion. Journal of Experimental Psychology: Learning, Memory, and Cognition, 16, 163-178.
-- **Order-freedom** (*lacks*). Recall depends on serial position (primacy and recency), so the order of study matters.
+- **Order-freedom** (*lacks*). Recall depends on serial position (primacy and recency), so the order of study matters. *Bridge:* Free recall by serial position is taken to reflect the retrieval distribution after a given study order. The law itself concerns swapping the last two study events.
   - Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.
-- **Recency** (*has*). On an immediate test, the last items studied are recalled best. A filled delay removes the advantage, so this holds for the immediate test only.
+- **Recency** (*has*). On an immediate test, the last items studied are recalled best. A filled delay removes the advantage, so this holds for the immediate test only. *Bridge:* Free recall is taken to reflect probe-based retrieval. The law concerns two items equally similar to a probe; free recall has no explicit probe.
   - Murdock, B. B. (1962). The serial position effect of free recall. Journal of Experimental Psychology, 64, 482-488.
   - Glanzer, M., & Cunitz, A. R. (1966). Two storage mechanisms in free recall. Journal of Verbal Learning and Verbal Behavior, 5, 351-360.
-- **Stored-only** (*lacks*). People endorse a category prototype they never saw, and falsely recall an unpresented word associated with the list.
+- **Stored-only** (*mixed*). The law concerns the representation memory returns; the experiments measure reports. Endorsing an unseen prototype as old does not show that the prototype itself was retrieved: a memory that returns a similar studied item (as discrimination and strength memory do) also calls it old. False recall of an unpresented word is stronger evidence, but it could be built by a response stage working on retrieved studied material. *Bridge:* Unformalized, and decisive here. A report must be linked to the retrieved representation by an explicit decision and response model.
   - Posner, M. I., & Keele, S. W. (1968). On the genesis of abstract ideas. Journal of Experimental Psychology, 77, 353-363.
   - Roediger, H. L., & McDermott, K. B. (1995). Creating false memories: Remembering words not presented in lists. Journal of Experimental Psychology: Learning, Memory, and Cognition, 21, 803-814.
