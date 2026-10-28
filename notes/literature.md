@@ -10,10 +10,47 @@ Fisher, C. R., Houpt, J., Larue, O., & Schmidt, K. D. (2024, June). *Deriving cr
 
 > Cognitive architectures (CAs) are unified theories of cognition which describe invariant properties in the structure and function of cognition, and how sub-systems (e.g., memory, vision) interact as a coherent system. An important role of CAs is integrating findings across many domains into a unified theory and preventing research silos. One downside of CAs is that their breadth and complexity create challenges for deriving critical tests of core architectural assumptions. Consequentially, it is often unclear to what extent empirical tests of CAs are driven by core architectural vs. auxiliary assumptions. To address this issue, we developed a methodology for deriving critical tests of CAs which combines systems factorial technology (SFT; Townsend & Nozawa, 1995) and global model analysis (GMA), forming what we call SFT-GMA. In SFT-GMA, GMA is performed within an SFT model space of qualitative model classes spanning four dimensions: architecture, stopping rule, dependence, and workload capacity. Constraints on the model space are derived from core architectural assumptions which may provide a basis for critical tests. To demonstrate the utility of SFT-GMA, we applied it to the ACT-R cognitive architecture (Anderson et al., 2004). Despite many degrees of freedom in the specification of parameters values, production rules, and declarative memory representations, SFT-GMA revealed that ACT-R's core architectural assumptions impose testable constraints on the SFT model space. In particular, ACT-R is incompatible with most parallel SFT models of perceptual processing. We believe that the use of theorem-based methods such as SFT-GMA have the potential to stimulate theoretical progress for CAs. The views expressed in this paper are those of the authors and do not reflect the official policy or position of the Department of Defense or the US Government. This work was supported by the Air Force Research Laboratory (FA8650-22-C-1046). Approved for public release; distribution unlimited. Cleared 12/21/2023; Case Number: AFRL-2023-6387.
 
-**Relation to CogLean** (my reading, from the abstract only):
-- **The same aim.** Separate what follows from a theory's *core* assumptions from what depends on auxiliary choices (parameters, production rules, representations). CogLean's laws-versus-families split, and its "has" cells proved for every parameter setting, aim at the same distinction.
-- **Qualitative model classes.** SFT-GMA's model space (architecture, stopping rule, dependence, workload capacity) plays the role CogLean's laws play: a theory-neutral space in which a theory's core assumptions rule some classes in and others out. Their finding that ACT-R is incompatible with most parallel SFT models has the shape of a "lacks" cell derived from core assumptions.
-- **Critical tests from theory.** Both derive experiments from what the theory's core forbids. SFT supplies its own experimental paradigm and diagnostic contrasts; compare CogLean's AB/BA design derived from recency and order-freedom.
-- **Theorem-based.** SFT's diagnostics rest on proved results about processing models (Townsend & Nozawa 1995). A natural question is whether SFT's model classes and diagnostics could be formalized in CogLean as laws, with ACT-R's architecture as a family.
+**Journal version.** Fisher, C. R., Houpt, J. W., Larue, O., & Schmidt, K. (2025). Using systems factorial technology for global model analysis of ACT-R's core architectural assumptions. *Journal of Mathematical Psychology, 125*, 102924. https://doi.org/10.1016/j.jmp.2025.102924. A local copy is at `../papers/2025-Fisher-etal-JMP1-s2.0-S0022249625000252-main.pdf`, outside the repo. Simulation code: https://github.com/itsdfish/ACTR_SFT.jl (Julia).
+
+**What the paper does.**
+- **Space.** 45 SFT model classes, from crossing architecture (serial, parallel, coactive), stopping rule (AND, OR), stochastic dependence (independent, inhibitory, facilitatory) and workload capacity (limited, unlimited, super).
+- **Auxiliary versus core.** Auxiliary: ACT-R 7's 105 parameters, 22 hooks, optional modules, the production rules and chunks, and the processing-time distributions. Core: eight assumptions they propose, since there is no official list:
+  1. discrete production cycles;
+  2. chunks;
+  3. modularity with encapsulation;
+  4. no redundant modules;
+  5. one production fires at a time;
+  6. a module handles one request at a time;
+  7. a buffer holds at most one chunk;
+  8. a perceptual module encodes one stimulus per chunk.
+
+  They state each assumption in set notation, as "the set of models violating it is empty".
+- **Theorems.** Three, proved in prose by enumerating the pathways to parallelism and showing that each conflicts with a core assumption:
+  1. within one modality, perceptual processing is serial;
+  2. across modalities, it cannot be coactive;
+  3. parallel cross-modal processing must be independent and unlimited-capacity (UCIP).
+- **Tables.** Tables 1 and 3 mark each of the 45 classes as producible or ruled out, with the ruling theorem as a superscript. They have the same shape as a CogMatrix column, where a "lacks" cell names the result behind it.
+- **Tests against data.**
+  - Within one modality (two dots), published double-factorial results show parallel processing (Townsend & Nozawa 1995; Eidels et al. 2015; Howard et al. 2021). Wenger & Rhoten (2020) found a shift to parallel super-capacity with training.
+  - Across modalities, Yang et al. (2018) found parallel exhaustive processing with super-capacity or facilitation.
+  - Both results contradict ACT-R, so at least one of its core assumptions fails: 4, 5, 6 or 8 for the first, and 3, 6, 7 or 8 for the second.
+- **Relaxing assumptions.**
+  - Dropping encapsulation (3) lets ACT-R produce every cross-modal pattern.
+  - Dropping one-stimulus-per-chunk (8) lets it produce every within-modality pattern.
+  - Dropping both makes ACT-R unfalsifiable in this space.
+
+  It is a robustness analysis of the verdicts over the core list.
+
+**Relation to CogLean.**
+- **The same aim and shape.** Separate what follows from a theory's *core* from what depends on auxiliary choices, and record verdicts per qualitative class with the result behind each. Their tables are one column of a matrix whose rows are SFT classes; CogMatrix has laws as rows and several families as columns.
+- **Proofs.** Theirs are careful prose case analyses over informally stated assumptions; CogLean's are machine-checked. Their Theorem 1 argument (each pathway to parallelism contradicts some assumption) is a natural candidate to formalize: it needs a small model of modules, buffers and production cycles, not ACT-R's activation equations.
+- **Domain.** They constrain the *timing structure* of perception, seen in response-time distributions. CogLean constrains what *declarative memory retrieves* and how study changes it. The two don't overlap yet: their analysis says nothing about retrieval content, and CogLean has no time.
+- **Link to data.** This is their strength. SFT comes with a paradigm (the double factorial design), diagnostics (SIC and the capacity coefficient), an assumption that makes them interpretable (selective influence), and published data. CogLean's evidence row is judgment, with bridges.
+- **Base-level learning, Section 8.2.** A reviewer suggested two core properties of base-level activation: retrieval time weakly decreases with the number of uses, and weakly increases with the time since the last use. The authors note that a critical test is hard, because these depend on how other activation terms (spreading activation, for instance) are constrained. Footnote 12 cites edge cases where the standard form violates them (Fisher, Houpt & Gunzelmann 2018). These are the monotonicity laws that `notes/20261028_law_specificity.md` proposes, for probability rather than time. A concrete first link: prove them for `actRetriever`, and show which other families have them.
+- **Their limitations are ours.**
+  - The possible/impossible split gives strong evidence against a theory but no graded support. That is our has/lacks problem, and the graded laws are the fix.
+  - Duhem–Quine: statistical tests bring their own auxiliary assumptions, just as CogLean's bridges do.
+  - SFT is neutral on representation, while CogLean's laws are tied to one representation.
+- **Future work they propose:** applying SFT-GMA to other architectures to compare them. That is CogLean's comparison of families, for processing structure.
 
 Presented in `presentations/coglean-overview` and `coglean-story` (slide "A related approach: SFT-GMA").

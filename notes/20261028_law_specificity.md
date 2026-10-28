@@ -32,7 +32,7 @@ The constants in the worked examples (100 + 100, faces 000 and 110) are not the 
    - recency as a monotonicity: moving any use later in time never lowers retrieval.
 
    A cell then becomes a **threshold** ("ACT-R has ε-certainty exactly when ε ≥ θ/(w + θ)"), not has/lacks. This also answers the open question of parameter regions (`notes/OPEN_ISSUES.md` #17), and it shows which "lacks" cells were only about noise.
-2. **Monotonicity and ordering laws** rather than equalities. Frequency: an extra study of y never lowers P(y | y). Similarity: more mismatches never raise retrieval. These are closer to how regularities are stated in psychology, and they survive small noise.
+2. **Monotonicity and ordering laws** rather than equalities. Frequency: an extra study of y never lowers P(y | y). Similarity: more mismatches never raise retrieval. These are closer to how regularities are stated in psychology, and they survive small noise. Fisher, Houpt, Larue & Schmidt (2025, Section 8.2; see `literature.md`) propose the same two properties as core assumptions of ACT-R's base-level learning: retrieval weakly improves with uses and weakly worsens with time since the last use.
 3. **An abstract similarity relation** in place of Hamming distance on binary codes, so the laws assume less about representation.
 4. **Robustness checks on the matrix.** For each cell, does the verdict survive a slight relaxation of the law? A cell that flips under an ε-relaxation reflects the law's form, not the family.
 5. **Logical relations between laws.** Prove implications and incompatibilities (as already done for recency and order-freedom), so it is clear which columns are independent.
