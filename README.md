@@ -103,7 +103,7 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
-**The theory matrix** (`CogMatrix/`): 5 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem that the family has or lacks the law. Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
+**The theory matrix** (`CogMatrix/`): 6 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem: the family has the law at every parameter setting, never has it, or lacks it at one setting (a counterexample). Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
 
 **Experiments** (`Experiments/`): an experiment is written once against the memory interface, and any family plugs in. The first one, a study-test experiment with a prototype lure, is run with all four families. Its serial-position curves and lure responses differ as the families' laws predict, and every number is a theorem ([`Experiments/README.md`](Experiments/README.md)).
 

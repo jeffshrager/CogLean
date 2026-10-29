@@ -121,18 +121,18 @@ The answer is to organize the library the way Mathlib organizes algebra. Mathlib
     & Certainty & Stability & Order-free & Recency & Stored-only & Determinate\\
     \midrule
     Discrimination & \has & \has & \lacks & \lacks & \has & \has\\
-    Activation & \lacks & \lacks & \lacks & \has & \has & \lacks\\
-    Strength & \lacks & \lacks & \has & \lacks & \has & \lacks\\
-    Global matching & \lacks & \lacks & \has & \lacks & \lacks & \has\\
+    Activation & \never & \never & \never & \has & \has & \never\\
+    Strength & \lacks & \lacks & \has & \never & \has & \lacks\\
+    Global matching & \lacks & \lacks & \has & \never & \lacks & \has\\
     \bottomrule
   \end{tabular}
   \bigskip
 
-  Every cell is a theorem: a general proof (\has), or a counterexample (\lacks).
+  Every cell is a theorem: a general proof that the law holds (\has) or fails (\never) at every parameter setting, or a counterexample at one setting (\lacks).
   Every law separates some families, and every family has its own row.
 \end{frame}
 \note{
-Put the two together and you get a matrix. Every cell is a theorem: has means a general proof for every parameter setting that meets the stated conditions, and lacks means a counterexample. Every law separates some families, and every family has its own row. Global matching was added as a test of the laws, and on the first four it looked exactly like strength memory, which forced the stored-only law. I should add that some of these laws are stated too narrowly, all-or-none where they should be graded; fixing that is the next piece of work.
+Put the two together and you get a matrix. Every cell is a theorem. Has means a general proof that the family has the law at every parameter setting meeting the stated conditions; never, in bold red, means a general proof that it fails at every such setting; and lacks, in plain red, is a counterexample at one setting. The difference matters, because only the every-setting cells can be refuted by evidence. Every law separates some families, and every family has its own row. Global matching was added as a test of the laws, and on the first four it looked exactly like strength memory, which forced the stored-only law. Some of these laws are stated too narrowly, all-or-none where they should be graded; fixing that is the next piece of work.
 }
 
 \begin{frame}{What is true here?}
@@ -159,7 +159,7 @@ In mathematics, a proved theorem is true. Here we have competing theories, so wh
 
 \begin{frame}{A refutation spreads}
   \begin{itemize}
-    \item If people lack a law, every family that has it is refuted at once, and every prediction proved from it loses its support, in every theory that uses it.
+    \item If people lack a law, every family that has it at every setting is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. A counterexample at one setting refutes nothing.
     \item The matrix carries a judged evidence row, kept apart from the theorems.
     \item Each judgment states its \textbf{bridge}: the assumption connecting what experiments measure (reports, decisions) to what a law is about (what memory retrieves).
   \end{itemize}
@@ -167,7 +167,7 @@ In mathematics, a proved theorem is true. Here we have competing theories, so wh
   \textit{Example.} People endorse a prototype they never saw. That does not show they \emph{retrieved} it: a memory that returns a similar studied item also calls the prototype ``old''. The bridge is the missing piece.
 \end{frame}
 \note{
-This structure has a useful property: a refutation spreads. If the evidence shows that people lack a law, every family that has the law is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. So the matrix carries an evidence row for people, kept apart from the theorems. Each entry states its bridge, the assumption that connects what an experiment measures, which is a report, to what a law is about, which is retrieval. Endorsing a prototype you never saw, for instance, doesn't show you retrieved it. Often the next step in comparing theories is not more data but an explicit response model.
+This structure has a useful property: a refutation spreads. If the evidence shows that people lack a law, every family that has the law at every setting is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. A counterexample at one setting refutes nothing, since another setting may do what people do. So the matrix carries an evidence row for people, kept apart from the theorems. Each entry states its bridge, the assumption that connects what an experiment measures, which is a report, to what a law is about, which is retrieval. Endorsing a prototype you never saw, for instance, doesn't show you retrieved it. Often the next step in comparing theories is not more data but an explicit response model.
 }
 
 \begin{frame}{Example 1: confident errors, inherited}

@@ -29,7 +29,7 @@ Fisher, C. R., Houpt, J., Larue, O., & Schmidt, K. D. (2024, June). *Deriving cr
   1. within one modality, perceptual processing is serial;
   2. across modalities, it cannot be coactive;
   3. parallel cross-modal processing must be independent and unlimited-capacity (UCIP).
-- **Tables.** Tables 1 and 3 mark each of the 45 classes as producible or ruled out, with the ruling theorem as a superscript. They have the same shape as a CogMatrix column, where a "lacks" cell names the result behind it.
+- **Tables.** Tables 1 and 3 mark each of the 45 classes as producible or ruled out, with the ruling theorem as a superscript. They have the same shape as a CogMatrix column, with each verdict naming the result behind it. Their ✗ ("cannot produce", under any auxiliary choices) is CogMatrix's **never**, and their ✓ ("can produce") is closer to **can hold** than to **has**.
 - **Tests against data.**
   - Within one modality (two dots), published double-factorial results show parallel processing (Townsend & Nozawa 1995; Eidels et al. 2015; Howard et al. 2021). Wenger & Rhoten (2020) found a shift to parallel super-capacity with training.
   - Across modalities, Yang et al. (2018) found parallel exhaustive processing with super-capacity or facilitation.
@@ -48,7 +48,7 @@ Fisher, C. R., Houpt, J., Larue, O., & Schmidt, K. D. (2024, June). *Deriving cr
 - **Link to data.** This is their strength. SFT comes with a paradigm (the double factorial design), diagnostics (SIC and the capacity coefficient), an assumption that makes them interpretable (selective influence), and published data. CogLean's evidence row is judgment, with bridges.
 - **Base-level learning, Section 8.2.** A reviewer suggested two core properties of base-level activation: retrieval time weakly decreases with the number of uses, and weakly increases with the time since the last use. The authors note that a critical test is hard, because these depend on how other activation terms (spreading activation, for instance) are constrained. Footnote 12 cites edge cases where the standard form violates them (Fisher, Houpt & Gunzelmann 2018). These are the monotonicity laws that `notes/20261028_law_specificity.md` proposes, for probability rather than time. A concrete first link: prove them for `actRetriever`, and show which other families have them.
 - **Their limitations are ours.**
-  - The possible/impossible split gives strong evidence against a theory but no graded support. That is our has/lacks problem, and the graded laws are the fix.
+  - The possible/impossible split gives strong evidence against a theory but no graded support. That is our has/never problem, and the graded laws are the fix. CogMatrix now separates claims about every setting (**has**, **never**) from claims about one setting (**lacks**, **can hold**), and only the former can refute a family. That is the asymmetry SFT-GMA relies on.
   - Duhem–Quine: statistical tests bring their own auxiliary assumptions, just as CogLean's bridges do.
   - SFT is neutral on representation, while CogLean's laws are tied to one representation.
 - **Future work they propose:** applying SFT-GMA to other architectures to compare them. That is CogLean's comparison of families, for processing structure.

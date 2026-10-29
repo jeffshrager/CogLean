@@ -6,6 +6,8 @@ The global-matching family (MINERVA 2) against the laws.
 * `not_certainty`, `not_stability`: lacks them. Enough traces of a neighbour
   outweigh a stimulus's own.
 * `not_recency`: lacks it. Nothing records when study happened.
+  `never_recency`: in fact lacks it for every choice of parameters, since it
+  is order-free.
 * `determinate`: has it, for every width. The echo is a single code.
 * `not_storedOnly`: lacks it. Probed with the centre of three studied
   variants, memory returns the centre, never studied.
@@ -90,5 +92,14 @@ theorem determinate (P : MinParams) (s0 : MinState) (U : List Item) :
   split
   · exact ⟨_, rfl⟩
   · exact ⟨_, rfl⟩
+
+/-- **Global matching never has recency**, for every choice of parameters and from
+every state, wherever recency can be tested: two distinct stimuli and a probe
+equally similar to both. It is order-free, and no order-free memory is
+recent (`not_recency_of_orderFree`). -/
+theorem never_recency (P : MinParams) (s0 : MinState) (fs : List Feature) (U : List Item) (a b x : Item)
+    (ha : a ∈ U) (hb : b ∈ U) (hab : a ≠ b) (hx : mismatches fs x a = mismatches fs x b) :
+    ¬ Recency fs (minRetriever P) s0 U :=
+  not_recency_of_orderFree fs _ s0 U (orderFree P s0 U) a b x ha hb hab hx
 
 end Cog.Matrix.Minerva

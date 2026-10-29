@@ -11,7 +11,7 @@ The constants in the worked examples (100 + 100, faces 000 and 110) are not the 
 | Law | How it is too specific | Consequence |
 |---|---|---|
 | Recency | Exactly two items, both new, studied last; a probe *exactly* equally similar to both (a count of mismatching binary features); a strict inequality. The shape was chosen partly because ACT-R's general proof could handle it, and that proof starts only from an empty memory. | It tests one narrow configuration. The general claim, "a more recent use never lowers retrieval", is not stated. |
-| Certainty | Probability exactly 1. | Any memory with any noise lacks it. The "lacks" cells for ACT-R, strength and MINERVA come cheaply. |
+| Certainty | Probability exactly 1. | Any memory with any noise lacks it. The "lacks" cells for strength and MINERVA come cheaply, and ACT-R's "never" cell (`never_certainty`) holds just because the failure weight is positive. |
 | Stability | Exact equality of self-retrieval before and after studying another item. | Any interference at all, however small, violates it. |
 | Determinacy | A single outcome, and syntactic (`= pure r`). | Again separates noiseless from noisy memories, not much else. |
 | Order-freedom | Swaps only the last two study events, and requires the full retrieval distributions to be equal. | A narrow notion of order-independence. |

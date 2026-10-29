@@ -6,6 +6,8 @@ laws.
 * `not_certainty`, `not_stability`: lacks them. A similar stimulus competes
   for retrieval.
 * `not_recency`: lacks it. Nothing records when study happened.
+  `never_recency`: in fact lacks it for every choice of parameters, since it
+  is order-free.
 * `not_determinate`: lacks it. After 000 and 100, the probe 000 states each
   with positive probability.
 * `storedOnly`: has it, for every choice of parameters. Only stimuli with
@@ -132,5 +134,14 @@ theorem storedOnly (P : StrParams) (U : List Item) : StoredOnly (strRetriever P)
   · simp only [Str.weight]; rw [hzero]; exact Rat.zero_mul _
   · intro a k hak; simpa using hak
   · rfl
+
+/-- **Strength memory never has recency**, for every choice of parameters and from
+every state, wherever recency can be tested: two distinct stimuli and a probe
+equally similar to both. It is order-free, and no order-free memory is
+recent (`not_recency_of_orderFree`). -/
+theorem never_recency (P : StrParams) (s0 : StrState) (fs : List Feature) (U : List Item) (a b x : Item)
+    (ha : a ∈ U) (hb : b ∈ U) (hab : a ≠ b) (hx : mismatches fs x a = mismatches fs x b) :
+    ¬ Recency fs (strRetriever P) s0 U :=
+  not_recency_of_orderFree fs _ s0 U (orderFree P s0 U) a b x ha hb hab hx
 
 end Cog.Matrix.Strength

@@ -20,6 +20,9 @@ nothing is ever certain (`stableRetrieval_of_neverCertain`).
   the later is retrieved more often.
 * `StoredOnly`: nothing is retrieved that was not studied.
 
+`not_recency_of_orderFree`: no memory is both order-free and recent, wherever
+recency can be tested.
+
 The laws are neutral about mechanism, not about representation: stimuli are
 binary codes, similarity is a count of mismatching features (`mismatches`),
 and stored-only compares codes for identity.
@@ -228,6 +231,20 @@ theorem studied_selfRetrieval (R : Retriever S Item) (s0 : S) (U : List Item)
       · simp at h; exact h ▸ hyU) hpost,
     studyAll_append]
   exact hc _ ⟨pre, hpre, rfl⟩ y hyU
+
+/-- **An order-free memory lacks recency**, wherever recency can be tested:
+two distinct stimuli of `U` and a probe equally similar to both. Studying
+them in either order leaves the same retrieval, so neither order can favour
+the later item. -/
+theorem not_recency_of_orderFree (fs : List Feature) (R : Retriever S Item) (s0 : S)
+    (U : List Item) (hof : OrderFree R s0 U) (a b x : Item) (ha : a ∈ U) (hb : b ∈ U)
+    (hab : a ≠ b) (hx : mismatches fs x a = mismatches fs x b) : ¬ Recency fs R s0 U := by
+  intro hrec
+  have h1 := hrec [] (by simp) a ha b hb hab (by simp) (by simp) x hx
+  have h2 := hrec [] (by simp) b hb a ha (Ne.symm hab) (by simp) (by simp) x hx.symm
+  have e := hof s0 ⟨[], by simp, rfl⟩ a ha b hb x
+  simp only [List.nil_append, Retriever.studyAll, List.foldl_cons, List.foldl_nil, pRet, e] at h1 h2
+  grind
 
 end Laws
 end Cog

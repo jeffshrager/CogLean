@@ -440,20 +440,44 @@ And instead of individual models, we formalize families of models, each once, wi
     & Certainty & Stability & Order-free & Recency & Stored-only & Determinate\\
     \midrule
     Discrimination & \has & \has & \lacks & \lacks & \has & \has\\
-    Activation & \lacks & \lacks & \lacks & \has & \has & \lacks\\
-    Strength & \lacks & \lacks & \has & \lacks & \has & \lacks\\
-    Global matching & \lacks & \lacks & \has & \lacks & \lacks & \has\\
+    Activation & \never & \never & \never & \has & \has & \never\\
+    Strength & \lacks & \lacks & \has & \never & \has & \lacks\\
+    Global matching & \lacks & \lacks & \has & \never & \lacks & \has\\
     \bottomrule
   \end{tabular}
   \bigskip
   \begin{itemize}\small
-    \item \has: a general proof, for every parameter choice meeting stated conditions.
-    \item \lacks: a counterexample, computed exactly on the eight 3-bit codes.
-    \item Every law is had by some family and lacked by another; every family has its own row. A script checks both.
+    \item \has{} / \never: a general proof that the law holds / fails at \emph{every} parameter setting meeting stated conditions.
+    \item \lacks: a counterexample at \emph{one} setting, computed exactly on the eight 3-bit codes.
+    \item Every law holds for some family and fails for another; every family has its own row.
   \end{itemize}
 \end{frame}
 \note{
-Put them together and you get a matrix. Every cell is a theorem: has means a general proof, for every parameter setting that meets stated conditions; lacks means a counterexample. Every law separates some families, and every family has its own row. I'll be candid: some of these laws are stated too narrowly, all-or-none where they should be graded, and fixing that is the next piece of work. But it's the structure I want you to see.
+Put them together and you get a matrix. Every cell is a theorem, and there are three kinds. Has, in black, means a general proof that the family has the law at every parameter setting that meets stated conditions. Never, in bold red, means a general proof that it fails at every such setting. Lacks, in plain red, means a counterexample at one setting. ACT-R, for instance, is never certain, never stable, never order-free and never determinate, at any positive failure weight; the other families' lacks are single counterexamples. Every law separates some families, and every family has its own row. I'll be candid: some of these laws are stated too narrowly, all-or-none where they should be graded, and fixing that is the next piece of work. But it's the structure I want you to see.
+}
+
+\begin{frame}{One setting, or every setting?}
+  \small
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    & at every setting & at one setting\\
+    \midrule
+    the law holds & \has & \canhold\\
+    the law fails & \never & \lacks\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}\small
+    \item Only every-setting cells speak for the family, so only they can be refuted: by people lacking a law the family \has, or having one it \never{} has.
+    \item A \lacks{} cell refutes nothing: another setting may do what people do.
+    \item Activation \never{} has certainty, at any positive failure weight: retrieval can always fail.
+    \item An order-free memory \never{} has recency: either order of study leaves the same memory. Proved once for every memory; strength and global matching inherit it.
+    \item The shape of SFT-GMA's critical tests: what an architecture \emph{cannot} produce.
+  \end{itemize}
+\end{frame}
+\note{
+Why distinguish never from lacks? Because they say different things about a family. A counterexample at one setting shows the family doesn't guarantee the law, but another setting might have it. Only a claim about every setting speaks for the whole family, so only has and never can be refuted. If people lack a law, a family that has it everywhere is in trouble; if people have it, a family that never has it is. Two of the never cells are worth a word. ACT-R is never certain simply because retrieval can always fail. And any order-free memory never has recency, for a general reason: studying two items in either order leaves the same memory, so neither order can favour the later item. That one is proved once, for every memory, and strength and global matching inherit it. This is the same shape as the critical tests of Fisher and colleagues: what an architecture cannot produce, under any auxiliary choice.
 }
 
 \begin{frame}{The laws were tested, and failed once}
@@ -625,11 +649,24 @@ Finally, part eight, and the question I promised. In mathematics, a proved theor
   \begin{itemize}
     \item A judgment, not a theorem, with sources, kept apart from the proofs.
     \item Each entry states its \textbf{bridge}: how a measure (a report) is taken to show a law (about retrieval).
-    \item Activation fits every settled entry, but each fit rests on unformalized bridges.
   \end{itemize}
+  \medskip
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{lll}
+    \toprule
+    Family & refuted on (an every-setting cell) & open on (one setting only)\\
+    \midrule
+    Discrimination & certainty & recency\\
+    Activation & --- & ---\\
+    Strength & order-freedom, recency & ---\\
+    Global matching & order-freedom, recency & ---\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
 \end{frame}
 \note{
-So the matrix carries a row for people: a judgment, with sources, kept apart from the theorems. Each entry states its bridge, that is, how a measure, which is always a report, is taken to show something about retrieval. For example, endorsing an unseen prototype as old doesn't show you retrieved the prototype; a memory that retrieves a similar studied item would also call it old. As we've judged it, ACT-R fits every settled entry, but those fits are hypotheses until the bridges are formalized.
+So the matrix carries a row for people: a judgment, with sources, kept apart from the theorems. Each entry states its bridge, that is, how a measure, which is always a report, is taken to show something about retrieval. Endorsing an unseen prototype as old, for example, doesn't show you retrieved it. Against the settled entries, only the every-setting cells can refute. EPAM is refuted on certainty: it has it everywhere, and people lack it. Its recency conflict is only open, since that cell is one counterexample. Strength and global matching are each refuted twice: they're order-free everywhere, which people aren't, and they never have recency, which people do. ACT-R fits every settled entry. All of these are hypotheses until the bridges are formalized.
 }
 
 \begin{frame}{Where this is weaker than mathematics}

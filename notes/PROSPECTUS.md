@@ -32,13 +32,13 @@ Models are many, but mechanisms are few:
 - **Global matching:** the response depends on summed similarity to all stored traces (MINERVA 2, REM, TODAM, ACT-R blending).
 - **Distributed:** connectionist networks.
 
-Each family is formalized once, with its parameters free. For each law, the family gets either a proof that it has the law, with any conditions on the parameters, or a counterexample. A particular published model is a choice of parameters within its family.
+Each family is formalized once, with its parameters free. For each law, the family gets a proof that it has the law at every parameter setting (with any conditions stated), a proof that it never has it, or a counterexample at one setting. A particular published model is a choice of parameters within its family.
 
 ### 3. The theory matrix
-The rows are families and the columns are laws. Each cell holds a theorem: the family has the law, or it lacks it. **Differential predictions are read off the matrix.** Where two families differ on a law, every prediction resting on that law separates them, and the experiment that tests the prediction tests the law. The comparison document is generated from the matrix, not written by hand.
+The rows are families and the columns are laws. Each cell holds a theorem, about every parameter setting (**has**, **never**) or one setting (**lacks**, a counterexample, or **can hold**). **Differential predictions are read off the matrix.** Where two families differ on a law, every prediction resting on that law separates them, and the experiment that tests the prediction tests the law. The comparison document is generated from the matrix, not written by hand.
 
 ### 4. Every law must discriminate
-A law enters the library only with a *witness on each side*: a family that has it and a family that lacks it. A law that every family satisfies, or satisfies only vacuously, tells theories apart only by accident.
+A law enters the library only with a *witness on each side*: a family that has it and a family that fails it. A law that every family satisfies, or satisfies only vacuously, tells theories apart only by accident.
 - In practice this favours **graded** laws ("studying `z` never changes the probability of retrieving `y`") over all-or-none ones ("a studied item is retrieved for certain").
 - An all-or-none law is vacuous for any family in which nothing is ever certain.
 
@@ -59,13 +59,13 @@ That is why the library is built on laws rather than theories. A theory is a lar
 | A family has or lacks a law | discrimination nets have stability | proved, permanent |
 | People have or lack a law | people lack stability in recall (retroactive interference) | empirical, revisable, judged law by law |
 
-Which theory is right is not a claim the library makes. It follows from the second and third rows together. **A refutation spreads.** If people lack a law, every family that has it is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. Without formalization, a refuted assumption lingers in theories that never said they depended on it.
+Which theory is right is not a claim the library makes. It follows from the second and third rows together, and only for cells that speak for the whole family. A family that has a law at every setting is refuted if people lack it, and one that never has it is refuted if people have it. A counterexample at one setting refutes nothing, since another setting may do what people do. This is the shape of SFT-GMA's critical tests (`notes/literature.md`): a model class the architecture *cannot* produce. **A refutation spreads.** If people lack a law, every family that has it at every setting is refuted at once, and every prediction proved from it loses its support, in every theory that uses it. Without formalization, a refuted assumption lingers in theories that never said they depended on it.
 
 The matrix carries the third row, as a judgment kept apart from the theorems (`CogMatrix/evidence.json`, shown in `notes/MATRIX.md`). Each judgment rests on a **bridge**: an assumption connecting what an experiment measures (reports and decisions) to what a law is about (what memory retrieves). The bridges are not yet formalized, and they matter:
 - People show recency in free recall, and only activation has the recency law. The bridge is that free recall reflects probe-based retrieval.
 - People endorse a category prototype they never saw (Posner & Keele 1968). This does not show they *retrieved* the prototype: a memory that returns a similar studied item, as discrimination and strength memory do, also calls the prototype old. False recall of an unpresented word (Roediger & McDermott 1995) is stronger, but it could be built by a response stage working on stored material. So stored-only retrieval is judged mixed.
 
-With the judgments as they stand, activation fits every law on which the evidence is settled. The law that would decide between it and global matching is stored-only retrieval, and its bridge is the one that is missing. The next step is not more data but **observational semantics**: decision and report components, so that a law about retrieval yields a prediction about what participants say (Program 4).
+With the judgments as they stand, activation fits every law on which the evidence is settled. Discrimination is refuted on certainty, and strength and global matching on order-freedom and recency. The law that would decide between it and global matching is stored-only retrieval, and its bridge is the one that is missing. The next step is not more data but **observational semantics**: decision and report components, so that a law about retrieval yields a prediction about what participants say (Program 4).
 
 **Where this is weaker than mathematics.**
 - **The definitions are contestable.** A family is one formalization of a theory. If it misrepresents the theory, its cells say nothing about the theory itself. Blind simulations and checks against community implementations (`MultiDigit/sim/`, PyACTUp) test that link. A change of definition means the results that depend on it must be proved again.
@@ -75,20 +75,19 @@ With the judgments as they stand, activation fits every law on which the evidenc
 
 ## Where the library stands
 
-**The matrix exists at small scale** (`CogMatrix/`, generated table in `notes/MATRIX.md`): 5 laws × 4 families, 20 cells, every one a theorem.
+**The matrix exists at small scale** (`CogMatrix/`, generated table in `notes/MATRIX.md`): 6 laws × 4 families, 24 cells, every one a theorem.
 
-| Family | Certainty | Stability | Order-freedom | Recency | Stored-only |
-|---|---|---|---|---|---|
-| Discrimination (EPAM) | has | has | lacks | lacks | has |
-| Activation (ACT-R, decay 1, temperature 1) | lacks | lacks | lacks | has | has |
-| Strength with a criterion (DOA) | lacks | lacks | has | lacks | has |
-| Global matching (MINERVA 2) | lacks | lacks | has | lacks | lacks |
-
-(A sixth law, determinacy, is now in the generated matrix: discrimination and global matching have it, activation and strength lack it.)
+| Family | Certainty | Stability | Order-freedom | Recency | Stored-only | Determinate |
+|---|---|---|---|---|---|---|
+| Discrimination (EPAM) | has | has | lacks | lacks | has | has |
+| Activation (ACT-R, decay 1, temperature 1) | never | never | never | has | has | never |
+| Strength with a criterion (DOA) | lacks | lacks | has | never | has | lacks |
+| Global matching (MINERVA 2) | lacks | lacks | has | never | lacks | has |
 
 - The laws are in CogLib (`Phenomena/RetrievalLaws.lean`), stated over its `Retriever` interface (study a stimulus; retrieve, for a probe, a distribution over stored stimuli). Each is relative to a starting state and a set of stimuli. The older all-or-none `StableRetrieval` is related to them by theorem: stability gives it for deterministic memories, and it holds vacuously for memories in which nothing is certain.
-- Every **has** cell is a general proof for every parameter choice meeting its stated conditions. Every **lacks** cell is a counterexample.
-- Every law is had by some family and lacked by another, and every family has its own row. The generator checks both.
+- Every **has** and **never** cell is a general proof for every parameter choice meeting its stated conditions. Every **lacks** cell is a counterexample at one setting. The generator reads each verdict from the theorem's statement, not its name, and checks with `#print axioms` that no cell rests on `sorry`.
+- Order-freedom excludes recency, for any memory, wherever recency can be tested (`not_recency_of_orderFree`), so both order-free families never have recency.
+- Every law holds for some family and fails for another, and every family has its own row. The generator checks both.
 
 **Point 4 has already done work twice.**
 - In the multi-digit model, the all-or-none law `StableRetrieval` turned out to hold for ACT-R only vacuously, because nothing in ACT-R is retrieved for certain. That is why the matrix's laws are probabilistic.
@@ -106,7 +105,7 @@ With the judgments as they stand, activation fits every law on which the evidenc
    - REM (likelihood-based global matching);
    - a distributed or connectionist memory;
    - CHREST (discrimination with chunking).
-2. **Map the "lacks" cells.** Each is one counterexample. Find the parameter regions where the family does have the law. For example, strength memory with no generalization may have certainty.
+2. **Map the "lacks" cells.** Each is one counterexample. Either prove the family never has the law (a "never" cell, as for activation's four), or find the parameter regions where it does. For example, strength memory with no generalization may have certainty. Eight cells remain of this kind.
 3. **Sharpen the laws.**
    - Certainty and stability have the same row: separate them or merge them.
    - Add the graded laws not yet stated: frequency monotonicity, similarity-graded confusion.

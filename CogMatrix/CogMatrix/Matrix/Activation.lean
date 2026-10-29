@@ -5,6 +5,10 @@ against the laws.
 Regime: from an empty memory, with a positive failure weight `θ` and a
 positive discount `μ` per mismatch.
 
+* `never_certainty`, `never_stability`, `never_orderFree`,
+  `never_determinate`: lacks them for *every* positive failure weight (and
+  nonnegative discount), not only at the setting `P` of the counterexamples
+  `not_certainty` and the others.
 * `recency`: has it, for every such choice of parameters. Of two stimuli
   studied last, the later is retrieved more often (twice as often, in fact).
 * `not_certainty`: lacks it. Retrieval can fail.
@@ -286,6 +290,131 @@ theorem storedOnly (U : List Item) : StoredOnly (actRetriever Q) empty U := by
       have : c.code ≠ y := fun e => hy (e ▸ hcx)
       simpa using this
   rw [hz, Rat.div_def, Rat.zero_mul]
+
+/-! ### Never, for every parameter setting
+
+Each counterexample above is for one setting. These show the law fails for
+every setting with a positive failure weight (and, where it matters, a
+nonnegative discount), on any `U` with one or two stimuli. -/
+
+/-- Cross-multiplying an equality of fractions. -/
+theorem cross (a b c d : Rat) (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) : a * d = c * b := by
+  calc a * d = a / b * b * d := by rw [Rat.div_mul_cancel hb]
+    _ = c / d * d * b := by rw [h]; grind
+    _ = c * b := by rw [Rat.div_mul_cancel hd]
+
+theorem mismatches_self (fs : List Feature) (x : Item) : mismatches fs x x = 0 := by
+  simp [mismatches]
+
+theorem pRet_single (now : Nat) (c : Chunk) (x : Item) :
+    pRet (actRetriever Q) ⟨now, [c]⟩ x c.code =
+      Act.chunkWeight Q now x c / (Q.theta + Act.chunkWeight Q now x c) := by
+  show prob (Act.retrieve Q _ x) _ = _
+  rw [Act.prob_retrieve]
+  simp [Act.outcomes, strengthIn, total, Act.weight]
+  grind
+
+theorem total_two (now : Nat) (c c' : Chunk) (x : Item) (h : c'.code ≠ c.code) :
+    total (Act.outcomes ⟨now, [c, c']⟩) (Act.weight Q ⟨now, [c, c']⟩ x) =
+      Q.theta + Act.chunkWeight Q now x c + Act.chunkWeight Q now x c' := by
+  have h' : c.code ≠ c'.code := fun e => h e.symm
+  simp [Act.outcomes, strengthIn, total, Act.weight, h, h']
+  grind
+
+theorem cw_self (now t : Nat) (y : Item) :
+    Act.chunkWeight Q now y ⟨y, [t]⟩ = 1 / ((now - t : Nat) : Rat) := by
+  simp [Act.chunkWeight, Act.baseWeight, mismatches_self, Rat.add_zero]
+
+theorem cw_other (now t : Nat) (x y : Item) :
+    Act.chunkWeight Q now x ⟨y, [t]⟩ = 1 / ((now - t : Nat) : Rat) * Q.mu ^ mismatches Q.fs x y := by
+  simp [Act.chunkWeight, Act.baseWeight, Rat.add_zero]
+
+/-- After one study, an item retrieves itself with probability `1/(θ + 1)`. -/
+theorem pRet_once (y : Item) :
+    pRet (actRetriever Q) (Act.study empty y) y y = 1 / (Q.theta + 1) := by
+  have := pRet_single Q 1 ⟨y, [0]⟩ y
+  simp only [cw_self] at this
+  have e : (1 : Rat) / 1 = 1 := by decide +kernel
+  show pRet (actRetriever Q) ⟨1, [⟨y, [0]⟩]⟩ y y = _
+  rw [this]
+  have e1 : (((1 - 0 : Nat)) : Rat) = 1 := by decide +kernel
+  rw [e1, e]
+
+/-- After `a` then `b`, the probe `a` retrieves `a` with probability
+`(1/2)/(θ + 1/2 + μ^m)`, and after `b` then `a`, with `1/(θ + μ^m/2 + 1)`. -/
+theorem pRet_pair (a b : Item) (hab : a ≠ b) :
+    pRet (actRetriever Q) (Act.study (Act.study empty a) b) a a =
+        (1 / 2) / (Q.theta + 1 / 2 + Q.mu ^ mismatches Q.fs a b) ∧
+      pRet (actRetriever Q) (Act.study (Act.study empty b) a) a a =
+        1 / (Q.theta + 1 / 2 * Q.mu ^ mismatches Q.fs a b + 1) := by
+  have e1 : Act.study (Act.study empty a) b = ⟨2, [⟨a, [0]⟩, ⟨b, [1]⟩]⟩ := by
+    simp [Act.study, empty, Act.addUse, hab]
+  have e2 : Act.study (Act.study empty b) a = ⟨2, [⟨b, [0]⟩, ⟨a, [1]⟩]⟩ := by
+    simp [Act.study, empty, Act.addUse, Ne.symm hab]
+  have hl := pRet_last Q [] 2 ⟨a, [0]⟩ ⟨b, [1]⟩ a (by simp) (Ne.symm hab)
+  have hl2 := pRet_last Q [] 2 ⟨a, [1]⟩ ⟨b, [0]⟩ a (by simp) (Ne.symm hab)
+  simp only [List.nil_append] at hl hl2
+  rw [e1, e2, hl.1, hl2.2, total_two Q 2 _ _ a (Ne.symm hab), total_two Q 2 _ _ a hab,
+    cw_self, cw_self, cw_other, cw_other]
+  constructor
+  · congr 1 <;> simp <;> grind
+  · congr 1 <;> simp <;> grind
+
+/-- **Activation never has certainty**: for every positive failure weight and
+nonnegative discount, on any nonempty `U`. -/
+theorem never_certainty (hθ : 0 < Q.theta) (U : List Item) (y : Item) (hy : y ∈ U) :
+    ¬ Certainty (actRetriever Q) empty U := by
+  intro h
+  have h1 := h empty ⟨[], by simp, rfl⟩ y hy
+  change pRet (actRetriever Q) (Act.study empty y) y y = 1 at h1
+  rw [pRet_once] at h1
+  have := cross 1 (Q.theta + 1) 1 1 (by grind) (by decide) (by rw [h1]; decide +kernel)
+  grind
+
+/-- **Activation never has stability**: for every positive failure weight and
+nonnegative discount, on any `U` with two stimuli. -/
+theorem never_stability (hθ : 0 < Q.theta) (hμ : 0 ≤ Q.mu) (U : List Item) (y z : Item)
+    (hy : y ∈ U) (hz : z ∈ U) (hyz : y ≠ z) : ¬ Stability (actRetriever Q) empty U := by
+  intro h
+  have h1 := h (Act.study empty y) ⟨[y], by simp [hy], rfl⟩ y hy z hz (Ne.symm hyz)
+  change pRet (actRetriever Q) (Act.study (Act.study empty y) z) y y =
+    pRet (actRetriever Q) (Act.study empty y) y y at h1
+  rw [(pRet_pair Q y z hyz).1, pRet_once] at h1
+  have hw := Rat.pow_nonneg (n := mismatches Q.fs y z) hμ
+  have := cross _ _ _ _ (by grind) (by grind) h1
+  grind
+
+/-- **Activation is never order-free**: for every positive failure weight and
+nonnegative discount, on any `U` with two stimuli. -/
+theorem never_orderFree (hθ : 0 < Q.theta) (hμ : 0 ≤ Q.mu) (U : List Item) (a b : Item)
+    (ha : a ∈ U) (hb : b ∈ U) (hab : a ≠ b) : ¬ OrderFree (actRetriever Q) empty U := by
+  intro h
+  have h1 := congrArg (fun d => prob d (· == some a)) (h empty ⟨[], by simp, rfl⟩ a ha b hb a)
+  change pRet (actRetriever Q) (Act.study (Act.study empty a) b) a a =
+    pRet (actRetriever Q) (Act.study (Act.study empty b) a) a a at h1
+  rw [(pRet_pair Q a b hab).1, (pRet_pair Q a b hab).2] at h1
+  have hw := Rat.pow_nonneg (n := mismatches Q.fs a b) hμ
+  have := cross _ _ _ _ (by grind) (by grind) h1
+  grind
+
+/-- **Activation is never determinate**: for every positive failure weight,
+on any nonempty `U`. A stimulus just studied may be retrieved, or retrieval
+may fail. -/
+theorem never_determinate (hθ : 0 < Q.theta) (U : List Item) (y : Item) (hy : y ∈ U) :
+    ¬ Determinate (actRetriever Q) empty U := by
+  intro h
+  obtain ⟨r, hr⟩ := h (Act.study empty y) ⟨[y], by simp [hy], rfl⟩ y
+  cases r with
+  | some w => exact Act.retrieve_not_certain Q _ y w hr
+  | none =>
+    have h1 := pRet_once Q y
+    have h0 : pRet (actRetriever Q) (Act.study empty y) y y = 0 := by
+      change Act.retrieve Q _ y = _ at hr
+      show prob (Act.retrieve Q _ y) _ = 0
+      rw [hr, prob_pure]; rfl
+    rw [h0] at h1
+    have := cross 0 1 1 (Q.theta + 1) (by decide) (by grind) (by rw [← h1]; decide +kernel)
+    grind
 
 end Recency
 
