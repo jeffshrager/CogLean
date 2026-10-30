@@ -14,6 +14,7 @@ import CogLib.Process.SampledRetrieval
 import CogLib.Process.RecognizeRetrieve
 import CogLib.Process.Combination
 import CogLib.Process.ViewApplication
+import CogLib.Process.Categorize
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
 import CogLib.Phenomena.Retriever

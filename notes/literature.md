@@ -61,7 +61,7 @@ Formalized in `Concepts/` (see its README).
 
 - **Smith, E. E., Osherson, D. N., Rips, L. J., & Keane, M. (1988).** Combining prototypes: A selective modification model. *Cognitive Science*, 12, 485–527. Local copy: `../papers/1988-SmithandOsherson-1-s2.0-0364021388900110-main.pdf`. Prototypes with diagnosticity and votes; typicality by Tversky's contrast rule; an adjective shifts its attribute's votes and boosts its diagnosticity. Postulates SO1–SO4; the figures are reproduced exactly.
 - **Hampton, J. A. (2007).** Typicality, graded membership, and vagueness. *Cognitive Science*, 31, 355–384. Local copy: `../papers/2007-Hampton-Typicality.pdf`. The threshold model: typicality and membership are both nondecreasing functions of one similarity; membership by his Eq. 8. Postulate H1. With it, S&O's conjunction effect becomes over-extension, which fuzzy logic's min rule forbids.
-- **Shrager, J. (1987).** Theory change via view application in instructionless learning. *Machine Learning*, 2, 247–276. Local copy: `../papers/1987MLVA.pdf` (a scan, no text layer). View application combines abstract knowledge structures into a learner's theory, a very different account of combination; a planned rival family (`OPEN_ISSUES.md` #19).
+- **Shrager, J. (1987).** Theory change via view application in instructionless learning. *Machine Learning*, 2, 247–276. Local copy: `../papers/1987MLVA.pdf` (a scan, no text layer). View application combines abstract knowledge structures into a learner's theory. Formalized in `ViewApplication/`: Table 4 reproduced; applied to number concepts, it removes over-extension and keeps typicality, the dissociation Armstrong, Gleitman & Gleitman (1983, *Cognition* 13, 263–308; not in `../papers/`) report.
 
 ## Semantic memory
 

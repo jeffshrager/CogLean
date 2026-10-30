@@ -105,6 +105,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **Semantic memory** (`SemanticMemory/`), the fifth: Collins & Quillian's (1969) hierarchical network and Smith, Shoben & Rips's (1974) feature comparison model, on CogLib's semantic nets. The hierarchical model has the distance effect for every net and can never produce a typicality effect or a reversal ("a chicken is an animal" faster than "a chicken is a bird"); the feature model produces both, and so lacks the distance effect ([`SemanticMemory/README.md`](SemanticMemory/README.md)).
 
+**View application** (`ViewApplication/`): Shrager's (1987) view application as one generic process on CogLib's knowledge nets (semantic nets over terms). It reproduces the paper's Table 4 exactly, and, given number concepts and an ARITHMETIC view, removes over-extension (membership in *even multiple of 3* becomes exactly divisibility by 6, for every number) while leaving typicality unchanged: typicality and membership dissociate ([`ViewApplication/README.md`](ViewApplication/README.md)).
+
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
 **The theory matrix** (`CogMatrix/`): 6 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem: the family has the law at every parameter setting, never has it, or lacks it at one setting (a counterexample). Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
@@ -168,4 +170,5 @@ cd StrategyChoice && lake build    # builds CogLib, then the strategy-choice mod
 cd MultiDigit && lake build        # builds CogLib, then the combined multi-digit model
 cd Concepts && lake build          # builds CogLib, then conceptual combination
 cd SemanticMemory && lake build    # builds CogLib, then semantic memory
+cd ViewApplication && lake build   # builds CogLib and Concepts, then view application
 ```
