@@ -22,9 +22,13 @@ proposed operator's precondition is violated, that is an *impasse*. A local
 problem solver then repairs it: repair heuristics propose actions in its
 place, critics veto some, and one of the survivors is taken at random.
 
-Main results: an impasse arises only where a proposed operator's
-precondition fails (`step_impasse_iff`); with no impasse, a step is just
-the operator's effect (`step_no_impasse`).
+Main results: means-ends analysis is sound for every space: whenever it
+succeeds, the goal holds (`achieve_sound`). Runs can be traced, with each
+operator applied and each impasse with its repair (`runTrace`), and
+forgetting the trace gives the run (`runTrace_forget`). An impasse arises
+only where a proposed operator's precondition fails (`step_impasse_iff`);
+with no impasse, a step is just the operator's effect (`step_no_impasse`):
+these two are restatements of the definitions.
 -/
 
 import CogLib.Rep.Distribution
@@ -123,5 +127,135 @@ theorem step_no_impasse (Sp : Space S O) (P : Procedure S O) (R : Repairer S O) 
     (hp : P s = some o) (hpre : Sp.pre o s = true) :
     step Sp P R s = Dist.bind (Sp.apply o s) fun s' => Dist.pure (some s') := by
   simp [step, hp, hpre]
+
+/-! ### What means-ends analysis guarantees -/
+
+/-- Every successful outcome of a distribution satisfies `P`. -/
+def AllSome (P : S → Prop) (d : Dist (Option S)) : Prop :=
+  ∀ x ∈ d, ∀ s, x.1 = some s → P s
+
+theorem allSome_pure_none (P : S → Prop) : AllSome P (Dist.pure none) := by
+  intro x hx s hs
+  simp [Dist.pure] at hx
+  rw [hx] at hs
+  cases hs
+
+theorem allSome_pure_some (P : S → Prop) (s : S) (h : P s) : AllSome P (Dist.pure (some s)) := by
+  intro x hx s' hs
+  simp [Dist.pure] at hx
+  rw [hx] at hs
+  cases hs
+  exact h
+
+theorem mem_bind {α β : Type} (d : Dist α) (f : α → Dist β) (x : β × Rat) (hx : x ∈ Dist.bind d f) :
+    ∃ y ∈ d, ∃ z ∈ f y.1, x.1 = z.1 := by
+  induction d with
+  | nil => simp [Dist.bind] at hx
+  | cons y d ih =>
+    obtain ⟨a, p⟩ := y
+    simp only [Dist.bind, List.mem_append, List.mem_map] at hx
+    rcases hx with ⟨z, hz, rfl⟩ | hx
+    · exact ⟨(a, p), List.mem_cons_self, z, hz, rfl⟩
+    · obtain ⟨y, hy, z, hz, h⟩ := ih hx
+      exact ⟨y, List.mem_cons_of_mem _ hy, z, hz, h⟩
+
+theorem allSome_bind {α : Type} (P : S → Prop) (d : Dist α) (f : α → Dist (Option S))
+    (h : ∀ y ∈ d, AllSome P (f y.1)) : AllSome P (Dist.bind d f) := by
+  intro x hx s hs
+  obtain ⟨y, hy, z, hz, hxz⟩ := mem_bind d f x hx
+  exact h y hy z hz s (hxz ▸ hs)
+
+theorem allSome_orElse (P : S → Prop) (d alt : Dist (Option S)) (hd : AllSome P d)
+    (ha : AllSome P alt) : AllSome P (orElse d alt) := by
+  unfold orElse
+  apply allSome_bind
+  intro y hy
+  match hy1 : y.1 with
+  | some s => exact allSome_pure_some P s (hd y hy s hy1)
+  | none => exact ha
+
+/-- **Means-ends analysis is sound**, for every problem space, difference
+table and depth: every outcome in which it succeeds satisfies the goal. -/
+theorem achieve_sound (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C) (s : S) :
+    AllSome (fun s' => ∀ c ∈ goal, M.holds c s' = true) (achieve Sp M k goal s) := by
+  induction k generalizing goal s with
+  | zero => exact allSome_pure_none _
+  | succ k ih =>
+    unfold achieve
+    split
+    · rename_i hf
+      apply allSome_pure_some
+      intro c hc
+      have := List.find?_eq_none.mp hf c hc
+      simpa using this
+    · rename_i c _
+      induction M.table c with
+      | nil => exact allSome_pure_none _
+      | cons o os ihos =>
+        simp only [List.foldr_cons]
+        apply allSome_orElse _ _ _ _ ihos
+        apply allSome_bind
+        intro y _
+        match y.1 with
+        | none => exact allSome_pure_none _
+        | some s1 =>
+          simp only
+          split
+          · apply allSome_bind
+            intro z _
+            exact ih goal z.1
+          · exact allSome_pure_none _
+
+/-! ### Traces: what the solver did, as an observable -/
+
+/-- One event of a run: an operator applied, or an impasse at an operator and
+the repair taken. -/
+inductive Event (O : Type) where
+  | applied (o : O)
+  | repaired (stuck r : O)
+
+/-- One decision cycle, with what happened. -/
+def stepTrace (Sp : Space S O) (P : Procedure S O) (R : Repairer S O) (s : S) :
+    Dist (Option (S × Event O)) :=
+  match P s with
+  | none => Dist.pure none
+  | some o =>
+    if Sp.pre o s then Dist.bind (Sp.apply o s) fun s' => Dist.pure (some (s', .applied o))
+    else match validRepairs Sp R o s with
+      | [] => Dist.pure none
+      | rs => Dist.bind (uniformOf rs) fun r => Dist.bind (Sp.apply r s) fun s' =>
+          Dist.pure (some (s', .repaired o r))
+
+/-- **A run with its trace**: the final state, and the events in order. -/
+def runTrace (Sp : Space S O) (P : Procedure S O) (R : Repairer S O) : Nat → S → Dist (S × List (Event O))
+  | 0, s => Dist.pure (s, [])
+  | k + 1, s => Dist.bind (stepTrace Sp P R s) fun r => match r with
+    | none => Dist.pure (s, [])
+    | some (s', e) => Dist.bind (runTrace Sp P R k s') fun (s'', es) => Dist.pure (s'', e :: es)
+
+theorem stepTrace_forget (Sp : Space S O) (P : Procedure S O) (R : Repairer S O) (s : S) :
+    Dist.bind (stepTrace Sp P R s) (fun r => Dist.pure (r.map Prod.fst)) = step Sp P R s := by
+  unfold stepTrace step
+  split
+  · simp [Dist.bind_pure_left]
+  · split
+    · simp only [Dist.bind_assoc, Dist.bind_pure_left, Option.map_some]
+    · split <;> simp only [Dist.bind_assoc, Dist.bind_pure_left, Option.map_some, Option.map_none]
+
+/-- **Forgetting the trace gives the run.** -/
+theorem runTrace_forget (Sp : Space S O) (P : Procedure S O) (R : Repairer S O) (k : Nat) (s : S) :
+    Dist.bind (runTrace Sp P R k s) (fun x => Dist.pure x.1) = run Sp P R k s := by
+  induction k generalizing s with
+  | zero => simp [runTrace, run, Dist.bind_pure_left]
+  | succ k ih =>
+    simp only [runTrace, run]
+    rw [← stepTrace_forget Sp P R s, Dist.bind_assoc, Dist.bind_assoc]
+    apply Dist.bind_congr
+    intro r
+    match r with
+    | none => simp [Dist.bind_pure_left]
+    | some (s', e) =>
+      simp only [Dist.bind_assoc, Dist.bind_pure_left, Option.map_some]
+      rw [← ih s']
 
 end Cog
