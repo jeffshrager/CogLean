@@ -1,0 +1,9 @@
+name = "concepts"
+defaultTargets = ["Concepts"]
+
+[[lean_lib]]
+name = "Concepts"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"

@@ -1,5 +1,6 @@
 import CogLib.Rep.Features
 import CogLib.Rep.Distribution
+import CogLib.Rep.Frames
 import CogLib.Memory.DiscriminationNet
 import CogLib.Memory.Cue
 import CogLib.Memory.Activation
@@ -9,9 +10,11 @@ import CogLib.Process.DiscriminationLearning
 import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
 import CogLib.Process.RecognizeRetrieve
+import CogLib.Process.Combination
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
 import CogLib.Phenomena.Retriever
 import CogLib.Phenomena.RetrievalLaws
 import CogLib.Phenomena.Responder
 import CogLib.Phenomena.SerialPosition
+import CogLib.Phenomena.Combination

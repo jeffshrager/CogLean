@@ -101,6 +101,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **Multi-digit addition** (`MultiDigit/`), the third, combines the first two. EPAM recognition is joined to DOA retrieval to cover 3-digit addition, where similar problems can be confused. Its predictions are deduced from the postulates for every choice of parameters, not simulated. The central one is that confusion produces *confident errors*: a retrieved wrong answer with no extra backup use. DOA alone cannot produce these, because in DOA errors and backup use come from the same flat distribution. Column work is built from single-digit DOA trials: carrying adds no error, so a column error is a single-digit error moved to its place. Learning removes a confusion without disturbing anything else, and the problem is then worked out by the columns until its own associations are strengthened. The predictions, with proofs, are in [`notes/MultiDigit_PREDICTIONS.md`](notes/MultiDigit_PREDICTIONS.md).
 
+**Conceptual combination** (`Concepts/`), the fourth: the selective modification model (Smith, Osherson, Rips & Keane 1988), with graded membership by Hampton's (2007) threshold model. It proves the conjunction effect, its reverse and over-extension for every prototype and parameter choice under stated conditions, and reproduces the paper's figures exactly. With number concepts learned from exemplars, its over-extensions are shown to be false, not only incoherent: 14 is judged an *even multiple of 3* far more than a *multiple of 3* ([`Concepts/README.md`](Concepts/README.md)).
+
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
 **The theory matrix** (`CogMatrix/`): 6 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem: the family has the law at every parameter setting, never has it, or lacks it at one setting (a counterexample). Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
@@ -162,4 +164,5 @@ curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh
 cd EPAM && lake build              # builds CogLib, then EPAM
 cd StrategyChoice && lake build    # builds CogLib, then the strategy-choice model
 cd MultiDigit && lake build        # builds CogLib, then the combined multi-digit model
+cd Concepts && lake build          # builds CogLib, then conceptual combination
 ```
