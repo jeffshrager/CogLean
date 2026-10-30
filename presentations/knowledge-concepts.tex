@@ -220,6 +220,45 @@ Now apply a view to number concepts. In the learner's theory, the category type 
 Here's the result. Before the view, fourteen is over-extended. After it, membership in even multiple of three is exactly divisibility by six, proved for every number, so there's no over-extension anywhere. And typicality is unchanged for every number, because the view never touched the prototypes. So typicality and membership come apart: fourteen as an even multiple of three is more typical than nine as a multiple of three, yet only nine is a member. Before the view that's impossible, and it's a theorem: when membership is a nondecreasing function of typicality, a more typical judgment is never less a member. That's what Armstrong, Gleitman and Gleitman found for odd number: people rate some odd numbers as better examples, while insisting membership is all or none. Here it's a derived result.
 }
 
+\begin{frame}{Choosing the view: spreading activation}
+  The 1987 paper had no principled account of \emph{which} view to apply. Collins \& Loftus (1975) supply one:
+  \begin{itemize}
+    \item Activation starts at the \textbf{cue} (a key's label) and at the \textbf{concepts the current theory uses}.
+    \item It spreads along links, each passing on a fraction set by its strength; activation from different sources \textbf{sums}.
+    \item A view is chosen in proportion to its activation, then \textbf{applied}.
+  \end{itemize}
+  \medskip
+  Proved for every net: activation sums over sources; it is never negative; priming never lowers it; priming a candidate never lowers its share.
+  \medskip
+
+  The composition is a mixture, chance of choosing a view times chance of each result: the shape of recognition-then-retrieval in the multi-digit model.
+\end{frame}
+\note{
+View application needs a view, and the 1987 paper had no principled account of how one is chosen: views were suggested by key labels, by the device's behavior, or by the current theory. Collins and Loftus's spreading activation supplies one, on the same net. Activation starts at the cue, say a key's label, and at the concepts the learner's theory already uses. It spreads along links, each passing on a fraction set by its strength, and activation from different sources adds up. A view is chosen in proportion to its activation and then applied. The general facts are proved for every net: activation sums, it's never negative, and priming never lowers it or a candidate's share. Put together, it's a mixture, like recognition followed by retrieval in the multi-digit model.
+}
+
+\begin{frame}{Same key, different knowledge}
+  A hypothetical device with a key labelled ``+'':
+  \begin{itemize}
+    \item ``+'' suggests CALCULATING (``+'' adds to the display), and more weakly PROGRAMMING (``+'' appends a step).
+    \item \emph{Memory} suggests PROGRAMMING.
+  \end{itemize}
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    Learner's theory & ``+'' adds & ``+'' appends a step\\
+    \midrule
+    no memory & $2/3$ & $1/3$\\
+    has a memory & $2/5$ & $3/5$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  The same cue brings in different knowledge, depending on what the learner already knows. Strengths are illustrative; the composition is general.
+\end{frame}
+\note{
+Here's the example. A device has a key labelled plus. Plus suggests a calculating view, where it adds to the display, and more weakly a programming view, where it appends a step. And memory suggests programming. A learner whose theory has no memory reads plus as adding two thirds of the time. A learner who has already learned that the device has a memory, as after the code-and-startup view, reads it as appending a step three fifths of the time, because activation from memory adds to what the cue sends to programming. The same cue brings in different knowledge depending on what the learner already knows. The numbers are illustrative; the composition is general.
+}
+
 \begin{frame}{The concept matrix}
   \scriptsize
   \begin{center}
@@ -251,18 +290,18 @@ Putting it together, the concept matrix. The verification theories are rows on t
   \begin{itemize}
     \item \textbf{One model, many theories}: semantic memory, concept combination and theory change share nets, terms and processes; each theory is data and choices.
     \item \textbf{A rival-theory matrix for knowledge}, as for memory.
-    \item \textbf{View application, formalized}: the paper's example exactly, and a new consequence for concepts.
+    \item \textbf{View application, formalized}: the paper's example exactly, a new consequence for concepts, and view selection by spreading activation.
   \end{itemize}
   \medskip
   Next:
   \begin{itemize}
-    \item \textbf{View selection} by EPAM recognition of cues (the 1987 paper had no principled account).
-    \item Spreading activation (Collins \& Loftus 1975) as a third family; feature lists as net links.
+    \item View selection by EPAM recognition of cues, as a rival to spreading activation; garden paths and their repair.
+    \item Collins \& Loftus's decision process, making spreading activation a third verification family; feature lists as net links.
     \item Learning views; a cognitive-skills package (problem solving).
   \end{itemize}
 \end{frame}
 \note{
-So what does this add? One knowledge model carrying several theories: semantic memory, conceptual combination and theory change share the same nets, terms and processes, and each theory is data plus a few choices. A matrix of rival theories for knowledge, like the one for memory. And view application formalized for the first time: the paper's own example comes out exactly, and applied to concepts it yields a consequence the 1987 paper never considered. Next: view selection by EPAM recognition of cues, which would join the two theories and supply what the 1987 paper lacked, a principled account of how a view is chosen; spreading activation as a third family of semantic memory; learning the views themselves; and a cognitive-skills package for problem solving.
+So what does this add? One knowledge model carrying several theories: semantic memory, conceptual combination and theory change share the same nets, terms and processes, and each theory is data plus a few choices. A matrix of rival theories for knowledge, like the one for memory. And view application formalized for the first time: the paper's own example comes out exactly, and applied to concepts it yields a consequence the 1987 paper never considered. Next: view selection by EPAM recognition of cues, as a rival to spreading activation, and garden paths, where a primed but wrong view is chosen and later repaired by failed predictions; Collins and Loftus's decision process, which would make spreading activation a third family of semantic memory; learning the views themselves; and a cognitive-skills package for problem solving.
 }
 
 \end{document}
