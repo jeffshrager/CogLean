@@ -10,6 +10,7 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 - Core Lean only, no Mathlib. Probabilities are core `Rat`; `decide +kernel` evaluates concrete rationals (plain `decide` gets stuck on them). Mathlib, when ACT-R needs `Real.log`/`exp`, goes in an `ACTR/` package only; CogLib stays core-only.
 - `../ACT-R/` (outside the repo) is the ACT-R 7 standalone build: executables, tutorial (`.content/tutorial/`), docs; no module source.
 - Every theorem fully proved: no `sorry`; `#print axioms` shows only `propext`, `Quot.sound`, `Classical.choice`.
+- `notes/CATALOG.md` lists every theorem by module, with its scope (general or instance), any law it concerns, and its docstring; regenerate it with `python3 tools/gen_catalog.py` (from the repo root) after adding or changing theorems. It also fails on non-standard axioms. Headline theorems are those whose docstrings begin in bold.
 - Generated files: `EPAM/Epam/ListA.lean` (from `EPAM/gen_lista.py`, run in `EPAM/`) and `EPAM/Epam/Fig41Alt.lean` (from `EPAM/analysis/gen_alt.py`, run in `EPAM/analysis/`). Edit the generators, not the outputs.
 - `.lake/` is excluded through `.git/info/exclude`; the owner's global gitignore ignores `.gitignore` files, so don't rely on one.
 

@@ -1,0 +1,243 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{preamble}
+
+\title{What CogLean proves}
+\subtitle{Laws and theorems, module by module}
+\author{Jeff Shrager}
+\date{October 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+This is a reference deck: for each module of CogLean, which theory-neutral laws it has or lacks, and its headline theorems. It's drawn from a catalog generated from the Lean code itself, so it can't claim more than is proved. Two distinctions run through it: laws versus a module's own theorems, and general results versus single computed cases.
+}
+
+\begin{frame}{How to read it}
+  \footnotesize
+  \begin{itemize}
+    \item \textbf{Laws} are phenomena defined once, theory-neutrally, in the library (\code{CogLib.Phenomena}); a module \emph{has} a law, \emph{never} has it, \emph{lacks} it (one counterexample), or \emph{can hold} it (one case).
+    \item \textbf{General} theorems bind variables: every net, problem, number or setting, under stated hypotheses. \textbf{Instances} are single cases computed exactly.
+    \item Generated from Lean (\code{tools/gen\_catalog.py} $\to$ \code{notes/CATALOG.md}); every theorem uses only the standard axioms; no \code{sorry}.
+  \end{itemize}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{0.9}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    & Theorems & General & Instances & About laws & Headline\\
+    \midrule
+    CogLib (the library) & 162 & 157 & 5 & 24 & 68\\
+    EPAM & 31 & 14 & 17 & 7 & 18\\
+    Strategy choice & 16 & 11 & 5 & 0 & 9\\
+    Multi-digit (with problem solver) & 126 & 105 & 21 & 1 & 53\\
+    Theory matrix & 61 & 46 & 15 & 31 & 30\\
+    Experiments & 45 & 25 & 20 & 0 & 13\\
+    Concepts & 17 & 12 & 5 & 5 & 8\\
+    Semantic memory & 13 & 6 & 7 & 6 & 7\\
+    View application & 14 & 5 & 9 & 0 & 8\\
+    \midrule
+    All & 485 & 381 & 104 & 74 & 214\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+\note{
+How to read it. Laws are phenomena defined once in the library without reference to any theory, and a module has a law, never has it, lacks it by a single counterexample, or can hold it in a single case. General theorems hold for every net, problem, number or setting, under their stated hypotheses; instances are single cases computed exactly. The whole thing is generated from Lean, every theorem uses only the standard axioms, and there's no sorry anywhere. In all, four hundred eighty-five theorems, three hundred eighty-one of them general, and seventy-four about laws.
+}
+
+\begin{frame}{The library: laws, and how they relate}
+  \small
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{Laws defined in CogLib}
+    \begin{itemize}
+      \item Learning: non-interference, criterion, generalization, serial position
+      \item Responding: oscillation, retroactive interference
+      \item Retrieval: certainty, stability, order-freedom, recency, stored-only, determinacy
+      \item Verification: distance, typicality, reversal
+      \item Combination: conjunction effect, over-extension, dissociation
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{Proved about the laws themselves}
+    \begin{itemize}
+      \item Non-interference $\Rightarrow$ learning to criterion
+      \item Order-freedom $\Rightarrow$ never recency
+      \item Determinacy + certainty + stability $\Rightarrow$ confident errors
+      \item Reversal $\Rightarrow$ no distance effect
+      \item Conjunction effect $\Rightarrow$ over-extension
+      \item Membership monotone in typicality $\Rightarrow$ never dissociation
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+The library defines the laws: of learning, of responding, of retrieval, of verification, and of conceptual combination. And some theorems are about the laws themselves, independent of any theory. Non-interference gives learning to criterion. Order-freedom rules out recency. Determinacy, certainty and stability together give confident errors. A reversal rules out the distance effect. The conjunction effect gives over-extension. And if membership is a nondecreasing function of typicality, the two can never dissociate. These are the reusable results: any theory that has the premises inherits the conclusion.
+}
+
+\begin{frame}{The library: general results about its mechanisms}
+  \small
+  \begin{itemize}
+    \item \textbf{Discrimination nets}: recognition depends only on features tested; learning never disturbs another item; nets have non-interference, generalization, oscillation, retroactive interference.
+    \item \textbf{Sampled retrieval}: used with probability $1-(1-R)^n$; error share independent of search length.
+    \item \textbf{Semantic nets}: inheritance with override and accumulation; distance is the least level.
+    \item \textbf{View application}: the view is kept; the view wins on matched frames; unmatched frames survive; instances are re-parented.
+    \item \textbf{Spreading activation}: sources sum; priming never lowers activation or a candidate's share.
+    \item \textbf{Problem solving}: an impasse is exactly a violated precondition; probabilistic stages regroup.
+  \end{itemize}
+\end{frame}
+\note{
+The library also proves general results about each of its mechanisms. Discrimination nets: recognition depends only on the features tested, learning never disturbs another item, and nets have the learning and responding laws. Sampled retrieval: its closed forms. Semantic nets: inheritance, with override for single-valued properties and accumulation for many-valued ones. View application: the view is kept, the view wins on matched frames, everything else survives, and instances are re-parented. Spreading activation: activation from sources sums, and priming never lowers it. And problem solving: an impasse is exactly a violated precondition.
+}
+
+\begin{frame}{EPAM, and memory families against retrieval laws}
+  \begin{columns}[T]
+    \column{0.32\linewidth}
+    \small
+    \textbf{EPAM} has, for every net and list: non-interference, learning to criterion, stimulus generalization, oscillation, retroactive inhibition, serial position.
+    \medskip
+
+    On List A (instance): stimulus generalization.
+    \column{0.66\linewidth}
+    \scriptsize
+    \setlength{\tabcolsep}{2pt}
+    \begin{tabular}{lcccccc}
+      \toprule
+      & Cert. & Stab. & Order-free & Recency & Stored & Determ.\\
+      \midrule
+      Discrimination & \has & \has & \lacks & \lacks & \has & \has\\
+      Activation & \never & \never & \never & \has & \has & \never\\
+      Strength & \lacks & \lacks & \has & \never & \has & \lacks\\
+      Global matching & \lacks & \lacks & \has & \never & \lacks & \has\\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+\end{frame}
+\note{
+EPAM has all six of its classic phenomena for every net and list: non-interference, learning to criterion, stimulus generalization, oscillation, retroactive inhibition and the serial position effect, with stimulus generalization also shown on its List A. And the theory matrix: four memory families against six retrieval laws. Has and never are for every setting; lacks is a single counterexample, so those eight cells are the weakest results in the table.
+}
+
+\begin{frame}{Strategy choice (Siegler \& Shrager 1984)}
+  \small
+  \textbf{General}, for any associations, criterion and search length:
+  \begin{itemize}
+    \item retrieval is used with probability $1-(1-R)^n$;
+    \item the retrieval error share is the wrong answers' share above the criterion, whatever the search length;
+    \item retrieval does not depend on the backup strategies;
+    \item the error share on counting trials involves neither the associations nor the criterion;
+    \item learning from a correct answer, or moving strength to it, never raises retrieval errors.
+  \end{itemize}
+  \textbf{Instances}: predicted overt-strategy order across six problems; peaking can \emph{raise} overt use (a limit the chapter does not state).
+\end{frame}
+\note{
+Strategy choice. In general, for any associations, criterion and search length: retrieval's probability of use, the retrieval error share, independence from the backup strategies, the counting error share, which is the chapter's nonintuitive prediction, and that strengthening the correct answer never raises errors. And two computed cases: the predicted order of overt strategy use across six problems, and a case where making a distribution more peaked raises overt strategy use, a condition the original chapter doesn't state.
+}
+
+\begin{frame}{Multi-digit addition: recognition and retrieval}
+  \small
+  \textbf{General}, with any memory (EPAM's net or any retriever):
+  \begin{itemize}
+    \item \textbf{confident errors}: a confused problem errs on every retrieval, with no extra backup use;
+    \item a confused problem gets its neighbour's answer; same-sum and commuted confusions are harmless;
+    \item strategy nesting; practiced problems stay practiced;
+    \item near misses within 200, or 20; confusions keep zeros, thresholds and column sums that are tested;
+    \item discrimination removes a confusion, and only that; then the columns.
+  \end{itemize}
+  \textbf{Instances}: the worked cases (EPAM 45/46; ACT-R graded, and lacking \emph{agrees-on}).
+\end{frame}
+\note{
+Multi-digit addition, the recognition and retrieval side. In general, with any memory: confident errors, the neighbour's answer, harmless confusions when sums agree, strategy nesting, practiced problems staying practiced, near misses, and what confusions preserve when features are tested. And learning by discrimination removes exactly the confusion it targets. The worked cases are instances: forty-five in forty-six with EPAM, and graded confusion with ACT-R, which lacks the agrees-on property in that case.
+}
+
+\begin{frame}{Multi-digit addition: the column backup as problem solving}
+  \small
+  \textbf{General}, for every problem:
+  \begin{itemize}
+    \item \textbf{the bridge}: the problem solver answers exactly as the column backup, for every single-digit process;
+    \item place value: carrying adds no error; a column error is a single-digit error moved to its place;
+    \item without the carry rule: exact when no carry is needed; under strict critics, the no-carry bug.
+  \end{itemize}
+  \textbf{Instances}:
+  \begin{itemize}
+    \item four repairs, four bugs on $15+17$;
+    \item GPS works units-first and is correct on three problems (a general proof is to do).
+  \end{itemize}
+\end{frame}
+\note{
+The problem-solving side. In general, for every problem: the bridge to the column backup, place value and the transfer of single-digit errors, and the two results without the carry rule, exactness when no carry is needed and the no-carry bug under strict critics. As instances: the four bugs on fifteen plus seventeen, and GPS's units-first order and correct answers on three problems; proving those for every problem is on the list.
+}
+
+\begin{frame}{Experiments written against the memory interface}
+  \small
+  \textbf{General}:
+  \begin{itemize}
+    \item recency and order-freedom are inconsistent wherever a valid design exists;
+    \item order-freedom gives no order effect, recency a positive one; under forced choice, order-freedom reports 0 however biased the guessing;
+    \item a flat serial-position curve, from certainty and stability alone;
+    \item confident misnaming, derived from EPAM's matrix cells.
+  \end{itemize}
+  \textbf{Instances}: ACT-R's rising curve; MINERVA returns the never-studied prototype; ACT-R says ``don't know'' more to strangers.
+\end{frame}
+\note{
+Experiments, written once against the memory interface. In general: recency and order-freedom are inconsistent wherever a valid design exists; the order effects each law predicts, including under a forced-choice response model; a flat serial-position curve from two laws alone; and confident misnaming of faces derived from EPAM's cells in the matrix. As instances, each family's own behavior on the shared experiments.
+}
+
+\begin{frame}{Concepts and semantic memory}
+  \small
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{Concepts} (selective modification + threshold), general:
+    \begin{itemize}
+      \item conjunction effect; its reverse;
+      \item the attribute, not the value;
+      \item over-extension (yes/no; graded);
+      \item every even number is more typical of \emph{even multiple of 3}.
+    \end{itemize}
+    Instances: the paper's figures; 14 at $.80$ vs $.06$.
+    \column{0.48\linewidth}
+    \textbf{Semantic memory}:
+    \begin{itemize}
+      \item Hierarchical (C\&Q): distance \has, typicality \never, reversal \never; parallel lines (all general).
+      \item Feature comparison (SSR): more similar is never slower (general); typicality and reversal \canhold, distance \lacks{} (instances).
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+Concepts and semantic memory. For selective modification with threshold membership, the conjunction effect, its reverse, the attribute-not-value prediction and over-extension are general, as is the theorem that every even number is more typical of even multiple of three. The paper's figures and the fourteen case are instances. For semantic memory, Collins and Quillian's verdicts are all general, for every net; the feature comparison model's monotonicity is general, but its typicality effect, reversal and lack of a distance effect are shown in one feature set.
+}
+
+\begin{frame}{View application}
+  \small
+  \textbf{General}:
+  \begin{itemize}
+    \item (library) the view is kept; the view wins on matched frames; unmatched frames survive; instances re-parented;
+    \item after the ARITHMETIC view, membership in \emph{even multiple of 3} is exactly divisibility by 6, for every number;
+    \item no over-extension after the view, at any number; typicality unchanged, for every number.
+  \end{itemize}
+  \textbf{Instances}:
+  \begin{itemize}
+    \item Table 4 reproduced (probability 1/2);
+    \item before the view, over-extension at 14; after, dissociation (14 vs 9);
+    \item view selection: ``+'' read as adding $2/3$ (naive), as appending a step $3/5$ (with a memory).
+  \end{itemize}
+\end{frame}
+\note{
+View application. In general: the library's four properties of the merge, and, after the arithmetic view, exact membership, no over-extension and unchanged typicality, each for every number. As instances: the paper's Table 4, the over-extension before the view, the dissociation after it, and the two readings of the plus key under view selection.
+}
+
+\begin{frame}{Where the results are weakest}
+  \begin{itemize}
+    \item \textbf{Single counterexamples}: eight ``lacks'' cells in the memory matrix; the feature model's verdicts; ACT-R's in the multi-digit cases.
+    \item \textbf{Examples only}: GPS's answers; view selection's readings; Table 4.
+    \item \textbf{Chosen settings}: worked cases' strengths and bounds; priors not yet from experience.
+    \item \textbf{Not yet formalized}: Soar's chunking and other impasses; Collins \& Loftus's decision process; subtraction.
+  \end{itemize}
+  \bigskip
+  The catalog is regenerated from Lean, so these lists shrink as general proofs replace examples.
+\end{frame}
+\note{
+Finally, where the results are weakest. Single counterexamples: the eight lacks cells in the memory matrix, and the feature model's and ACT-R's verdicts in their worked cases. Results on examples only: GPS's answers, view selection's readings, and Table 4. Settings chosen for illustration, where priors should come from experience. And mechanisms not yet formalized: Soar's chunking, Collins and Loftus's decision process, and subtraction. Because the catalog is generated from Lean, these lists will shrink exactly as general proofs replace examples.
+}
+
+\end{document}
