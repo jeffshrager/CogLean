@@ -1,4 +1,4 @@
-DECKS = catalog simulation coglean-overview conceptual-combination knowledge-concepts problem-solving multidigit-model recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation coglean-story
+DECKS = catalog doa-simulation coglean-overview conceptual-combination knowledge-concepts problem-solving multidigit-model recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation coglean-story
 
 all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 
