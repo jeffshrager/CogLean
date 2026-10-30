@@ -1,6 +1,7 @@
 import CogLib.Rep.Features
 import CogLib.Rep.Distribution
 import CogLib.Rep.Frames
+import CogLib.Rep.SemanticNet
 import CogLib.Memory.DiscriminationNet
 import CogLib.Memory.Cue
 import CogLib.Memory.Activation
