@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-162 theorems: 157 general, 5 instances; 68 headline; 24 about laws; 20 conditional on laws.
+184 theorems: 179 general, 5 instances; 75 headline; 24 about laws; 20 conditional on laws.
 
 **Laws**
 
@@ -47,7 +47,9 @@ How to read it:
 | Theorem | Scope | Given | Statement |
 |---|---|---|---|
 | `Cog.scanCost_ge_of_agree` | general | — | Similarity costs scanning. If two codes agree on the first `k` features of the noticing order, finding their difference costs at least `k` steps. |
-| `Cog.anchorAttention_serialPosition` | general | — | Anchor-point attention produces the serial position effect. |
+| `Cog.anchorAttention_serialPosition` | general | — | Anchor-point attention produces the serial position effect: derived from the attention rule, with the list's ends as its anchors. |
+| `Cog.isolation_effect` | general | — | The isolation effect (von Restorff), from the same rule: an item made distinctive, so an anchor too, is learned on the second trial, after the first item, where without it it is learned no earl... |
+| `Cog.rank_lt_of_before` | general | — | The rule orders learning by nearness, for any anchors: an item taken before another is learned on an earlier trial. |
 | `Cog.trials_at_least_items` | general | — | Serial mechanism, unit processing time. If after `t` trials at most `t` items are learned, then learning `n` items takes at least `n` trials. |
 | `Cog.Act.retrieve_not_certain` | general | — | Retrieval is never certain. Failure is always among the outcomes. |
 | `Cog.Net.cue_from_path_selects` | general | — | A path cue is sufficient. The cue made of exactly the features on the response's path selects the response's image, and nothing else. |
@@ -80,6 +82,11 @@ How to read it:
 | `Cog.netRetriever_deterministic` | general | — | A discrimination net retrieves deterministically. |
 | `Cog.netRetriever_stableRetrieval` | general | — | Discrimination learning has stable retrieval. |
 | `Cog.net_agreesOn` | general | — | A net agrees on the features a path tests. If each image is stored once, and `x` is recognized as the stored image `y`, which the net itself recognizes, then whatever `x` calls up agrees with i... |
+| `Cog.achieve_chain_fail_pre` | general | — | A broken link. If, once its preconditions are achieved, the single relevant operator still does not apply, the goal fails. |
+| `Cog.achieve_chain_fail_sub` | general | — | A broken link. If the single relevant operator's preconditions cannot be achieved, the goal fails. |
+| `Cog.achieve_chain_step` | general | — | A link of a chain. If the first unmet condition has a single relevant operator, its preconditions are achieved (state `s1`), and it then applies deterministically (state `s2`), achieving the go... |
+| `Cog.achieve_sound` | general | — | Means-ends analysis is sound, for every problem space, difference table and depth: every outcome in which it succeeds satisfies the goal. |
+| `Cog.runTrace_forget` | general | — | Forgetting the trace gives the run. |
 | `Cog.step_impasse_iff` | general | — | An impasse is a proposed operator whose precondition fails. |
 | `Cog.step_no_impasse` | general | — | With no impasse, a step is the operator's effect. |
 | `Cog.RR.backup_prob` | general | — | Backup use, with any memory: the average, over what the code calls up, of `1` (nothing) and `(1 - R_y)^n` (a stored `y`). |
@@ -174,7 +181,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-126 theorems: 105 general, 21 instances; 53 headline; 1 about laws; 5 conditional on laws.
+144 theorems: 124 general, 20 instances; 56 headline; 1 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -236,9 +243,12 @@ How to read it:
 | `MD.whole_depends_only_on_route` | general | — | Whole-problem retrieval depends only on the route. If `x` is recognized as `y`, whole-problem retrieval on `x` states an answer with property `P` exactly as often as retrieval on `y`'s associat... |
 | `MD.Solver.bridge` | general | — | The bridge: the full procedure answers exactly as the column backup `columns` does, for every problem and every single-digit process. |
 | `MD.Solver.bugs_15_17` | instance | — | The four bugs of 15 + 17: blank units (20), quit (0), no carry (22), two digits in a cell (212), each with probability 1/4. |
-| `MD.Solver.gps_examples` | instance | — | GPS adds units first, though nothing says so: the goal is only to be finished; subgoaling on preconditions works back to the units column. |
 | `MD.Solver.noCarry_bug` | general | — | The no-carry bug. Without the carry rule, and with critics against blank cells, quitting and two-digit cells, every problem is answered by adding the columns without carrying. |
 | `MD.Solver.noCarry_exact` | general | — | No carries needed, no impasse: without the carry rule, a problem whose columns all sum to less than 10 is answered exactly, whatever the repairs. |
+| `MD.Solver.gps_every_problem` | general | — | GPS adds the columns units first, for every problem, and finishes. |
+| `MD.Solver.gps_exact` | general | — | GPS answers exactly: for every problem with 3-digit addends, the sum. |
+| `MD.Solver.gps_noCarry` | general | — | GPS without the carry operator gives up on carry problems, and is exact on the rest, for every problem. |
+| `MD.Solver.regimes_diverge` | general | — | The same knowledge deficit, two control regimes. Without the carry rule, on every problem that needs a carry: the decision cycle with repair (and strict critics) answers confidently and wrongly... |
 
 ## The theory matrix: memory families against retrieval laws
 
@@ -412,13 +422,13 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 162 | 157 | 5 | 24 | 20 | 68 |
+| CogLib: the general library | 184 | 179 | 5 | 24 | 20 | 75 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 16 | 11 | 5 | 0 | 0 | 9 |
-| Multi-digit addition (with the problem solver) | 126 | 105 | 21 | 1 | 5 | 53 |
+| Multi-digit addition (with the problem solver) | 144 | 124 | 20 | 1 | 5 | 56 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 0 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 485 | 381 | 104 | 74 | 32 | 214 |
+| **All** | 525 | 422 | 103 | 74 | 32 | 224 |

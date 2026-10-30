@@ -17,6 +17,8 @@ CogLean is a Mathlib-style library of cognitive theory in Lean 4 (see `README.md
 
 ## Conventions
 
+- **Explanation, not only validity** (`notes/EXPLANATORY_AUDIT.md`): phenomena are targets, not premises. A theorem with a law or phenomenon among its hypotheses is conditional: name or document it so (`…_of_laws`, "given …"); the catalog flags these (column Given). Headline docstrings say which premises are postulates and which are conditions. Properties of algorithms (soundness, merge properties) are library facts, not psychological explanations. When a result is close to its definitions, say so, and look for a second consequence of the same mechanism.
+
 - Commit after every successful major change without asking. Push only when asked.
 - Session summaries: a new file per checkpoint, `seshsums/YYYYMMDD_HHMM_seshsum.md`, then commit (and push when asked).
 - Prototype in Python with semantics identical to the Lean definitions when iterating on experiments (see `EPAM/analysis/robustness.py`), then certify in Lean with `decide`.
