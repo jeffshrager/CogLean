@@ -118,6 +118,40 @@ theorem bind_pure_left (a : α) (f : α → Dist β) : bind (pure a) f = f a := 
   obtain ⟨b, q⟩ := x
   simp [Rat.one_mul]
 
+theorem bind_append {γ : Type} (d d' : Dist α) (f : α → Dist γ) :
+    bind (d ++ d') f = bind d f ++ bind d' f := by
+  induction d with
+  | nil => rfl
+  | cons x d ih => obtain ⟨a, p⟩ := x; simp [bind, ih]
+
+theorem bind_scale {γ : Type} (d : Dist α) (p : Rat) (f : α → Dist γ) :
+    bind (d.map fun (b, q) => (b, p * q)) f =
+      (bind d f).map fun (c, r) => (c, p * r) := by
+  induction d with
+  | nil => rfl
+  | cons x d ih =>
+    obtain ⟨a, q⟩ := x
+    simp only [List.map_cons, bind, ih, List.map_append, List.map_map]
+    congr 1
+    apply List.map_congr_left
+    intro y _
+    obtain ⟨c, r⟩ := y
+    simp [Rat.mul_assoc]
+
+/-- **Two-stage draws regroup.** -/
+theorem bind_assoc {γ : Type} (d : Dist α) (f : α → Dist β) (g : β → Dist γ) :
+    bind (bind d f) g = bind d fun a => bind (f a) g := by
+  induction d with
+  | nil => rfl
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    simp only [bind, bind_append, ih, bind_scale]
+
+theorem bind_congr {γ : Type} (d : Dist α) (f g : α → Dist γ) (h : ∀ a, f a = g a) :
+    bind d f = bind d g := by
+  have : f = g := funext h
+  rw [this]
+
 /-- **Relabelling.** Drawing from `d` and then certainly giving `g a` is
 drawing from `d` and asking of `g a`. -/
 theorem prob_bind_pure (d : Dist α) (g : α → β) (e : β → Bool) :

@@ -22,6 +22,20 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
   - near misses within 200 or 20, set by which digits the net examines;
   - no interference with practiced problems.
 - `MultiDigit/Columns.lean`: the column backup, built from single-digit facts with carries, which can be DOA trials. Carrying adds no error, and a column error is a single-digit error moved to its place.
+- `MultiDigit/Solver.lean`: **the column backup as problem solving** (CogLib `Process/ProblemSolving`).
+  - **The problem space:** states are partly worked problems. The operators are:
+    - add a column, with its single-digit fact from any process, e.g. a DOA trial;
+    - write the sum;
+    - write the units digit and carry;
+    - finish;
+    - repairs: skip, quit, write the units digit only, write both digits.
+  - **`bridge`:** the full procedure answers exactly as `columns`, for every problem and every single-digit process. The solver *is* the backup, and every theorem above holds for it.
+  - **Without the carry rule** (repair theory, Brown & VanLehn 1980):
+    - a column summing to 10 or more is an impasse;
+    - `noCarry_exact`: problems needing no carry are still exact;
+    - `noCarry_bug`: with critics against blanks, quitting and two-digit cells, every problem is answered by adding columns without carrying;
+    - `bugs_15_17`: with all four repairs, 15 + 17 gives 20, 0, 22 or 212, each with probability 1/4, one bug per repair.
+  - **Means-ends analysis (GPS):** the goal is only to be finished, yet subgoaling on preconditions works back to the units column first (`gps_examples`).
 - `MultiDigit/Learning.lean`: discrimination after a confusion removes it, and only it, and the problem is then worked out by the columns until its own associations are strengthened. The near-miss predictions hold for every net EPAM learns.
 - `MultiDigit/Features.lean`, `MultiDigit/FeaturePhenomena.lean`: further features a code may carry (zeros, magnitude as thresholds, column facts), and what confusions then keep: no confusion with a round problem once its zeros are tested; confused digits between the same tested thresholds; harmless confusions, or errors in multiples of 100, once column facts are tested.
 - `MultiDigit/Example.lean`, `MultiDigit/Example2.lean`: worked cases, a check that the theorems apply.

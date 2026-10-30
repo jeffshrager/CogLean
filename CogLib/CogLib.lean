@@ -16,6 +16,7 @@ import CogLib.Process.Combination
 import CogLib.Process.ViewApplication
 import CogLib.Process.Categorize
 import CogLib.Process.SpreadingActivation
+import CogLib.Process.ProblemSolving
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
 import CogLib.Phenomena.Retriever

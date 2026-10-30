@@ -71,3 +71,11 @@ Formalized in `SemanticMemory/` (see its README).
 - **Smith, E. E., Shoben, E. J., & Rips, L. J. (1974).** Structure and process in semantic memory: A featural model for semantic decisions. *Psychological Review*, 81, 214–241. Local copy: `../papers/1974-Structure_and_process_in_semantic_memory_A_featura.pdf` (a scan). Defining and characteristic features; the two-stage feature comparison model; postulates FC1–FC2.
 - **Collins, A. M., & Loftus, E. F. (1975).** A spreading-activation theory of semantic processing. *Psychological Review*, 82, 407–428. Local copy: `../papers/1975_A_Spreading_Activation_Theory_of_Semantic_Processi.pdf` (a scan). Formalized in part (CogLib `Process/SpreadingActivation`): assumptions 1-4 (spread in a decreasing gradient, release, decay as bounded depth, summation); used for view selection (`ViewApplication/Selection.lean`). The decision process (assumptions 8-13) is not yet formalized.
 
+## Problem solving
+
+Formalized in CogLib `Process/ProblemSolving` and `MultiDigit/Solver.lean`.
+
+- **Newell, A., Shaw, J. C., & Simon, H. A. (1958).** Elements of a theory of human problem solving. *Psychological Review*, 65, 151–166. Local copy: `../papers/1958-NewellShawSimon-ElementsTheoryHumanProblemSolving-PsychRev.pdf`. The program for a theory of problem solving; GPS itself is in Newell, Shaw & Simon (1959), *Report on a general problem-solving program* (IFIP), not yet in `../papers/`.
+- **Brown, J. S., & VanLehn, K. (1980).** Repair theory: A generative theory of bugs in procedural skills. *Cognitive Science*, 4, 379–426. Local copy: `../papers/1980-BrownVanLehn-RepairTheory-CogSci.pdf`. Deletion of rules, impasses at violated preconditions, a local problem solver, repair heuristics (Skip, Quit, Backup, Refocus, ...) filtered by critics; carried over here to addition.
+- **Laird, J. E., Newell, A., & Rosenbloom, P. S. (1987).** Soar: An architecture for general intelligence. *Artificial Intelligence*, 33, 1–64 (tech report AIP-9, DTIC ADA205407). Not yet in `../papers/`; needed for impasse types and chunking.
+
