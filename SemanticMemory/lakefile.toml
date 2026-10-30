@@ -1,0 +1,9 @@
+name = "semanticmemory"
+defaultTargets = ["SemanticMemory"]
+
+[[lean_lib]]
+name = "SemanticMemory"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"

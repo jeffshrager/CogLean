@@ -69,3 +69,9 @@
     - **View application** (Shrager 1987, *Machine Learning* 2, 247-276; `../papers/1987MLVA.pdf`, a scan, to be read as page images) as a rival theory of combination, of a very different kind: abstract knowledge structures ("views") applied to a theory, not attribute-value prototypes. Hold it to the same CogLib phenomena, matrix-style: combination theories as families, phenomena as laws.
     - Relation linking and noun-noun combination (Wisniewski; Murphy).
 20. **Cognitive skills: a package for problem solving.** The theories so far are memory, retrieval and concepts. Add a package for cognitive skills, starting with problem solving: states, operators and goals, search (means-ends analysis, as in GPS; production systems, as in #8's "then production systems"). Phenomena such as solution paths, impasses and learning from them would be stated theory-neutrally in CogLib, as the retrieval laws are, so rival theories of problem solving can be compared the same way.
+21. **Semantic memory** (`SemanticMemory/`; `Rep/SemanticNet`, `Phenomena/Verification` in CogLib). Done: semantic nets with inheritance and value search; Collins & Quillian (1969) and Smith, Shoben & Rips (1974) as rival verifiers; distance effect, typicality effect and reversal as laws; C&Q has the distance effect for every net and never the other two; the feature model shows both, so lacks the distance effect; C&Q's Fig. 1 and the order of Fig. 2. To do:
+    - Spreading activation (Collins & Loftus 1975, `../papers/`, a scan) as a third family.
+    - Similarity as a random variable (SSR's form), with costs as distributions; false responses (relatedness effect; C&Q's contradiction and search-and-destroy hypotheses).
+    - Rips, Shoben & Smith (1973), for the typicality evidence (not yet in `../papers/`).
+    - Then view application (#19) as operations on these nets: type matching, merge, coercion, binding.
+

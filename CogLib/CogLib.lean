@@ -19,3 +19,4 @@ import CogLib.Phenomena.RetrievalLaws
 import CogLib.Phenomena.Responder
 import CogLib.Phenomena.SerialPosition
 import CogLib.Phenomena.Combination
+import CogLib.Phenomena.Verification

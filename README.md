@@ -103,6 +103,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **Conceptual combination** (`Concepts/`), the fourth: the selective modification model (Smith, Osherson, Rips & Keane 1988), with graded membership by Hampton's (2007) threshold model. It proves the conjunction effect, its reverse and over-extension for every prototype and parameter choice under stated conditions, and reproduces the paper's figures exactly. With number concepts learned from exemplars, its over-extensions are shown to be false, not only incoherent: 14 is judged an *even multiple of 3* far more than a *multiple of 3* ([`Concepts/README.md`](Concepts/README.md)).
 
+**Semantic memory** (`SemanticMemory/`), the fifth: Collins & Quillian's (1969) hierarchical network and Smith, Shoben & Rips's (1974) feature comparison model, on CogLib's semantic nets. The hierarchical model has the distance effect for every net and can never produce a typicality effect or a reversal ("a chicken is an animal" faster than "a chicken is a bird"); the feature model produces both, and so lacks the distance effect ([`SemanticMemory/README.md`](SemanticMemory/README.md)).
+
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
 **The theory matrix** (`CogMatrix/`): 6 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem: the family has the law at every parameter setting, never has it, or lacks it at one setting (a counterexample). Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
@@ -165,4 +167,5 @@ cd EPAM && lake build              # builds CogLib, then EPAM
 cd StrategyChoice && lake build    # builds CogLib, then the strategy-choice model
 cd MultiDigit && lake build        # builds CogLib, then the combined multi-digit model
 cd Concepts && lake build          # builds CogLib, then conceptual combination
+cd SemanticMemory && lake build    # builds CogLib, then semantic memory
 ```

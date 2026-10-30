@@ -63,3 +63,11 @@ Formalized in `Concepts/` (see its README).
 - **Hampton, J. A. (2007).** Typicality, graded membership, and vagueness. *Cognitive Science*, 31, 355–384. Local copy: `../papers/2007-Hampton-Typicality.pdf`. The threshold model: typicality and membership are both nondecreasing functions of one similarity; membership by his Eq. 8. Postulate H1. With it, S&O's conjunction effect becomes over-extension, which fuzzy logic's min rule forbids.
 - **Shrager, J. (1987).** Theory change via view application in instructionless learning. *Machine Learning*, 2, 247–276. Local copy: `../papers/1987MLVA.pdf` (a scan, no text layer). View application combines abstract knowledge structures into a learner's theory, a very different account of combination; a planned rival family (`OPEN_ISSUES.md` #19).
 
+## Semantic memory
+
+Formalized in `SemanticMemory/` (see its README).
+
+- **Collins, A. M., & Quillian, M. R. (1969).** Retrieval time from semantic memory. *JVLVB*, 8, 240–247. Local copy: `../papers/` (saved as `Unconfirmed 811174.crdownload`; complete, 8 pages, a scan). The hierarchical network; postulates CQ1–CQ3; Fig. 1 reproduced.
+- **Smith, E. E., Shoben, E. J., & Rips, L. J. (1974).** Structure and process in semantic memory: A featural model for semantic decisions. *Psychological Review*, 81, 214–241. Local copy: `../papers/1974-Structure_and_process_in_semantic_memory_A_featura.pdf` (a scan). Defining and characteristic features; the two-stage feature comparison model; postulates FC1–FC2.
+- **Collins, A. M., & Loftus, E. F. (1975).** A spreading-activation theory of semantic processing. *Psychological Review*, 82, 407–428. Local copy: `../papers/1975_A_Spreading_Activation_Theory_of_Semantic_Processi.pdf` (a scan). Not yet formalized.
+
