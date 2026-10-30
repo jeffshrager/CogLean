@@ -2,7 +2,7 @@
 Used by `gen_catalog.py` (appended after the package's imports); not part of
 any library. For every theorem defined in the package's modules, prints one
 line: name | module | quantified | negated | law | law module | axioms ok |
-docstring's first sentence.
+assumed laws | docstring's first sentence.
 
 * quantified: the statement binds variables (a claim for every value of
   them); otherwise it is a closed statement, a single computed case.
@@ -11,6 +11,8 @@ are skipped.
 
 * law: the head of the conclusion (under `¬` and `∃`), when it is a
   definition from a `CogLib.Phenomena` module, a theory-neutral phenomenon.
+* assumed laws: hypotheses whose head is such a definition: the theorem is
+  conditional on them (a law or phenomenon among its premises).
 -/
 
 open Lean Meta
@@ -46,9 +48,18 @@ def catLine (prefixes : List Name) : MetaM Unit := do
     let some idx := env.getModuleIdxFor? n | continue
     let mod := env.header.moduleNames[idx.toNat]!
     unless prefixes.any (fun p => p.isPrefixOf mod) do continue
-    let (q, neg, law) ← forallTelescope ci.type fun xs body => do
+    let (q, neg, law, assumed) ← forallTelescope ci.type fun xs body => do
       let (neg, h) ← catHead body
-      return (decide (xs.size > 0), neg, h)
+      let mut assumed : Array Name := #[]
+      for x in xs do
+        let t ← inferType x
+        unless (← isProp t) do continue
+        let (_, hh) ← catHead t
+        if let some hn := hh then
+          if let some i := env.getModuleIdxFor? hn then
+            if (`CogLib.Phenomena).isPrefixOf env.header.moduleNames[i.toNat]! then
+              unless assumed.contains hn do assumed := assumed.push hn
+      return (decide (xs.size > 0), neg, h, assumed)
     let lawMod : String := match law with
       | some l => match env.getModuleIdxFor? l with
         | some i => toString env.header.moduleNames[i.toNat]!
@@ -58,4 +69,5 @@ def catLine (prefixes : List Name) : MetaM Unit := do
     let ok := ax.all (catStd.contains ·)
     let doc := ((← findDocString? env n).getD "").replace "\n" " " |>.replace "|" "/"
     let lawS := match law with | some l => toString l | none => ""
-    IO.println s!"{n}|{mod}|{q}|{neg}|{lawS}|{lawMod}|{ok}|{doc}"
+    let assumedS := ",".intercalate (assumed.toList.map toString)
+    IO.println s!"{n}|{mod}|{q}|{neg}|{lawS}|{lawMod}|{ok}|{assumedS}|{doc}"
