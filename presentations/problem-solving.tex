@@ -103,11 +103,11 @@ Multi-column addition as a problem space. A state records the next column, the c
   \begin{itemize}
     \item The goal names no order: only \emph{finished}. Finishing needs the hundreds written; writing needs the sum; adding a column needs the column to its right written, for its carry.
     \item Subgoaling works back to the units column, and the work runs units, tens, hundreds.
-    \item GPS gives the right answers (15+17, 999+1, 478+256), by evaluation.
+    \item \textbf{Proved for every problem}: GPS works units, tens, hundreds, and answers exactly.
   \end{itemize}
 \end{frame}
 \note{
-Here's the first result. GPS's goal is only to be finished; nothing says to start with the units. Finishing needs the hundreds written. Writing a column needs its sum. And adding a column needs the column to its right written, because that's where its carry comes from. So subgoaling works backward until it reaches the units column, the only column with no prerequisite, and the work then runs units, tens, hundreds. The right-to-left order of the algorithm falls out of the preconditions. On the problems I've run, GPS gets the right answers; a proof for every problem is still to do.
+Here's the first result. GPS's goal is only to be finished; nothing says to start with the units. Finishing needs the hundreds written. Writing a column needs its sum. And adding a column needs the column to its right written, because that's where its carry comes from. So subgoaling works backward until it reaches the units column, the only column with no prerequisite, and the work then runs units, tens, hundreds. The right-to-left order of the algorithm falls out of the preconditions. And that's now proved for every problem: GPS works units first and answers exactly. The proof is a chain of general lemmas about means-ends analysis, one link per subgoal.
 }
 
 \begin{frame}{The bridge: the solver is the column backup}
@@ -175,33 +175,55 @@ At the impasse, the four repairs give four bugs. On fifteen plus seventeen, skip
 Critics narrow the choice. A learner who won't leave a cell blank, won't give up, and won't put two digits in a cell has only one repair left: write the units digit. Then, for every problem, the answer is each column's sum without carrying. That's proved in general, not checked on examples. So a bug is the joint product of what the learner is missing, the carry rule, and what they won't do, their critics. Where the critics leave a single repair, the theory predicts a stable bug; where they leave several, the same learner can answer the same problem in different wrong ways.
 }
 
+\begin{frame}{The same deficit, two control regimes}
+  Hold the knowledge fixed: the same operators, the same carry operator deleted. Change only the control regime.
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    & no carry needed & a carry needed\\
+    \midrule
+    Decision cycle with repair & exact & confident wrong (no-carry bug)\\
+    Means-ends analysis (GPS) & exact & \textbf{no answer}: it gives up\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item Proved for every problem (\code{regimes\_diverge}).
+    \item A testable contrast: the same gap in knowledge shows as a systematic bug or as a stall, depending on how the learner controls their work.
+  \end{itemize}
+\end{frame}
+\note{
+Here is the result I'd lead with. Hold the knowledge fixed: the same operators, with the same carry operator deleted. Change only the control regime. The decision cycle with repair reaches an impasse and repairs it, giving a confident wrong answer, the no-carry bug. Means-ends analysis finds no operator for a column it can't write, backs up, and gives up: no answer at all. On problems that need no carry, both are exact. That's proved for every problem. So the same gap in knowledge shows up as a systematic bug or as a stall, depending on control, which is a contrast an experiment could look for.
+}
+
 \begin{frame}{What is proved, and what is not yet}
   \small
   \begin{tabular}{p{0.45\linewidth}p{0.45\linewidth}}
     \toprule
     For every problem / setting & On examples, or not yet\\
     \midrule
-    Impasse $\iff$ violated precondition & GPS's answers (three problems)\\
+    Means-ends analysis is sound (any space) & The four bugs on $15+17$ (one problem)\\
     The bridge to \code{columns} & Soar's tie and conflict impasses\\
-    No-carry learner exact without carries & Chunking (next)\\
+    GPS units-first and exact & Chunking (next)\\
     The no-carry bug under strict critics & Subtraction, repair theory's own domain\\
+    GPS gives up exactly on carry problems & \\
+    The two regimes diverge & \\
     \bottomrule
   \end{tabular}
 \end{frame}
 \note{
-To be clear about what's proved. In general: an impasse is exactly a violated precondition; the bridge to the column backup, for every problem and process; exactness without carries; and the no-carry bug under strict critics, for every problem. On examples only: GPS's answers, on three problems; a general GPS theorem is next. Not yet: Soar's other impasse types, chunking, and subtraction, which is repair theory's own domain.
+To be clear about what's proved. In general: means-ends analysis is sound for any problem space; the bridge to the column backup; GPS's units-first order and exact answers; the no-carry bug under strict critics; GPS giving up on exactly the carry problems; and the divergence of the two regimes, all for every problem. On one problem: the four bugs of fifteen plus seventeen. Not yet: Soar's other impasse types, chunking, and subtraction, which is repair theory's own domain.
 }
 
 \begin{frame}{Next}
   \begin{itemize}
     \item \textbf{Chunking} (Soar): the result of a subgoal becomes a new rule. In addition, a fact found by counting at a retrieval impasse becomes an association: DOA's own learning rule, seen from the problem-solving side.
-    \item A general GPS theorem: units-first and exact, for every problem.
     \item \textbf{Subtraction} and borrowing, where repair theory's bug data are.
     \item Laws comparing the regimes, matrix-style: \emph{every subgoal arises from an impasse}, \emph{learning only by chunking}, \dots
   \end{itemize}
 \end{frame}
 \note{
-Next. Chunking, Soar's learning mechanism, where the result of a subgoal becomes a new rule. In addition, when retrieval reaches an impasse and the fact is found by counting, chunking would store it as an association, which is exactly the distributions-of-associations model's learning rule, seen from the problem-solving side. A general GPS theorem. Subtraction and borrowing, where repair theory's own bug data are. And laws that separate the control regimes, so that GPS and Soar get rows in a matrix like the memory families.
+Next. Chunking, Soar's learning mechanism, where the result of a subgoal becomes a new rule. In addition, when retrieval reaches an impasse and the fact is found by counting, chunking would store it as an association, which is exactly the distributions-of-associations model's learning rule, seen from the problem-solving side. Subtraction and borrowing, where repair theory's own bug data are. And laws that separate the control regimes, so that GPS and Soar get rows in a matrix like the memory families.
 }
 
 \end{document}

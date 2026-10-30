@@ -20,7 +20,7 @@ This is a reference deck: for each module of CogLean, which theory-neutral laws 
   \begin{itemize}
     \item \textbf{Laws} are phenomena defined once, theory-neutrally, in the library (\code{CogLib.Phenomena}); a module \emph{has} a law, \emph{never} has it, \emph{lacks} it (one counterexample), or \emph{can hold} it (one case).
     \item \textbf{General} theorems bind variables: every net, problem, number or setting, under stated hypotheses. \textbf{Instances} are single cases computed exactly.
-    \item Generated from Lean (\code{tools/gen\_catalog.py} $\to$ \code{notes/CATALOG.md}); every theorem uses only the standard axioms; no \code{sorry}.
+    \item Generated from Lean (\code{tools/gen\_catalog.py} $\to$ \code{notes/CATALOG.md}); every theorem uses only the standard axioms; no \code{sorry}. \textbf{Given}: the laws a theorem assumes (32 are conditional on laws).
   \end{itemize}
   \scriptsize
   \begin{center}
@@ -29,23 +29,23 @@ This is a reference deck: for each module of CogLean, which theory-neutral laws 
     \toprule
     & Theorems & General & Instances & About laws & Headline\\
     \midrule
-    CogLib (the library) & 162 & 157 & 5 & 24 & 68\\
+    CogLib (the library) & 184 & 179 & 5 & 24 & 75\\
     EPAM & 31 & 14 & 17 & 7 & 18\\
     Strategy choice & 16 & 11 & 5 & 0 & 9\\
-    Multi-digit (with problem solver) & 126 & 105 & 21 & 1 & 53\\
+    Multi-digit (with problem solver) & 144 & 124 & 20 & 1 & 56\\
     Theory matrix & 61 & 46 & 15 & 31 & 30\\
     Experiments & 45 & 25 & 20 & 0 & 13\\
     Concepts & 17 & 12 & 5 & 5 & 8\\
     Semantic memory & 13 & 6 & 7 & 6 & 7\\
     View application & 14 & 5 & 9 & 0 & 8\\
     \midrule
-    All & 485 & 381 & 104 & 74 & 214\\
+    All & 525 & 422 & 103 & 74 & 224\\
     \bottomrule
   \end{tabular}
   \end{center}
 \end{frame}
 \note{
-How to read it. Laws are phenomena defined once in the library without reference to any theory, and a module has a law, never has it, lacks it by a single counterexample, or can hold it in a single case. General theorems hold for every net, problem, number or setting, under their stated hypotheses; instances are single cases computed exactly. The whole thing is generated from Lean, every theorem uses only the standard axioms, and there's no sorry anywhere. In all, four hundred eighty-five theorems, three hundred eighty-one of them general, and seventy-four about laws.
+How to read it. Laws are phenomena defined once in the library without reference to any theory, and a module has a law, never has it, lacks it by a single counterexample, or can hold it in a single case. General theorems hold for every net, problem, number or setting, under their stated hypotheses; instances are single cases computed exactly. The whole thing is generated from Lean, every theorem uses only the standard axioms, and there's no sorry anywhere. In all, five hundred twenty-five theorems, four hundred twenty-two of them general, and seventy-four about laws. The catalog also records which theorems assume a law among their premises, thirty-two of them, so a conditional result can't pass for a derived one.
 }
 
 \begin{frame}{The library: laws, and how they relate}
@@ -69,6 +69,7 @@ How to read it. Laws are phenomena defined once in the library without reference
       \item Reversal $\Rightarrow$ no distance effect
       \item Conjunction effect $\Rightarrow$ over-extension
       \item Membership monotone in typicality $\Rightarrow$ never dissociation
+      \item Attention nearer an anchor first $\Rightarrow$ serial position effect \emph{and} isolation effect
     \end{itemize}
   \end{columns}
 \end{frame}
@@ -84,7 +85,7 @@ The library defines the laws: of learning, of responding, of retrieval, of verif
     \item \textbf{Semantic nets}: inheritance with override and accumulation; distance is the least level.
     \item \textbf{View application}: the view is kept; the view wins on matched frames; unmatched frames survive; instances are re-parented.
     \item \textbf{Spreading activation}: sources sum; priming never lowers activation or a candidate's share.
-    \item \textbf{Problem solving}: an impasse is exactly a violated precondition; probabilistic stages regroup.
+    \item \textbf{Problem solving}: means-ends analysis is sound for any space; how it chains and fails; runs traced as observables.
   \end{itemize}
 \end{frame}
 \note{
@@ -156,16 +157,14 @@ Multi-digit addition, the recognition and retrieval side. In general, with any m
   \begin{itemize}
     \item \textbf{the bridge}: the problem solver answers exactly as the column backup, for every single-digit process;
     \item place value: carrying adds no error; a column error is a single-digit error moved to its place;
-    \item without the carry rule: exact when no carry is needed; under strict critics, the no-carry bug.
+    \item without the carry rule: exact when no carry is needed; under strict critics, the no-carry bug;
+    \item GPS works units first and answers exactly; without the carry operator it gives up on exactly the carry problems;
+    \item \textbf{the same deficit, two regimes}: a confident bug under repair, no answer under GPS.
   \end{itemize}
-  \textbf{Instances}:
-  \begin{itemize}
-    \item four repairs, four bugs on $15+17$;
-    \item GPS works units-first and is correct on three problems (a general proof is to do).
-  \end{itemize}
+  \textbf{Instance}: four repairs, four bugs on $15+17$.
 \end{frame}
 \note{
-The problem-solving side. In general, for every problem: the bridge to the column backup, place value and the transfer of single-digit errors, and the two results without the carry rule, exactness when no carry is needed and the no-carry bug under strict critics. As instances: the four bugs on fifteen plus seventeen, and GPS's units-first order and correct answers on three problems; proving those for every problem is on the list.
+The problem-solving side. In general, for every problem: the bridge to the column backup, place value and the transfer of single-digit errors, and the two results without the carry rule, exactness when no carry is needed and the no-carry bug under strict critics. Also for every problem now: GPS's units-first order and exact answers, its giving up on exactly the carry problems when the carry operator is missing, and the divergence of the two regimes on the same deficit. The four bugs on fifteen plus seventeen remain an instance.
 }
 
 \begin{frame}{Experiments written against the memory interface}
@@ -226,10 +225,28 @@ Concepts and semantic memory. For selective modification with threshold membersh
 View application. In general: the library's four properties of the merge, and, after the arithmetic view, exact membership, no over-extension and unchanged typicality, each for every number. As instances: the paper's Table 4, the over-extension before the view, the dissociation after it, and the two readings of the plus key under view selection.
 }
 
+\begin{frame}{Derived, or close to the definitions? (the audit)}
+  \small
+  \begin{tabular}{p{0.24\linewidth}p{0.68\linewidth}}
+    \toprule
+    Compositional & confident errors (recognition + associations); after the view (view application + categorization); the two regimes diverge\\
+    Derived & no-carry bug; GPS order; isolation effect; DOA's counting error share; EPAM's oscillation\\
+    Close & serial position (now from a rule); conjunction effect; DOA's closed forms\\
+    Definitional & hierarchical network's costs; algorithm properties (soundness, merges)\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  A judgment, not a check (\code{notes/EXPLANATORY\_AUDIT.md}). Its weakest results are its targets.
+\end{frame}
+\note{
+Lean checks that each theorem follows from its premises, but not whether the premises already contain the phenomenon. So there's a written audit, a judgment rather than a check. The compositional results, where two mechanisms are needed, are the strongest: confident errors, the arithmetic view's effects, and the divergence of the two control regimes. Several are derived from premises that don't mention them, like the no-carry bug and the isolation effect. Some are close to their definitions, such as the serial position effect, though it now comes from a general rule, and the conjunction effect. And some are definitional, like the hierarchical network's costs. The weakest results are the targets for the next round.
+}
+
 \begin{frame}{Where the results are weakest}
   \begin{itemize}
     \item \textbf{Single counterexamples}: eight ``lacks'' cells in the memory matrix; the feature model's verdicts; ACT-R's in the multi-digit cases.
-    \item \textbf{Examples only}: GPS's answers; view selection's readings; Table 4.
+    \item \textbf{Examples only}: view selection's readings; Table 4; the four bugs on $15+17$.
     \item \textbf{Chosen settings}: worked cases' strengths and bounds; priors not yet from experience.
     \item \textbf{Not yet formalized}: Soar's chunking and other impasses; Collins \& Loftus's decision process; subtraction.
   \end{itemize}
@@ -237,7 +254,7 @@ View application. In general: the library's four properties of the merge, and, a
   The catalog is regenerated from Lean, so these lists shrink as general proofs replace examples.
 \end{frame}
 \note{
-Finally, where the results are weakest. Single counterexamples: the eight lacks cells in the memory matrix, and the feature model's and ACT-R's verdicts in their worked cases. Results on examples only: GPS's answers, view selection's readings, and Table 4. Settings chosen for illustration, where priors should come from experience. And mechanisms not yet formalized: Soar's chunking, Collins and Loftus's decision process, and subtraction. Because the catalog is generated from Lean, these lists will shrink exactly as general proofs replace examples.
+Finally, where the results are weakest. Single counterexamples: the eight lacks cells in the memory matrix, and the feature model's and ACT-R's verdicts in their worked cases. Results on examples only: view selection's readings, Table 4, and the four bugs on fifteen plus seventeen. Settings chosen for illustration, where priors should come from experience. And mechanisms not yet formalized: Soar's chunking, Collins and Loftus's decision process, and subtraction. Because the catalog is generated from Lean, these lists will shrink exactly as general proofs replace examples.
 }
 
 \end{document}
