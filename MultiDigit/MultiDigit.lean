@@ -9,3 +9,4 @@ import MultiDigit.Example
 import MultiDigit.Example2
 import MultiDigit.ExampleACTR
 import MultiDigit.Solver
+import MultiDigit.SolverGPS

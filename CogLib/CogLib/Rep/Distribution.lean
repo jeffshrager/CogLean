@@ -147,6 +147,12 @@ theorem bind_assoc {γ : Type} (d : Dist α) (f : α → Dist β) (g : β → Di
     obtain ⟨a, p⟩ := x
     simp only [bind, bind_append, ih, bind_scale]
 
+/-- Drawing and then certainly keeping the draw changes nothing. -/
+theorem bind_pure_right (d : Dist α) : bind d pure = d := by
+  induction d with
+  | nil => rfl
+  | cons x d ih => obtain ⟨a, p⟩ := x; simp [bind, pure, ih, Rat.mul_one]
+
 theorem bind_congr {γ : Type} (d : Dist α) (f g : α → Dist γ) (h : ∀ a, f a = g a) :
     bind d f = bind d g := by
   have : f = g := funext h

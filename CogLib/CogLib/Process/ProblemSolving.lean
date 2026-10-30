@@ -206,6 +206,56 @@ theorem achieve_sound (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C)
             exact ih goal z.1
           · exact allSome_pure_none _
 
+/-! ### How means-ends analysis chains -/
+
+theorem orElse_pure_some (s : S) (alt : Dist (Option S)) :
+    orElse (Dist.pure (some s)) alt = Dist.pure (some s) := by
+  simp [orElse, Dist.bind_pure_left]
+
+theorem orElse_pure_none (alt : Dist (Option S)) : orElse (Dist.pure none) alt = alt := by
+  simp [orElse, Dist.bind_pure_left]
+
+/-- With every condition of the goal met, it is achieved at once. -/
+theorem achieve_done (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C) (s : S)
+    (h : goal.find? (fun c => !M.holds c s) = none) : achieve Sp M (k + 1) goal s = Dist.pure (some s) := by
+  simp [achieve, h]
+
+/-- **A link of a chain.** If the first unmet condition has a single relevant
+operator, its preconditions are achieved (state `s1`), and it then applies
+deterministically (state `s2`), achieving the goal goes on from `s2`. -/
+theorem achieve_chain_step (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C) (s s1 s2 : S)
+    (c : C) (o : O) (cs : List C) (hf : goal.find? (fun c => !M.holds c s) = some c)
+    (ht : M.table c = [o]) (hc : M.conds o = cs)
+    (hsub : achieve Sp M k cs s = Dist.pure (some s1)) (hpre : Sp.pre o s1 = true)
+    (happ : Sp.apply o s1 = Dist.pure s2) :
+    achieve Sp M (k + 1) goal s = achieve Sp M k goal s2 := by
+  simp only [achieve, hf, ht, hc, List.foldr_cons, List.foldr_nil, hsub, Dist.bind_pure_left, hpre,
+    ite_true, happ]
+  unfold orElse
+  conv => rhs; rw [← Dist.bind_pure_right (achieve Sp M k goal s2)]
+  apply Dist.bind_congr
+  intro r
+  match r with
+  | some _ => rfl
+  | none => rfl
+
+/-- **A broken link.** If the single relevant operator's preconditions cannot
+be achieved, the goal fails. -/
+theorem achieve_chain_fail_sub (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C) (s : S)
+    (c : C) (o : O) (cs : List C) (hf : goal.find? (fun c => !M.holds c s) = some c)
+    (ht : M.table c = [o]) (hc : M.conds o = cs) (hsub : achieve Sp M k cs s = Dist.pure none) :
+    achieve Sp M (k + 1) goal s = Dist.pure none := by
+  simp [achieve, hf, ht, hc, hsub, Dist.bind_pure_left, orElse_pure_none]
+
+/-- **A broken link.** If, once its preconditions are achieved, the single
+relevant operator still does not apply, the goal fails. -/
+theorem achieve_chain_fail_pre (Sp : Space S O) (M : MEA S O C) (k : Nat) (goal : List C) (s s1 : S)
+    (c : C) (o : O) (cs : List C) (hf : goal.find? (fun c => !M.holds c s) = some c)
+    (ht : M.table c = [o]) (hc : M.conds o = cs)
+    (hsub : achieve Sp M k cs s = Dist.pure (some s1)) (hpre : Sp.pre o s1 = false) :
+    achieve Sp M (k + 1) goal s = Dist.pure none := by
+  simp [achieve, hf, ht, hc, hsub, Dist.bind_pure_left, hpre, orElse_pure_none]
+
 /-! ### Traces: what the solver did, as an observable -/
 
 /-- One event of a run: an operator applied, or an impasse at an operator and

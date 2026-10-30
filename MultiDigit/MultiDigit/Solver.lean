@@ -25,10 +25,12 @@ Two procedures (decision-cycle rules):
 * `noCarry`: the carry rule deleted. A column sum of 10 or more meets `write`
   with its precondition violated: an impasse.
 
-Means-ends analysis (GPS) over the same space: the goal is that the hundreds
-column is written; writing a column needs its sum; adding a column needs
-the column to its right written, for its carry. The order of work, units
-first, is not given: it follows from the subgoaling (`gps_order`).
+Means-ends analysis (GPS) over the same space (`gpsWith`): the goal is only
+to be finished; finishing needs the hundreds written; writing a column needs
+its sum; adding a column needs the column to its right written, for its
+carry. GPS's theorems are in `MultiDigit/SolverGPS.lean`: units first and
+exact for every problem, and, without the carry operator, giving up on
+exactly the problems that need a carry.
 
 Results:
 * `bridge`: the full procedure gives exactly the old column backup,
@@ -327,36 +329,38 @@ theorem noCarry_exact (R : Repairer St Op) (p : Problem) (ha : p.a < 1000) (hb :
 inductive Cond | written (i : Nat) | summed (i : Nat) | finished
   deriving DecidableEq
 
-/-- The difference table and operator preconditions. Adding a column needs
-the column to its right written (for its carry). -/
-def gpsMEA : MEA St Op Cond where
+/-- The difference table and operator preconditions, given the operator the
+solver knows for writing a column (`wop`): `writeCarry` with full knowledge,
+only `write` without the carry rule. Adding a column needs the column to its
+right written (for its carry). -/
+def gpsWith (wop : Nat → Op) : MEA St Op Cond where
   holds c s := match c with
     | .written i => decide (i < s.col)
     | .summed i => s.col == i && s.sum.isSome
     | .finished => s.done
   table c := match c with
-    | .written i => [.writeCarry i]
+    | .written i => [wop i]
     | .summed i => [.add i]
     | .finished => [.finish]
   conds o := match o with
     | .add 0 => []
     | .add (i + 1) => [.written i]
-    | .writeCarry i => [.summed i]
+    | .writeCarry i | .write i => [.summed i]
     | .finish => [.written 2]
     | _ => []
 
-/-- GPS's answers: achieve *finished* from the start. -/
+/-- GPS with full knowledge. -/
+abbrev gpsMEA : MEA St Op Cond := gpsWith .writeCarry
+
+/-- GPS without the carry operator: the same knowledge as `noCarry`. -/
+abbrev gpsNoCarry : MEA St Op Cond := gpsWith .write
+
+/-- GPS's answers: achieve *finished* from the start (`none`: it fails). -/
+def gpsAnswersWith (M : MEA St Op Cond) (fact : Nat → Nat → Dist Nat) (p : Problem) : Dist (Option Nat) :=
+  Dist.bind (achieve (space fact) M 12 [.finished] (init p)) fun r => Dist.pure (r.map answer)
+
 def gpsAnswers (fact : Nat → Nat → Dist Nat) (p : Problem) : Dist (Option Nat) :=
   Dist.bind (achieve (space fact) gpsMEA 12 [.finished] (init p)) fun r =>
     Dist.pure (r.map answer)
-
-/-- **GPS adds units first, though nothing says so**: the goal is only to be
-finished; subgoaling on preconditions works back to the units column. Its
-answers are the full procedure's. -/
-theorem gps_examples :
-    gpsAnswers exact ⟨15, 17⟩ = Dist.pure (some 32) ∧
-      gpsAnswers exact ⟨999, 1⟩ = Dist.pure (some 1000) ∧
-      gpsAnswers exact ⟨478, 256⟩ = Dist.pure (some 734) := by
-  decide +kernel
 
 end MD.Solver

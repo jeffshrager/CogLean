@@ -35,7 +35,10 @@ cd MultiDigit && lake build    # builds CogLib too; core Lean only
     - `noCarry_exact`: problems needing no carry are still exact;
     - `noCarry_bug`: with critics against blanks, quitting and two-digit cells, every problem is answered by adding columns without carrying;
     - `bugs_15_17`: with all four repairs, 15 + 17 gives 20, 0, 22 or 212, each with probability 1/4, one bug per repair.
-  - **Means-ends analysis (GPS):** the goal is only to be finished, yet subgoaling on preconditions works back to the units column first (`gps_examples`).
+  - **Means-ends analysis (GPS)** (`MultiDigit/SolverGPS.lean`), for every problem:
+    - **`gps_every_problem`, `gps_exact`:** GPS works units first and answers exactly. Its goal is only to be finished; the order comes from subgoaling on preconditions.
+    - **`gps_noCarry`:** without the carry operator, GPS gives up, with no answer, on exactly the problems that need a carry, and is exact on the rest.
+    - **`regimes_diverge`:** the same knowledge deficit under two control regimes. The decision cycle with repair gives the confident no-carry bug; GPS gives no answer. Both are exact when no carry is needed.
 - `MultiDigit/Learning.lean`: discrimination after a confusion removes it, and only it, and the problem is then worked out by the columns until its own associations are strengthened. The near-miss predictions hold for every net EPAM learns.
 - `MultiDigit/Features.lean`, `MultiDigit/FeaturePhenomena.lean`: further features a code may carry (zeros, magnitude as thresholds, column facts), and what confusions then keep: no confusion with a round problem once its zeros are tested; confused digits between the same tested thresholds; harmless confusions, or errors in multiples of 100, once column facts are tested.
 - `MultiDigit/Example.lean`, `MultiDigit/Example2.lean`: worked cases, a check that the theorems apply.
