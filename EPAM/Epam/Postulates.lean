@@ -25,7 +25,7 @@ theorem about EPAM can be traced to the postulates it uses.
 |---|---|
 | M0 Serial mechanism, M1 Unit processing time | `Cog.trials_at_least_items` |
 | M2 Immediate memory | not yet used |
-| M3 Anchor points: "items with features of uniqueness will be attended to first ... then ... items adjacent to those already learned" | `Cog.learnedOnTrial`, `Cog.errorsAt` |
+| M3 Anchor points: "items with features of uniqueness will be attended to first ... then ... items adjacent to those already learned" | the attention rule `Cog.before`, `Cog.attentionRank` (any anchors); `Cog.learnedOnTrial`, `Cog.errorsAt` (the ends as anchors) |
 
 The EPAM-specific content is the combination, and the parameters left to
 the experimenter: the codes, the noticing order, P2, and the learning
