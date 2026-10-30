@@ -51,7 +51,7 @@ Applying the view replaces `category`'s test and combination. The concepts' fram
 | over-extension | at 14 (`before`) | never, at any number (`after_no_overextension`) |
 | typicality | | unchanged, for every number (`typicality_unchanged`) |
 
-So after the view, typicality and membership dissociate. 14 is still more typical of *even multiple of 3* than of *multiple of 3*, and a member of neither (`dissociation`). That is Armstrong, Gleitman & Gleitman's (1983) finding for *odd number*: graded typicality for a concept whose membership is all-or-none.
+So after the view, typicality and membership dissociate (`dissociation`). 14 as an *even multiple of 3* is more typical (−16) than 9 as a *multiple of 3* (−23), yet only 9 is a member. Before the view, that is impossible: membership is a nondecreasing function of typicality (`Cog.not_dissociates`). 14 also remains more typical of *even multiple of 3* than of *multiple of 3*. That is Armstrong, Gleitman & Gleitman's (1983) finding for *odd number*: graded typicality for a concept whose membership is all-or-none.
 
 Apples are unaffected, since no view applies to them. S&O's and Hampton's results (`../Concepts/`) stand.
 

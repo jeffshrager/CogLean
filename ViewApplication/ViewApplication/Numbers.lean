@@ -26,11 +26,12 @@ not matched, so they are kept.
 * After: membership in *even multiple of 3* is exactly divisibility by 6,
   for every number (`after_exact`), so no number is ever more a member of
   the combination than of *multiple of 3* (`after_no_overextension`).
-* Typicality is unchanged, for every number (`typicality_unchanged`): 14 is
-  still more typical of *even multiple of 3* than of *multiple of 3*, though
-  now a member of neither (`dissociation`). Typicality is graded where
-  membership is all-or-none, as Armstrong, Gleitman & Gleitman (1983) found
-  for *odd number*.
+* Typicality is unchanged, for every number (`typicality_unchanged`).
+* So typicality and membership dissociate (`dissociation`): 14 as an *even
+  multiple of 3* is more typical than 9 as a *multiple of 3*, yet only 9 is
+  a member. Before the view that is impossible (`Cog.not_dissociates`).
+  Typicality is graded where membership is all-or-none, as Armstrong,
+  Gleitman & Gleitman (1983) found for *odd number*.
 -/
 
 import CogLib.Process.Categorize
@@ -213,14 +214,19 @@ theorem typicality_unchanged (n : Nat) :
     unfold adjOf; rw [show C.adjL = Lbl.adj from rfl, ha]
   exact ⟨typicality_congr C after theory mult3 hv hd n, by simp only [typicality2, hadj, hp, typicality]⟩
 
-/-- **Typicality and membership dissociate**: after the view, 14 is still
-more typical of *even multiple of 3* than of *multiple of 3*, and a member
-of neither. -/
+/-- **Typicality and membership dissociate** after the view: 14 as an *even
+multiple of 3* is more typical (−16) than 9 as a *multiple of 3* (−23), yet
+14 is not a member and 9 is. Before the view this is impossible: membership
+is a nondecreasing function of typicality (`Cog.not_dissociates`). And 14 is
+still more typical of *even multiple of 3* than of *multiple of 3*. -/
 theorem dissociation :
-    typicality C after mult3 14 < typicality2 C after even mult3 14 ∧
-      membership2 C after even mult3 14 = 0 ∧ membership C after mult3 14 = 0 := by
-  refine ⟨?_, by rw [after_exact]; decide, by rw [after_head]; decide⟩
-  rw [(typicality_unchanged 14).1, (typicality_unchanged 14).2]
-  decide +kernel
+    typicality C after mult3 9 < typicality2 C after even mult3 14 ∧
+      membership2 C after even mult3 14 < membership C after mult3 9 ∧
+      typicality C after mult3 14 < typicality2 C after even mult3 14 := by
+  refine ⟨?_, by rw [after_exact, after_head]; decide, ?_⟩
+  · rw [(typicality_unchanged 9).1, (typicality_unchanged 14).2]
+    decide +kernel
+  · rw [(typicality_unchanged 14).1, (typicality_unchanged 14).2]
+    decide +kernel
 
 end ViewApplication.Numbers

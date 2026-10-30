@@ -11,6 +11,10 @@ Phenomena of conceptual combination, for any similarity to a prototype.
   combination than of one of its constituents. Fuzzy logic's rule for
   conjunction (membership is the minimum) forbids it.
 
+* **Dissociation**: a more typical judgment that is less a member. It is
+  impossible when membership is a nondecreasing function of typicality
+  (`not_dissociates`).
+
 Over-extension follows from the conjunction effect for any nondecreasing
 membership function that rises between the two similarities
 (`overExtends_of_conjunctionEffect`), and, for yes/no judgments, at some
@@ -57,6 +61,19 @@ the combination and not of the head. -/
 def OverExtendsBinary (θ : Rat) (K : Contrast) (S : Schema A V) (comb head : Proto A V)
     (I : Inst A V) : Prop :=
   sim K S head I < θ ∧ θ ≤ sim K S comb I
+
+/-- **Typicality and membership dissociate**: of two judgments (an instance
+in a concept), the more typical is less a member. -/
+def Dissociates {β : Type} (typ mem : β → Rat) : Prop :=
+  ∃ p q, typ q < typ p ∧ mem p < mem q
+
+/-- **No dissociation when membership is a nondecreasing function of
+typicality** (the threshold model, with one function for every concept). -/
+theorem not_dissociates {β : Type} (typ : β → Rat) (m : Rat → Rat) (hm : Nondecreasing m) :
+    ¬ Dissociates typ (fun p => m (typ p)) := by
+  rintro ⟨p, q, hlt, hmem⟩
+  have := hm _ _ (Rat.le_of_lt hlt)
+  exact absurd hmem (Rat.not_lt.mpr this)
 
 /-- Under any nondecreasing membership, the conjunction effect makes `I` at
 least as much a member of the combination as of the head. -/
