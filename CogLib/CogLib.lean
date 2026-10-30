@@ -2,6 +2,7 @@ import CogLib.Rep.Features
 import CogLib.Rep.Distribution
 import CogLib.Rep.Frames
 import CogLib.Rep.SemanticNet
+import CogLib.Rep.Terms
 import CogLib.Memory.DiscriminationNet
 import CogLib.Memory.Cue
 import CogLib.Memory.Activation
@@ -12,6 +13,7 @@ import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
 import CogLib.Process.RecognizeRetrieve
 import CogLib.Process.Combination
+import CogLib.Process.ViewApplication
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
 import CogLib.Phenomena.Retriever

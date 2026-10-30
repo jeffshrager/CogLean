@@ -1,0 +1,13 @@
+name = "viewapplication"
+defaultTargets = ["ViewApplication"]
+
+[[lean_lib]]
+name = "ViewApplication"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"
+
+[[require]]
+name = "concepts"
+path = "../Concepts"
