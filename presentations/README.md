@@ -1,6 +1,6 @@
 # Presentations
 
-Six Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide). The notes are a spoken script: a paragraph per slide, written to be said more or less as is.
+Seven Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide). The notes are a spoken script: a paragraph per slide, written to be said more or less as is.
 
 | Deck | Audience | Slides |
 |---|---|---|
@@ -9,10 +9,11 @@ Six Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as s
 | `recognition-retrieval` | detailed: the multi-digit model (EPAM + DOA), confident errors, the blind simulation, swapping in ACT-R, the extracted composition, face naming, confident errors from laws | 12 |
 | `recognition-retrieval-lean` | partner to the deck above, for readers who want the proofs: the actual Lean code, layer by layer (exact distributions, the two-stage lemma, discrimination nets and Lemma A, DOA search and its closed form, the composition, `confident_errors` and a supporting lemma, memory as an interface, the bridge to multi-digit addition, laws, `studied_selfRetrieval`, `confident_errors_of_laws`, an instance, computing with `decide +kernel`, what is trusted). Each code slide is preceded by an "In words" slide stating its definitions and theorems in English, with proof sketches; read in order, they give the whole proof in words | 34 |
 | `laws-matrix-experiments` | detailed: the six laws, four families, the matrix (every setting or one setting) and evidence row, the prototype study-test, the AB/BA experiment derived from laws, forced choice | 14 |
+| `conceptual-combination` | detailed: the selective modification model (Smith, Osherson, Rips & Keane 1988) with Hampton's (2007) threshold membership; over-extension; prototypes, the contrast rule, modification; what is proved for every setting (conjunction effect, its reverse, the attribute not the value); over-extension from the conjunction effect; the paper's figures exactly; number concepts learned from exemplars, where 14 is judged an even multiple of 3 (incoherent and false); limits and rival theories | 13 |
 | `blind-simulation` | a methods talk: checking that a formalization says what the theory says. The prose specification with declared open choices, the preregistration (committed before the simulator existed), the blind AI implementer, how checks are judged (exact, 4σ, non-vacuity), the results (no failures; 5 vacuous predictions), the findings (a zero-strength gap, a prediction that depends on an open choice, ambiguities resolved the same way blind), limits, and the next round (ACT-R, PyACTUp) | 13 |
 
 ```sh
-cd presentations && make        # builds all six PDFs (pdflatex, two passes each)
+cd presentations && make        # builds all seven PDFs (pdflatex, two passes each)
 make clean                      # removes LaTeX auxiliary files
 ```
 

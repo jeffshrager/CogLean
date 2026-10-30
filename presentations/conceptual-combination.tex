@@ -1,0 +1,228 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{preamble}
+
+\title{Conceptual combination, proved}
+\subtitle{Selective modification, graded membership, and over-extension}
+\author{Jeff Shrager}
+\date{October 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+This talk is about formalizing a classic theory of conceptual combination: Smith, Osherson, Rips and Keane's selective modification model, with graded membership from Hampton's threshold model. I'll state the theory, prove its predictions for every choice of parameters, check the formalization against the paper's own figures, and then move the theory into a domain where there's a truth to compare against: number concepts. That's where it gets interesting, because there the model's over-extensions turn out to be not only incoherent but false.
+}
+
+\begin{frame}{The puzzle: over-extension}
+  \begin{itemize}
+    \item People judge some things members of a combination but not of one of its parts: a \emph{guppy} is a better \emph{pet fish} than it is a \emph{fish} or a \emph{pet} (Hampton 1988).
+    \item Fuzzy logic forbids this: membership in \emph{A and B} is at most the minimum of the two.
+    \item So combination is not intersection. What is it?
+  \end{itemize}
+  \bigskip
+  \textbf{One answer} (Smith, Osherson, Rips \& Keane 1988): the adjective \emph{modifies} the noun's prototype. Typicality and membership follow from similarity to the modified prototype.
+\end{frame}
+\note{
+Here's the puzzle. People will judge something to be a member of a combination but not of one of its parts. The classic case is the guppy, which is a better pet fish than it is a fish or a pet. Hampton showed this is systematic, and called it over-extension. Fuzzy logic can't produce it: there, membership in A and B is at most the smaller of the two memberships. So combining concepts isn't intersecting them. Smith, Osherson, Rips and Keane's answer is that the adjective modifies the noun's prototype, and that typicality and membership follow from similarity to the modified prototype.
+}
+
+\begin{frame}{Prototypes (SO1, SO2)}
+  \begin{columns}
+    \column{0.45\linewidth}
+    \small
+    \begin{tabular}{lll}
+      \toprule
+      \multicolumn{3}{l}{\textbf{apple}}\\
+      diag. & attribute & votes\\
+      \midrule
+      1 & color & red 25, green 5\\
+      .5 & shape & round 15, other 5\\
+      .25 & texture & smooth 25, rough 5\\
+      \bottomrule
+    \end{tabular}
+    \column{0.5\linewidth}
+    \begin{itemize}
+      \item A \textbf{prototype}: attributes, each with a \emph{diagnosticity}, and \emph{votes} (salience) on its values.
+      \item An \textbf{instance}: votes too, no diagnosticity. A red apple has all 30 color votes on red.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+A concept is a prototype. It lists attributes, such as color, shape and texture. Each attribute has a diagnosticity, which says how much it matters for this concept, and each value of an attribute has votes, its salience. For apple, color matters most, and most of its color votes are on red. An instance is represented the same way, without diagnosticity. In the paper's examples an instance has all its votes on an attribute on one value: a red apple has all thirty color votes on red.
+}
+
+\begin{frame}{Typicality is similarity (SO3)}
+  Tversky's contrast rule, attribute by attribute, each vote a feature:
+  \[
+    \mathrm{Sim}(P, I) = \sum_i d_i \bigl[\, a\,|P\cap I|_i - b\,|P - I|_i - c\,|I - P|_i \,\bigr]
+  \]
+  \begin{itemize}
+    \item Red apple in \emph{apple}, on color: $25$ shared, $5$ green only in the prototype, $5$ red only in the instance: $1\cdot(25 - 5 - 5) = 15$.
+    \item With $a=b=c=1$, the red apple's typicality is $15 + 2.5 + 3.75 = 85/4$. The paper prints 21.
+  \end{itemize}
+\end{frame}
+\note{
+Typicality is similarity, measured by Tversky's contrast rule. Each vote counts as a feature. On each attribute, you count the votes the prototype and instance share, the votes only the prototype has, and the votes only the instance has. Shared votes count for, distinct ones against, weighted by a, b and c, and the whole is multiplied by the attribute's diagnosticity. For the red apple on color: twenty-five shared red votes, five green votes only in the prototype, five extra red votes in the instance, so fifteen. Summing over attributes gives eighty-five quarters, which the paper rounds to twenty-one.
+}
+
+\begin{frame}{Selective modification (SO4)}
+  An adjective naming one value of one attribute (\emph{red}: color):
+  \begin{enumerate}
+    \item \textbf{selects} that attribute of the noun;
+    \item \textbf{shifts} all its votes to the value: \emph{red apple} has color red 30;
+    \item \textbf{boosts} its diagnosticity: by 2 in the paper (``an arbitrary choice''), a parameter here.
+  \end{enumerate}
+  \medskip
+  Every other attribute is unchanged.
+  \bigskip
+
+  In Lean: \code{modify S boost i0 v0 P}, in CogLib, with \code{sim\_modify}: modification changes similarity only on the selected attribute.
+\end{frame}
+\note{
+Now combination. An adjective like red names one value of one attribute. It selects that attribute in the noun's prototype, shifts all of that attribute's votes to its value, so red apple has all thirty color votes on red, and boosts the attribute's diagnosticity. The paper doubles it and calls the two an arbitrary choice, so here the boost is a parameter. Nothing else changes. In Lean this is a function called modify, in the general library, and the first lemma about it says that modification changes similarity only on the attribute it selects.
+}
+
+\begin{frame}{Membership: the threshold model (H1)}
+  \begin{columns}
+    \column{0.48\linewidth}
+    \begin{tikzpicture}[scale=0.9]
+      \draw[->] (-0.2,0) -- (5.4,0) node[right] {\small sim};
+      \draw[->] (0,-0.2) -- (0,3.2) node[above] {\small $M$};
+      \draw (0,3) node[left] {\small 1};
+      \draw[thick, blue!70!black, domain=0:1, samples=2] plot (\x, 0);
+      \draw[thick, blue!70!black, domain=1:2.5, samples=30] plot (\x, {6*((\x-1)/3)^2});
+      \draw[thick, blue!70!black, domain=2.5:4, samples=30] plot (\x, {3 - 6*((4-\x)/3)^2});
+      \draw[thick, blue!70!black, domain=4:5, samples=2] plot (\x, 3);
+      \draw (1,0.1) -- (1,-0.1) node[below] {\small $S_L$};
+      \draw (4,0.1) -- (4,-0.1) node[below] {\small $S_H$};
+    \end{tikzpicture}
+    \column{0.48\linewidth}
+    \begin{itemize}
+      \item Hampton (2007): typicality and membership are both nondecreasing functions of \emph{one} similarity.
+      \item Membership is 0 below $S_L$, 1 above $S_H$, and two quadratic pieces between (his Eq.~8).
+      \item Exactly rational: Lean computes it.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+Selective modification is a theory of typicality. To talk about over-extension we need membership, and for that I've added Hampton's threshold model. His claim is that typicality and membership both depend on one underlying similarity, and differ only in how. Membership is zero below a lower bound, one above an upper bound, and graded in between. His equation 8 makes the graded part two quadratic pieces, so it's exactly rational and Lean can compute it. This is a postulate I've added to Smith and Osherson's, and the deck says so wherever it matters.
+}
+
+\begin{frame}{What is proved, for every parameter setting}
+  For every prototype, every $a > 0$, $b, c \ge 0$, boost $\ge 1$, a diagnostic attribute, and an instance with the adjective's value:
+  \begin{itemize}
+    \item \textbf{Conjunction effect}: the instance is more typical of \emph{red apple} than of \emph{apple}. It needs only that something change: a boost above 1, or noun votes not already all on red.
+    \item \textbf{Reverse effect}: an instance with another value is \emph{less} typical of \emph{red apple}. It needs only $b + c > 0$.
+    \item \textbf{The attribute, not the value}: a red apple in \emph{red apple} is exactly as typical as a brown apple in \emph{brown apple}, for every setting (p.~495).
+  \end{itemize}
+\end{frame}
+\note{
+Here's what's proved, not computed. For every prototype and every choice of the weights and the boost, under stated conditions, three predictions hold. First, the conjunction effect: an instance with the adjective's value is more typical of the combination than of the noun. The only condition worth noting is that something must actually change. Second, the reverse effect: an instance with a different value becomes less typical, and that needs only that b plus c be positive. Third, a prediction the paper states in passing: what matters is the attribute, not the value. A red apple in red apple is exactly as typical as a brown apple in brown apple, at every parameter setting.
+}
+
+\begin{frame}{From the conjunction effect to over-extension}
+  Stated in CogLib for \emph{any} similarity, not just this model:
+  \begin{itemize}
+    \item \textbf{Yes/no membership}: if the instance is more typical of the combination, then at some criterion it is judged a member of the combination and not of the noun.
+    \item \textbf{Graded membership}: under any nondecreasing membership function, it is never less a member of the combination. Where the function rises, strictly more: over-extension.
+  \end{itemize}
+  \bigskip
+  So selective modification plus threshold membership \emph{predicts} over-extension. Fuzzy logic's min rule is violated by construction.
+\end{frame}
+\note{
+Over-extension then follows, and it's stated in the general library for any similarity, so a rival theory can be held to the same phenomenon. With yes or no judgments: if an instance is more typical of the combination, there's a criterion at which it's judged a member of the combination and not of the noun. With graded membership: under any nondecreasing membership function, the instance is never less a member of the combination, and where the function is rising, it's strictly more. So selective modification plus Hampton's threshold model predicts over-extension, and the fuzzy min rule is violated by construction.
+}
+
+\begin{frame}{Is it faithful? The paper's figures, exactly}
+  \begin{center}
+  \begin{tabular}{lrr}
+    \toprule
+    Similarity (Figs.~1--4) & paper & Lean, exact\\
+    \midrule
+    red apple in \emph{apple} & 21 & $85/4$\\
+    brown apple in \emph{apple} & $-54$ & $-215/4$\\
+    bumpy red apple in \emph{apple} & 2.5 & $5/2$\\
+    red apple in \emph{red apple} & 66 & $265/4$\\
+    brown apple in \emph{red apple} & $-114$ & $-455/4$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  The conjunction effect is 120 for \emph{brown apple} and 45 for \emph{red apple}, as on p.~495. Every value is proved by \code{decide +kernel}.
+\end{frame}
+\note{
+Is the formalization faithful to the paper? One check: the paper works an example in four figures, and we can recompute every number. They all match. The paper rounds, so twenty-one is exactly eighty-five quarters, and so on. The paper also notes that the conjunction effect is larger for the incompatible combination, brown apple, a hundred and twenty against forty-five, and that comes out too. Each of these is a theorem, checked by Lean's kernel.
+}
+
+\begin{frame}{Numbers: concepts with a truth}
+  \begin{itemize}
+    \item Attributes computed from the number: parity, last digit, digit sum mod 3, number of digits.
+    \item The truth, proved: divisible by 6 $\iff$ even and divisible by 3; the digit-sum test for 3.
+    \item \textbf{The prototype comes from experience}: \emph{multiple of 3} counts the values of the exemplars $3, 6, \dots, 30$.
+  \end{itemize}
+  \medskip
+  \small
+  \begin{tabular}{ll}
+    \toprule
+    \emph{multiple of 3} & \emph{even multiple of 3} (by SO4)\\
+    \midrule
+    parity: even 5, odd 5 & parity: even 10 \quad (diagnosticity 2)\\
+    last digit: 1 each & unchanged\\
+    digit sum mod 3: 0 $\times$ 10 & unchanged\\
+    digits: one 3, two 7 & unchanged\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+Now the move that classic studies can't make. With apples and pet fish there's no fact of the matter about membership, only people's judgments. With numbers there is. So take number concepts, with attributes computed from the number: parity, last digit, digit sum mod 3 and size. Lean proves the truths, for instance that divisible by six means even and divisible by three. And the prototype isn't chosen: multiple of three is built by counting the values of the exemplars the learner has seen, three through thirty. Even multiple of three is that prototype modified by even.
+}
+
+\begin{frame}{14 is an even multiple of 3}
+  \begin{center}
+  \begin{tabular}{lrr}
+    \toprule
+    & \emph{multiple of 3} & \emph{even multiple of 3}\\
+    \midrule
+    typicality of 14 & $-41$ & $-16$\\
+    membership of 14 & $81/1250 \approx .06$ & $497/625 \approx .80$\\
+    membership of 9 & $721/1250 \approx .58$ & \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item 14 is far more an \emph{even multiple of 3} than a \emph{multiple of 3}: \textbf{incoherent}.
+    \item And 14 is not a multiple of 3: \textbf{false}. Lean proves both.
+    \item In general: \emph{every} even number is more typical of \emph{even multiple of 3}, multiple of 3 or not.
+  \end{itemize}
+  \footnotesize $a=b=c=1$, boost 2, Hampton bounds $-50$ and $0$: chosen for illustration.
+\end{frame}
+\note{
+Here's the result. Fourteen, as an instance, is more typical of even multiple of three than of multiple of three, and with Hampton bounds chosen for illustration it's an even multiple of three to degree point eight, but a multiple of three only to degree point oh six. That's over-extension: incoherent, by fuzzy logic's standard. But here we can also say it's false, because Lean proves fourteen isn't a multiple of three. And nine, a true multiple of three, is a multiple of three only to degree point five eight, less than fourteen's degree for the combination. The general theorem says this isn't special to fourteen: every even number is more typical of the combination than of the noun.
+}
+
+\begin{frame}{What this adds}
+  \begin{itemize}
+    \item \textbf{Predictions for every setting}, with their conditions explicit, and the paper's numbers as a check.
+    \item \textbf{Phenomena stated theory-neutrally} (CogLib): conjunction effect, over-extension. A rival theory is held to the same statements, as memory families are in the theory matrix.
+    \item \textbf{A domain with truth}: over-extension separates into incoherence (judgments disagree with each other) and error (judgments disagree with the facts).
+  \end{itemize}
+\end{frame}
+\note{
+So what does this add? Three things. The model's predictions hold for every parameter setting, with their conditions written down, and the paper's own numbers check the formalization. The phenomena, the conjunction effect and over-extension, are stated in the general library without reference to this model, so a rival theory of combination can be held to exactly the same statements, the way memory families are compared in the theory matrix. And a domain with a truth lets us separate two things the literature runs together: incoherence, where judgments disagree with each other, and error, where they disagree with the facts.
+}
+
+\begin{frame}{Limits, and next}
+  \begin{itemize}
+    \item Hampton's membership function is computed but not yet proved monotone; the graded theorem assumes it rises.
+    \item Diagnosticity is set to 1 for numbers; S\&O derive it from a contrast class.
+    \item Only single-attribute adjectives, as in the paper's precise model.
+    \item \textbf{Rival theories}: view application (Shrager 1987), a very different account, combining abstract knowledge structures; relation linking for noun--noun combinations.
+    \item Hampton's over-extension data, judged as evidence.
+  \end{itemize}
+\end{frame}
+\note{
+Limits. Hampton's membership function is computed but I haven't yet proved it monotone, so the graded theorem takes its rise as a hypothesis. Diagnosticity for numbers is simply set to one, where Smith and Osherson would derive it from a contrast class. And like the paper's precise model, this handles only adjectives that name a single attribute. Next are rival theories: view application, from my 1987 paper, which is a very different account that combines abstract knowledge structures, and relation linking for noun-noun combinations. And Hampton's over-extension data, to be judged as evidence, as the memory laws are.
+}
+
+\end{document}
