@@ -1,6 +1,6 @@
 # Presentations
 
-Eight Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide). The notes are a spoken script: a paragraph per slide, written to be said more or less as is.
+Ten Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as slides with speaker notes (`deck-notes.pdf`, a notes page after each slide). The notes are a spoken script: a paragraph per slide, written to be said more or less as is.
 
 | Deck | Audience | Slides |
 |---|---|---|
@@ -11,10 +11,12 @@ Eight Beamer decks about CogLean. Each comes as slides alone (`deck.pdf`) and as
 | `laws-matrix-experiments` | detailed: the six laws, four families, the matrix (every setting or one setting) and evidence row, the prototype study-test, the AB/BA experiment derived from laws, forced choice | 14 |
 | `conceptual-combination` | detailed: the selective modification model (Smith, Osherson, Rips & Keane 1988) with Hampton's (2007) threshold membership; over-extension; prototypes, the contrast rule, modification; what is proved for every setting (conjunction effect, its reverse, the attribute not the value); over-extension from the conjunction effect; the paper's figures exactly; number concepts learned from exemplars, where 14 is judged an even multiple of 3 (incoherent and false); limits and rival theories | 13 |
 | `knowledge-concepts` | the knowledge model (semantic nets over terms) and the theories on it: semantic nets' inheritance and override; hierarchical network vs feature comparison, with distance, typicality and reversal as laws and the semantic-memory matrix; concept combination and over-extension; view application (Shrager 1987), Table 4 reproduced; an ARITHMETIC view that makes number-concept membership exact while typicality is unchanged (dissociation); choosing the view by spreading activation (Collins & Loftus 1975), the same key read differently by learners who know different things; the concept matrix | 16 |
+| `problem-solving` | problem spaces under two control regimes: means-ends analysis (GPS) and a decision cycle with impasses and repairs (repair theory; Soar); multi-column addition as a problem space; GPS works units first though its goal names no order; the bridge (the solver is the old column backup, for every problem); deleting the carry rule, impasses, four repairs and four bugs; critics select the bug (the no-carry bug for every problem); what is proved and what is not yet | 13 |
+| `multidigit-model` | the combined three-digit addition model and the theories it is built from: EPAM recognition, distributions of associations (whole problems and single-digit facts), the column backup as problem solving, memory as a parameter (EPAM or ACT-R, with laws); how they compose; what the whole predicts and from which parts; a worked case; the blind simulation; limits | 14 |
 | `blind-simulation` | a methods talk: checking that a formalization says what the theory says. The prose specification with declared open choices, the preregistration (committed before the simulator existed), the blind AI implementer, how checks are judged (exact, 4σ, non-vacuity), the results (no failures; 5 vacuous predictions), the findings (a zero-strength gap, a prediction that depends on an open choice, ambiguities resolved the same way blind), limits, and the next round (ACT-R, PyACTUp) | 13 |
 
 ```sh
-cd presentations && make        # builds all eight PDFs (pdflatex, two passes each)
+cd presentations && make        # builds all ten PDFs (pdflatex, two passes each)
 make clean                      # removes LaTeX auxiliary files
 ```
 
