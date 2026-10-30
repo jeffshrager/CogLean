@@ -1,4 +1,4 @@
-DECKS = catalog doa-simulation coglean-overview conceptual-combination knowledge-concepts problem-solving multidigit-model recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation coglean-story
+DECKS = catalog doa-simulation explanation coglean-overview conceptual-combination knowledge-concepts problem-solving multidigit-model recognition-retrieval recognition-retrieval-lean laws-matrix-experiments blind-simulation coglean-story
 
 all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 
@@ -10,7 +10,7 @@ all: $(DECKS:=.pdf) $(DECKS:=-notes.pdf)
 	pdflatex -interaction=nonstopmode -jobname=$*-notes "\def\withnotes{}\input{$*.tex}" > /dev/null
 	pdflatex -interaction=nonstopmode -jobname=$*-notes "\def\withnotes{}\input{$*.tex}" > /dev/null
 
-coglean-story.tex: gen_story.py coglean-overview.tex recognition-retrieval.tex recognition-retrieval-lean.tex blind-simulation.tex laws-matrix-experiments.tex
+coglean-story.tex: gen_story.py coglean-overview.tex recognition-retrieval.tex recognition-retrieval-lean.tex blind-simulation.tex laws-matrix-experiments.tex explanation.tex
 	python3 gen_story.py
 
 clean:

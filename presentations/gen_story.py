@@ -4,9 +4,9 @@ Run from presentations/ (the Makefile does)."""
 import re
 
 # (deck, frame title, transition note or None). A transition opens each part.
-OV, RR, LEAN, BLIND, LAWS = ("coglean-overview.tex", "recognition-retrieval.tex",
-                             "recognition-retrieval-lean.tex", "blind-simulation.tex",
-                             "laws-matrix-experiments.tex")
+OV, RR, LEAN, BLIND, LAWS, EXPL = ("coglean-overview.tex", "recognition-retrieval.tex",
+                                   "recognition-retrieval-lean.tex", "blind-simulation.tex",
+                                   "laws-matrix-experiments.tex", "explanation.tex")
 PICKS = [
     # 1. Why
     (OV, "The problem", "Part 1, why: what simulation leaves open."),
@@ -47,6 +47,8 @@ PICKS = [
     (OV, "A related approach: SFT-GMA", None),
     # 8. What is true
     (OV, "What is true here?", "Part 8, what is true: conditional results, evidence, and limits."),
+    (EXPL, "Valid is not explanatory", None),
+    (EXPL, "Explanatory distance", None),
     (LAWS, "Against the evidence", None),
     (OV, "Where this is weaker than mathematics", None),
     (OV, "Next", None),
@@ -56,6 +58,8 @@ PICKS = [
 # What to say: a paragraph per slide, used as that slide's notes in place of
 # the source deck's reminder bullets.
 SCRIPT = {
+"Valid is not explanatory": """Being true here also has a second sense. Lean guarantees that every theorem follows from its premises. It can't say whether the premises already contain the phenomenon: if a model's definition is a bowed schedule, proving it gives a bowed curve is valid and nearly worthless. So there are two standards: does it follow, which Lean settles, and how much of the behaviour was put in and how much emerged, which is a scientific judgment. Proof doesn't remove that judgment; it makes it visible.""",
+"Explanatory distance": """So we sort results by how far they are from their premises. Definitional: a restatement, like the hierarchical network's distance effect, where cost is defined as distance. Close: the pattern is largely in the mechanism. Derived: it follows from premises that don't mention it, like the no-carry bug. Compositional: it needs two or more mechanisms, like confident errors. The catalog flags results that assume a law outright, and a written audit sorts the rest; its weakest results are the work list.""",
 "TITLE": """Today I want to tell you about CogLean, a project to build a machine-checked library of cognitive theory, in the spirit of Mathlib for mathematics. I'll go in eight parts: why prove things about cognitive theories at all; one theory we've proved things about; what the proofs actually look like; how we check that the formal version says what the theory says; how to generalize beyond one model; laws of memory, and a matrix comparing families of models; experiments derived from those laws; and finally, what can count as true when the theories compete.""",
 "The problem": """Most of our theories live in prose, in simulation code, or as equations fitted to data. When we evaluate them, we usually run a model with particular parameters on particular stimuli and compare the output with data. That tells us the theory can produce a result. It doesn't tell us which of the theory's assumptions produced it, whether it would survive a different choice of parameters, or whether a rival theory would produce it just as well. Those are exactly the questions we care about when we compare theories, and they are rarely answered.""",
 "Three kinds of evidence a theory can give": """It helps to separate three kinds of evidence. One run: one model, one parameter setting; the theory can do it. Every run: one model in all its executions, by exhaustive search or parameter sweeps; that model always does it. And every model the theory allows: the postulates entail it. That third kind is a proof, and it's what CogLean is built around. A proof tells you which assumptions matter, because it uses some postulates and not others, and it distinguishes what a theory can do from what it must do. Simulation stays essential for exploring and fitting, and experiments with people still decide whether the assumptions are right.""",

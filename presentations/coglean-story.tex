@@ -635,6 +635,45 @@ We're not alone in wanting this. Fisher, Houpt, Larue and Schmidt, in the Journa
 Finally, part eight, and the question I promised. In mathematics, a proved theorem is true. Here we have competing theories, so what is true? There are three kinds of claim. That a law entails a prediction is proved, and permanent. That a family has a law is proved, and permanent. Whether people have a law is empirical, and revisable. Which theory is right follows from the second and third together, and the first two never expire, even if every model in the library is refuted.
 }
 
+\begin{frame}{Valid is not explanatory}
+  \begin{itemize}
+    \item Lean guarantees \textbf{validity}: every theorem follows from its premises, with nothing hidden.
+    \item It cannot say whether the premises \textbf{already contain} the phenomenon.
+    \item A theorem ``the model shows a bowed serial-position curve'' is worth little if the model's definition is a bowed schedule.
+    \item So two standards:
+    \begin{itemize}
+      \item \emph{formal}: does it follow? (Lean)
+      \item \emph{explanatory}: how much of the behaviour is in the premises, and how much emerges? (scientific judgment)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\note{
+Being true here also has a second sense. Lean guarantees that every theorem follows from its premises. It can't say whether the premises already contain the phenomenon: if a model's definition is a bowed schedule, proving it gives a bowed curve is valid and nearly worthless. So there are two standards: does it follow, which Lean settles, and how much of the behaviour was put in and how much emerged, which is a scientific judgment. Proof doesn't remove that judgment; it makes it visible.
+}
+
+\begin{frame}{Explanatory distance}
+  \small
+  How far is the result from its premises?
+  \medskip
+
+  \begin{tabular}{p{0.18\linewidth}p{0.34\linewidth}p{0.38\linewidth}}
+    \toprule
+    Distance & Meaning & Example\\
+    \midrule
+    Definitional & a restatement & hierarchical network: cost is distance, so a distance effect\\
+    Close & the pattern is largely in the mechanism & selective modification's conjunction effect\\
+    Derived & follows from premises that don't mention it & the no-carry bug: deletion + impasse + critics\\
+    Compositional & needs two or more mechanisms & confident errors: recognition + associations\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  The question to ask of every result: \emph{how much of the behaviour is in the premises, and how much emerges?}
+\end{frame}
+\note{
+So we sort results by how far they are from their premises. Definitional: a restatement, like the hierarchical network's distance effect, where cost is defined as distance. Close: the pattern is largely in the mechanism. Derived: it follows from premises that don't mention it, like the no-carry bug. Compositional: it needs two or more mechanisms, like confident errors. The catalog flags results that assume a law outright, and a written audit sorts the rest; its weakest results are the work list.
+}
+
 \begin{frame}{Against the evidence}
   \small
   \begin{tabular}{lcccccc}

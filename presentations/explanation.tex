@@ -1,0 +1,182 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{preamble}
+
+\title{Valid is not explanatory}
+\subtitle{What a proof about a cognitive model does and does not show, and an audit of CogLean's results}
+\author{Jeff Shrager}
+\date{October 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+This talk is about a question every formal model of cognition faces, and that proof makes sharper rather than easier: did the model explain the phenomenon, or did we build it in? I'll separate what Lean guarantees from what it can't, show how CogLean now marks the difference, walk through two cases, and report an audit of the library's results.
+}
+
+\begin{frame}{Valid is not explanatory}
+  \begin{itemize}
+    \item Lean guarantees \textbf{validity}: every theorem follows from its premises, with nothing hidden.
+    \item It cannot say whether the premises \textbf{already contain} the phenomenon.
+    \item A theorem ``the model shows a bowed serial-position curve'' is worth little if the model's definition is a bowed schedule.
+    \item So two standards:
+    \begin{itemize}
+      \item \emph{formal}: does it follow? (Lean)
+      \item \emph{explanatory}: how much of the behaviour is in the premises, and how much emerges? (scientific judgment)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\note{
+Lean guarantees validity: a theorem follows from its premises, and nothing is assumed silently. What it can't tell you is whether the premises already contain the phenomenon. If the definition of a model is a bowed schedule, then proving the model shows a bowed curve is valid and nearly worthless. So there are two standards. The formal one, does it follow, Lean settles. The explanatory one, how much of the behaviour was put in and how much emerged, is a scientific judgment, and proof doesn't make it go away; it makes it easier to see.
+}
+
+\begin{frame}{Three levels}
+  \begin{enumerate}
+    \item \textbf{A phenomenon}: a pattern observed in people (errors bowed across a list).
+    \item \textbf{A predicate}: a precise statement of the pattern, in Lean. It asserts nothing; it is a target.
+    \item \textbf{A theorem}: a mechanism, under stated conditions, produces behaviour satisfying the predicate.
+  \end{enumerate}
+  \bigskip
+  A predicate in CogLib's \code{Phenomena} is not an axiom. It becomes a result only when a mechanism is proved to satisfy it.
+\end{frame}
+\note{
+Three levels need keeping apart. A phenomenon is a pattern observed in people. A predicate is a precise statement of that pattern in Lean; it asserts nothing, it's a target. And a theorem says that some mechanism, under stated conditions, produces behaviour satisfying the predicate. The library's phenomena are predicates, not axioms: a phenomenon becomes a result only when some mechanism is proved to satisfy it.
+}
+
+\begin{frame}{Derived, or conditional?}
+  \begin{itemize}
+    \item A theorem with a phenomenon among its \emph{hypotheses} is a relation between phenomena: ``if recency, then \dots''. Valid, useful, but not a prediction of any model.
+    \item It becomes a prediction when a model \emph{discharges} the hypothesis by proving it.
+    \item The catalog now marks this mechanically: \textbf{Given}, the laws a theorem assumes.
+  \end{itemize}
+  \medskip
+  \begin{center}
+  \small
+  \begin{tabular}{lll}
+    \toprule
+    Theorem & Given & Status\\
+    \midrule
+    confident errors from laws & determinacy, certainty, stability & conditional\\
+    confident misnaming (EPAM) & --- (discharged from EPAM's cells) & derived\\
+    flat serial curve & certainty, stability & conditional\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  32 of 525 theorems are conditional on laws.
+\end{frame}
+\note{
+The first thing to make visible is what a theorem assumes. A theorem with a phenomenon among its hypotheses, if recency then something, is a relation between phenomena. It's valid and often useful, but it predicts nothing about any model. It becomes a prediction when a model proves the hypothesis. The catalog now reads this off every theorem mechanically: a column called Given lists the laws a theorem assumes. For example, confident errors from laws assumes three laws, so it's conditional; confident misnaming with EPAM discharges those laws from EPAM's own results, so it's derived. Thirty-two of the library's five hundred twenty-five theorems are conditional in this sense.
+}
+
+\begin{frame}{Explanatory distance}
+  \small
+  How far is the result from its premises?
+  \medskip
+
+  \begin{tabular}{p{0.18\linewidth}p{0.34\linewidth}p{0.38\linewidth}}
+    \toprule
+    Distance & Meaning & Example\\
+    \midrule
+    Definitional & a restatement & hierarchical network: cost is distance, so a distance effect\\
+    Close & the pattern is largely in the mechanism & selective modification's conjunction effect\\
+    Derived & follows from premises that don't mention it & the no-carry bug: deletion + impasse + critics\\
+    Compositional & needs two or more mechanisms & confident errors: recognition + associations\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  The question to ask of every result: \emph{how much of the behaviour is in the premises, and how much emerges?}
+\end{frame}
+\note{
+Beyond assumed phenomena, there's a scale of explanatory distance. A definitional result restates the definitions: in the hierarchical network, cost is defined as distance, so a distance effect is immediate. A close result has the pattern largely in the mechanism, like the conjunction effect in selective modification. A derived result follows from premises that don't mention it: the no-carry bug isn't in any one premise, it comes from deleting a rule, reaching an impasse, and the critics together. And a compositional result needs two or more mechanisms, like confident errors, which need both recognition and associations. The question for every result is how much of the behaviour is in the premises and how much emerges.
+}
+
+\begin{frame}{Case 1: the serial-position curve}
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{Before}
+    \begin{itemize}
+      \item The model was a schedule: item $i$ learned on trial $2 \times$ (distance from an end).
+      \item The bow was in the definition. Valid; close to definitional.
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{Now}
+    \begin{itemize}
+      \item A rule, over \emph{any} anchors: nearer an anchor first (EPAM's M3).
+      \item Proved: nearer is learned earlier, for any anchors.
+      \item Ends as anchors $\Rightarrow$ the serial-position effect.
+      \item A distinctive item as an anchor $\Rightarrow$ the \textbf{isolation effect}.
+    \end{itemize}
+  \end{columns}
+  \bigskip
+  Still close, but one mechanism now answers to two phenomena.
+\end{frame}
+\note{
+Here's a case where the audit led to a change. The serial-position result used to be a schedule: item i learned on trial twice its distance from an end. The bow was in the definition. Now the mechanism is a rule over any set of anchors, EPAM's postulate that distinctive items are attended first and then their neighbours. For any anchors, an item nearer an anchor is learned earlier. With the two ends as anchors, that gives the serial-position effect; with a distinctive mid-list item as another anchor, the same rule gives the isolation effect. It's still close to its premises, since the rule orders by nearness, but one mechanism now has to answer to two phenomena, which is a real test.
+}
+
+\begin{frame}{Case 2: the same deficit, two control regimes}
+  Same operators, same missing carry operator; only the control differs.
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    & no carry needed & a carry needed\\
+    \midrule
+    Decision cycle with repair & exact & confident wrong (no-carry bug)\\
+    Means-ends analysis (GPS) & exact & no answer\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item \textbf{Compositional}: knowledge $\times$ control regime.
+    \item \textbf{Discriminating}: the regimes differ in observable behaviour, with knowledge held constant.
+    \item Proved for every problem.
+  \end{itemize}
+\end{frame}
+\note{
+The second case is the strongest kind of result. Hold the knowledge fixed, the same operators with the same carry operator missing, and change only the control regime. The repair-theory solver gives a confident wrong answer, the no-carry bug; means-ends analysis gives up with no answer; on problems with no carries, both are exact. It's compositional, because it needs both the knowledge and the control regime, and it's discriminating, because the regimes differ in observable behaviour with knowledge held constant. And it's proved for every problem.
+}
+
+\begin{frame}{What the audit found}
+  \small
+  \begin{itemize}
+    \item \textbf{Strongest}: compositional results: confident errors; the arithmetic view (over-extension gone, typicality kept); the two regimes.
+    \item \textbf{Derived}: the no-carry bug; GPS's units-first order; the isolation effect; DOA's counting error share; EPAM's oscillation.
+    \item \textbf{Close}: serial position; the conjunction effect; DOA's closed forms.
+    \item \textbf{Definitional}: the hierarchical network's costs; properties of algorithms (soundness, merges), which are library facts, not explanations.
+    \item \textbf{Premises still unexplained}: sharp associations (assumed in every confident-errors result); prior associations; which items are anchors.
+  \end{itemize}
+  \medskip
+  A judgment, written down (\code{notes/EXPLANATORY\_AUDIT.md}); its weakest results are the targets.
+\end{frame}
+\note{
+The audit sorted the library's headline results. The strongest are compositional: confident errors, the arithmetic view that removes over-extension while keeping typicality, and the two control regimes. Several are derived from premises that don't mention them: the no-carry bug, GPS's units-first order, the isolation effect. Some are close, like the serial-position effect and the conjunction effect. Some are definitional, including properties of the algorithms themselves, which are useful library facts but explain nothing on their own. And some premises are still unexplained: sharp associations, which every confident-errors result assumes; prior associations; and which items count as anchors. Those are the targets.
+}
+
+\begin{frame}{Conventions, not a checker}
+  \begin{itemize}
+    \item Phenomena are \textbf{targets}, not premises.
+    \item A theorem with a law among its hypotheses is \textbf{named and flagged} as conditional.
+    \item Docstrings say which premises are \textbf{postulates} and which are \textbf{conditions}.
+    \item Properties of algorithms are not presented as explanations.
+    \item When a result is close to its definitions, say so, and look for a \textbf{second consequence} of the same mechanism.
+  \end{itemize}
+  \bigskip
+  Why not a checker? ``Who checks the checker?'' Lean already shows every premise; what remains is judgment, and the right place for it is in the open.
+\end{frame}
+\note{
+So, conventions rather than machinery. Phenomena are targets. A theorem with a law among its hypotheses is named and flagged as conditional, and the catalog does the flagging. Docstrings say which premises are postulates and which are conditions. Algorithm properties aren't presented as explanations. And when a result is close to its definitions, say so, and look for a second consequence of the same mechanism, as the isolation effect was for the serial-position rule. We considered a special checker for explanatory proofs and decided against it: who checks the checker? Lean already shows every premise; what remains is judgment, and the right place for that is written down, in the open.
+}
+
+\begin{frame}{Next}
+  \begin{itemize}
+    \item The audit's weakest results: a process for semantic search, so distance effects are derived, not defined; sharp associations derived from learning; anchors derived from features.
+    \item \textbf{A composition designed around this principle}: practising while sleepy. Fatigue raises errors; learning retains some of them; they persist when alert, unless feedback corrects them first. Stated with each premise marked as postulate, condition, or empirical premise awaiting explanation, and with the boundary cases as theorems too.
+  \end{itemize}
+\end{frame}
+\note{
+Next. The audit's weakest results are the work list: a process model of semantic search, so the distance effect is derived instead of defined; sharp associations derived from learning rather than assumed; and anchors derived from features. And a composition designed from the start around this principle: practising while sleepy. Fatigue raises errors; learning retains some of them; they persist when alert, unless feedback corrects them first. It would be stated with every premise marked as a postulate, a condition, or an empirical premise awaiting explanation, and with the boundary cases, where feedback prevents the effect, proved too.
+}
+
+\end{document}
