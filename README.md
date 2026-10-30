@@ -109,6 +109,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **Problem solving** (CogLib `Process/ProblemSolving`, `MultiDigit/Solver.lean`): problem spaces under means-ends analysis (GPS) and a decision cycle with impasses and repairs (repair theory; Soar). Multi-digit addition's column backup becomes problem solving, proved to answer exactly as before (`bridge`); deleting the carry rule yields impasses whose repairs are the classic addition bugs, one bug per repair; and GPS works units-first though its goal names no order.
 
+**Simulations** (`Sims/`): the library's definitions run as simulations, with seeded sampling checked against the exact distributions. The first is Siegler & Shrager's learning simulation, compared with the chapter's Fig. 9.8 ([`notes/SC_simulation_RESULTS.md`](notes/SC_simulation_RESULTS.md)). Nothing in the library depends on `Sims/`.
+
 **Memory as a parameter.** CogLib's `Retriever` interface lets a theory leave its memory open. Discrimination nets and ACT-R's declarative memory (decay 1 and temperature 1, where it is exactly rational) are two instances. The multi-digit model is stated for any memory, and run with both.
 
 **The theory matrix** (`CogMatrix/`): 6 laws of retrieval × 4 families of memory (discrimination, activation, strength, global matching), each cell a theorem: the family has the law at every parameter setting, never has it, or lacks it at one setting (a counterexample). Every law separates some families, and every family has its own row ([`notes/MATRIX.md`](notes/MATRIX.md)). This is the direction for the library as a whole ([`notes/PROSPECTUS.md`](notes/PROSPECTUS.md)).
@@ -173,4 +175,5 @@ cd MultiDigit && lake build        # builds CogLib, then the combined multi-digi
 cd Concepts && lake build          # builds CogLib, then conceptual combination
 cd SemanticMemory && lake build    # builds CogLib, then semantic memory
 cd ViewApplication && lake build   # builds CogLib and Concepts, then view application
+cd Sims && lake build && lake exe sc-learning   # simulations
 ```

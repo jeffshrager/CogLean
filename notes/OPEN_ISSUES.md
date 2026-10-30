@@ -19,7 +19,7 @@
 ## Next theories
 
 8. **Strategy choice** (Siegler & Shrager 1984), in `StrategyChoice/`. Done: postulates A1-A5, the trial, the closed-form phenomena, six rows of Fig. 9.2A with exact predictions. To do:
-   - The learning simulation (A6 itself is now stated: `SC.strengthen`, `correct_strengthening_lowers_errors`) (Python prototype, checked against the chapter: after 2000 trials 1+4 has 77% of its strength at 5 vs 46% for 2+3; 4+1 peaks at .80 vs .51 for 3+2). Needs the original simulation code for what the chapter leaves open: the size of the counting-string prime, the increment, the skip and double-count probabilities, how the criterion and search length are drawn.
+   - The learning simulation now runs from the Lean model (`Sims/`, `notes/SC_simulation_RESULTS.md`): the frequency and counting-string effects reproduce (the latter only with a large prime, .2); the sum effect does not. Earlier: the learning simulation (A6 itself is now stated: `SC.strengthen`, `correct_strengthening_lowers_errors`) (Python prototype, checked against the chapter: after 2000 trials 1+4 has 77% of its strength at 5 vs 46% for 2+3; 4+1 peaks at .80 vs .51 for 3+2). Needs the original simulation code for what the chapter leaves open: the size of the counting-string prime, the increment, the skip and double-count probabilities, how the criterion and search length are drawn.
    - The full 25-problem Fig. 9.2A (the OCR of the scan is garbled; transcribe and check, or take from the code).
    - Solution times (expected searches) and the strategies' time ordering.
    - A theory-neutral statement of strategy-choice phenomena in `CogLib/Phenomena/` (a strategy-chooser interface), so ACT-R can be tested against the same statements.

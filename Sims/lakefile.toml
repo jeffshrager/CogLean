@@ -1,0 +1,21 @@
+name = "sims"
+defaultTargets = ["Sims", "sc-learning", "sc-check"]
+
+[[lean_lib]]
+name = "Sims"
+
+[[lean_exe]]
+name = "sc-learning"
+root = "Sims.SCLearningMain"
+
+[[lean_exe]]
+name = "sc-check"
+root = "Sims.SCCheckMain"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"
+
+[[require]]
+name = "strategychoice"
+path = "../StrategyChoice"
