@@ -86,3 +86,20 @@ Stages 1–3 are moderate and need no change to the CMC. Stage 4 is substantial 
 
 - **The CMC:** concrete, proved instances of its slots drawn from established cognitive theories (EPAM, distributions of associations, ACT-R memory, repair theory). Also a test of the specification against real mechanisms, and a route for stochastic architectures to conform.
 - **CogLean:** an architecture-level framework above its mechanisms, so its theories compose into a whole mind under shared, community-agreed commitments. Its task models gain an architecture to run on.
+
+## Addendum: placement, revised after discussion (2026-10-30)
+
+The proposal above places the CMC in a separate package, with CogLib architecture-neutral. After discussion, the preferred placement is different, pending John's view.
+
+**The CMC is both inside and above CogLib.**
+- **Inside**, because it is task-general, which is CogLib's criterion for membership.
+- **Above** the lower layers within CogLib: memories, control, processes. Those are what fill its slots.
+- **Below** every task model (EPAM, StrategyChoice, MultiDigit and the rest), which would run on an architecture assembled from it.
+
+So "above" and "inside" are relative to different things: above the mechanisms, inside the task-general library.
+
+**Consequences:**
+- **The specification imports nothing.** Laird's `Arch` is abstract, so `CogLib/Architecture/CMC.lean` would import nothing from CogLib. The conformance proofs (EPAM retrieval fills `retrieve`, the decision cycle fills `select`) would be modules in the same layer, importing both the specification and the mechanisms. Dependencies still run upward, with no cycles.
+- **A top layer, not a ceiling.** Some task-general content is not architectural (the verification laws, concept combination, the theory matrix's laws). It sits beside the architecture layer, unconstrained by it.
+- **The probabilistic CMC becomes natural.** A distribution-valued CMC fits inside CogLib, where `Dist` already lives.
+- **Provenance:** Laird's original files are kept alongside the ported version, with the port's differences listed. Whether he is comfortable with the specification living inside CogLib is a question for him.

@@ -74,4 +74,5 @@
     - Similarity as a random variable (SSR's form), with costs as distributions; false responses (relatedness effect; C&Q's contradiction and search-and-destroy hypotheses).
     - Rips, Shoben & Smith (1973), for the typicality evidence (not yet in `../papers/`).
     - Then view application (#19) as operations on these nets: type matching, merge, coercion, binding.
+22. **The Common Model of Cognition, and learnability** (recorded, not started; waiting on John Laird). Laird's Lean CMC specification is ported to 4.35 in a scratch copy (292 theorems check). Proposal: `20261030_CMC_CogLean_proposal.md`, with its addendum: the CMC inside CogLib as its top, task-general layer, which CogLib's mechanisms fill. The architecture-versus-model question: `20261030_architecture_vs_model.md`. Learnability candidates: `LEARNABILITY.md` (DOA sharpness first).
 
