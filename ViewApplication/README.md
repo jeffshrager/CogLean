@@ -55,9 +55,34 @@ So after the view, typicality and membership dissociate (`dissociation`). 14 as 
 
 Apples are unaffected, since no view applies to them. S&O's and Hampton's results (`../Concepts/`) stand.
 
+## Selecting the view by spreading activation (`Selection.lean`)
+
+The 1987 paper had no principled account of view selection (§3.4.1). Here selection is **spreading activation** (Collins & Loftus 1975; CogLib `Process/SpreadingActivation`), run over the same knowledge net that holds the learner's theory and the views' associations.
+
+- Activation starts at the cue (a key's label) and at the concepts the current theory uses.
+- It spreads along `suggests` links, each passing on a fraction set by its strength.
+- A view is chosen in proportion to its activation.
+- The chosen view is then applied.
+
+So the composition is a mixture, the same shape as recognition followed by retrieval in MultiDigit.
+
+**Proved generally (CogLib):**
+- activation from several sources sums, which is C&L's assumption 4;
+- activation is never negative;
+- priming never lowers any node's activation;
+- priming a candidate never lowers its share of the choice.
+
+**The example: a hypothetical device with a "+" key.**
+- "+" suggests a CALCULATING view ("+" adds to the display) and, more weakly, a PROGRAMMING view ("+" appends a step).
+- *Memory* suggests PROGRAMMING.
+- A learner whose theory has no memory reads "+" as adding with probability 2/3 (`naive`).
+- A learner whose theory already has a memory reads it as appending a step with probability 3/5 (`primed`).
+
+The same cue brings in different knowledge depending on what the learner already knows. The strengths are illustrative.
+
 ## Not yet
 
-- **View selection** (§3.4.1), for instance by EPAM recognition of a cue such as a label.
+- **View selection by EPAM recognition** of cues, as an alternative to spreading activation. Also C&L's decision process: evidence summed toward positive and negative criteria.
 - **Learning the view itself.**
 - **Holding the feature comparison model's `Meaning`s in knowledge nets.** S&O prototypes already are held in nets (`protoOfNet`); SSR's features aren't yet.
 - **Coercion, binding and single function are minimal general forms** of what the paper describes in prose. The paper calls their heuristics partly domain-specific.
