@@ -85,6 +85,21 @@ theorem prob_not_above (as : List α) (s : α → Rat) (cc : Rat) (hT : total as
   rw [mass_sample as s hT] at h
   simp only [reach]; grind
 
+/-- Retrieval from positive total strength is a proper distribution. -/
+theorem mass_search (as : List α) (s : α → Rat) (cc : Rat) (hT : total as s ≠ 0) :
+    ∀ n k, mass (search as s cc k n) = 1 := by
+  intro n
+  induction n with
+  | zero => intro k; exact mass_pure _
+  | succ n ih =>
+    intro k
+    simp only [search]
+    apply mass_bind _ _ (mass_sample as s hT)
+    intro a
+    split
+    · exact mass_pure _
+    · exact ih _
+
 /-- **Exhaustion.** With search length `n`, retrieval is exhausted with
 probability `(1 - R)^n`. -/
 theorem prob_exhausted (as : List α) (s : α → Rat) (cc : Rat) (hT : total as s ≠ 0) :

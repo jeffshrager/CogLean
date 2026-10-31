@@ -45,6 +45,9 @@ Where the result names its own theory as "derived", the question to ask is the m
 | `SC.peaking_can_raise_overt_use` | postulates; one setting | derived (counterexample) | Refutes an informal claim of the chapter at one setting. |
 | `MD.confident_errors` | postulates: EPAM and DOA; conditions: the net confuses x with q, sharp associations | compositional | Confusion is derived for learned nets elsewhere (`near_miss_*_learned`). Sharp associations remain a condition. |
 | `MD.column_error_is_doa_error` | postulates: column backup and DOA facts | compositional | — |
+| `Integrated.integrated_confident_errors`, `errors_two_sources` | postulates: EPAM, DOA (whole-problem and single-digit), the decision-cycle solver; conditions: confusion (from the learned net), sharp associations, proper strengths | compositional | Confident errors with a computed backup, so no route is handed the answer. A second consequence: the column route's errors are the single-digit DOA errors, scaled to their column, so a confused problem has two sources of error with different signatures. |
+| `Integrated.whole_independent_of_solver` | the same | compositional | A better solver cannot repair a whole-problem error. |
+| `Integrated.setting_*` | the above, at chosen numbers | instance | Values at one setting (150 + 100 answered 200 with probability about .978). An illustration, not evidence. |
 | `Solver.bridge` | two formalizations | definitional (an equivalence) | It licenses replacing the backup; it predicts nothing itself. |
 | `Solver.noCarry_bug` | postulates: the procedure with the carry rule deleted, repair heuristics, critics | derived | The bug isn't in any one premise. It comes from the deletion, the impasse and the critics together. |
 | `Solver.noCarry_exact` | the same | derived | A learner lacking carrying looks competent without carries. |

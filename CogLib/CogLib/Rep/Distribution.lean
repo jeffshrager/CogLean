@@ -204,6 +204,120 @@ theorem possible_pure {a b : α} : Possible (pure a) b ↔ b = a := by
   · intro h
     exact ⟨1, by simp [pure, h], by decide⟩
 
+/-- **Proper stages make a proper process.** If the first stage and every
+second stage are proper distributions, so is the two-stage process. -/
+theorem mass_bind (d : Dist α) (f : α → Dist β) (hd : mass d = 1) (hf : ∀ a, mass (f a) = 1) :
+    mass (bind d f) = 1 := by
+  simp only [mass] at hd hf ⊢
+  rw [prob_bind_split d f _ (fun _ => true) (fun _ => false) 0 (fun a => by simp [hf a]; grind)]
+  rw [hd]; grind
+
+theorem mass_pure (a : α) : mass (pure a) = 1 := by simp [mass, prob_pure]
+
+/-! ### Merging equal outcomes
+
+Outcomes may repeat, so a many-stage process can be a long list. `merge`
+adds up the weights of equal outcomes. It changes no probability, before or
+after a further stage (`prob_bind_merge`), so a merged distribution can stand
+in for the original wherever only probabilities matter. -/
+
+/-- The weighted average of `h` over `d`. -/
+def expect (d : Dist α) (h : α → Rat) : Rat := (d.map fun ap => ap.2 * h ap.1).sum
+
+/-- Add weight `p` to outcome `a`. -/
+def addTo [DecidableEq α] (a : α) (p : Rat) : Dist α → Dist α
+  | [] => [(a, p)]
+  | (b, q) :: d => if a = b then (b, q + p) :: d else (b, q) :: addTo a p d
+
+/-- Equal outcomes, merged. -/
+def merge [DecidableEq α] : Dist α → Dist α
+  | [] => []
+  | (a, p) :: d => addTo a p (merge d)
+
+theorem expect_addTo [DecidableEq α] (a : α) (p : Rat) (h : α → Rat) (d : Dist α) :
+    expect (addTo a p d) h = p * h a + expect d h := by
+  induction d with
+  | nil => simp [addTo, expect]
+  | cons x d ih =>
+    obtain ⟨b, q⟩ := x
+    by_cases hab : a = b
+    · subst hab; simp [addTo, expect, Rat.add_mul]; grind
+    · simp only [addTo, hab, ite_false]
+      simp only [expect, List.map_cons, List.sum_cons] at ih ⊢
+      rw [ih]; grind
+
+theorem expect_merge [DecidableEq α] (d : Dist α) (h : α → Rat) :
+    expect (merge d) h = expect d h := by
+  induction d with
+  | nil => rfl
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    simp only [merge, expect_addTo, ih]
+    simp [expect]
+
+/-- **Merging changes no probability**, even after a further stage. -/
+theorem prob_bind_merge [DecidableEq α] (d : Dist α) (f : α → Dist β) (e : β → Bool) :
+    prob (bind (merge d) f) e = prob (bind d f) e := by
+  rw [prob_bind_sum, prob_bind_sum]
+  exact expect_merge d fun a => prob (f a) e
+
+theorem prob_merge [DecidableEq α] (d : Dist α) (e : α → Bool) : prob (merge d) e = prob d e := by
+  have h := prob_bind_merge d pure e
+  rwa [bind_pure_right, bind_pure_right] at h
+
+/-- A second stage enters an event's probability only through that event's
+probability after each first-stage outcome. -/
+theorem prob_bind_congr {γ : Type} (d : Dist α) (f g : α → Dist γ) (e : γ → Bool)
+    (h : ∀ a, prob (f a) e = prob (g a) e) : prob (bind d f) e = prob (bind d g) e := by
+  rw [prob_bind_sum, prob_bind_sum]
+  congr 1
+  apply List.map_congr_left
+  intro x _
+  rw [h]
+
+/-- Two lists are the **same distribution** when every weighted average,
+and so every probability, agrees on them, however their outcomes are listed. -/
+def Same (d d' : Dist α) : Prop := ∀ h : α → Rat, expect d h = expect d' h
+
+theorem prob_eq_expect (d : Dist α) (e : α → Bool) :
+    prob d e = expect d fun a => if e a then 1 else 0 := by
+  induction d with
+  | nil => rfl
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    simp only [prob, ih, expect, List.map_cons, List.sum_cons]
+    split <;> grind
+
+theorem Same.prob {d d' : Dist α} (h : Same d d') (e : α → Bool) : prob d e = prob d' e := by
+  rw [prob_eq_expect, prob_eq_expect, h]
+
+theorem Same.refl (d : Dist α) : Same d d := fun _ => rfl
+
+theorem same_merge [DecidableEq α] (d : Dist α) : Same (merge d) d := expect_merge d
+
+theorem expect_bind (d : Dist α) (f : α → Dist β) (h : β → Rat) :
+    expect (bind d f) h = expect d fun a => expect (f a) h := by
+  induction d with
+  | nil => rfl
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    have hs : ∀ l : Dist β, ((l.map fun (b, q) => (b, p * q)).map fun bq => bq.2 * h bq.1).sum =
+        p * (l.map fun bq => bq.2 * h bq.1).sum := by
+      intro l
+      induction l with
+      | nil => simp
+      | cons y l ihl => obtain ⟨b, q⟩ := y; simp only [List.map_cons, List.sum_cons] at ihl ⊢; rw [ihl]; grind
+    simp only [bind, expect, List.map_append, List.sum_append, List.map_cons, List.sum_cons] at ih ⊢
+    rw [ih, hs]
+
+/-- **Same stages, same process.** -/
+theorem same_bind {d d' : Dist α} {f g : α → Dist β} (hd : Same d d') (hf : ∀ a, Same (f a) (g a)) :
+    Same (bind d f) (bind d' g) := by
+  intro h
+  rw [expect_bind, expect_bind, hd]
+  have : (fun a => expect (f a) h) = (fun a => expect (g a) h) := funext fun a => hf a h
+  rw [this]
+
 /-! ### Sampling in proportion to strength -/
 
 /-- The total strength of the outcomes in `as` that satisfy `e`. -/

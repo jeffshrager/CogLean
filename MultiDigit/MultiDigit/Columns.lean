@@ -125,6 +125,20 @@ theorem doaFact_wrong (as : List Nat) (s : SC.Problem → Nat → Rat) (bk : SC.
       prob (SC.trial as (s ⟨d, e⟩) bk cc n ⟨d, e⟩) (fun o => o.2 != d + e) :=
   prob_bind_pure _ _ _
 
+/-- Proper single-digit processes make a proper column backup. -/
+theorem mass_columns (fact : Nat → Nat → Dist Nat) (hf : ∀ d e, mass (fact d e) = 1)
+    (p : Problem) : mass (columns fact p) = 1 :=
+  mass_bind _ _ (hf _ _) fun _ => mass_bind _ _ (hf _ _) fun _ =>
+    mass_bind _ _ (hf _ _) fun _ => mass_pure _
+
+/-- The DOA single-digit process is proper when its associations, and those
+elaborated on the fingers, have positive total strength. -/
+theorem mass_doaFact (as : List Nat) (s : SC.Problem → Nat → Rat) (bk : SC.Backup) (cc : Rat)
+    (n d e : Nat) (hT : total as (s ⟨d, e⟩) ≠ 0)
+    (hE : total as (SC.elaborate (s ⟨d, e⟩) (d + e) bk.e) ≠ 0) :
+    mass (doaFact as s bk cc n d e) = 1 :=
+  mass_bind _ _ (SC.mass_trial as _ bk cc n ⟨d, e⟩ hT hE) fun _ => mass_pure _
+
 /-- **A column error is a single-digit DOA error, moved to its place.** With
 DOA adding the columns, if two columns are certain, the problem is wrong
 exactly as often as the DOA trial on the third column's digits. -/

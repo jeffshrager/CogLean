@@ -25,8 +25,9 @@ the criterion, the search length and the backup are all parameters, and the
 theorems in `Phenomena.lean` hold for every choice of them.
 
 Simplifications:
-* The backup is left abstract: any distribution of answers. Building it from
-  single-digit DOA trials chained by carries is the next stage.
+* The backup is left abstract: any distribution of answers. The theorems
+  hold for every backup. `Integrated.lean` fills it with the column problem
+  solver (`Solver.lean`) adding each column by a single-digit DOA trial.
 * Strengths are attached to stored codes. A code stores the problem it
   encodes (`select` returns `code q`), so a stored image's "correct" answer
   is `q`'s sum.

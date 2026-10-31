@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-184 theorems: 179 general, 5 instances; 75 headline; 24 about laws; 20 conditional on laws.
+198 theorems: 193 general, 5 instances; 78 headline; 24 about laws; 20 conditional on laws.
 
 **Laws**
 
@@ -110,12 +110,15 @@ How to read it:
 | `Cog.choose_primed` | general | — | Priming a candidate raises its share: if extra activation reaches candidate `v` by `δ` and no other candidate at all, `v`'s share of the total activation does not fall. |
 | `Cog.merge_view_wins` | general | — | On a matched frame the view wins: where the view says something about a slot of frame `v`, the merged net says exactly what the view says, provided only matched theory frames are renamed to `v`. |
 | `Cog.Dist.bind_assoc` | general | — | Two-stage draws regroup. |
+| `Cog.Dist.mass_bind` | general | — | Proper stages make a proper process. If the first stage and every second stage are proper distributions, so is the two-stage process. |
 | `Cog.Dist.prob_bind_cons` | general | — | Two stages. |
 | `Cog.Dist.prob_bind_ite` | general | — | A two-valued second stage. If the event has probability `c` after each first-stage outcome in `g`, and `c'` after each outcome not in it, its probability overall is `c` times the chance of `g` ... |
+| `Cog.Dist.prob_bind_merge` | general | — | Merging changes no probability, even after a further stage. |
 | `Cog.Dist.prob_bind_pure` | general | — | Relabelling. Drawing from `d` and then certainly giving `g a` is drawing from `d` and asking of `g a`. |
 | `Cog.Dist.prob_bind_split` | general | — | A second stage that is certain on one set and constant on another. If the event is certain after first-stage outcomes in `g₁`, has probability `c` after those in `g₂`, and is impossible otherwi... |
 | `Cog.Dist.prob_bind_sum` | general | — | A mixture. The probability of an event after a two-stage process is the sum, over first-stage outcomes, of each one's probability times the event's probability after it. |
 | `Cog.Dist.prob_sample` | general | — | Sampling. An event's probability is its share of the total strength. |
+| `Cog.Dist.same_bind` | general | — | Same stages, same process. |
 | `Cog.Dist.strengthIn_mono` | general | — | Less strength, in a smaller event, is less total strength. If every outcome in `e'` under strengths `s'` is in `e` with at least as much strength under `s`, the total strength of `e'` under `s'... |
 | `Cog.SemNet.findVal_spec` | general | — | A property value is found at the first level storing it, when no lower level stores it or, for a single-valued property, any other value. |
 | `Cog.SemNet.isaDist_spec` | general | — | Distance is the least level containing the target. |
@@ -163,7 +166,7 @@ How to read it:
 
 ## Strategy choice: distributions of associations
 
-16 theorems: 11 general, 5 instances; 9 headline; 0 about laws; 0 conditional on laws.
+20 theorems: 15 general, 5 instances; 11 headline; 0 about laws; 0 conditional on laws.
 
 **Headline theorems**
 
@@ -171,8 +174,10 @@ How to read it:
 |---|---|---|---|
 | `SC.Data.predicted_overt_order` | instance | — | Predicted overt strategy use, by problem: least on 1+1, then 2+2, 1+2, 1+3, 3+3, and most on 2+3. |
 | `SC.Data.retrieval_never_errs_2_2` | instance | — | On 2+2, retrieval never errs: at every one of the twelve criteria, no wrong answer's strength exceeds the criterion while the correct one's does (.80; the largest wrong strength is .05, not abo... |
+| `SC.same_trialMerged` | general | — | The merged trial is the trial, as a distribution. |
 | `SC.correct_strengthening_lowers_errors` | general | — | Learning from a correct answer never raises retrieval errors (A6). |
 | `SC.counting_error_share` | general | — | The error share on counting trials is the counting process's error rate on the sum: it involves neither the associations, nor the criterion, nor the search length (p. 245). |
+| `SC.mass_trial` | general | — | A trial is a proper distribution when the associations, and the associations elaborated on the fingers, have positive total strength. |
 | `SC.peaking_can_raise_overt_use` | instance | — | Peaking can raise overt strategy use. Moving strength to the correct answer, already the peak, raises the overt strategy use predicted with search length 1, averaged over the chapter's twelve c... |
 | `SC.peaking_lowers_retrieval_errors` | general | — | Moving strength to the correct answer never raises the error share on retrieval trials, at any confidence criterion and search length. |
 | `SC.retrieval_error_share` | general | — | The error share on retrieval trials is the wrong answers' share of the strength above the criterion, whatever the search length. |
@@ -181,7 +186,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-144 theorems: 124 general, 20 instances; 56 headline; 1 about laws; 5 conditional on laws.
+164 theorems: 138 general, 26 instances; 66 headline; 1 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -227,6 +232,16 @@ How to read it:
 | `MD.facts_tested_harmless` | general | — | So the confusion costs nothing: whole-problem retrieval errs on `x` exactly as often as on `q`. |
 | `MD.round_confusion_exact` | general | — | Confusion with a round problem is exact. Let `q` be round, and let `x`'s path test the zeros of both addends' tens and units, and both hundreds digits. |
 | `MD.threshold_diffs` | general | — | Close digits share features. Two digits differ on exactly `/d - e/` of the nine thresholds, so they agree on `9 - /d - e/`. |
+| `MD.Integrated.columnsSuch_prob` | general | — | The column route, factored. When `x` is recognized as `y`, an answer with property `P` comes by the column route with probability: the chance that retrieval is exhausted, times the chance that ... |
+| `MD.Integrated.errors_two_sources` | general | — | Two sources of error on a confused problem. Under the same conditions, `x` is answered wrongly by whole-problem retrieval whenever that route is taken, and wrongly by the column route with prob... |
+| `MD.Integrated.integrated_confident_errors` | general | — | Confident errors, with the solver as backup. Given that the net recognizes `q` as itself and confuses `x` with it, that `q`'s associations are sharp, and that the DOA strengths are proper: * wh... |
+| `MD.Integrated.setting_confident_errors` | instance | — | Confident errors in the setting: the conditional theorem, its conditions met by the net EPAM learned and the chosen strengths. |
+| `MD.Integrated.setting_overall_q1` | instance | — | 100 + 100 overall: correct with probability about .993, by retrieval (45/46) and by the solver (1/46 × about .664). |
+| `MD.Integrated.setting_overall_x` | instance | — | 150 + 100 overall: answered 200 with probability about .978 (almost all by whole-problem retrieval), and correctly, 250, only by the solver, with probability (1/46) × the solver's .656. |
+| `MD.Integrated.setting_routes` | instance | — | 150 + 100, recognized as 100 + 100. Whole-problem retrieval answers 200 with probability 45/46, as with the given backup of `Example`; the solver is invoked with probability 1/46. |
+| `MD.Integrated.setting_solver_x` | instance | — | The solver on 150 + 100: 250 with probability about .656. |
+| `MD.Integrated.solver_error_is_doa_error` | general | — | A solver error is a single-digit DOA error, moved to its place. If two columns' DOA trials are certain, the solver is wrong exactly as often as the DOA trial on the third column's digits (`colu... |
+| `MD.Integrated.whole_independent_of_solver` | general | — | Whole-problem answers do not depend on the solver. Once `x` is recognized as `y`, the chance of a whole-problem answer with property `P` is that of retrieval on `y`'s associations, whatever the... |
 | `MD.discrimination_removes_confusion` | general | — | Discrimination removes a confusion, and only that. Let `x` be confused with `q` in a clean net, and let `x`'s code be noticeably different from every stored image. |
 | `MD.discrimination_then_columns` | general | — | After discrimination, the columns. A problem recognized as itself whose own associations do not yet clear the criterion falls back on the columns on every trial. |
 | `MD.near_miss_200_learned` | general | — | Near misses within 200, for any net EPAM learns from empty. |
@@ -422,13 +437,13 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 184 | 179 | 5 | 24 | 20 | 75 |
+| CogLib: the general library | 198 | 193 | 5 | 24 | 20 | 78 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
-| Strategy choice: distributions of associations | 16 | 11 | 5 | 0 | 0 | 9 |
-| Multi-digit addition (with the problem solver) | 144 | 124 | 20 | 1 | 5 | 56 |
+| Strategy choice: distributions of associations | 20 | 15 | 5 | 0 | 0 | 11 |
+| Multi-digit addition (with the problem solver) | 164 | 138 | 26 | 1 | 5 | 66 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 0 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 525 | 422 | 103 | 74 | 32 | 224 |
+| **All** | 563 | 454 | 109 | 74 | 32 | 239 |

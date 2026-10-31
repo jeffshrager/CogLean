@@ -29,6 +29,7 @@
 12. **Multi-digit addition** (`MultiDigit/`, EPAM + DOA). Done:
     - postulates M1-M5 and predictions 1-12 (`MultiDigit_PREDICTIONS.md`);
     - the column backup from single-digit DOA trials;
+    - the integrated model (`Integrated.lean`): recognition, whole-problem retrieval, and on failure the column solver with DOA single-digit facts, so no route is handed the answer. 150 + 100's confident error is kept, with the solver's own errors computed. Its single-digit associations are one chosen rule for every digit pair (sum 4/5, next count 3/25, the rest 1/100), not grounded in experience (see #18);
     - discrimination after confusion;
     - nets learned by EPAM are clean (`learnAll_clean`);
     - further features (M1a–M1c: zeros, magnitude, column facts) and Predictions 13–18 (`FeaturePhenomena.lean`).

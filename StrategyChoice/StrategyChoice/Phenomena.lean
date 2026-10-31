@@ -129,6 +129,24 @@ theorem mass_count (qs qd : Rat) : ∀ k, mass (count qs qd k) = 1 := by
     · simp only [mass] at ih; rw [ih, prob_false]; grind
     · intro r; simp [prob] <;> grind
 
+/-- **A trial is a proper distribution** when the associations, and the
+associations elaborated on the fingers, have positive total strength. -/
+theorem mass_trial (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : Rat) (n : Nat)
+    (p : Problem) (hT : total as s ≠ 0) (hE : total as (elaborate s p.sum bk.e) ≠ 0) :
+    mass (trial as s bk cc n p) = 1 := by
+  unfold trial
+  apply mass_bind _ _ (mass_search as s cc hT n 0)
+  intro o
+  cases o with
+  | stated a k => exact mass_pure _
+  | exhausted =>
+    unfold backup
+    apply mass_bind _ _ (mass_sample _ _ hE)
+    intro a
+    split
+    · exact mass_pure _
+    · exact mass_bind _ _ (mass_count _ _ _) fun _ => mass_pure _
+
 /-- Events on counting trials, by the answer counted. -/
 theorem prob_trial_counting (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : Rat)
     (n : Nat) (p : Problem) (e : Strategy × Answer → Bool) (P : Answer → Bool)

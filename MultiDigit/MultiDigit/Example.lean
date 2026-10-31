@@ -16,6 +16,10 @@ and is recognized as it. Whole-problem retrieval answers 200, never 250
 error, while backup use is as low as on 100 + 100 itself
 (`confident_errors`). With search length 1, it is answered 200 with
 probability 45/46.
+
+The backup here is handed the correct sum. `Integrated.lean` replaces it
+with the column solver and DOA single-digit trials, so that every answer is
+computed.
 -/
 
 import MultiDigit.Phenomena
