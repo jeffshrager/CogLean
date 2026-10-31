@@ -1,0 +1,390 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../presentations/preamble}
+\usepackage{array}
+
+\title{CogLean}
+\subtitle{Towards a Cumulative, Machine-Checked Theory of Cognition}
+\author{Jeff Shrager}
+\date{October 2026\\[2mm]\small\textcolor{red!70!black}{\textbf{Draft for comment --- not for circulation}}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+This talk goes with the paper of the same name, which is a draft for comment. It is not for circulation, and it hasn't been carefully checked yet. The paper introduces CogLean, a library of cognitive theory in the Lean proof assistant, and argues for a way of doing theoretical cognitive science: theories stated once, their consequences proved, and independently developed theories composed so that new results follow from old ones. The central example is multi-digit addition, but I want to be clear from the start that it is a demonstration, not a new theory of arithmetic.
+}
+
+\begin{frame}{The problem: theory that doesn't accumulate}
+  \begin{itemize}
+    \item Many computational theories of memory, learning, problem solving, skill.
+    \item Little theory that can be \textbf{reused}:
+    \begin{itemize}
+      \item a memory theory is reimplemented for each new task;
+      \item combining two theories means writing a third program;
+      \item what a theory predicts is established by running it, one setting at a time.
+    \end{itemize}
+    \item Newell (1973): twenty questions with nature, answers never assembled.
+  \end{itemize}
+  \bigskip
+  \emph{Can independently developed theories, in a common formal library, be composed to derive meaningful consequences we'd otherwise need a new model to find?}
+\end{frame}
+\note{
+The problem is an old one. Cognitive science has many computational theories, but little theory that can be reused. A theory of memory developed for verbal learning has to be reimplemented before it can take part in a model of arithmetic. Combining two theories means writing a third program and exploring it by simulation. And what a theory predicts is established by running it, at one setting at a time. Newell complained in 1973 that we play twenty questions with nature and never assemble the answers. The question for this talk is whether a common formal library can change that: whether theories in such a library can be composed to give meaningful consequences that we would otherwise need a whole new model to find.
+}
+
+\begin{frame}{The analogy: Mathlib}
+  \begin{itemize}
+    \item Mathlib, the community library of formalized mathematics in Lean, proposes no new mathematics.
+    \item It is a \textbf{shared environment}: definitions made once, every result machine-checked, later work citing earlier results.
+    \item A theorem about groups, once proved, is available to everyone who uses groups.
+  \end{itemize}
+  \bigskip
+  CogLean asks whether cognitive theory can be organized the same way.\\
+  It is not a new theory of cognition, nor a new modeling language.\\
+  And it is nowhere near Mathlib's scale: a first demonstration.
+\end{frame}
+\note{
+Mathematics faced a version of this problem and has made real progress on it. Mathlib, the community library for the Lean proof assistant, doesn't propose new mathematics. It's a shared environment: definitions are made once, every result is checked by machine, and later work builds on earlier results by citing them. A theorem about groups, once proved, is available to everyone who works with groups. CogLean asks whether cognitive theory can be organized the same way. It is not a new theory of cognition, and it's not a new modelling language either. And it's nowhere near Mathlib's scale; this is a first demonstration that the approach can work.
+}
+
+\begin{frame}{CogLean's layers}
+  \begin{center}
+  \begin{tikzpicture}[font=\small, node distance=2.5mm,
+    layer/.style={draw, rounded corners, text width=12.5cm, align=left, inner sep=4pt}]
+    \node[layer, fill=blue!4] (app) {\textbf{Applications}: task models assembled from theories and library parts (three-digit addition)};
+    \node[layer, fill=blue!8, below=of app] (th) {\textbf{Theories}: EPAM, strategy choice (DOA), ACT-R declarative memory, concepts, semantic memory, \dots};
+    \node[layer, fill=blue!12, below=of th] (lib) {\textbf{CogLib}: representations, memories, processes, decision cycle; a retriever interface; theory-neutral phenomena and laws, with their theorems};
+    \node[layer, fill=blue!16, below=of lib] (lean) {\textbf{Lean 4} (core only): the language and the proof checker; exact rational probabilities};
+  \end{tikzpicture}
+  \end{center}
+  Each layer imports only those below it, and inherits their theorems.
+\end{frame}
+\note{
+CogLean has four layers. At the bottom is Lean, core only, with exact rational probabilities. Above it is CogLib, the general library: representations such as feature codes and distributions; memory structures such as discrimination nets and an activation memory; processes such as sampled retrieval and a decision cycle with impasses; an interface that any memory can implement; and theory-neutral statements of phenomena and laws, with theorems about them. Above that are the theories, each stated as choices of library mechanisms. And at the top are applications, models of particular tasks assembled from theories and library parts. Each layer imports only those below it, and inherits their theorems.
+}
+
+\begin{frame}{Four kinds of object, kept apart}
+  \begin{enumerate}
+    \item \textbf{Mechanisms} and their postulates: definitions (how a net sorts a code; how retrieval samples).
+    \item \textbf{Phenomena}: predicates, stated without any mechanism. A predicate asserts nothing; it is a target.
+    \item \textbf{Theorems}: a mechanism produces behavior satisfying a predicate.
+    \item \textbf{Conditions}: situational (``$x$ is confused with $q$''), empirical premises not yet explained (``associations are sharp''), well-formedness.
+  \end{enumerate}
+  \bigskip
+  A theorem with a phenomenon among its hypotheses is a relation between phenomena, not a prediction. The catalog flags these mechanically.
+\end{frame}
+\note{
+Four kinds of object have to be kept apart. Mechanisms and their postulates are definitions. Phenomena are predicates, stated without reference to any mechanism; a predicate asserts nothing, it's a target. Theorems say that a mechanism produces behaviour satisfying a predicate. And conditions are the hypotheses under which a theorem holds: some situational, some empirical premises we haven't explained yet, some just well-formedness. One rule follows: a theorem with a phenomenon among its hypotheses is a relation between phenomena, not a prediction of any model. The library's catalog flags those mechanically.
+}
+
+\begin{frame}{Three capabilities}
+  \begin{enumerate}
+    \item \textbf{Formalization}: theories as definitions, postulates and theorems, with every assumption explicit.
+    \item \textbf{Composition}: mechanisms reused in new contexts, and so are the \emph{theorems} about them.
+    \begin{itemize}
+      \item reusable algorithms: useful software;
+      \item reusable \emph{results}: a contribution to theory.
+    \end{itemize}
+    \item \textbf{Discovery}: consequences the original authors didn't state; unstated assumptions; results for whole classes of models; where theories diverge.
+  \end{enumerate}
+\end{frame}
+\note{
+The argument has three parts, in increasing order of importance. Formalization: theories stated precisely, with every assumption explicit. Composition: mechanisms reused in new contexts, and, crucially, the theorems about them reused too. A library of reusable cognitive algorithms would just be useful software; a library of reusable results is a contribution to theory. And discovery, which matters most: consequences the original authors didn't state, assumptions they didn't know they were making, results that hold for whole classes of models, and conditions under which theories diverge.
+}
+
+\begin{frame}{Two theories, formalized on their own}
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{EPAM} (Feigenbaum \& Simon)
+    \begin{itemize}
+      \item A discrimination net sorts a code to a stored image.
+      \item Learning grows a test only where codes are confused.
+      \item Proved for every net: recognition depends only on tested features; learning never disturbs other items.
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{DOA} (Siegler \& Shrager 1984)
+    \begin{itemize}
+      \item Associations from problems to answers; sample, state if above a criterion; else fingers, then counting.
+      \item Proved for every setting: retrieval used with probability $1-(1-R)^n$; counting errors independent of the associations.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+The demonstration uses two theories, each formalized on its own first. EPAM, Feigenbaum and Simon's model, recognizes a stimulus by sorting its code down a discrimination net; learning grows a test only where two codes are confused. Proved for every net: recognition depends only on the features tested, and learning never disturbs what's already learned. And the distributions-of-associations model that Bob Siegler and I proposed in 1984: a child samples answers in proportion to strength, states one that clears a confidence criterion, and otherwise falls back on fingers and counting. Proved for every setting: retrieval is used with probability one minus one minus R to the n, and counting errors don't depend on the associations at all, which was the chapter's nonintuitive prediction.
+}
+
+\begin{frame}{A discovery from formalization alone}
+  The DOA chapter: ``a peaked distribution results in less frequent use of overt strategies.''
+  \medskip
+  \begin{itemize}
+    \item \textbf{Follows}: moving strength to the correct answer never raises retrieval errors, at any setting.
+    \item \textbf{Does not follow}: it can \emph{raise} overt strategy use.
+    \begin{itemize}
+      \item $1+1$, strengths $.38, .31, .31 \;\to\; .39, .30, .31$;
+      \item averaged over the chapter's twelve criteria: $7/12 \to 73/120$.
+      \item The weakened wrong answer drops to a criterion, stops being stated, and the child turns to fingers.
+    \end{itemize}
+  \end{itemize}
+  \medskip
+  The claim needs a condition the chapter doesn't state.
+\end{frame}
+\note{
+Before any composition, formalization alone corrected one of the theories, and it's one of my own. The chapter says that a peaked distribution results in less frequent use of overt strategies. Half of that follows from the model: moving strength to the correct answer never raises retrieval errors, at any setting. Half doesn't. Peaking can raise overt strategy use. Take one plus one with strengths point three eight, point three one, point three one, and move one hundredth from a wrong answer to the correct one. Averaged over the chapter's own twelve criteria, overt strategy use goes up, from seven twelfths to seventy-three over one twenty. The weakened wrong answer drops to one of the criteria, stops being stated, and the child turns to fingers. So the claim needs a condition the chapter never stated.
+}
+
+\begin{frame}{The application: three-digit addition}
+  \begin{center}
+  \begin{tikzpicture}[font=\footnotesize, node distance=6mm and 8mm]
+    \node[box] (x) {problem\\$a+b$};
+    \node[box, right=of x] (rec) {\textbf{recognize}\\EPAM net\\(or any memory)};
+    \node[box, right=of rec] (ret) {\textbf{retrieve}\\DOA on the recognized\\problem's associations};
+    \node[box, right=of ret] (ans) {answer\\(whole)};
+    \node[box, below=9mm of ret] (sol) {\textbf{column solver}\\decision cycle:\\add, write, carry};
+    \node[box, right=of sol] (ans2) {answer\\(columns)};
+    \node[box, below=6mm of sol] (f) {\textbf{each column}: a DOA trial (retrieve, fingers, count)};
+    \draw[arr] (x) -- (rec); \draw[arr] (rec) -- node[above, font=\scriptsize] {as $q$} (ret);
+    \draw[arr] (ret) -- (ans);
+    \draw[arr] (ret) -- node[right, font=\scriptsize] {exhausted} (sol);
+    \draw[arr] (rec) |- node[below, pos=0.7, font=\scriptsize] {not recognized} (sol);
+    \draw[arr] (sol) -- (ans2);
+    \draw[arr, <->] (sol) -- (f);
+  \end{tikzpicture}
+  \end{center}
+  \small A demonstration, not a theory of arithmetic. In Lean, the composition is three definitions.
+\end{frame}
+\note{
+Here's the application. A problem is recognized by an EPAM net, or by any memory. If it's recognized as a familiar problem q, the answer is retrieved from q's distribution of associations. If retrieval is exhausted, or nothing is recognized, a column solver takes over. It runs on the library's decision cycle, adding, writing and carrying, and each column's addition is itself a full single-digit trial from the strategy-choice model. In Lean the whole composition is three definitions. Again: arithmetic is the demonstration. It's a familiar task that needs several mechanisms, and two of the theories already existed.
+}
+
+\begin{frame}{No answer supplied}
+  \begin{itemize}
+    \item The earlier worked case used a backup that returned the correct sum: \code{Dist.pure p.sum}.
+    \begin{itemize}
+      \item Enough to instantiate theorems about \emph{every} backup;
+      \item but it supplies the answer instead of computing it.
+    \end{itemize}
+    \item In the integrated model, \textbf{nothing is handed the answer}.
+    \begin{itemize}
+      \item $250$ for $150+100$ is assembled by the solver from three DOA trials and a carry rule, and is never certain.
+      \item Correct knowledge enters only as single-digit associations and the carry rule.
+    \end{itemize}
+  \end{itemize}
+  \medskip
+  So composition has to work twice: the mechanisms run together, and their theorems transfer.
+\end{frame}
+\note{
+One detail matters a lot for whether this counts as evidence. An earlier version of the worked case used a backup that simply returned the correct sum. That's enough to instantiate theorems that hold for every backup, but it supplies the answer instead of computing it. In the integrated model nothing is handed the answer. Two hundred fifty for one fifty plus one hundred is assembled by the solver from three single-digit trials and a carry rule, and it's never certain. Correct knowledge enters only as the single-digit associations and the carry rule. So the composition has to work twice: the mechanisms have to run together, and their theorems have to transfer to the whole.
+}
+
+\begin{frame}{How theorems compose}
+  \begin{itemize}
+    \item \textbf{A bridge}: the solver on the decision cycle answers exactly as the fixed column procedure, for every problem and every single-digit process. Every column theorem transfers.
+    \item \textbf{Associativity}: every arrow is a two-stage draw; draws regroup, so a component's theorem holds inside the whole.
+    \item \textbf{Well-formedness, inherited}: the composed trial is a probability distribution, proved by chaining lemmas from three packages:
+    \begin{itemize}
+      \item retrieval, a DOA trial, the column procedure, the bridge;
+      \item total mass 1, \emph{and} nonnegative weights.
+    \end{itemize}
+  \end{itemize}
+  \medskip
+  These are library facts, not psychology; they are what let results transfer.
+\end{frame}
+\note{
+Three kinds of reuse make the composition deductive rather than just executable. A bridge theorem says the solver on the decision cycle answers exactly as a fixed column procedure does, for every problem and every single-digit process, so everything proved about the fixed procedure transfers. Associativity: every arrow is a two-stage draw of distributions, and draws regroup, so a theorem about a component holds where it sits inside the whole. And well-formedness is inherited: that the composed trial is a genuine probability distribution, total mass one and no negative weights, is proved by chaining lemmas from three packages. None of this is psychology. It's what lets the psychology transfer.
+}
+
+\begin{frame}{Confident errors}
+  If $q$ is recognized as itself, $x$ is confused with $q$, $q$'s associations are \textbf{sharp}, and their sums differ:
+  \begin{enumerate}[(i)]
+    \item whole-problem retrieval never errs on $q$;
+    \item every whole-problem answer to $x$ is wrong;
+    \item $x$ reaches the solver \emph{exactly as often} as $q$.
+  \end{enumerate}
+  \medskip
+  \begin{itemize}
+    \item \textbf{Neither theory alone}: in DOA, errors and backup use come from one distribution; recognition gives $x$ another problem's distribution.
+    \item \textbf{Reused}: a one-line proof, from CogLib's theorem for \emph{any} task with problems, a familiar set and a backup.
+    \item \textbf{Conditions}: confusion (derived for learned nets); sharpness (assumed, not yet explained); positive strengths.
+  \end{itemize}
+\end{frame}
+\note{
+The first result is confident errors. Suppose a familiar problem q is recognized as itself, a stranger x is confused with it, q's associations are sharp, meaning only q's correct sum clears the criterion, and the two sums differ. Then retrieval never errs on q, every whole-problem answer to x is wrong, and x goes to the solver exactly as often as q does. Neither theory says this alone: in strategy choice, a problem's errors and its backup use come from the same distribution, so they go together. Recognition breaks the tie by handing x another problem's distribution. The proof is one line, applying a library theorem that holds for any task with problems, a familiar set and a backup. And the conditions are explicit: confusion, which is derived for learned nets; sharpness, which is assumed and not yet explained; and positive strengths.
+}
+
+\begin{frame}{Equal is not low}
+  \begin{itemize}
+    \item The theorem gives \emph{equal} solver use for $x$ and $q$, not \emph{low} solver use.
+    \item The rate is $(1-R_q)^n$, with $R_q$ the chance one search of $q$'s associations clears the criterion.
+    \item If $R_q \ge r$, the confused problem reaches the solver with probability at most $(1-r)^n$.
+    \item With flat associations on $q$, the same theorem holds, and the errors are not confident.
+  \end{itemize}
+  \medskip
+  Here $R_q = 45/46$, $n = 1$: the solver is reached $1/46$ of the time.
+\end{frame}
+\note{
+One precision matters here. The theorem says the confused problem reaches the solver exactly as often as the familiar one. It doesn't say that's rare. The rate is one minus R q to the n, where R q is the chance that one search of q's associations clears the criterion; and if R q is at least r, solver use is at most one minus r to the n. Both are proved. So whether these errors are confident, fluent and unhesitating, is a separate, quantitative matter. With flat associations the same theorem holds, but the errors wouldn't be confident. In our setting R q is forty-five over forty-six, so the solver is reached once in forty-six.
+}
+
+\begin{frame}{Two more consequences of the composition}
+  \textbf{Whole-problem errors don't depend on the solver} (every setting)
+  \begin{itemize}
+    \item Improving column skill cannot reduce errors from mistaken recognition.
+  \end{itemize}
+  \medskip
+  \textbf{Two sources of error} on a confused problem (given the conditions)
+  \begin{itemize}
+    \item Whole route: always the neighbour's sum.
+    \item Column route: exhaustion $\times$ the solver's own error rate, which comes from the single-digit DOA trials.
+    \item If the other columns are exact, a column error is a single-digit error in place, off by $10^j\delta$. But columns can err together, errors can carry, and they can even cancel: units 10 and tens 4 still give 250.
+  \end{itemize}
+\end{frame}
+\note{
+Two more consequences. First, whole-problem errors don't depend on the solver at all, at any setting. Psychologically that's a prediction about intervention: teaching column skill can't reduce errors that come from mistaken recognition; only learning that changes recognition or associations can. Second, a confused problem has two sources of error. The whole route always gives the neighbour's sum. The column route errs with probability equal to exhaustion times the solver's own error rate, which comes entirely from the single-digit trials. When only one column errs, the error is that single-digit error moved to its place. But that's a special case: columns can err together, errors propagate through carries, and they can even cancel. A units result of ten and a tens result of four still give two hundred fifty.
+}
+
+\begin{frame}{Swapping the memory: EPAM versus ACT-R}
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    & EPAM net & ACT-R memory\\
+    \midrule
+    $150+100$ answered 200 by retrieval & $45/46$ & $225/529 \approx .43$\\
+    $150+100$ reaches the solver & $1/46$ & $383/1058 \approx .36$\\
+    $150+100$ answered correctly & $\approx .014$ & $\approx .238$\\
+    practiced $100+100$: overall errors & $\approx .0073$ & $\approx .334$\\
+    \quad after also studying $100+300$ & unchanged & $\approx .616$\\
+    \midrule
+    memory laws (every setting) & determinacy, certainty, & none of them\\
+    & stability & \\
+    \bottomrule
+  \end{tabular}
+  \normalsize
+  \medskip
+  \begin{itemize}
+    \item The confident-error theorem holds for \emph{any} memory with the three laws.
+    \item For ACT-R it doesn't apply. That doesn't mean ACT-R can't err similarly (it does, gradedly); the exact pattern fails.
+  \end{itemize}
+\end{frame}
+\note{
+Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's declarative memory and change nothing else. The confident-error pattern is proved for any memory with three laws: determinacy, certainty and stability. EPAM's net has all three at every setting; ACT-R's memory has none of them, also proved. So the theorem applies to EPAM and never to ACT-R. But be careful about what that means. It doesn't mean ACT-R can't make similar errors; at this setting it answers two hundred about forty-three percent of the time. What fails is the exact pattern: ACT-R's confusion is graded, and its solver use differs from the familiar problem's. It also predicts interference: studying a new problem raises the errors on a practiced one, which EPAM never does. All the numbers are exact, at one illustrative setting.
+}
+
+\begin{frame}{What each result rests on}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.62\linewidth}}
+    \toprule
+    Kind & Examples\\
+    \midrule
+    Library facts & the bridge; the composed trial is a probability distribution\\
+    Compositional deductions (every setting) & whole-problem errors independent of the solver; solver use is \mbox{$(1-R_q)^n$}\\
+    Conditional & confident errors; two sources of error; any memory with three laws\\
+    At chosen settings & $45/46$, $1/46$, $\approx .656$, $\approx .014$, the ACT-R column\\
+    \bottomrule
+  \end{tabular}
+  \normalsize
+  \bigskip
+
+  None of these is yet an empirical finding about people. The numbers are illustrations, not fits.
+\end{frame}
+\note{
+For credibility, it's essential to say what each result rests on. Some are library facts, like the bridge and well-formedness: needed, but not psychology. Some are compositional deductions that hold at every setting, like solver independence. Some are conditional, like confident errors, and the conditions are where the science is: the proofs say exactly which premise a failed test would implicate. And some are just numbers at chosen settings. None of these is yet an empirical finding about people, and the numbers are illustrations, not fits to children's data.
+}
+
+\begin{frame}{Valid is not explanatory}
+  \begin{itemize}
+    \item Lean guarantees \textbf{validity}: conclusions follow from premises.
+    \item Not \textbf{empirical adequacy}: whether the premises describe people.
+    \item Not \textbf{explanation}: whether the premises already contain the phenomenon.
+    \item Example: a serial-position result whose mechanism was a bowed schedule. Valid, nearly empty. Now derived from an attention rule, which also gives the isolation effect.
+    \item An explicit audit sorts results as definitional, close, derived, compositional.
+  \end{itemize}
+\end{frame}
+\note{
+A word on what proofs do and don't show. Lean guarantees validity. It doesn't guarantee that the premises describe people, and it doesn't guarantee explanation, because the premises might already contain the phenomenon. We had exactly that case: a serial-position result whose mechanism was a bowed schedule, so proving a bowed curve was valid and nearly empty. It's now derived from an attention rule over anchors, which also gives the isolation effect, a second consequence of the same mechanism. The library keeps an explicit audit that sorts its results as definitional, close, derived or compositional. That's a judgment, written down in the open.
+}
+
+\begin{frame}{Checking the formalization: a blind simulation}
+  \begin{itemize}
+    \item A prose specification, no Lean; preregistered checks; a fresh agent wrote a simulator from the prose alone.
+    \item \textbf{Agreement}: every check whose hypothesis arose passed; 243 frequencies matched Lean exactly.
+    \item \textbf{Found what proof didn't}:
+    \begin{itemize}
+      \item five theorems' hypotheses were \emph{unrealized} in the tested learning histories (not shown unreachable);
+      \item a gap at zero total strength;
+      \item a predicted learning sequence depends on an unstated assumption: a new problem's initial associations.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\note{
+Lean checks that the theorems follow from the definitions, not that the definitions say what the prose model says. So we checked that link independently. A prose specification with no Lean in it, checks preregistered before any simulator existed, and a fresh AI agent that wrote a simulator from the prose alone. Every check whose hypothesis arose passed, and two hundred forty-three outcome frequencies matched Lean's exact values. And it found things the proofs didn't. Five theorems had hypotheses that never arose in the learning histories we tested; that doesn't show they're unreachable, only that the theorems said little about those nets. There's a gap at zero total strength. And a predicted learning sequence turns out to depend on an assumption the model never stated: the initial associations of a newly discriminated problem.
+}
+
+\begin{frame}{Model verification and theoretical deduction}
+  \begin{itemize}
+    \item \textbf{Simulation} samples executions.
+    \item \textbf{Probabilistic model checking} (PRISM; Soar to PRISM, Ganeriwala et al.\ 2026) analyzes a specified state-transition model exhaustively; it is formal verification, and can treat parameters symbolically.
+    \item \textbf{Deductive proof} (CogLean) establishes results for whole classes of models satisfying theoretical assumptions.
+  \end{itemize}
+  \medskip
+  The contrast is \emph{model verification} versus \emph{theoretical deduction}. Complementary, not competitors.\\
+  Much prior formal work: Soar in Z, Sceptic, ACT-R semantics and model checking, SFT-GMA. CogLean's claim is the combination: a shared, cumulative library with reusable proofs, cross-theory composition, and deductive discovery.
+\end{frame}
+\note{
+Where does this sit? There's a lot of prior formal work on cognitive architectures: a specification of Soar in Z, the Sceptic specification language, formal semantics and model checking for ACT-R, and recently Soar models compiled for the PRISM probabilistic model checker. It helps to separate three approaches. Simulation samples executions. Probabilistic model checking analyzes a specified model exhaustively; that's real formal verification, not simulation, and it can treat parameters symbolically. Deductive proof establishes results for whole classes of models that satisfy theoretical assumptions. So the contrast isn't simulation versus verification; it's model verification versus theoretical deduction, and they're complementary. CogLean doesn't introduce formal methods to cognitive science. What's new is the combination: a shared, cumulative library with reusable proofs, composition across theories, and deductive discovery.
+}
+
+\begin{frame}{Relationship to cognitive architectures}
+  \begin{itemize}
+    \item Not an alternative to Soar, ACT-R, or the Common Model of Cognition.
+    \item A possible \textbf{formal foundation} for expressing, composing and reasoning about their mechanisms and architectural commitments.
+    \item The present example composes locally, for one task, without committing to a general architecture.
+    \item Longer term: formalize \textbf{architectural constraints themselves}, so their implications can be proved and architectures compared in one framework.
+  \end{itemize}
+\end{frame}
+\note{
+And to be clear about cognitive architectures. CogLean isn't proposed as an alternative to Soar, ACT-R, or the Common Model of Cognition. It's a possible formal foundation for expressing, composing and reasoning about their mechanisms and architectural commitments. The present example composes mechanisms locally, for one task, without committing to any general architecture. The longer-term aim is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within one shared framework.
+}
+
+\begin{frame}{Limitations, and next}
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{Limitations}
+    \begin{itemize}
+      \item Strengths chosen, not learned; sharpness assumed.
+      \item Error-free carrying; independent columns.
+      \item Nonnegativity proved for this model, not library-wide.
+      \item Scalability: exact finite distributions.
+      \item No contact with data yet.
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{Next}
+    \begin{itemize}
+      \item Derive associations from learning histories, so sharpness is a theorem.
+      \item Learning across whole trials: prove the learning sequence.
+      \item Restate the unrealized predictions in terms of tested features.
+      \item Architectural constraints; other domains.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+The limitations are real. The associative strengths are chosen, not learned, and sharpness, the key premise of confident errors, is assumed. Carrying is error-free and columns are independent. Nonnegative weights are proved for this model but not yet across the library. Exact finite distributions raise scalability questions. And there's no contact with data yet. Next: derive the associations from learning histories, so that sharpness becomes a theorem instead of an assumption; add learning across whole trials, so the predicted learning sequence can be proved; restate the predictions whose hypotheses weren't realized; and move on to architectural constraints and other domains.
+}
+
+\begin{frame}{Take-home}
+  \begin{itemize}
+    \item Cognitive theories can be stated once, in a shared formal library, with their consequences proved.
+    \item Independently formalized theories compose, and so do their \textbf{theorems}.
+    \item Composition derives consequences none of the parts states; formalization exposes what the theories didn't say.
+    \item Every result is labelled: library fact, compositional deduction, conditional, or illustrative.
+  \end{itemize}
+  \bigskip
+  The goal: a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and traditions.\\[2mm]
+  \small\url{https://github.com/jeffshrager/CogLean}
+\end{frame}
+\note{
+To sum up. Cognitive theories can be stated once, in a shared formal library, with their consequences proved rather than simulated. Independently formalized theories compose, and so do their theorems. Composition derives consequences that none of the parts states, and formalization exposes things the theories never said. And every result is labelled: a library fact, a compositional deduction, a conditional result, or an illustration. The goal is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, the way mathematical results are reused in Mathlib. One example doesn't establish that. It shows that the approach can produce results of the right kind.
+}
+
+\end{document}
