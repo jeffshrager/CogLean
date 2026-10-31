@@ -26,11 +26,17 @@
 
 \title{CogLean: Compositional Proof of Cognitive Predictions}
 \author{Jeff Shrager}
-\date{Draft for circulation, October 2026}
+\date{Draft, October 2026}
 
 \begin{document}
 \sloppy
 \maketitle
+
+\begin{center}
+\fbox{\parbox{0.9\linewidth}{\centering\large\textbf{DRAFT FOR COMMENT --- NOT FOR CIRCULATION}\footnotemark}}
+\end{center}
+\footnotetext{This draft has \emph{not} been carefully checked by the author. It is likely to contain erroneous citations and details. Please do not cite or distribute it.}
+\medskip
 
 \begin{abstract}
 Cognitive science has many computational theories, but little cumulative theoretical knowledge. Theories are implemented as separate programs, so combining two of them usually means writing a third, and what a theory predicts is usually established by running it. We describe CogLean, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics. CogLean is not a new theory of cognition. Its shared library, CogLib, holds representations, mechanisms, theory-neutral statements of phenomena, and theorems about them. Existing theories are expressed as choices of those mechanisms, and their consequences are proved, not simulated.
