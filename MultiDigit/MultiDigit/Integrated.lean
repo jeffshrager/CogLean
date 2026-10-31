@@ -21,8 +21,8 @@ What each result rests on:
 
 | Kind | Results |
 |---|---|
-| **Consequence of the composition** (every encoding, net, strength set and DOA parameter set) | `solverBackup_eq_columns`, `mass_solverBackup`, `whole_independent_of_solver`, `columnsSuch_prob`, `solver_error_is_doa_error` |
-| **Conditional**, given the conditions named in its docstring | `integrated_confident_errors` (given confusion, sharp associations, proper DOA strengths), `errors_two_sources` (the same), `solver_exact_of_exact` (given exact facts, which DOA sampling does not supply) |
+| **Consequence of the composition** (every encoding, net, strength set and DOA parameter set) | `solverBackup_eq_columns`, `mass_solverBackup`, `nonneg_solverBackup`, `nonneg_itrial`, `whole_independent_of_solver`, `columnsSuch_prob`, `integrated_backup_rate`, `integrated_backup_le`, `solver_error_is_doa_error` |
+| **Conditional**, given the conditions named in its docstring | `integrated_confident_errors` (given confusion, sharp associations, proper DOA strengths), `errors_two_sources` (the same), `solver_exact_of_exact` (given exact facts, which DOA sampling does not supply; sufficient, not necessary: `compensating_errors`) |
 | **The illustrative setting** (chosen numbers) | `setting_*`, including `setting_actr_x` with ACT-R's memory in place of the net |
 
 Conditions, and where they stand:
@@ -104,6 +104,31 @@ theorem mass_solverBackup (F : Facts) (hF : F.Proper) (p : Problem) : mass (solv
   rw [solverBackup_eq_columns]
   exact mass_columns _ (fun d e => mass_doaFact _ _ _ _ _ d e (hF d e).1 (hF d e).2) p
 
+/-- Strengths, elaboration and counting rates that are nonnegative, so that
+every weight is a probability (mass 1 alone does not rule out negative
+weights). -/
+def Facts.Valid (F : Facts) : Prop :=
+  (∀ p a, 0 ≤ F.s p a) ∧ 0 ≤ F.bk.e ∧ 0 ≤ F.bk.qs ∧ 0 ≤ F.bk.qd ∧ 0 ≤ 1 - F.bk.qs - F.bk.qd
+
+theorem nonneg_solverBackup (F : Facts) (hF : F.Valid) (p : Problem) : Nonneg (solverBackup F p) := by
+  obtain ⟨hs, he, h1, h2, h3⟩ := hF
+  rw [solverBackup_eq_columns]
+  exact nonneg_columns _ (fun d e => nonneg_doaFact _ _ _ _ _ d e (hs _) he h1 h2 h3) p
+
+/-- **An integrated trial is a probability distribution**: nonnegative weights
+(with valid parameters and nonnegative whole-problem strengths) and, by
+`mass_solverBackup` and the trial's own structure, mass 1. -/
+theorem nonneg_itrial (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat) (cc : Rat)
+    (n : Nat) (F : Facts) (hF : F.Valid) (hstr : ∀ y a, 0 ≤ str y a) (x : Problem) :
+    Nonneg (itrial E N str as cc n F x) := by
+  have hk : Nonneg (Dist.bind (solverBackup F x) fun r => Dist.pure (Route.columns, r)) :=
+    nonneg_bind _ _ (nonneg_solverBackup F hF x) fun _ => nonneg_pure _
+  unfold itrial trial
+  split
+  · exact hk
+  · exact nonneg_bind _ _ (nonneg_search as _ cc (hstr _) n 0) fun r => by
+      cases r <;> first | exact nonneg_pure _ | exact hk
+
 /-- **Whole-problem answers do not depend on the solver.** Once `x` is
 recognized as `y`, the chance of a whole-problem answer with property `P` is
 that of retrieval on `y`'s associations, whatever the backup. A better solver
@@ -181,6 +206,30 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str : Item → Nat
   confident_errors E N str as cc n (solverBackup F) x q hT (mass_solverBackup F hF x)
     (mass_solverBackup F hF q) hq hx hs hne
 
+/-- **How often a confused problem reaches the solver.** `integrated_confident_errors`
+says only that `x` reaches it as often as `q`. That rate is `(1 - R_q)^n`,
+with `R_q` the chance that one search of `q`'s associations clears the
+criterion. Whether the errors are *confident* (the solver rarely reached)
+depends on `R_q` and `n`, not on the theorem. -/
+theorem integrated_backup_rate (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat)
+    (cc : Rat) (n : Nat) (F : Facts) (hF : F.Proper) (x q : Problem)
+    (hT : ∀ y, total as (str y) ≠ 0) (hx : N.select (E.code x) = some (E.code q)) :
+    prob (itrial E N str as cc n F x) isColumns = (1 - reach as (str (E.code q)) cc) ^ n := by
+  unfold itrial
+  rw [columns_prob E N str as cc n _ x (mass_solverBackup F hF x) hT, hx]
+
+/-- A lower bound on retrieval success gives an upper bound on solver use: if
+one search of `q`'s associations clears the criterion with probability at
+least `r`, the confused `x` reaches the solver with probability at most
+`(1 - r)^n`. -/
+theorem integrated_backup_le (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat)
+    (cc : Rat) (n : Nat) (F : Facts) (hF : F.Proper) (x q : Problem)
+    (hT : ∀ y, total as (str y) ≠ 0) (hstr : ∀ y a, 0 ≤ str y a)
+    (hx : N.select (E.code x) = some (E.code q)) (r : Rat) (hr : r ≤ reach as (str (E.code q)) cc) :
+    prob (itrial E N str as cc n F x) isColumns ≤ (1 - r) ^ n := by
+  rw [integrated_backup_rate E N str as cc n F hF x q hT hx]
+  exact exhausted_antitone_reach n hr (reach_le_one as _ cc (hstr _) (hT _))
+
 /-- **Two sources of error on a confused problem.** Under the same conditions,
 `x` is answered wrongly by whole-problem retrieval whenever that route is
 taken, and wrongly by the column route with probability: the chance that
@@ -206,6 +255,14 @@ theorem solver_exact_of_exact (F : Facts) (p : Problem) (ha : p.a < 1000) (hb : 
     solverBackup F p = Dist.pure p.sum := by
   rw [solverBackup_eq_columns]
   exact columns_exact _ p ha hb (hex _) (hex _) (hex _)
+
+/-- Exact facts are sufficient for an exact solver, not necessary: errors in
+two columns can cancel. For 150 + 100, a units result of 10 (for 0 + 0) and a
+tens result of 4 (for 5 + 0) still give 250. -/
+theorem compensating_errors :
+    columns (fun d e => if d + e = 0 then Dist.pure 10 else if d + e = 5 then Dist.pure 4
+      else Dist.pure (d + e)) ⟨150, 100⟩ = Dist.pure 250 := by
+  decide +kernel
 
 /-! ### Exact evaluation
 
@@ -340,6 +397,28 @@ theorem setting_actr_x :
         (solverBackup F0) x) (fun o => o.2 == 250) = 1911678749972988451 / 8045428750000000000 := by
   simp only [prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) x
     (fun h => (same_fastBackup F0 x h).symm)]
+  decide +kernel
+
+theorem setting_valid : F0.Valid ∧ ∀ y a, 0 ≤ str y a := by
+  refine ⟨⟨fun p a => ?_, by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel⟩,
+    fun y a => ?_⟩
+  · simp only [F0, colStr]; split <;> (try split) <;> decide +kernel
+  · simp only [str]; split <;> split <;> decide +kernel
+
+/-- **Overall errors on the practiced 100 + 100**, with the solver: about .0073
+with EPAM's net (whole-problem retrieval never errs; the errors are the
+solver's), about .334 with ACT-R's memory, and about .616 with ACT-R after
+also studying 100 + 300. -/
+theorem setting_practiced_errors :
+    prob (it q1) (fun o => o.2 != 200) = 6394725423 / 874503125000 ∧
+      prob (trialWith ((actRetriever ExampleACTR.P).retrieve ExampleACTR.mem) bcd str answers (1 / 2) 1
+        (solverBackup F0) q1) (fun o => o.2 != 200) = 4961696557761 / 14866553125000 ∧
+      prob (trialWith ((actRetriever ExampleACTR.P).retrieve
+          ((actRetriever ExampleACTR.P).study ExampleACTR.mem (bcd.code ExampleACTR.z))) bcd str answers
+        (1 / 2) 1 (solverBackup F0) q1) (fun o => o.2 != 200) = 2975095474767 / 4828778125000 := by
+  simp only [prob_itrial_fast,
+    prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) q1
+      (fun h => (same_fastBackup F0 q1 h).symm)]
   decide +kernel
 
 end MD.Integrated

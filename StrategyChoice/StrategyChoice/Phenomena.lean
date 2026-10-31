@@ -147,6 +147,45 @@ theorem mass_trial (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : R
     · exact mass_pure _
     · exact mass_bind _ _ (mass_count _ _ _) fun _ => mass_pure _
 
+/-- Counting with nonnegative error rates has nonnegative weights. -/
+theorem nonneg_count (qs qd : Rat) (h1 : 0 ≤ qs) (h2 : 0 ≤ qd) (h3 : 0 ≤ 1 - qs - qd) :
+    ∀ k, Nonneg (count qs qd k) := by
+  intro k
+  induction k with
+  | zero => exact nonneg_pure _
+  | succ k ih =>
+    simp only [count]
+    apply nonneg_bind _ _ ih
+    intro r ap h
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at h
+    rcases h with rfl | rfl | rfl <;> assumption
+
+theorem nonneg_elaborate (s : Answer → Rat) (objects : Nat) (e : Rat) (hs : ∀ a, 0 ≤ s a)
+    (he : 0 ≤ e) (a : Answer) : 0 ≤ elaborate s objects e a := by
+  simp only [elaborate]
+  apply div_nonneg'
+  · have := hs a; split <;> grind
+  · grind
+
+/-- **A trial has nonnegative weights** when the strengths, the elaboration and
+the counting rates are nonnegative. With `mass_trial`, it is a probability
+distribution. -/
+theorem nonneg_trial (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : Rat) (n : Nat)
+    (p : Problem) (hs : ∀ a, 0 ≤ s a) (he : 0 ≤ bk.e) (h1 : 0 ≤ bk.qs) (h2 : 0 ≤ bk.qd)
+    (h3 : 0 ≤ 1 - bk.qs - bk.qd) : Nonneg (trial as s bk cc n p) := by
+  unfold trial
+  apply nonneg_bind _ _ (nonneg_search as s cc hs n 0)
+  intro o
+  cases o with
+  | stated a k => exact nonneg_pure _
+  | exhausted =>
+    unfold backup
+    apply nonneg_bind _ _ (nonneg_sample _ _ (nonneg_elaborate s _ _ hs he))
+    intro a
+    split
+    · exact nonneg_pure _
+    · exact nonneg_bind _ _ (nonneg_count _ _ h1 h2 h3 _) fun _ => nonneg_pure _
+
 /-- Events on counting trials, by the answer counted. -/
 theorem prob_trial_counting (as : List Answer) (s : Answer → Rat) (bk : Backup) (cc : Rat)
     (n : Nat) (p : Problem) (e : Strategy × Answer → Bool) (P : Answer → Bool)

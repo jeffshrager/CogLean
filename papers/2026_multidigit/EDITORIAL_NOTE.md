@@ -4,7 +4,27 @@ The draft is `paper.tex` (build with `make`). It follows `notes/20261031_paper_d
 
 It is written fresh rather than as an edit of `MultiDigit/paper/paper.tex`, which is untouched. Some passages are carried over and revised: the EPAM and DOA summaries, and the account of the blind simulation. Every number in it was checked against the current Lean files on 2026-10-31.
 
-## 1. The three strongest claims of scientific novelty
+## Revision of 2026-10-31 (focused review)
+
+Each technical point was checked against the Lean source. New theorems were added where the source fell short.
+
+1. **Confident errors.** Equal backup use is not low backup use. New: `integrated_backup_rate` (the rate is `(1 - R_q)^n`) and `integrated_backup_le` (if `R_q ≥ r`, solver use is at most `(1 - r)^n`). The paper now separates the equality from the high-confidence setting.
+2. **Comparison table.** The practiced-problem rows came from `ExampleACTR.lean`, which has an exact backup. The table now gives whole-retrieval errors and overall errors with the solver as separate rows. New: `setting_practiced_errors`:
+   - EPAM ≈ .0073;
+   - ACT-R ≈ .334, then ≈ .616 after studying 100 + 300.
+   EPAM's value is unchanged after study by `MD.learning_preserves_trial`, which holds for any backup.
+3. **Column signatures.** The one-digit signature is now stated as holding only when the other columns are exact; multiple and propagating errors are acknowledged. Exact facts are sufficient, not necessary. New: `compensating_errors` (units 10 and tens 4 still give 250).
+4. **Unrealized hypotheses.** Reworded throughout as "unrealized in the tested learning histories". The paper notes that no impossibility theorem exists.
+5. **Nonnegativity.** It was not enforced. New: `Dist.Nonneg` and lemmas through the composition (`nonneg_itrial`, `setting_valid`). The library-wide limitation is recorded in the paper and in OPEN_ISSUES #23.
+6. **ACT-R applicability.** The paper now states that the hypotheses failing means the theorem does not apply. That does not mean ACT-R cannot behave similarly: it answers 200 with probability .43, but its solver use differs from the familiar problem's (383/1058 against 107/782).
+7. **Peaking.** Now its own subsection (§3.3) and in the abstract. It pairs the general result (peaking never raises retrieval errors) with the counterexample on overt strategy use.
+8. **Novelty.**
+   - The abstract no longer says every theorem predated the composition.
+   - The kinds table now separates library facts, compositional deductions, conditional results and values at settings.
+   - The paper says none of these is yet an empirical finding.
+9. **Discussion.** "What the approach bought" was rewritten as one paragraph on the four kinds of gain. The conclusion was shortened. The intro caution was condensed.
+
+ of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:
    - EPAM's nets (CogLib);

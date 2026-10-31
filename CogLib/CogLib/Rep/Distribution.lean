@@ -214,6 +214,28 @@ theorem mass_bind (d : Dist α) (f : α → Dist β) (hd : mass d = 1) (hf : ∀
 
 theorem mass_pure (a : α) : mass (pure a) = 1 := by simp [mass, prob_pure]
 
+/-- Every weight is nonnegative. A list with nonnegative weights and mass 1 is
+a probability distribution; mass 1 alone does not rule out negative weights. -/
+def Nonneg (d : Dist α) : Prop := ∀ ap ∈ d, 0 ≤ ap.2
+
+theorem nonneg_pure (a : α) : Nonneg (pure a) := by
+  intro ap h
+  simp only [pure, List.mem_singleton] at h
+  rw [h]; show (0 : Rat) ≤ 1; decide +kernel
+
+/-- **Nonnegative stages make a nonnegative process.** -/
+theorem nonneg_bind (d : Dist α) (f : α → Dist β) (hd : Nonneg d) (hf : ∀ a, Nonneg (f a)) :
+    Nonneg (bind d f) := by
+  induction d with
+  | nil => intro ap h; simp [bind] at h
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    intro bq h
+    simp only [bind, List.mem_append, List.mem_map] at h
+    rcases h with ⟨⟨b, q⟩, hm, rfl⟩ | h
+    · exact Rat.mul_nonneg (hd _ List.mem_cons_self) (hf a _ hm)
+    · exact ih (fun y hy => hd y (List.mem_cons_of_mem _ hy)) bq h
+
 /-! ### Merging equal outcomes
 
 Outcomes may repeat, so a many-stage process can be a long list. `merge`
@@ -416,6 +438,13 @@ theorem strengthIn_le_total (as : List α) (s : α → Rat) (e : α → Bool) (h
     simp only [total, strengthIn] at ih ⊢
     have := hs a
     split <;> grind
+
+/-- Sampling from nonnegative strengths gives nonnegative weights. -/
+theorem nonneg_sample (as : List α) (s : α → Rat) (hs : ∀ a, 0 ≤ s a) : Nonneg (sample as s) := by
+  intro ap h
+  simp only [sample, List.mem_map] at h
+  obtain ⟨a, _, rfl⟩ := h
+  exact div_nonneg' (hs a) (strengthIn_nonneg as s _ hs)
 
 end Dist
 end Cog

@@ -139,6 +139,16 @@ theorem mass_doaFact (as : List Nat) (s : SC.Problem → Nat → Rat) (bk : SC.B
     mass (doaFact as s bk cc n d e) = 1 :=
   mass_bind _ _ (SC.mass_trial as _ bk cc n ⟨d, e⟩ hT hE) fun _ => mass_pure _
 
+theorem nonneg_columns (fact : Nat → Nat → Dist Nat) (hf : ∀ d e, Nonneg (fact d e))
+    (p : Problem) : Nonneg (columns fact p) :=
+  nonneg_bind _ _ (hf _ _) fun _ => nonneg_bind _ _ (hf _ _) fun _ =>
+    nonneg_bind _ _ (hf _ _) fun _ => nonneg_pure _
+
+theorem nonneg_doaFact (as : List Nat) (s : SC.Problem → Nat → Rat) (bk : SC.Backup) (cc : Rat)
+    (n d e : Nat) (hs : ∀ a, 0 ≤ s ⟨d, e⟩ a) (he : 0 ≤ bk.e) (h1 : 0 ≤ bk.qs) (h2 : 0 ≤ bk.qd)
+    (h3 : 0 ≤ 1 - bk.qs - bk.qd) : Nonneg (doaFact as s bk cc n d e) :=
+  nonneg_bind _ _ (SC.nonneg_trial as _ bk cc n ⟨d, e⟩ hs he h1 h2 h3) fun _ => nonneg_pure _
+
 /-- **A column error is a single-digit DOA error, moved to its place.** With
 DOA adding the columns, if two columns are certain, the problem is wrong
 exactly as often as the DOA trial on the third column's digits. -/

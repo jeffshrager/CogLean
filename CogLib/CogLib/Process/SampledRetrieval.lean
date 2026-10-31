@@ -100,6 +100,21 @@ theorem mass_search (as : List α) (s : α → Rat) (cc : Rat) (hT : total as s 
     · exact mass_pure _
     · exact ih _
 
+/-- Retrieval from nonnegative strengths has nonnegative weights. -/
+theorem nonneg_search (as : List α) (s : α → Rat) (cc : Rat) (hs : ∀ a, 0 ≤ s a) :
+    ∀ n k, Nonneg (search as s cc k n) := by
+  intro n
+  induction n with
+  | zero => intro k; exact nonneg_pure _
+  | succ n ih =>
+    intro k
+    simp only [search]
+    apply nonneg_bind _ _ (nonneg_sample as s hs)
+    intro a
+    split
+    · exact nonneg_pure _
+    · exact ih _
+
 /-- **Exhaustion.** With search length `n`, retrieval is exhausted with
 probability `(1 - R)^n`. -/
 theorem prob_exhausted (as : List α) (s : α → Rat) (cc : Rat) (hT : total as s ≠ 0) :

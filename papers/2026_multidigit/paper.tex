@@ -35,9 +35,9 @@
 \begin{abstract}
 Cognitive science has many computational theories, but little cumulative theoretical knowledge. Theories are implemented as separate programs, so combining two of them usually means writing a third, and what a theory predicts is usually established by running it. We describe CogLean, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics. CogLean is not a new theory of cognition. Its shared library, CogLib, holds representations, mechanisms, theory-neutral statements of phenomena, and theorems about them. Existing theories are expressed as choices of those mechanisms, and their consequences are proved, not simulated.
 
-The central demonstration composes two independently formalized theories: EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager). They are joined with a problem solver in the GPS and repair-theory tradition to produce a model of three-digit addition. Every component, and every theorem about it, was established before the composition. The composed model computes all of its answers; no route is given the correct sum. Its predictions are proved by reusing those theorems. One is the \emph{confident error}: a problem confused with a familiar one gets the familiar problem's answer, wrongly, with no more use of the backup procedure than the familiar problem itself. Neither theory makes this prediction alone. Others say that improving the fallback solver cannot reduce such errors, and that a confused problem has two sources of error with different signatures. Replacing EPAM's memory with ACT-R's declarative memory, and changing nothing else, changes these predictions, and laws of memory that one memory has and the other lacks explain why.
+The central demonstration composes two independently formalized theories: EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager). They are joined with a problem solver in the GPS and repair-theory tradition to produce a model of three-digit addition. The components, and most of the theorems the composition relies on, were established before it; the composition adds linking lemmas but no new psychological assumptions. The composed model computes all of its answers; no route is given the correct sum. One consequence is the \emph{confident error}: a problem confused with a familiar one gets the familiar problem's answer, wrongly, with exactly as much use of the backup procedure as the familiar problem itself, which is rare when retrieval on the familiar problem usually succeeds. Neither theory makes this prediction alone. Others are that improving the fallback solver cannot reduce such errors, and that a confused problem has two sources of error. Replacing EPAM's memory with ACT-R's declarative memory, and changing nothing else, removes the conditions under which the confident-error theorem applies; ACT-R still produces graded errors of a similar kind, and laws of memory that one memory has and the other lacks explain the difference. Formalization alone also produced a correction to one of the original theories: making a distribution of associations more peaked can \emph{increase} overt strategy use, contrary to an informal claim of the original chapter.
 
-We separate results that hold for every setting of the mechanisms from results that need stated conditions, and both from exact values at illustrative settings. We also report what an independent, blind simulation found that the proofs did not: hypotheses that learned networks never reach, and an unstated assumption on which a predicted learning sequence depends.
+We separate results that hold for every setting of the mechanisms from results that need stated conditions, and both from exact values at illustrative settings. We also report what an independent, blind simulation found that the proofs did not: theorem hypotheses that were never realized in the tested learning conditions, and an unstated assumption on which a predicted learning sequence depends.
 \end{abstract}
 
 \section{Introduction}
@@ -58,10 +58,10 @@ The argument is organized around three capabilities, in increasing order of impo
 \begin{enumerate}
   \item \textbf{Formalization.} Existing theories are stated as definitions, postulates and theorems. Each theorem's assumptions are explicit.
   \item \textbf{Composition.} Formalized mechanisms are reused in new contexts, and so are the \emph{theorems} about them. A library of reusable cognitive algorithms would be useful software. A library of reusable \emph{results} is a contribution to theory.
-  \item \textbf{Discovery.} Composition establishes consequences that the original theories' authors did not state. Formalization also exposes unstated assumptions, results that depend on parameters, results that hold for whole classes of models, and conditions under which theories diverge.
+  \item \textbf{Discovery.} Composition establishes consequences that the original theories' authors did not state. Formalization also exposes unstated assumptions, results that depend on parameters, results that hold for whole classes of models, and conditions under which theories diverge. It can also correct a theory: in Section~\ref{sec:peak}, an informal claim of the DOA chapter turns out not to follow from the model's own postulates.
 \end{enumerate}
 
-A caution belongs at the start. Lean checks that each conclusion follows from its premises. It does not check that the premises describe people, nor that a valid derivation is an explanation. Section~\ref{sec:status} takes this up directly, and we distinguish throughout what holds generally, what holds under stated conditions, and what was computed at illustrative settings.
+Lean checks that conclusions follow from premises, not that the premises describe people or that a valid derivation explains anything (Section~\ref{sec:status}).
 
 \section{CogLean}
 \label{sec:coglean}
@@ -145,7 +145,17 @@ Let $R$ be the chance that one search clears the criterion. StrategyChoice prove
   \item the error rate among counting trials does not depend on the associations at all, which is the chapter's ``nonintuitive prediction'' (\lean{SC.counting\_error\_share}).
 \end{itemize}
 
-Formalization also exposed a gap between the chapter's informal description and its formal consequences. The chapter states that ``a peaked distribution results in less frequent use of overt strategies'' \citep[p.~245]{siegler1984}. That is not a consequence of the model's postulates. Moving strength onto the correct answer can push a strong wrong competitor below the criterion, and so \emph{raise} overt strategy use. A setting where this happens, averaged over the chapter's own twelve criteria, is proved in Lean (\lean{SC.peaking\_can\_raise\_overt\_use}). The claim needs a condition the chapter does not state.
+\subsection{A discovery from formalization alone}
+\label{sec:peak}
+
+The DOA chapter's central idea is that the peakedness of a problem's distribution of associations governs both accuracy and strategy use. It states that ``a peaked distribution results in less frequent use of overt strategies'' \citep[p.~245]{siegler1984}. Formalizing the model showed that half of this follows from the postulates and half does not.
+
+\begin{itemize}
+  \item \textbf{What follows.} Moving strength to the correct answer never raises the error rate on retrieval trials, at any criterion or search length (\lean{SC.peaking\_lowers\_retrieval\_errors}), and neither does learning from a correct answer (\lean{SC.correct\_strengthening\_lowers\_errors}). These are general theorems.
+  \item \textbf{What does not.} Peaking can \emph{raise} overt strategy use. Take $1+1$ with answers 2, 3 and 1, and strengths $.38, .31, .31$. Move one hundredth of strength from the wrong answer 3 to the correct answer 2, which is already the strongest: $.39, .30, .31$. With search length 1, averaged over the chapter's own twelve confidence criteria, predicted overt strategy use rises from $7/12$ to $73/120$ (\lean{SC.peaking\_can\_raise\_overt\_use}). The reason is that the weakened wrong answer falls to the criterion $.30$, so it no longer clears it. Searches that used to state it now fail, and the child turns to fingers.
+\end{itemize}
+
+The chapter's claim is not wrong in general; it needs a condition the chapter does not state, roughly that no competitor sits near a criterion. Nothing about this required composition or new mechanisms. It came from stating the postulates precisely and asking whether the informal claim followed. It is the clearest case in the library of formalization correcting a theory's description of its own consequences.
 
 \section{Composing theories: multi-digit addition}
 \label{sec:compose}
@@ -213,14 +223,14 @@ Three kinds of reuse make the composition deductive rather than merely executabl
 
 \paragraph{Associativity.} Each arrow in Figure~\ref{fig:compose} is a two-stage draw of finite distributions. CogLib proves that such draws regroup (\lean{Dist.bind\_assoc}), so a theorem about a component holds where the component sits inside the whole.
 
-\paragraph{Well-formedness, inherited.} The general confident-errors theorem needs the backup to be a proper distribution, of total probability 1. For the integrated model this is proved, not assumed, by chaining results from three packages (\lean{mass\_solverBackup}):
+\paragraph{Well-formedness, inherited.} The general confident-errors theorem needs the backup to have total probability 1. For the integrated model this is proved, not assumed, by chaining results from three packages (\lean{mass\_solverBackup}):
 \begin{itemize}
   \item DOA retrieval is proper (CogLib, \lean{mass\_search});
   \item a whole DOA trial is proper (StrategyChoice, \lean{SC.mass\_trial});
   \item the column procedure is proper when its facts are (MultiDigit, \lean{mass\_columns});
   \item the solver equals the column procedure (\lean{Solver.bridge}).
 \end{itemize}
-These lemmas contribute no psychology. They are what allows theorems written for an abstract backup to apply to a concrete, computing one.
+A parallel chain proves that every weight is nonnegative, given nonnegative strengths and rates (\lean{nonneg\_search}, \lean{SC.nonneg\_trial}, \lean{nonneg\_solverBackup}, \lean{nonneg\_itrial}). Both are needed: CogLib's distributions are lists of rational weights, and total mass 1 alone does not exclude negative weights. These lemmas contribute no psychology. They are what allows theorems written for an abstract backup to apply to a concrete, computing one, and the integrated trial to be read as a probability distribution.
 
 \section{Derived consequences}
 \label{sec:results}
@@ -244,6 +254,8 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str ...) (F : Fact
     prob (itrial ... x) isColumns = prob (itrial ... q) isColumns     -- (iii)
 \end{Verbatim}
 In words: (i) whole-problem retrieval never errs on $q$; (ii) every whole-problem answer to $x$ is wrong; (iii) $x$ goes to the column solver exactly as often as $q$ does. The confused problem is answered wrongly with the same fluency as the familiar one.
+
+Equal backup use is not low backup use. Whether the errors are \emph{confident}, in the sense that the solver is rarely invoked, is a separate, quantitative matter. The rate is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}). If $R_q \ge r$, the confused problem reaches the solver with probability at most $(1-r)^n$ (\lean{integrated\_backup\_le}). In the illustrative setting, $R_q = 45/46$ and $n = 1$, so the solver is reached $1/46$ of the time. With flat associations on $q$, the same theorem would hold, and the errors would not be confident.
 
 \paragraph{What is assumed.} The postulates are the mechanisms: the net, DOA retrieval and the solver. The conditions are of three kinds.
 \begin{itemize}
@@ -278,9 +290,11 @@ Once $x$ is recognized as $q$, the chance of a whole-problem answer with any pro
 Under the same conditions as confident errors, the integrated model distinguishes two sources of error on a confused problem (\lean{errors\_two\_sources}).
 \begin{itemize}
   \item \textbf{Whole-route errors} are always the confused neighbour's answer (here 200), whenever that route is taken.
-  \item \textbf{Column-route errors} occur with probability equal to the chance that retrieval is exhausted times the solver's own error rate on $x$. The solver's errors are single-digit DOA errors, displaced to their column: off by $10^j\delta$ when column $j$ errs by $\delta$ (\lean{solver\_error\_is\_doa\_error}).
+  \item \textbf{Column-route errors} occur with probability equal to the chance that retrieval is exhausted times the solver's own error rate on $x$, which comes entirely from the single-digit DOA trials.
 \end{itemize}
-The two sources leave different signatures: a whole-route error is another familiar problem's sum, while a column-route error differs from the correct answer in one digit. This result is \emph{compositional}. Neither recognition nor DOA says it alone, and it would not hold with the old backup, which never erred. The model also says when the column route is exact: only when every column's single-digit trial is exact (\lean{solver\_exact\_of\_exact}). DOA sampling does not guarantee that.
+This result is \emph{compositional}. Neither recognition nor DOA says it alone, and it would not hold with the old backup, which never erred.
+
+The two sources tend to leave different signatures, but only the first is guaranteed. A whole-route error is always the confused neighbour's sum. A column-route error has a simple signature only when one column errs: if the other columns are exact, the problem is wrong exactly when that column's DOA trial is, and off by $10^j\delta$ when column $j$ errs by $\delta$ (\lean{solver\_error\_is\_doa\_error}). Several columns can err on the same trial, and a column error can propagate through a carry. Errors can even cancel. Exact single-digit facts in every column are sufficient for an exact answer (\lean{solver\_exact\_of\_exact}), but not necessary: for $150+100$, a units result of 10 and a tens result of 4 still give 250 (\lean{compensating\_errors}).
 
 \subsection{Memory substitution}
 
@@ -291,7 +305,7 @@ The two memories differ in the laws just listed. Both cells are proved, for ever
   \item the discrimination net has determinacy, certainty and stability (\lean{Matrix.Discrimination.determinate}, \lean{.certainty}, \lean{.stability});
   \item ACT-R's memory has none of them (\lean{Matrix.Activation.never\_determinate}, \lean{never\_certainty}, \lean{never\_stability}).
 \end{itemize}
-So the general confident-errors theorem applies to EPAM and never to ACT-R. Its hypotheses can never be met, because nothing is retrieved for certain (\lean{Act.retrieve\_not\_certain}). Table~\ref{tab:memories} shows the consequences at one setting.
+So the general confident-errors theorem applies to EPAM and never to ACT-R: its hypotheses cannot be met, because nothing is retrieved for certain (\lean{Act.retrieve\_not\_certain}). That the theorem does not apply does not show that ACT-R cannot produce similar behavior, and at the illustrative setting it does: $150+100$ is answered 200 by retrieval with probability $.43$. What fails is the exact pattern. Retrieval of the confused problem is graded, and its solver use differs from the familiar problem's ($383/1058$ against $107/782$), so the dissociation in (iii) does not hold. A graded analogue of confident errors for memories like ACT-R's would need its own theorem, and its own laws. Table~\ref{tab:memories} shows the consequences at one setting.
 
 \begin{table}[t]
 \centering
@@ -305,23 +319,26 @@ $150+100$ answered 200 by whole-problem retrieval & $45/46$ & $225/529 \approx .
 $150+100$ answered 300 (taken for $100+200$) & $0$ & $225/1058 \approx .21$ \\
 $150+100$ reaches the column solver & $1/46$ & $383/1058 \approx .36$ \\
 $150+100$ answered correctly (250), by the solver & $\approx .014$ & $\approx .238$ \\
-errors on the practiced $100+100$ & $0$ & $225/782 \approx .29$ \\
-the same, after also studying $100+300$ & $0$ & $3375/5842 \approx .58$ \\
 \midrule
-for every setting (general theorems) & confident errors; & no certain retrieval; \\
+practiced $100+100$: errors by whole-problem retrieval & $0$ & $225/782 \approx .29$ \\
+practiced $100+100$: errors overall, with the solver & $\approx .0073$ & $\approx .334$ \\
+after also studying $100+300$: whole-problem retrieval & $0$ & $3375/5842 \approx .58$ \\
+after also studying $100+300$: overall & $\approx .0073$ (unchanged) & $\approx .616$ \\
+\midrule
+for every setting (general theorems) & confident-error theorem applies; & its hypotheses never hold; \\
 & practice never disturbed & interference possible \\
 \bottomrule
 \end{tabularx}
-\caption{The same application with two memories. All values are exact, proved in Lean (\code{ExampleACTR.lean}, \code{Integrated.lean}), at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. The last row states what holds at every setting.}
+\caption{The same application with two memories, at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. All values are exact and proved in Lean. Rows about whole-problem retrieval do not depend on the backup (\lean{whole\_independent\_of\_solver}), so they are the same in \code{ExampleACTR.lean}, which uses an exact backup. Rows about answers overall use the integrated model, with its fallible solver (\lean{setting\_actr\_x}, \lean{setting\_practiced\_errors}). EPAM's overall errors on $100+100$ are the solver's own; after studying $100+300$ they are unchanged, by \lean{MD.learning\_preserves\_trial}, which holds for every backup. The last row states what holds at every setting.}
 \label{tab:memories}
 \end{table}
 
-With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the errors on the practiced $100+100$ (\lean{act\_interference}). EPAM predicts none, for every net (\lean{MD.learning\_preserves\_trial}). The difference is between kinds of memory, and the laws say which property of memory produces it.
+With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM predicts no interference, for every net and every backup (\lean{MD.learning\_preserves\_trial}). The difference is between kinds of memory, and the laws say which property of memory produces it.
 
 \section{Three kinds of results}
 \label{sec:kinds}
 
-Table~\ref{tab:kinds} sorts the results of this section by what they rest on. The distinction matters for credibility. A reader should be able to tell which statements are claims about a whole class of models, which are claims given particular conditions, and which are only numbers at chosen settings.
+Table~\ref{tab:kinds} sorts the results by what they rest on. A reader should be able to tell which statements are library facts about mechanisms, which are deductions from the composition, which hold only given further conditions, and which are numbers at chosen settings. Not every theorem is a psychological prediction, and none here is an empirical finding: the conditional and compositional results become empirical predictions about people only once their conditions can be identified in people and the predictions tested.
 
 \begin{table}[t]
 \centering
@@ -330,11 +347,13 @@ Table~\ref{tab:kinds} sorts the results of this section by what they rest on. Th
 \toprule
 Kind & Results & What they rest on \\
 \midrule
-\textbf{General}: hold for every encoding, net, strength set and DOA setting & the solver equals the column procedure; whole-problem errors are independent of the solver; the column route factors as exhaustion times the solver; a solver error is a single-digit error moved to its column; the solver is a proper distribution & the mechanisms alone (plus positive strengths, for the last) \\
+\textbf{Library facts}: properties of mechanisms, needed for reuse & the solver equals the column procedure (the bridge); the solver and the integrated trial are probability distributions; merged evaluation is the same distribution & the definitions, and nonnegative strengths with positive totals \\
 \addlinespace
-\textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; exactness of the solver only given exact facts; confident errors for any memory with three laws & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); for the last, the laws themselves \\
+\textbf{Compositional deductions}: hold for every encoding, net, strength set and DOA setting & whole-problem errors are independent of the solver; the column route factors as exhaustion times the solver; the solver's rate of use is $(1-R_q)^n$ & the composed mechanisms alone \\
 \addlinespace
-\textbf{At chosen settings}: exact values & $150+100$: 200 by retrieval $45/46$; solver reached $1/46$; solver correct $\approx .656$; correct overall $\approx .0143$; the ACT-R column of Table~\ref{tab:memories} & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
+\textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; a solver error as a single-digit error in place (other columns exact); exactness of the solver (exact facts: sufficient, not necessary); confident errors for any memory with three laws & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); exact columns; for the last, the laws themselves \\
+\addlinespace
+\textbf{At chosen settings}: exact values & $150+100$: 200 by retrieval $45/46$; solver reached $1/46$; solver correct $\approx .656$; correct overall $\approx .0143$; Table~\ref{tab:memories} & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
 \bottomrule
 \end{tabularx}
 \caption{The integrated model's results, by kind. Lean names are in Appendix~\ref{app:index}.}
@@ -345,7 +364,7 @@ Kind & Results & What they rest on \\
 
 At this setting, $150+100$ is answered 200 by whole-problem retrieval with probability $45/46$ and reaches the solver with probability $1/46$. The solver alone answers 250 with probability $\approx .656$. Its main errors are 260, 350 and 251, each $\approx .1$: a tens error, a hundreds error (the counting-sequence neighbour of $1+1$) and a units error. So $150+100$ is answered correctly with probability $\approx .0143$ (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}). The familiar $100+100$ is answered correctly with probability $\approx .993$.
 
-These numbers are exact consequences of the setting, and they show that the conditional theorems' hypotheses can be met by a learned net. They are \emph{not} fitted to children's data and are not predictions about children. Computing them required a small addition to the library. The DOA counting process, written out as a list of outcomes, lists $3^k$ of them, too many for the kernel to evaluate. A merged evaluator, proved to be the same distribution (\lean{SC.same\_trialMerged}, \lean{same\_fastBackup}), makes the computation take seconds while every value remains a probability of the model itself.
+These numbers are exact consequences of the setting, and they show that the conditional theorems' hypotheses can be met by a learned net. They are \emph{not} fitted to children's data and are not predictions about children. (Computing them needed a merged evaluator, proved to be the same distribution as the model, \lean{SC.same\_trialMerged}: written out, counting $k$ objects lists $3^k$ outcomes.)
 
 \section{The scientific status of proofs}
 \label{sec:status}
@@ -361,7 +380,7 @@ The repository records an explicit audit of this kind for its headline results (
   \item \emph{derived}: it follows from premises that do not mention it;
   \item \emph{compositional}: it needs two or more mechanisms working together.
 \end{itemize}
-Not every CogLean theorem is a psychological explanation, and we do not claim that. Some are properties of algorithms: the soundness of means-ends search, or the merge properties of semantic networks. Those are needed library facts, but they explain nothing on their own. Some are relations between laws. Some, such as confident errors, the two sources of error and solver independence, are compositional: no single mechanism contains them. Making these distinctions visible is part of the method. Lean shows every premise of every theorem; what remains is a scientific judgment, and the right place for it is written down, in the open.
+Not every CogLean theorem is a psychological explanation. Some are properties of algorithms, needed library facts that explain nothing on their own; some are relations between laws; some, such as confident errors and solver independence, are compositional. Making these distinctions visible is part of the method: Lean shows every premise, and the judgment of what the premises contain is written down, in the open.
 
 \paragraph{Premises still unexplained.} The audit also lists what is assumed but not yet derived:
 \begin{itemize}
@@ -382,12 +401,12 @@ Lean guarantees that the theorems follow from the definitions. It does not guara
 
 \paragraph{What the simulation found that the proofs did not.} Three findings remain open in the current library.
 \begin{enumerate}
-  \item \textbf{Unreachable hypotheses.} Five predictions (near misses within 200 or 20, round problems, and column facts) were vacuous: their hypotheses never held in any net EPAM learned. Each needs a path to test \emph{every} feature of a digit or column. EPAM grows one test per confusion, so paths are short. The theorems are true but say little about the nets the learning mechanism actually produces. Proof alone did not reveal this. Counting how often each hypothesis arose did. The distinction is between logical correctness and \emph{reachable} model states.
+  \item \textbf{Hypotheses unrealized in the tested conditions.} Five predictions (near misses within 200 or 20, round problems, and column facts) were vacuous in the simulation: their hypotheses never held in any of the nets EPAM learned across the simulation's random instances. Each needs a path that tests \emph{every} feature of a digit or column, and EPAM grows one test per confusion, so paths in these histories stayed short. This does not show that the hypotheses are unreachable. No impossibility theorem exists, and a long enough history of confusions on one digit could plausibly produce such paths. It shows that the theorems say little about the nets these learning histories produced. Proof alone did not reveal this; counting how often each hypothesis arose did. The distinction is between logical correctness and the model states that learning actually produces.
   \item \textbf{A gap at zero strength.} With associations of total strength 0, sampling divides by zero, and a trial has total probability 0. The theorems avoid the case by assuming positive totals. The simulator, reading the prose, treats it as exhausted retrieval, which is the natural reading.
   \item \textbf{An unstated assumption decides a predicted learning sequence.} The combined model suggests a sequence: a confident error, then, after discrimination, slow column work, then fluent correct retrieval. Whether it occurs depends on the initial associations of a newly discriminated problem, which the prose left open. With none, 40 of 48 discriminated problems followed the sequence. With only the correct answer, the column phase was skipped. With a copy of the neighbour's associations, the error was stated, strengthened and stated again: 7 of 44 problems were trapped, and 35 were still mixed at the end. The blind implementer flagged this dependence from the specification alone.
 \end{enumerate}
 
-The simulation does not prove the formalization faithful to the intended theory. It supplies independent evidence that the formal model behaves as its prose describes, and it found where the formal model says too little. Three standards are involved, and they are different: logical correctness (Lean), behavior over reachable states (simulation), and empirical adequacy (data about people), which neither addresses.
+The simulation does not prove the formalization faithful to the intended theory. It is independent evidence that the formal model behaves as its prose describes, and it found where the formal model says too little. Three standards are involved: logical correctness (Lean), behavior in the states learning produces (simulation), and empirical adequacy (data about people), which neither addresses.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -406,30 +425,20 @@ For ACT-R in particular, Gall and Frühwirth gave an abstract operational semant
 \end{itemize}
 The important distinction is therefore not between simulation and formal verification, but between \emph{model verification} and \emph{theoretical deduction}. Model checking primarily verifies properties of a particular formalized system, or of a parameterized family of them. CogLean's principal objects are the theories themselves: reusable representations, mechanisms, assumptions and theorems. Its aim is to establish general consequences of those theories, and to derive further results by composing independently formalized mechanisms. The approaches are complementary, not competitors. A model checker can verify a large, detailed model that would be laborious to reason about deductively. A theorem can state what every such model must do, and why.
 
-What is distinctive in CogLean, relative to this work, is a combination of emphases. CogLean does not introduce formal methods to cognitive science. Few of them are entirely new on their own:
+CogLean does not introduce formal methods to cognitive science. What is distinctive, relative to this work, is a combination of emphases, few of them entirely new on their own:
 \begin{itemize}
   \item \textbf{Theorems over classes of models}, not properties of one model or one parameterized family. CogLean's theorems quantify over every encoding, net, strength set and backup, and, through laws, over every memory.
   \item \textbf{Phenomena and laws stated theory-neutrally}, so that rival mechanisms can be tested against the same statement.
   \item \textbf{Reusable proofs across independently developed theories.} The previous work formalizes one architecture or model at a time. CogLean's central example composes theorems proved separately for EPAM, DOA and a problem solver into results about their combination.
-  \item \textbf{Behavioral predictions derived from composition}, with their premises sorted into postulates, conditions and settings.
+  \item \textbf{Behavioral consequences derived from composition}, with their premises sorted into postulates, conditions and settings.
 \end{itemize}
 Whether any single one of these is novel is a matter for a more complete review. What we claim to be new is their combination: a shared, cumulative library of cognitive theory that supports reusable proofs, composition across theories, and deductive discovery.
 
 \subsection{What the approach bought}
 
-\paragraph{Composition as deduction.} The integrated model's predictions follow from results already proved for its parts, with a small number of new lemmas. The proofs say what each prediction rests on. For example, confident errors need the criterion and search length not to depend on the route. A failed empirical test of confident errors would therefore point at specific premises, not at the model as a whole.
+The examples above show four kinds of gain, of different weight. Some results are \emph{library facts}, such as the bridge and the well-formedness of the composed distributions: unglamorous, but they are what lets theorems transfer. Some are \emph{compositional deductions}, true at every setting: whole-problem errors do not depend on the solver. Some are \emph{conditional}, and the conditions are where the science is: confident errors need confusion and sharp associations, and the proofs say exactly which premise a failed test would implicate. And some are \emph{corrections}: the DOA chapter's claim about peaking, the theorem hypotheses that learning did not realize, and the unstated assumption behind the predicted learning sequence. None of these is yet an empirical result about people.
 
-\paragraph{Discovery.} Formalization and composition produced results the original authors did not state:
-\begin{itemize}
-  \item a dissociation between errors and backup use that neither theory produces alone;
-  \item the independence of recognition errors from solver quality;
-  \item a counterexample to an informal claim of the DOA chapter;
-  \item hypotheses that are true but unreachable by the learning mechanism;
-  \item an unstated assumption on which a predicted learning sequence depends.
-\end{itemize}
-The comparison of memories adds conditions under which two theories diverge, explained by laws.
-
-\paragraph{Proof and simulation are complementary.} The slogan ``simulation explores, proof settles'' understates the relation. Simulation also checks what the proofs are \emph{about}: whether their hypotheses arise, and whether the definitions say what the prose says.
+Proof and simulation were complementary here, in a way the slogan ``simulation explores, proof settles'' understates. The simulation checked what the proofs are \emph{about}: whether their hypotheses arise, and whether the definitions say what the prose says.
 
 \subsection{Limitations}
 
@@ -440,7 +449,8 @@ The comparison of memories adds conditions under which two theories diverge, exp
   \item Carrying is error-free in the full procedure, and columns are added independently.
   \item The framework does not establish psychological plausibility. That remains a matter of evidence and judgment.
   \item Scalability is a serious question. CogLean uses exact rational distributions over finite outcome spaces. Continuous representations, large state spaces and neural models will need different techniques, and exact evaluation already required a merged evaluator here.
-  \item Three findings of the simulation remain open: unreachable hypotheses, the zero-strength gap, and the initial associations of a newly discriminated problem.
+  \item Three findings of the simulation remain open: hypotheses unrealized in the tested learning histories, the zero-strength gap, and the initial associations of a newly discriminated problem.
+  \item CogLib's distributions are rational-weighted lists; the type does not enforce nonnegative weights. Most library theorems are algebraic identities that hold regardless, but reading them as probabilities needs nonnegativity. It is proved here for the integrated model, given nonnegative strengths and rates, but not yet across the whole library.
 \end{itemize}
 
 \subsection{Future work}
@@ -449,7 +459,7 @@ Natural next steps:
 \begin{itemize}
   \item derive associative distributions from learning histories, so that sharpness becomes a theorem;
   \item add feedback-driven learning across whole trials, so that the predicted learning sequence can be proved;
-  \item restate the vacuous predictions in terms of the features a net actually tests;
+  \item restate the vacuous predictions in terms of the features a net actually tests, or prove when learning can realize their hypotheses;
   \item generalize the retriever interface, so that more memories can be swapped in;
   \item compose theories in other domains.
 \end{itemize}
@@ -457,7 +467,7 @@ The library already contains early work on the last of these: conceptual combina
 
 \subsection{Conclusion}
 
-The question was whether theories represented in a common formal library can be composed to yield meaningful consequences that would otherwise require building a new model from scratch. In one case the answer is yes. EPAM's recognition, DOA's retrieval and strategy choice, and a decision-cycle problem solver, each formalized on its own, compose into a model of three-digit addition with no answer supplied. Its predictions, confident errors, solver independence and two sources of error, are proved by reusing the components' theorems. Replacing one memory with another changes the predictions in ways that laws of memory explain. The larger ambition is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, as mathematical results are reused in Mathlib. One example does not establish that. It shows that the approach can produce results of the right kind.
+The question was whether theories represented in a common formal library can be composed to yield meaningful consequences that would otherwise require building a new model from scratch. In one case the answer is yes. EPAM's recognition, DOA's retrieval and strategy choice, and a decision-cycle problem solver, each formalized on its own, compose into a model of three-digit addition with no answer supplied, and its consequences are proved largely by reusing the components' theorems. The larger ambition is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, as mathematical results are reused in Mathlib. One example does not establish that. It shows that the approach can produce results of the right kind.
 
 \paragraph{Code.} All definitions and theorems are in the CogLean repository \citep{coglean}, \url{https://github.com/jeffshrager/CogLean}. Every theorem is fully proved, with no \code{sorry}, and depends only on Lean's standard axioms.
 
@@ -481,17 +491,18 @@ A confusion agrees on every tested feature & \lean{confusion\_agrees\_on\_path} 
 Learned nets recognize each image as itself & \lean{learnAll\_clean} (\code{CogLib/Process/DiscriminationLearning}) \\
 DOA retrieval use, error share, backup independence & \lean{SC.retrieval\_prob}, \lean{retrieval\_error\_share}, \lean{retrieval\_independent\_of\_backup} \\
 Counting errors independent of associations & \lean{SC.counting\_error\_share} \\
-Peaking can raise overt strategy use & \lean{SC.peaking\_can\_raise\_overt\_use} \\
+Peaking never raises retrieval errors; but can raise overt strategy use & \lean{SC.peaking\_lowers\_retrieval\_errors}; \lean{SC.peaking\_can\_raise\_overt\_use} \\
 Confident errors, any task & \lean{RR.confident\_errors} (\code{CogLib/Process/RecognizeRetrieve}) \\
 Confident errors from laws of memory & \lean{RR.confident\_errors\_of\_laws} \\
 Solver equals the column procedure & \lean{Solver.bridge} (\code{MultiDigit/Solver}) \\
 A column error is a DOA error in place & \lean{MD.column\_error\_is\_doa\_error} (\code{MultiDigit/Columns}) \\
-Integrated: solver is the column backup; proper & \lean{solverBackup\_eq\_columns}, \lean{mass\_solverBackup} (\code{MultiDigit/Integrated}) \\
+Integrated: solver is the column backup; mass 1; nonnegative weights & \lean{solverBackup\_eq\_columns}, \lean{mass\_solverBackup}, \lean{nonneg\_solverBackup}, \lean{nonneg\_itrial} (\code{MultiDigit/Integrated}) \\
+Integrated: rate of solver use, and its bound & \lean{integrated\_backup\_rate}, \lean{integrated\_backup\_le} \\
 Integrated: whole-problem errors independent of solver & \lean{whole\_independent\_of\_solver} \\
 Integrated: column route factored & \lean{columnsSuch\_prob} \\
 Integrated: confident errors; two sources & \lean{integrated\_confident\_errors}, \lean{errors\_two\_sources} \\
-Integrated: solver error is a DOA error; exact only given exact facts & \lean{solver\_error\_is\_doa\_error}, \lean{solver\_exact\_of\_exact} \\
-Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}; \lean{setting\_actr\_x} \\
+Integrated: solver error is a DOA error (other columns exact); exact facts sufficient, not necessary & \lean{solver\_error\_is\_doa\_error}, \lean{solver\_exact\_of\_exact}, \lean{compensating\_errors} \\
+Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}, \lean{setting\_practiced\_errors}, \lean{setting\_valid}; \lean{setting\_actr\_x} \\
 ACT-R: graded confusion; interference & \lean{act\_values}, \lean{act\_interference} (\code{MultiDigit/ExampleACTR}) \\
 EPAM: practice never disturbed & \lean{MD.learning\_preserves\_trial} \\
 Memory laws: EPAM has, ACT-R never has & \lean{Matrix.Discrimination.*}, \lean{Matrix.Activation.never\_*} (\code{CogMatrix}) \\

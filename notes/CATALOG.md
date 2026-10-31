@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-198 theorems: 193 general, 5 instances; 78 headline; 24 about laws; 20 conditional on laws.
+202 theorems: 197 general, 5 instances; 79 headline; 24 about laws; 20 conditional on laws.
 
 **Laws**
 
@@ -111,6 +111,7 @@ How to read it:
 | `Cog.merge_view_wins` | general | — | On a matched frame the view wins: where the view says something about a slot of frame `v`, the merged net says exactly what the view says, provided only matched theory frames are renamed to `v`. |
 | `Cog.Dist.bind_assoc` | general | — | Two-stage draws regroup. |
 | `Cog.Dist.mass_bind` | general | — | Proper stages make a proper process. If the first stage and every second stage are proper distributions, so is the two-stage process. |
+| `Cog.Dist.nonneg_bind` | general | — | Nonnegative stages make a nonnegative process. |
 | `Cog.Dist.prob_bind_cons` | general | — | Two stages. |
 | `Cog.Dist.prob_bind_ite` | general | — | A two-valued second stage. If the event has probability `c` after each first-stage outcome in `g`, and `c'` after each outcome not in it, its probability overall is `c` times the chance of `g` ... |
 | `Cog.Dist.prob_bind_merge` | general | — | Merging changes no probability, even after a further stage. |
@@ -166,7 +167,7 @@ How to read it:
 
 ## Strategy choice: distributions of associations
 
-20 theorems: 15 general, 5 instances; 11 headline; 0 about laws; 0 conditional on laws.
+23 theorems: 18 general, 5 instances; 12 headline; 0 about laws; 0 conditional on laws.
 
 **Headline theorems**
 
@@ -178,6 +179,7 @@ How to read it:
 | `SC.correct_strengthening_lowers_errors` | general | — | Learning from a correct answer never raises retrieval errors (A6). |
 | `SC.counting_error_share` | general | — | The error share on counting trials is the counting process's error rate on the sum: it involves neither the associations, nor the criterion, nor the search length (p. 245). |
 | `SC.mass_trial` | general | — | A trial is a proper distribution when the associations, and the associations elaborated on the fingers, have positive total strength. |
+| `SC.nonneg_trial` | general | — | A trial has nonnegative weights when the strengths, the elaboration and the counting rates are nonnegative. |
 | `SC.peaking_can_raise_overt_use` | instance | — | Peaking can raise overt strategy use. Moving strength to the correct answer, already the peak, raises the overt strategy use predicted with search length 1, averaged over the chapter's twelve c... |
 | `SC.peaking_lowers_retrieval_errors` | general | — | Moving strength to the correct answer never raises the error share on retrieval trials, at any confidence criterion and search length. |
 | `SC.retrieval_error_share` | general | — | The error share on retrieval trials is the wrong answers' share of the strength above the criterion, whatever the search length. |
@@ -186,7 +188,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-166 theorems: 139 general, 27 instances; 67 headline; 1 about laws; 5 conditional on laws.
+175 theorems: 145 general, 30 instances; 70 headline; 1 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -234,11 +236,14 @@ How to read it:
 | `MD.threshold_diffs` | general | — | Close digits share features. Two digits differ on exactly `/d - e/` of the nine thresholds, so they agree on `9 - /d - e/`. |
 | `MD.Integrated.columnsSuch_prob` | general | — | The column route, factored. When `x` is recognized as `y`, an answer with property `P` comes by the column route with probability: the chance that retrieval is exhausted, times the chance that ... |
 | `MD.Integrated.errors_two_sources` | general | — | Two sources of error on a confused problem. Under the same conditions, `x` is answered wrongly by whole-problem retrieval whenever that route is taken, and wrongly by the column route with prob... |
+| `MD.Integrated.integrated_backup_rate` | general | — | How often a confused problem reaches the solver. `integrated_confident_errors` says only that `x` reaches it as often as `q`. |
 | `MD.Integrated.integrated_confident_errors` | general | — | Confident errors, with the solver as backup. Given that the net recognizes `q` as itself and confuses `x` with it, that `q`'s associations are sharp, and that the DOA strengths are proper: * wh... |
+| `MD.Integrated.nonneg_itrial` | general | — | An integrated trial is a probability distribution: nonnegative weights (with valid parameters and nonnegative whole-problem strengths) and, by `mass_solverBackup` and the trial's own structure,... |
 | `MD.Integrated.setting_actr_x` | instance | — | With ACT-R's memory in place of the net (`ExampleACTR`): the same application with one part swapped. 150 + 100 is answered 200 by retrieval with probability 225/529, as before; it reaches the s... |
 | `MD.Integrated.setting_confident_errors` | instance | — | Confident errors in the setting: the conditional theorem, its conditions met by the net EPAM learned and the chosen strengths. |
 | `MD.Integrated.setting_overall_q1` | instance | — | 100 + 100 overall: correct with probability about .993, by retrieval (45/46) and by the solver (1/46 × about .664). |
 | `MD.Integrated.setting_overall_x` | instance | — | 150 + 100 overall: answered 200 with probability about .978 (almost all by whole-problem retrieval), and correctly, 250, only by the solver, with probability (1/46) × the solver's .656. |
+| `MD.Integrated.setting_practiced_errors` | instance | — | Overall errors on the practiced 100 + 100, with the solver: about .0073 with EPAM's net (whole-problem retrieval never errs; the errors are the solver's), about .334 with ACT-R's memory, and ab... |
 | `MD.Integrated.setting_routes` | instance | — | 150 + 100, recognized as 100 + 100. Whole-problem retrieval answers 200 with probability 45/46, as with the given backup of `Example`; the solver is invoked with probability 1/46. |
 | `MD.Integrated.setting_solver_x` | instance | — | The solver on 150 + 100: 250 with probability about .656. |
 | `MD.Integrated.solver_error_is_doa_error` | general | — | A solver error is a single-digit DOA error, moved to its place. If two columns' DOA trials are certain, the solver is wrong exactly as often as the DOA trial on the third column's digits (`colu... |
@@ -438,13 +443,13 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 198 | 193 | 5 | 24 | 20 | 78 |
+| CogLib: the general library | 202 | 197 | 5 | 24 | 20 | 79 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
-| Strategy choice: distributions of associations | 20 | 15 | 5 | 0 | 0 | 11 |
-| Multi-digit addition (with the problem solver) | 166 | 139 | 27 | 1 | 5 | 67 |
+| Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
+| Multi-digit addition (with the problem solver) | 175 | 145 | 30 | 1 | 5 | 70 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 0 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 565 | 455 | 110 | 74 | 32 | 240 |
+| **All** | 581 | 468 | 113 | 74 | 32 | 245 |
