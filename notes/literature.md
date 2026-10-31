@@ -55,6 +55,19 @@ Fisher, C. R., Houpt, J., Larue, O., & Schmidt, K. D. (2024, June). *Deriving cr
 
 Presented in `presentations/coglean-overview` and `coglean-story` (slide "A related approach: SFT-GMA").
 
+## Probabilistic model checking (PRISM), and where CogLean differs
+
+Ganeriwala et al. (2026), *Formal analysis of stochastic cognitive models: A translation framework from Soar to PRISM* (NASA Formal Methods, LNCS, pp. 192–213, doi:10.1007/978-3-032-28079-4_9), compile Soar models to discrete-time Markov chains for PRISM (Kwiatkowska, Norman & Parker 2011, *PRISM 4.0*, CAV, LNCS 6806). Their earlier working paper is Ganeriwala, Matsumuro, Ritter & Bhattacharyya (2025), *Enabling formal verification in a common model of cognition* (SBP-BRiMS; not yet read).
+
+**Positioning** (the user's note, 2026-10-31). Keep three approaches apart:
+1. **Simulation** samples executions to estimate behavioural outcomes.
+2. **Probabilistic model checking** analyses a specified state-transition model, often numerically, to establish properties or compute probabilities over its state space. It is formal verification, not simulation. PRISM also supports symbolic analysis over parameters (parametric Markov models; Hahn, Hermanns & Zhang 2011).
+3. **Deductive theorem proving**, as in CogLean, establishes results for whole classes of models satisfying stated theoretical assumptions, independent of parameter settings or finite-state enumeration.
+
+The distinction that matters is **model verification versus theoretical deduction**, not simulation versus formal verification. PRISM verifies properties of particular formalized systems, or of parameterized families. CogLean's objects are the theories: reusable representations, mechanisms, assumptions and theorems, composed to derive further results. The approaches are complementary, not competitors. Don't claim CogLean introduces formal methods to cognitive science. Its contribution is a shared, cumulative library of cognitive theory supporting reusable proofs, cross-theory composition and deductive discovery.
+
+Used in `papers/2026_multidigit/paper.tex`, Discussion, "Model verification and theoretical deduction".
+
 ## Conceptual combination
 
 Formalized in `Concepts/` (see its README).

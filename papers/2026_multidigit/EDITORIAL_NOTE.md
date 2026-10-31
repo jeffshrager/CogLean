@@ -45,6 +45,9 @@ It is written fresh rather than as an edit of `MultiDigit/paper/paper.tex`, whic
 - **Milnes et al. (1992).** The report number and author list were verified from the catalog records. The draft's description ("covered the architecture completely but at a low level, and it could not be executed") comes from the report's own description and from a later DTIC report.
 - **Verified via Crossref:** all other entries with DOIs.
 
+**Positioning against model checking** (added 2026-10-31). The Discussion now separates simulation, probabilistic model checking and deductive proof, and frames the contrast as model verification versus theoretical deduction, with the approaches complementary. PRISM 4.0 and parametric model checking (Hahn et al. 2011) are cited and verified via Crossref. The rationale is in `notes/literature.md`.
+- *Check:* how far the PRISM work handles parameters symbolically. The draft says only that PRISM *can*. It does not say that the Soar translation does.
+
 **Novelty**
 - The claim that CogLean's *combination* of emphases is new rests on a review of about fifteen works. Before submission, search further:
   - formalizations of psychological models in other proof assistants (Coq/Rocq, Isabelle, Agda);
