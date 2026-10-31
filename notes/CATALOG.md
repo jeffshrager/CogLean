@@ -186,7 +186,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-164 theorems: 138 general, 26 instances; 66 headline; 1 about laws; 5 conditional on laws.
+166 theorems: 139 general, 27 instances; 67 headline; 1 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -235,6 +235,7 @@ How to read it:
 | `MD.Integrated.columnsSuch_prob` | general | — | The column route, factored. When `x` is recognized as `y`, an answer with property `P` comes by the column route with probability: the chance that retrieval is exhausted, times the chance that ... |
 | `MD.Integrated.errors_two_sources` | general | — | Two sources of error on a confused problem. Under the same conditions, `x` is answered wrongly by whole-problem retrieval whenever that route is taken, and wrongly by the column route with prob... |
 | `MD.Integrated.integrated_confident_errors` | general | — | Confident errors, with the solver as backup. Given that the net recognizes `q` as itself and confuses `x` with it, that `q`'s associations are sharp, and that the DOA strengths are proper: * wh... |
+| `MD.Integrated.setting_actr_x` | instance | — | With ACT-R's memory in place of the net (`ExampleACTR`): the same application with one part swapped. 150 + 100 is answered 200 by retrieval with probability 225/529, as before; it reaches the s... |
 | `MD.Integrated.setting_confident_errors` | instance | — | Confident errors in the setting: the conditional theorem, its conditions met by the net EPAM learned and the chosen strengths. |
 | `MD.Integrated.setting_overall_q1` | instance | — | 100 + 100 overall: correct with probability about .993, by retrieval (45/46) and by the solver (1/46 × about .664). |
 | `MD.Integrated.setting_overall_x` | instance | — | 150 + 100 overall: answered 200 with probability about .978 (almost all by whole-problem retrieval), and correctly, 250, only by the solver, with probability (1/46) × the solver's .656. |
@@ -440,10 +441,10 @@ How to read it:
 | CogLib: the general library | 198 | 193 | 5 | 24 | 20 | 78 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 20 | 15 | 5 | 0 | 0 | 11 |
-| Multi-digit addition (with the problem solver) | 164 | 138 | 26 | 1 | 5 | 66 |
+| Multi-digit addition (with the problem solver) | 166 | 139 | 27 | 1 | 5 | 67 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 0 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 563 | 454 | 109 | 74 | 32 | 239 |
+| **All** | 565 | 455 | 110 | 74 | 32 | 240 |

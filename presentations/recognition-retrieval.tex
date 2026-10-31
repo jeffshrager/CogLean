@@ -87,13 +87,13 @@ Here is the prediction neither theory makes alone. Suppose a familiar problem q 
   \begin{tabular}{lc}
     \toprule
     $150+100$ answered $200$, by retrieval & $45/46$\\
-    $150+100$ answered $250$, by the columns & $1/46$\\
+    $150+100$ sent to the columns & $1/46$\\
     \bottomrule
   \end{tabular}
   \end{center}
 \end{frame}
 \note{
-To see it concretely: encode each digit in four bits. A net that has learned 100 plus 100 and 100 plus 200 only needs to test the second addend's hundreds digit to tell them apart. So 150 plus 100 slips through as 100 plus 100. With these strengths and a single search, it's answered 200 by retrieval with probability 45 over 46, and correctly, by the columns, with probability 1 over 46. These numbers are just an illustration, computed exactly; the structure, confident errors, holds for every choice of parameters.
+To see it concretely: encode each digit in four bits. A net that has learned 100 plus 100 and 100 plus 200 only needs to test the second addend's hundreds digit to tell them apart. So 150 plus 100 slips through as 100 plus 100. With these strengths and a single search, it's answered 200 by retrieval with probability 45 over 46, and sent to the columns with probability 1 over 46. With the column problem solver doing the columns from single-digit facts, it's then right about two thirds of the time, so correct overall only about one and a half percent of the time. These numbers are just an illustration, computed exactly; the structure, confident errors, holds for every choice of parameters.
 }
 
 \begin{frame}{Checking the formalization: a blind simulation}
@@ -136,7 +136,7 @@ Next we made memory a parameter. The recognition step is now an interface: memor
     \midrule
     $150+100$ answered $200$ (the neighbour's sum) & $45/46$ & $225/529$\\
     $150+100$ answered $300$ (differs on a tested digit) & $0$ & $225/1058$\\
-    $150+100$ answered correctly & $1/46$ & $383/1058$\\
+    $150+100$ sent to the columns & $1/46$ & $383/1058$\\
     errors on the practiced $100+100$ & $0$ & $225/782$\\
     the same, after also studying $100+300$ & $0$ & $3375/5842$\\
     \bottomrule

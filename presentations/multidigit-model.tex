@@ -124,6 +124,46 @@ The fourth component is that memory is a parameter. Recognition is stated for an
 How do they compose? A trial is recognition, then either retrieval of the recognized problem's answer or the backup. The backup is a chain of problem-solving steps, and adding a column is itself a full distributions-of-associations trial on that column's digits. Each step is a two-stage draw: probabilities multiply along a path and add over paths. It's exact, with no simulation anywhere, and every number is a theorem. And because these draws regroup freely, a theorem proved about a component holds where that component sits inside the whole.
 }
 
+\begin{frame}{An application built from the library}
+  \small
+  \begin{tabular}{p{0.17\linewidth}p{0.52\linewidth}p{0.2\linewidth}}
+    \toprule
+    Layer & What it supplies & Where\\
+    \midrule
+    Library & discrimination nets and their learning; sampled retrieval with a criterion; recognize, then retrieve, else back up; the decision cycle with impasses and repairs; exact distributions & \code{CogLib/}\\
+    Theory & the single-digit trial: retrieve, fingers, count (Siegler \& Shrager) & \code{StrategyChoice/}\\
+    Task knowledge & the problem's code; the column problem space and its procedure & \code{MultiDigit/}\\
+    The application & the wiring: the solver as the backup, a DOA trial as each column's fact & \code{Integrated.lean}\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+  \begin{itemize}
+    \item No new mechanism, and no answer given: correct knowledge enters only as single-digit associations and the carry rule.
+    \item It inherits every theorem of its parts, and proves its own about the whole.
+  \end{itemize}
+\end{frame}
+\note{
+This is the point I most want to make. The integrated model is an application: something built out of the library, not a new model written from scratch. The library supplies the mechanisms: discrimination nets and how they learn, sampled retrieval with a confidence criterion, the general pattern of recognize, then retrieve, else back up, the decision cycle with impasses and repairs, and exact probability distributions. A theory package supplies the single-digit trial from Siegler and Shrager. The task supplies its own knowledge: how a problem is coded, and the column problem space with its procedure. And the application itself is just the wiring: the problem solver goes in the backup slot, and a single-digit trial supplies each column's fact. There's no new mechanism, and nothing is handed the answer; correct knowledge enters only as single-digit associations and the carry rule. And the application inherits every theorem of its parts, and then proves its own theorems about the whole.
+}
+
+\begin{frame}{What rests on what}
+  \small
+  \begin{tabular}{p{0.25\linewidth}p{0.67\linewidth}}
+    \toprule
+    Kind & Results\\
+    \midrule
+    Follows from the composition, at every setting & the solver answers as the column backup; whole-problem errors are untouched by the solver, so a better solver cannot repair them; a solver error is a single-digit error moved to its column\\
+    Given stated conditions & confident errors, and two sources of error on a confused problem, given: the confusion (derived from the learned net), sharp associations (assumed, not yet explained), positive strengths (well-formedness)\\
+    Illustrative numbers & the worked case, next\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+  No phenomenon is a premise of any of these theorems.
+\end{frame}
+\note{
+Here is what each result rests on, because that's where the explanatory work is. Some results follow from the composition alone, at every setting: the solver answers exactly as the old column backup did; whole-problem errors don't depend on the solver at all, so no improvement to the solver can repair a confident error; and a solver error is a single-digit error moved to its column. Others need stated conditions. Confident errors, and the fact that a confused problem has two sources of error with different signatures, need the confusion, which here is derived from the net EPAM learned; sharp associations, which are still an assumption we haven't explained; and positive strengths, which is just well-formedness. And then there are the numbers in the worked case, which are only an illustration. In none of these theorems is the phenomenon itself a premise.
+}
+
 \begin{frame}{What the whole predicts}
   \small
   \begin{tabular}{p{0.38\linewidth}p{0.55\linewidth}}
@@ -148,20 +188,22 @@ Here's what the whole model predicts, and which parts each prediction comes from
     \toprule
     & EPAM & ACT-R\\
     \midrule
-    $150+100$ answered 200 (the neighbour's sum) & $45/46$ & $225/529$\\
-    $150+100$ answered correctly & $1/46$ & $383/1058$\\
-    \midrule
+    $150+100$ answered 200 (neighbour's sum) by retrieval & $45/46$ & $225/529$\\
+    $150+100$ reaches the solver & $1/46$ & $383/1058$\\
+    $150+100$ answered correctly, by the solver & $\approx .014$ & $\approx .238$\\
+
     $15+17$, no carry rule, strict critics & \multicolumn{2}{c}{22, for every such learner}\\
     \bottomrule
   \end{tabular}
   \end{center}
   \begin{itemize}
-    \item Values are exact, at settings chosen for illustration; the predictions above hold for every setting.
+    \item Values are exact, at settings chosen for illustration; the predictions above hold for every setting. Each column's facts follow one chosen rule.
+    \item The solver alone on $150+100$: 250 $\approx .66$; 260, 350, 251 $\approx .10$ each, single-digit errors in place (tens, hundreds, units).
     \item With EPAM, the confusion is certain; with ACT-R, it is graded.
   \end{itemize}
 \end{frame}
 \note{
-A worked case. With EPAM recognition and illustrative strengths, one hundred fifty plus one hundred is answered with its neighbour's sum, two hundred, forty-five times in forty-six, and correctly only once in forty-six. With ACT-R's memory instead, the confusion is graded, and correct answers are much more common. And with the problem solver missing its carry rule and strict critics, fifteen plus seventeen is twenty-two. These numbers are exact but come from chosen settings; the predictions on the previous slide hold for every setting.
+A worked case, with every answer computed. With EPAM recognition and illustrative strengths, one hundred fifty plus one hundred is answered with its neighbour's sum, two hundred, by retrieval forty-five times in forty-six. Only once in forty-six does it reach the problem solver, and the solver, adding each column with a single-digit trial, gets two hundred fifty about two thirds of the time. So it's answered correctly only about one and a half percent of the time. The solver's own errors are single-digit errors in place: two sixty, three fifty, two fifty-one, each about ten percent. Swap in ACT-R's memory, with nothing else changed, and the confusion is graded: the solver is reached more often, and the problem is answered correctly about a quarter of the time. And with the problem solver missing its carry rule and strict critics, fifteen plus seventeen is twenty-two. These numbers are exact but come from chosen settings, including one rule for every column's single-digit associations; the predictions on the earlier slides hold for every setting.
 }
 
 \begin{frame}{Is the formalization faithful?}
@@ -201,7 +243,7 @@ To summarize the parts. Discrimination nets, from EPAM, say which problems look 
 
 \begin{frame}{Limits, and next}
   \begin{itemize}
-    \item Worked cases use chosen settings; priors should come from experience, as Siegler \& Shrager's did from counting (open issue).
+    \item Worked cases use chosen settings; priors, whole-problem and single-digit, should come from experience, as Siegler \& Shrager's did from counting (open issue).
     \item ``Multi-digit'' is three-digit.
     \item \textbf{Chunking} would close the loop: a fact found by counting at a retrieval impasse becomes an association, DOA's learning rule as problem-solving learning.
     \item Subtraction, borrowing, and repair theory's own bug data.

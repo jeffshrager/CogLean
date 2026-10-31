@@ -29,17 +29,17 @@ This is a reference deck: for each module of CogLean, which theory-neutral laws 
     \toprule
     & Theorems & General & Instances & About laws & Headline\\
     \midrule
-    CogLib (the library) & 184 & 179 & 5 & 24 & 75\\
+    CogLib (the library) & 198 & 193 & 5 & 24 & 78\\
     EPAM & 31 & 14 & 17 & 7 & 18\\
-    Strategy choice & 16 & 11 & 5 & 0 & 9\\
-    Multi-digit (with problem solver) & 144 & 124 & 20 & 1 & 56\\
+    Strategy choice & 20 & 15 & 5 & 0 & 11\\
+    Multi-digit (with problem solver) & 166 & 139 & 27 & 1 & 67\\
     Theory matrix & 61 & 46 & 15 & 31 & 30\\
     Experiments & 45 & 25 & 20 & 0 & 13\\
     Concepts & 17 & 12 & 5 & 5 & 8\\
     Semantic memory & 13 & 6 & 7 & 6 & 7\\
     View application & 14 & 5 & 9 & 0 & 8\\
     \midrule
-    All & 525 & 422 & 103 & 74 & 224\\
+    All & 565 & 455 & 110 & 74 & 240\\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -143,9 +143,10 @@ Strategy choice. In general, for any associations, criterion and search length: 
     \item a confused problem gets its neighbour's answer; same-sum and commuted confusions are harmless;
     \item strategy nesting; practiced problems stay practiced;
     \item near misses within 200, or 20; confusions keep zeros, thresholds and column sums that are tested;
-    \item discrimination removes a confusion, and only that; then the columns.
+    \item discrimination removes a confusion, and only that; then the columns;
+    \item the integrated application (solver as backup, DOA facts): whole-problem errors are untouched by the solver, and a solver error is a single-digit error in its column.
   \end{itemize}
-  \textbf{Instances}: the worked cases (EPAM 45/46; ACT-R graded, and lacking \emph{agrees-on}).
+  \textbf{Instances}: the worked cases (EPAM 45/46; ACT-R graded, and lacking \emph{agrees-on}); with every answer computed, $150+100$ is correct $\approx .014$ (EPAM), $\approx .238$ (ACT-R).
 \end{frame}
 \note{
 Multi-digit addition, the recognition and retrieval side. In general, with any memory: confident errors, the neighbour's answer, harmless confusions when sums agree, strategy nesting, practiced problems staying practiced, near misses, and what confusions preserve when features are tested. And learning by discrimination removes exactly the confusion it targets. The worked cases are instances: forty-five in forty-six with EPAM, and graded confusion with ACT-R, which lacks the agrees-on property in that case.

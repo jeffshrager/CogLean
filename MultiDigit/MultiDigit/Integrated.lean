@@ -23,7 +23,7 @@ What each result rests on:
 |---|---|
 | **Consequence of the composition** (every encoding, net, strength set and DOA parameter set) | `solverBackup_eq_columns`, `mass_solverBackup`, `whole_independent_of_solver`, `columnsSuch_prob`, `solver_error_is_doa_error` |
 | **Conditional**, given the conditions named in its docstring | `integrated_confident_errors` (given confusion, sharp associations, proper DOA strengths), `errors_two_sources` (the same), `solver_exact_of_exact` (given exact facts, which DOA sampling does not supply) |
-| **The illustrative setting** (chosen numbers) | `setting_*` |
+| **The illustrative setting** (chosen numbers) | `setting_*`, including `setting_actr_x` with ACT-R's memory in place of the net |
 
 Conditions, and where they stand:
 * *x is confused with q, and q recognized as itself*: a property of the net,
@@ -56,6 +56,7 @@ each value is a probability of the model itself.
 -/
 
 import MultiDigit.Example
+import MultiDigit.ExampleACTR
 import MultiDigit.Solver
 import StrategyChoice.Exact
 
@@ -242,6 +243,21 @@ theorem prob_trial_same (E : Encoding) (N : Net) (str : Item → Nat → Rat) (a
   · exact hk
   · exact same_bind (Same.refl _) fun r => by cases r <;> first | exact Same.refl _ | exact hk
 
+/-- The same, for a trial with any memory. -/
+theorem prob_trialWith_same (retrieve : Item → Dist (Option Item)) (E : Encoding)
+    (str : Item → Nat → Rat) (as : List Nat) (cc : Rat) (n : Nat) (b b' : Problem → Dist Nat)
+    (x : Problem) (hb : Same (b x) (b' x)) (e : Route × Nat → Bool) :
+    prob (trialWith retrieve E str as cc n b x) e = prob (trialWith retrieve E str as cc n b' x) e := by
+  apply Same.prob
+  have hk : Same (Dist.bind (b x) fun r => Dist.pure (Route.columns, r))
+      (Dist.bind (b' x) fun r => Dist.pure (Route.columns, r)) :=
+    same_bind hb fun _ => Same.refl _
+  unfold trialWith
+  refine same_bind (Same.refl _) fun r => ?_
+  cases r with
+  | none => exact hk
+  | some y => exact same_bind (Same.refl _) fun o => by cases o <;> first | exact Same.refl _ | exact hk
+
 theorem prob_itrial_fast (E : Encoding) (N : Net) (str : Item → Nat → Rat) (as : List Nat)
     (cc : Rat) (n : Nat) (F : Facts) (x : Problem) (e : Route × Nat → Bool) :
     prob (itrial E N str as cc n F x) e = prob (trial E N str as cc n (fastBackup F) x) e :=
@@ -308,6 +324,22 @@ theorem setting_overall_q1 :
     prob (solverBackup F0 q1) (· == 200) = 12616212077 / 19010937500 ∧
       prob (it q1) (fun o => o.2 == 200) = 868108399577 / 874503125000 := by
   rw [← (same_fastBackup F0 q1).prob, prob_itrial_fast]
+  decide +kernel
+
+/-- **With ACT-R's memory in place of the net** (`ExampleACTR`): the same
+application with one part swapped. 150 + 100 is answered 200 by retrieval
+with probability 225/529, as before; it reaches the solver with probability
+383/1058, and is answered correctly, 250, with probability 383/1058 × the
+solver's .656, about .238. -/
+theorem setting_actr_x :
+    prob (trialWith ((actRetriever ExampleACTR.P).retrieve ExampleACTR.mem) bcd str answers (1 / 2) 1
+        (solverBackup F0) x) (wholeSuch (· == 200)) = 225 / 529 ∧
+      prob (trialWith ((actRetriever ExampleACTR.P).retrieve ExampleACTR.mem) bcd str answers (1 / 2) 1
+        (solverBackup F0) x) isColumns = 383 / 1058 ∧
+      prob (trialWith ((actRetriever ExampleACTR.P).retrieve ExampleACTR.mem) bcd str answers (1 / 2) 1
+        (solverBackup F0) x) (fun o => o.2 == 250) = 1911678749972988451 / 8045428750000000000 := by
+  simp only [prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) x
+    (fun h => (same_fastBackup F0 x h).symm)]
   decide +kernel
 
 end MD.Integrated
