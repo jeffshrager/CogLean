@@ -41,20 +41,20 @@
 \medskip
 
 \begin{abstract}
-A companion paper introduced CogLean, a library of cognitive theory in the Lean proof assistant, and argued that formalized theories can accumulate: mechanisms defined once, phenomena stated apart from any mechanism, and theorems reused when theories are composed. Its demonstration was multi-digit arithmetic. A library is cumulative only if it serves domains it was not built for. Here we take CogLean to a different area of cognition: how people form concepts of something new by applying concepts they already have. We formalize view application (Shrager, 1987), in which a learner understands a novel device or domain by merging a prior schema, a \emph{view}, into a current theory, and we add the two things it lacked: an account of which view is brought in, and of when the theory is revised.
+CogLean is a library of cognitive theory in the Lean proof assistant, designed on the model of Mathlib: a general library of reusable cognitive representations, mechanisms and processes, on which models of any kind can be built, with their consequences both machine-checked and executable. A companion paper introduced it, with multi-digit arithmetic as its first worked example. A general library has to be shown general by use. Here we build on CogLean in a very different area of cognition: how people form concepts of something new by applying concepts they already have. We formalize view application (Shrager, 1987), in which a learner understands a novel device or domain by merging a prior schema, a \emph{view}, into a current theory, and we add the two things it lacked: an account of which view is brought in, and of when the theory is revised.
 
-Both additions are built from CogLib components developed for the arithmetic work. Which view is brought in is decided by retrieval through the same memory interface, so EPAM-style and ACT-R-style memories can be exchanged, and their proved laws apply. When the theory is revised is decided by the same decision cycle that runs the arithmetic solver: a failed prediction is an impasse, and applying a view is the repair. We prove results at the levels the companion paper distinguished. In general, for any theories, actions and revision processes, a failed prediction is exactly an impasse and a correct theory is never revised. For view retrieval, a cue confused with another brings in the other's view, and the confusion-error pattern first stated for arithmetic holds again, through a different mechanism. For a class of memories, every memory with the law of determinacy makes a learner who keeps consulting one cue keep applying the same failed interpretation, a formal account of perseveration. Views can also be composed from parts (a key enters a number; the number is a time, or a duration), and a revision can then replace one part and keep the rest. Because views re-interpret types, we prove that no theory in which two keys share a type can tell them apart, which makes \emph{differentiation}, splitting a type, necessary rather than optional; we prove that a split by itself changes no prediction, and show that a learner who splits when a revision would undo an explanation learns both keys, while one who cannot split never does and oscillates between interpretations. Earlier view-application results in the library show the same process removing over-extension from number concepts while leaving typicality unchanged. A worked case, learning a microwave oven, gives concrete witnesses; its exact values are in an appendix. The point is not the microwave but the reuse: a different domain, much of the same library, and phenomena that transfer across domains.
+Both additions are built from general CogLib components that the arithmetic example also used. Which view is brought in is decided by retrieval through the same memory interface, so EPAM-style and ACT-R-style memories can be exchanged, and their proved laws apply. When the theory is revised is decided by the same decision cycle that runs the arithmetic solver: a failed prediction is an impasse, and applying a view is the repair. We prove results at the levels the companion paper distinguished. In general, for any theories, actions and revision processes, a failed prediction is exactly an impasse and a correct theory is never revised. For view retrieval, a cue confused with another brings in the other's view, and the confusion-error pattern first stated for arithmetic holds again, through a different mechanism. For a class of memories, every memory with the law of determinacy makes a learner who keeps consulting one cue keep applying the same failed interpretation, a formal account of perseveration. Views can also be composed from parts (a key enters a number; the number is a time, or a duration), and a revision can then replace one part and keep the rest. Because views re-interpret types, we prove that no theory in which two keys share a type can tell them apart, which makes \emph{differentiation}, splitting a type, necessary rather than optional; we prove that a split by itself changes no prediction, and show that a learner who splits when a revision would undo an explanation learns both keys, while one who cannot split never does and oscillates between interpretations. Earlier view-application results in the library show the same process removing over-extension from number concepts while leaving typicality unchanged. A worked case, learning a microwave oven, gives concrete witnesses; its exact values are in an appendix. The point is not the microwave but the reuse: a different domain, much of the same library, and phenomena that transfer across domains.
 \end{abstract}
 
 \section{Introduction}
 
 The companion paper \citep{shrager2026coglean} introduced CogLean \citep{coglean}, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib. Its claim was methodological. If mechanisms are defined once, phenomena are stated as predicates independent of any mechanism, and the consequences of theories are proved rather than simulated, then theoretical results can accumulate. Theories can be composed, their theorems reused, and new consequences derived from old ones. The demonstration composed EPAM's recognition \citep{feigenbaum1962}, Siegler and Shrager's distributions of associations and a problem solver into a model of three-digit addition.
 
-One domain does not show that a library is cumulative. A library built around arithmetic could be a well-organized model of arithmetic. The test is whether its components serve a domain they were not designed for. This paper takes CogLean to a domain as different from arithmetic as we could find within the library's reach: the formation of concepts and theories, and in particular how people make sense of something new by applying concepts they already have.
+CogLean was not designed for arithmetic. It was designed as a general library: representations, mechanisms and processes defined once, on which any model can be built, with its consequences both proved and executable. Arithmetic was the first example worked out in it. One example cannot show that the design succeeded; a second, in a very different domain, is a test of it. This paper builds a model in a domain as different from arithmetic as we could find within the library's present reach: the formation of concepts and theories, and in particular how people make sense of something new by applying concepts they already have.
 
 That process has been described in many ways. Concepts are embedded in theories that give them coherence \citep{murphy1985}. Children's concepts change by restructuring, not only by accretion \citep{carey1985,rumelhart1976}. Analogy maps the structure of a known domain onto a new one \citep{gentner1983}. Prior schemas or frames supply defaults and expectations \citep{minsky1975}. People learning to operate a device build mental models of it \citep{gentner1983mm,kieras1984}. Shrager's account of \emph{view application} \citep{shrager1987} is a computational version of one part of this story. A learner exploring a device without instructions \citep{shrager1986} holds a theory of it. The learner changes that theory by applying a \emph{view}: a schema of a familiar kind of thing, such as ``a device that stores a program and runs it'', which is merged into the theory, overriding it where they conflict.
 
-The 1987 account left two things open. It had no principled account of which view a learner brings in, and it described, but did not formalize, when the theory is changed. Both turn out to be supplied by components CogLib already had for arithmetic.
+The 1987 account left two things open. It had no principled account of which view a learner brings in, and it described, but did not formalize, when the theory is changed. Both turn out to be supplied by general components CogLib already had, which the arithmetic example had also used.
 
 \begin{enumerate}
   \item \textbf{Which view: retrieval through a shared memory interface.} A cue (a key's label, a feature of the display) is coded and recognized by a memory, and the view stored with what it calls up is applied. The memory is CogLib's \emph{retriever} interface, the one that let the arithmetic model exchange EPAM's discrimination net for ACT-R's declarative memory. The laws of memory proved for those families apply unchanged.
@@ -184,28 +184,28 @@ Both are mechanism-independent predicates; as with the confusion-error pattern, 
 \centering
 \begin{tikzpicture}[font=\footnotesize,
   ty/.style={draw, rounded corners, align=left, inner sep=3pt, fill=black!5},
-  in/.style={draw, align=center, inner sep=2pt},
+  inst/.style={draw, align=center, inner sep=2pt},
   isa/.style={-{Stealth[length=1.6mm]}},
   lab/.style={font=\small\bfseries}]
   % (a)
   \node[lab] at (0,2.1) {(a) before};
   \node[ty] (a1) at (0,1.2) {\textit{key type}\\enters a number\\means: duration};
-  \node[in] (a2) at (-1.0,0) {TIME COOK};
-  \node[in] (a3) at (1.0,0) {CLOCK};
+  \node[inst] (a2) at (-1.0,0) {TIME COOK};
+  \node[inst] (a3) at (1.0,0) {CLOCK};
   \draw[isa] (a2) -- (a1); \draw[isa] (a3) -- (a1);
   % (b)
   \node[lab] at (4.95,2.1) {(b) split};
   \node[ty] (b1) at (3.6,1.2) {\textit{key type}\\enters a number\\means: duration};
   \node[ty] (b2) at (6.3,1.2) {\textit{copy}\\enters a number\\means: duration};
-  \node[in] (b3) at (3.6,0) {TIME COOK};
-  \node[in] (b4) at (6.3,0) {CLOCK};
+  \node[inst] (b3) at (3.6,0) {TIME COOK};
+  \node[inst] (b4) at (6.3,0) {CLOCK};
   \draw[isa] (b3) -- (b1); \draw[isa] (b4) -- (b2);
   % (c)
   \node[lab] at (10.65,2.1) {(c) re-interpret the copy};
   \node[ty] (c1) at (9.3,1.2) {\textit{key type}\\enters a number\\means: duration};
   \node[ty] (c2) at (12.0,1.2) {\textit{copy}\\enters a number\\means: \textbf{time}};
-  \node[in] (c3) at (9.3,0) {TIME COOK};
-  \node[in] (c4) at (12.0,0) {CLOCK};
+  \node[inst] (c3) at (9.3,0) {TIME COOK};
+  \node[inst] (c4) at (12.0,0) {CLOCK};
   \draw[isa] (c3) -- (c1); \draw[isa] (c4) -- (c2);
 \end{tikzpicture}
 \caption{Differentiation in the microwave. (a) Both keys share a type, so they are read alike, and no view on that type can make both right (\lean{never\_both\_shared}). (b) Splitting copies the type for CLOCK; nothing predicts differently yet (\lean{split\_conservative}). (c) NUMBER-IS-A-TIME, aimed at the copy, changes CLOCK only (\lean{split\_separates}).}
@@ -284,7 +284,7 @@ With EPAM's net, TIME COOK and CLOCK are confused with the VCR's SET TIME. So th
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{What this shows about cumulativity.} The companion paper argued that a library of reusable \emph{results} is a contribution to theory, and a library of reusable code is not. Here the reused results are the laws of memory, the confusion-error pattern and the decision cycle's structure. They carried over to a domain they were not designed for: forming a theory of something new from concepts already held. The new pieces were stated generally, so they are available to the next domain. One second domain does not establish that the library will scale. It does show that its components were cut at joints that a different cognitive problem could use.
+\paragraph{What this shows about cumulativity.} The companion paper argued that a library of reusable \emph{results} is a contribution to theory, and a library of reusable code is not. Here the reused results are the laws of memory, the confusion-error pattern and the decision cycle's structure. They were first used in the arithmetic example, and they served unchanged in forming a theory of something new from concepts already held. The new pieces were stated generally, as the library's design requires, so they are available to the next model. A second domain does not establish that the library will scale. It is evidence that its components were cut at general joints, as intended, and not around the first example.
 
 \paragraph{What it says about concept formation.} Formalization sharpened three points of the 1987 account.
 \begin{itemize}
@@ -305,7 +305,7 @@ With EPAM's net, TIME COOK and CLOCK are confused with the VCR's SET TIME. So th
 
 \paragraph{Future work.} The natural next steps are learning in memory; the general commutation law for views; a learner that chooses between splitting and overwriting; a second reviser (rule induction or hypothesis testing) on the same loop, to show that the loop's results transfer between revision processes as the confusion-error pattern transferred between domains; and contact with data, of which the instructionless-learning protocols \citep{shrager1986} are the obvious first source.
 
-\paragraph{Conclusion.} CogLean was built around arithmetic. Taken to concept formation, it supplied the memory interface and its laws, a phenomenon stated for arithmetic, and the decision cycle. View application needed only new components that are themselves general. The results were proved at the levels the companion paper set out: for every learner, for every memory with a law, and at a setting as a witness. The library is still small. But this is the behavior a cumulative library should show.
+\paragraph{Conclusion.} CogLean was designed as a general, Mathlib-like library of cognitive processes, on which any model can be built with proofs and executability; arithmetic was only its first worked example. Building a model of concept formation on it, the library supplied the memory interface and its laws, a phenomenon first stated in the arithmetic example, and the decision cycle. View application needed only new components that are themselves general. The results were proved at the levels the companion paper set out: for every learner, for every memory with a law, and at a setting as a witness. The library is still small. But this is the behavior a cumulative library should show.
 
 \paragraph{Code.} All definitions and theorems are in the CogLean repository \citep{coglean}: CogLib's \code{Process/ViewApplication}, \code{ViewRetrieval}, \code{TheoryRevision}, \code{ViewRevision}, \code{TheoryExecution} and \code{Phenomena/TheoryChange}; and the \code{ViewApplication} and \code{DeviceLearning} packages. Every theorem is fully proved and depends only on Lean's standard axioms.
 

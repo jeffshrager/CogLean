@@ -3,7 +3,7 @@
 The draft is `paper.tex`, with an accompanying talk in `talk.tex`; `make` builds both. It is the second CogLean paper. It does not introduce CogLean, which the companion paper does (`../2026_multidigit/`). Its point is that the library carries over to a different domain: concept and theory formation by view application. It reuses CogLib's memory interface and laws, the confusion-error phenomenon, and the decision cycle. Every result cited was checked against the Lean source on 2026-11-01.
 
 ## Claims of novelty
-1. **A domain the library was not built for.** Device learning reuses components built for arithmetic by citing their proofs:
+1. **A second domain for a general library.** CogLean is designed as a general library; arithmetic was only its first worked example. Device learning reuses general components that the arithmetic example also used, by citing their proofs:
    - the retriever interface, EPAM and ACT-R;
    - the laws of memory and the memory matrix;
    - `ConfusionErrorPattern`;
@@ -73,3 +73,6 @@ The paper is 13 pages; the talk is 19 slides.
 **In the talk,** a new slide, "A split, step by step", with the same three panels and spoken notes covering aiming and cost.
 
 The paper is 14 pages; the talk is 20 slides.
+
+## Revision of 2026-11-01 (framing)
+The draft had said in several places (the abstract, the introduction, the discussion, the conclusion and the talk) that CogLean was "built around arithmetic" and that this paper takes it to a domain it "was not built for". That is wrong. CogLean was designed from the start as a general, Mathlib-like library of reusable cognitive processes, on which any model can be built, provable and executable. Arithmetic was the first example worked out in it. All of these passages now say so. This paper is presented as a second worked example, in a very different domain, testing that design.

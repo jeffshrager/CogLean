@@ -22,15 +22,15 @@ This talk goes with a draft paper of the same name, which is not for circulation
 
 \begin{frame}{The question}
   \begin{itemize}
-    \item The CogLean paper: mechanisms defined once, phenomena stated apart from mechanisms, theorems reused when theories are composed. Demonstrated on \textbf{multi-digit arithmetic}.
-    \item One domain doesn't show a library is cumulative: it could just be a tidy model of arithmetic.
-    \item \textbf{The test:} do its components serve a domain they weren't built for?
+    \item CogLean is designed as a general, Mathlib-like library of cognitive processes: build \emph{any} model on it, with proofs \emph{and} executability.
+    \item The CogLean paper's first worked example: \textbf{multi-digit arithmetic}.
+    \item One example can't show the design worked. \textbf{The test:} a second model, in a very different domain.
   \end{itemize}
   \bigskip
   \emph{Take CogLean to concept formation: how people understand something new by applying concepts they already have.}
 \end{frame}
 \note{
-Here's the question. The first paper argued that if you define mechanisms once, state phenomena apart from any mechanism, and prove consequences rather than simulate them, then theoretical results can accumulate, and it showed that on multi-digit arithmetic. But one domain doesn't show a library is cumulative. A library built around arithmetic might just be a well-organized model of arithmetic. The real test is whether its pieces serve a domain they weren't designed for. So we took it to concept formation: how people make sense of something new by applying concepts they already have.
+Here's the question. CogLean is designed as a general library, on the model of Mathlib: reusable cognitive representations, mechanisms and processes, on which you can build any model, with its consequences both proved and executable. The first paper introduced it, and multi-digit arithmetic was just the first example worked out in it. But one example can't show that the design worked. The test is a second model in a very different domain, built from the same parts. So we built one for concept formation: how people make sense of something new by applying concepts they already have.
 }
 
 \begin{frame}{Forming concepts from old ones}
@@ -235,25 +235,25 @@ Now the important part. Views act on types: every instance of a type changes tog
   \centering
   \resizebox{0.97\linewidth}{!}{\begin{tikzpicture}[font=\scriptsize,
     ty/.style={draw, rounded corners, align=left, inner sep=3pt, fill=black!5},
-    in/.style={draw, align=center, inner sep=2pt},
+    inst/.style={draw, align=center, inner sep=2pt},
     isa/.style={-{Stealth[length=1.6mm]}},
     lab/.style={font=\footnotesize\bfseries}]
     \node[lab] at (0,2.1) {(a) before};
     \node[ty] (a1) at (0,1.2) {\textit{key type}\\enters a number\\means: duration};
-    \node[in] (a2) at (-1.0,0) {TIME COOK};
-    \node[in] (a3) at (1.0,0) {CLOCK};
+    \node[inst] (a2) at (-1.0,0) {TIME COOK};
+    \node[inst] (a3) at (1.0,0) {CLOCK};
     \draw[isa] (a2) -- (a1); \draw[isa] (a3) -- (a1);
     \node[lab] at (4.95,2.1) {(b) split};
     \node[ty] (b1) at (3.6,1.2) {\textit{key type}\\enters a number\\means: duration};
     \node[ty] (b2) at (6.3,1.2) {\textit{copy}\\enters a number\\means: duration};
-    \node[in] (b3) at (3.6,0) {TIME COOK};
-    \node[in] (b4) at (6.3,0) {CLOCK};
+    \node[inst] (b3) at (3.6,0) {TIME COOK};
+    \node[inst] (b4) at (6.3,0) {CLOCK};
     \draw[isa] (b3) -- (b1); \draw[isa] (b4) -- (b2);
     \node[lab] at (10.65,2.1) {(c) re-interpret the copy};
     \node[ty] (c1) at (9.3,1.2) {\textit{key type}\\enters a number\\means: duration};
     \node[ty] (c2) at (12.0,1.2) {\textit{copy}\\enters a number\\means: \textbf{time}};
-    \node[in] (c3) at (9.3,0) {TIME COOK};
-    \node[in] (c4) at (12.0,0) {CLOCK};
+    \node[inst] (c3) at (9.3,0) {TIME COOK};
+    \node[inst] (c4) at (12.0,0) {CLOCK};
     \draw[isa] (c3) -- (c1); \draw[isa] (c4) -- (c2);
   \end{tikzpicture}}
   \medskip
@@ -378,10 +378,10 @@ The limitations are real. Memory doesn't learn while the theory is being revised
 
 \begin{frame}{Take-home}
   \begin{itemize}
-    \item CogLean was built around arithmetic. Taken to concept formation, it supplied:
+    \item CogLean: a general library; arithmetic was only its first example. For concept formation, it supplied:
     \begin{itemize}
       \item the memory interface and its laws;
-      \item a phenomenon first stated for arithmetic;
+      \item a phenomenon first stated in the arithmetic example;
       \item the decision cycle.
     \end{itemize}
     \item The new parts went into the library in general form: view retrieval, the revision loop, view composition, type splitting.
@@ -392,7 +392,7 @@ The limitations are real. Memory doesn't learn while the theory is being revised
   \centering\emph{That's what a cumulative library should do.}
 \end{frame}
 \note{
-To sum up. CogLean was built around arithmetic. Taken to a very different domain, concept formation, it supplied the memory interface and its laws, a phenomenon first written down for arithmetic, and the decision cycle. What had to be added went into the library in general form, ready for the next domain. And the results came out at the levels the first paper laid out: for every learner, for every memory with a law, and at a particular setting, as a witness. The library is still small. But that's the behavior a cumulative library should show.
+To sum up. CogLean is designed as a general library of cognitive processes; arithmetic was only the first example built on it. Building a model in a very different domain, concept formation, the library supplied the memory interface and its laws, a phenomenon first written down for arithmetic, and the decision cycle. What had to be added went into the library in general form, ready for the next domain. And the results came out at the levels the first paper laid out: for every learner, for every memory with a law, and at a particular setting, as a witness. The library is still small. But that's the behavior a cumulative library should show.
 }
 
 \end{document}
