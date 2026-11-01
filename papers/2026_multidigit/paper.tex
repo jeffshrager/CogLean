@@ -363,6 +363,19 @@ for every setting (general theorems) & confident-error theorem applies; & its hy
 
 With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM predicts no interference, for every net and every backup (\lean{MD.learning\_preserves\_trial}). The difference is between kinds of memory, and the laws say which property of memory produces it.
 
+\subsection{One memory for whole problems and column facts}
+\label{sec:shared}
+
+In the integrated model, the solver's single-digit facts come from a DOA association table of their own, separate from the memory that recognizes whole problems. A child has one memory. \code{MultiDigit/SharedMemory.lean} removes the separation, again by composition alone. Each column's digit pair $d+e$ is coded in the problems' own code space, as the problem $d+e$. A column's addition is then recognize--retrieve--back up on that pair (\lean{memFact}): the \emph{same} retriever that recognizes whole problems calls up a stored code, and retrieval searches its associations in the same strength table. When nothing clears the criterion, the column falls back on DOA's fingers and counting. The memory becomes a single parameter, used at both levels; the solver itself is unchanged, since it is parametric in its facts.
+
+Three results follow from theorems already in the library:
+\begin{itemize}
+  \item \textbf{The separate table is a special case.} If the memory recognizes a digit pair as itself, the column fact \emph{is} the DOA fact on that pair's associations (\lean{memFact\_self}). So when each column's pair is recognized as itself, the shared model is the integrated model (\lean{strial\_reduces}, \lean{strial\_net\_reduces}), and every theorem of \S\ref{sec:results} holds of it.
+  \item \textbf{Confident errors one level down.} A digit pair taken for another, whose associations are sharp, shows the confusion-error pattern: every retrieved answer is the other pair's sum, with no more fallback than the other pair (\lean{column\_confident\_errors}). The proof applies \lean{RR.confident\_errors} to digit pairs; it needed no new lemma.
+  \item \textbf{The two memories diverge further.} At the setting (the memory studies $0+0$, $5+0$ and $1+1$, then the two problems), EPAM's net recognizes all five as themselves, and every value is the integrated model's (\lean{setting\_epam\_values}). ACT-R's memory does not: digit pairs and whole problems compete for retrieval. $0+0$ calls up $5+0$ with probability $15/197$ and is answered 5 with probability $120/2167$; the solver answers $150+100$ correctly with probability about $.385$, against $.656$ with the separate table; and the practiced $100+100$ is answered wrongly about $.386$ of the time, against $.334$ (\lean{setting\_act\_pairs}, \lean{setting\_act\_values}).
+\end{itemize}
+These ACT-R values carry the limitation stated below: retrieval does not change ACT-R's memory here. And part of ACT-R's loss comes from the fallback to finger counting, which a child doing three-digit addition would not use.
+
 \section{Three kinds of results}
 \label{sec:kinds}
 
@@ -409,14 +422,6 @@ The repository records an explicit audit of this kind for its headline results (
   \item \emph{compositional}: it needs two or more mechanisms working together.
 \end{itemize}
 Not every CogLean theorem is a psychological explanation. Some are properties of algorithms, needed library facts that explain nothing on their own; some are relations between laws; some, such as confident errors and solver independence, are compositional. Making these distinctions visible is part of the method: Lean shows every premise, and the judgment of what the premises contain is written down, in the open.
-
-\paragraph{Premises still unexplained.} The audit also lists what is assumed but not yet derived:
-\begin{itemize}
-  \item sharp associations, in every confident-errors result;
-  \item the prior associations of the worked cases;
-  \item which items serve as anchors in serial learning.
-\end{itemize}
-These are the library's most important targets.
 
 \section{Checking the formalization}
 \label{sec:sim}
@@ -477,7 +482,8 @@ Proof and simulation were complementary here, in a way the slogan ``simulation e
 \begin{itemize}
   \item The associative strengths in the worked example are chosen, not derived from experience. Siegler and Shrager's priors came from a counting process. Grounding these in learning histories is open.
   \item The strongest results depend on sharp associations and on particular recognition confusions. Confusions are derived for learned nets; sharpness is not.
-  \item Single-digit DOA assumes that a representation with the right number of objects is available for elaboration and counting.
+  \item Single-digit DOA assumes that a representation with the right number of objects is available for elaboration and counting. As the column process of a multi-digit adder, its fallback to fingers and counting is implausible: by then single-digit facts are retrieved. The fallback should be a parameter of the column process; the general theorems do not depend on it.
+  \item ACT-R's memory is represented by its retrieval rule, without retrieval as use: memory changes when an item is studied, not when it is retrieved during a trial. Every ACT-R value here, including Table~\ref{tab:memories}, \S\ref{sec:shared} and the counterexample to the pattern, holds for that version. Full ACT-R, in which each retrieval strengthens what it retrieves, would give different values, and possibly different theorems.
   \item Carrying is error-free in the full procedure, and columns are added independently.
   \item The framework does not establish psychological plausibility. That remains a matter of evidence and judgment.
   \item Scalability is a serious question. CogLean uses exact rational distributions over finite outcome spaces. Continuous representations, large state spaces and neural models will need different techniques, and exact evaluation already required a merged evaluator here.
@@ -492,7 +498,7 @@ Natural next steps:
   \item derive associative distributions from learning histories, so that sharpness becomes a theorem;
   \item add feedback-driven learning across whole trials, so that the predicted learning sequence can be proved;
   \item restate the vacuous predictions in terms of the features a net actually tests, or prove when learning can realize their hypotheses;
-  \item generalize the retriever interface, so that more memories can be swapped in;
+  \item generalize the retriever interface, so that more memories can be swapped in, and so that retrieval can change memory (ACT-R's retrieval as use), with the memory's state carried through the solver;
   \item compose theories in other domains.
 \end{itemize}
 The library already contains early work on the last of these: conceptual combination, semantic memory and view application, on a shared semantic-network representation.
@@ -533,6 +539,8 @@ Integrated: solver is the column backup; mass 1; nonnegative weights & \lean{sol
 Integrated: rate of solver use, and its bound & \lean{integrated\_backup\_rate}, \lean{integrated\_backup\_le} \\
 Integrated: whole-problem errors independent of solver & \lean{whole\_independent\_of\_solver} \\
 Integrated: column route factored & \lean{columnsSuch\_prob} \\
+One memory: column fact is DOA under self-recognition; reduction to the integrated model & \lean{memFact\_self}, \lean{strial\_reduces}, \lean{strial\_net\_reduces} (\code{MultiDigit/SharedMemory}) \\
+One memory: confident errors on digit pairs; values at the setting & \lean{column\_confident\_errors}; \lean{setting\_epam\_values}, \lean{setting\_act\_pairs}, \lean{setting\_act\_values} \\
 Integrated: confident errors; with a bound; two sources & \lean{integrated\_confident\_errors}, \lean{integrated\_confident\_errors\_le}, \lean{errors\_two\_sources} \\
 Integrated: solver error is a DOA error (other columns exact); exact facts sufficient, not necessary & \lean{solver\_error\_is\_doa\_error}, \lean{solver\_exact\_of\_exact}, \lean{compensating\_errors} \\
 Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}, \lean{setting\_practiced\_errors}, \lean{setting\_valid}, \lean{setting\_confident\_errors\_bound}; \lean{setting\_actr\_x}, \lean{setting\_actr\_not\_pattern} \\

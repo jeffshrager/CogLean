@@ -28,6 +28,19 @@ Each technical point was checked against the Lean source. New theorems were adde
 
 The confident-errors theorems now conclude one theory-neutral predicate, CogLib's `Phenomena.ConfusionErrorPattern`; `ConfidentErrors r` adds a bound on backup use. The paper's statement of `integrated_confident_errors` shows the predicate and its definition. New: `integrated_confident_errors_le`, `setting_confident_errors_bound`, and `setting_actr_not_pattern`. The last one proves that ACT-R lacks the pattern at the setting, so §5 now says "proved at this setting" where it said "fails". The talk's Lean slide and its ACT-R slide are updated to match.
 
+## Revision of 2026-10-31 (one memory)
+
+- **New §5.5, "One memory for whole problems and column facts"** (`MultiDigit/SharedMemory.lean`). It covers:
+  - the reduction to the integrated model;
+  - confident errors on digit pairs;
+  - EPAM unchanged against ACT-R's drop, from .656 to .385.
+- **New limitations:**
+  - finger counting is an implausible column fallback for a multi-digit adder;
+  - ACT-R appears without retrieval as use, which affects every ACT-R value.
+- **Future work** now names retrieval that changes memory.
+- **Removed:** the "Premises still unexplained" paragraph. Its items are covered in Limitations, apart from serial-learning anchors.
+- **Talk:** a new slide, "One memory for both levels", and the limitations slide is updated.
+
  of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:

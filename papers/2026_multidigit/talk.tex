@@ -442,6 +442,27 @@ Two more consequences. First, whole-problem errors don't depend on the solver at
 Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's declarative memory and change nothing else. The confident-error pattern is proved for any memory with three laws: determinacy, certainty and stability. EPAM's net has all three at every setting; ACT-R's memory has none of them, also proved. So the theorem applies to EPAM and never to ACT-R. But be careful about what that means. It doesn't mean ACT-R can't make similar errors; at this setting it answers two hundred about forty-three percent of the time. What fails is the exact pattern: ACT-R's confusion is graded, and its solver use differs from the familiar problem's. It also predicts interference: studying a new problem raises the errors on a practiced one, which EPAM never does. All the numbers are exact, at one illustrative setting.
 }
 
+\begin{frame}{One memory for both levels}
+  \small
+  Column facts from the \emph{same} memory as whole problems: each digit pair $d+e$ is coded as a problem, recognized, and retrieved in the same strength table; fingers and counting if that fails.
+  \begin{itemize}
+    \item \textbf{The old model is a special case}: a pair recognized as itself gives exactly the DOA fact (\code{memFact\_self}), so every earlier theorem carries over.
+    \item \textbf{Confident errors one level down}: a pair taken for another states the other's sum (\code{column\_confident\_errors}), with no new proof.
+  \end{itemize}
+  \begin{tabular}{lcc}
+    \toprule
+    memory studies $0+0$, $5+0$, $1+1$, $100+100$, $100+200$ & EPAM & ACT-R\\
+    \midrule
+    $0+0$ answered 5 (retrieves $5+0$) & 0 & $120/2167$\\
+    solver correct on $150+100$ (separate table: $.656$) & $.656$ & $\approx .385$\\
+    errors on practiced $100+100$ (separate table) & $.0073$ ($.0073$) & $\approx .386$ ($.334$)\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+So far the solver's single-digit facts came from their own table, separate from the memory that recognizes whole problems. A child has one memory, so we removed the separation. Each digit pair, say five plus zero, is coded as a problem in the same code space, recognized by the same memory, and retrieved from the same strength table, with fingers and counting if retrieval fails. Two things follow from theorems already in the library. First, if a pair is recognized as itself, its fact is exactly the old DOA fact, so the old model is a special case and every earlier theorem carries over. Second, a pair taken for another pair gives confident errors one level down, by the same general theorem, with no new proof. And the memories diverge further. EPAM recognizes every pair as itself, so nothing changes. ACT-R confuses pairs: zero plus zero sometimes retrieves five plus zero and is answered five, and the solver's accuracy on one fifty plus one hundred drops from about sixty-six percent to under forty. Two caveats: this is ACT-R without retrieval changing memory, and finger counting is an implausible fallback for someone doing three-digit addition.
+}
+
 \begin{frame}{What each result rests on}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.62\linewidth}}
@@ -553,7 +574,8 @@ So, to be clear about what this is and isn't. CogLean doesn't generate hypothese
     \textbf{Limitations}
     \begin{itemize}
       \item Strengths chosen, not learned; sharpness assumed.
-      \item Error-free carrying; independent columns.
+      \item Error-free carrying; independent columns; finger counting as the column fallback.
+      \item ACT-R without retrieval as use.
       \item Nonnegativity proved for this model, not library-wide.
       \item Scalability: exact finite distributions.
       \item No contact with data yet.
@@ -564,12 +586,13 @@ So, to be clear about what this is and isn't. CogLean doesn't generate hypothese
       \item Derive associations from learning histories, so sharpness is a theorem.
       \item Learning across whole trials: prove the learning sequence.
       \item Restate the unrealized predictions in terms of tested features.
+      \item Retrieval that changes memory, carried through the solver.
       \item Architectural constraints; other domains.
     \end{itemize}
   \end{columns}
 \end{frame}
 \note{
-The limitations are real. The associative strengths are chosen, not learned, and sharpness, the key premise of confident errors, is assumed. Carrying is error-free and columns are independent. Nonnegative weights are proved for this model but not yet across the library. Exact finite distributions raise scalability questions. And there's no contact with data yet. Next: derive the associations from learning histories, so that sharpness becomes a theorem instead of an assumption; add learning across whole trials, so the predicted learning sequence can be proved; restate the predictions whose hypotheses weren't realized; and move on to architectural constraints and other domains.
+The limitations are real. The associative strengths are chosen, not learned, and sharpness, the key premise of confident errors, is assumed. Carrying is error-free and columns are independent, and the columns fall back on finger counting, which no one doing three-digit addition would do. ACT-R is represented by its retrieval rule only: retrieving something doesn't change its memory, so all the ACT-R numbers are for that version. Nonnegative weights are proved for this model but not yet across the library. Exact finite distributions raise scalability questions. And there's no contact with data yet. Next: derive the associations from learning histories, so that sharpness becomes a theorem instead of an assumption; add learning across whole trials, so the predicted learning sequence can be proved; restate the predictions whose hypotheses weren't realized; let retrieval change memory, carrying the memory's state through the solver; and move on to architectural constraints and other domains.
 }
 
 \begin{frame}{Take-home}
