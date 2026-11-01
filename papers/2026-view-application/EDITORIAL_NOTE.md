@@ -76,3 +76,7 @@ The paper is 14 pages; the talk is 20 slides.
 
 ## Revision of 2026-11-01 (framing)
 The draft had said in several places (the abstract, the introduction, the discussion, the conclusion and the talk) that CogLean was "built around arithmetic" and that this paper takes it to a domain it "was not built for". That is wrong. CogLean was designed from the start as a general, Mathlib-like library of reusable cognitive processes, on which any model can be built, provable and executable. Arithmetic was the first example worked out in it. All of these passages now say so. This paper is presented as a second worked example, in a very different domain, testing that design.
+
+## Revision (relation to cognitive architectures)
+
+Credited the cognitive-architecture tradition (Newell; Soar; ACT-R; the Common Model) as the main prior effort to make theory cumulative. CogLean is positioned as complementary: it accumulates machine-checked results, reusable deductively and stated across architectural commitments (confident errors / perseveration for classes of memories; laws sufficient, not necessary; no general equivalence or divergence claimed). The novelty claim is the combination only. Talk slides updated to match. Added refs laird1987, laird2012 / laird2017.

@@ -17,22 +17,18 @@
 This talk goes with the paper of the same name, which is a draft for comment. It hasn't been carefully checked yet: think of it as an over-starched blog post, and constructive feedback is welcome. The paper introduces CogLean, a library of cognitive theory in the Lean proof assistant, and argues for a way of doing theoretical cognitive science: theories stated once, their consequences proved, and independently developed theories composed so that new results follow from old ones. The central example is multi-digit addition, but I want to be clear from the start that it is a demonstration, not a new theory of arithmetic.
 }
 
-\begin{frame}{The problem: theory that doesn't accumulate}
+\begin{frame}{The problem: making theory cumulative}
   \begin{itemize}
-    \item Many computational theories of memory, learning, problem solving, skill.
-    \item Little theory that can be \textbf{reused}:
-    \begin{itemize}
-      \item a memory theory is reimplemented for each new task;
-      \item combining two theories means writing a third program;
-      \item what a theory predicts is established by running it, one setting at a time.
-    \end{itemize}
-    \item Newell (1973): twenty questions with nature, answers never assembled.
+    \item Newell (1973): twenty questions with nature, answers never assembled; Newell (1990): unified theories.
+    \item Cognitive architectures (Soar, ACT-R; now the Common Model) have spent decades on this: \textbf{shared mechanisms}, so models of different tasks reuse and integrate theoretical commitments.
+    \item What they accumulate is mainly \textbf{models}: what a model predicts is established by running it, one setting at a time, and a result for one model is rarely reusable \emph{as a result} by another.
+    \item CogLean, \textbf{complementary}: accumulate machine-checked \textbf{theorems} about mechanisms, reusable deductively, and stated across architectural commitments.
   \end{itemize}
   \bigskip
   \emph{Can independently developed theories, in a common formal library, be composed to derive meaningful consequences we'd otherwise need a new model to find?}
 \end{frame}
 \note{
-The problem is an old one. Cognitive science has many computational theories, but little theory that can be reused. A theory of memory developed for verbal learning has to be reimplemented before it can take part in a model of arithmetic. Combining two theories means writing a third program and exploring it by simulation. And what a theory predicts is established by running it, at one setting at a time. Newell complained in 1973 that we play twenty questions with nature and never assemble the answers. The question for this talk is whether a common formal library can change that: whether theories in such a library can be composed to give meaningful consequences that we would otherwise need a whole new model to find.
+The problem is an old one, and the people who have done the most about it are the architecture builders. Newell complained in 1973 that we play twenty questions with nature and never assemble the answers, and his answer was unified theories of cognition. Soar and ACT-R, and now the Common Model of Cognition, are decades of work by Newell, Anderson, Laird, Rosenbloom and many others on exactly this: shared mechanisms and constraints, so that a model of a new task reuses the architecture's theory of memory, learning and control, and models of different tasks can be integrated. CogLean is not the first effort in this direction, and it isn't a competitor. What architectures accumulate, though, is mainly models. What a model predicts is established by running it, at one setting at a time, and a result established for one model is rarely available as a result to another. CogLean pursues a complementary goal: accumulating machine-checked theorems about cognitive mechanisms, which can be reused deductively, and stated independently of any one architecture's commitments, so they can cover classes of mechanisms. An architecture could, in principle, carry such results itself. The question for this talk is whether a common formal library can change that: whether theories in such a library can be composed to give meaningful consequences that we would otherwise need a whole new model to find.
 }
 
 \begin{frame}{Prior formal approaches to cognitive theory}
@@ -537,14 +533,16 @@ Where does this sit? There's a lot of prior formal work on cognitive architectur
 
 \begin{frame}{Relationship to cognitive architectures}
   \begin{itemize}
-    \item Not an alternative to Soar, ACT-R, or the Common Model of Cognition.
+    \item \textbf{Complementary}, not an alternative to Soar, ACT-R, or the Common Model of Cognition.
+    \item Architectures accumulate shared mechanisms and models; CogLean tries to accumulate \textbf{proved results} about mechanisms, including over classes of them. An architecture could carry such results itself.
+    \item Example: confident errors hold for every memory with three laws (EPAM has them; ACT-R's memory has none). The laws are sufficient, not shown necessary; no general equivalence or divergence of architectures is claimed.
     \item A possible \textbf{formal foundation} for expressing, composing and reasoning about their mechanisms and architectural commitments.
     \item The present example composes locally, for one task, without committing to a general architecture.
     \item Longer term: formalize \textbf{architectural constraints themselves}, so their implications can be proved and architectures compared in one framework.
   \end{itemize}
 \end{frame}
 \note{
-And to be clear about cognitive architectures. CogLean isn't proposed as an alternative to Soar, ACT-R, or the Common Model of Cognition. It's a possible formal foundation for expressing, composing and reasoning about their mechanisms and architectural commitments. The present example composes mechanisms locally, for one task, without committing to any general architecture. The longer-term aim is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within one shared framework.
+And to be clear about cognitive architectures. CogLean is complementary to Soar, ACT-R and the Common Model of Cognition, not an alternative to them. Architectures accumulate theory as shared mechanisms in which models are built. CogLean tries to accumulate proved results about those mechanisms, including results over whole classes of them, and nothing stops an architecture from carrying such results itself. The confident-errors theorem is the example: it holds for every memory that satisfies three laws, which EPAM's memory has and ACT-R's has none of. That's also the limit of what's shown: the laws are sufficient, not shown to be necessary, and nothing here establishes general equivalence or divergence between architectures. It's a possible formal foundation for expressing, composing and reasoning about their mechanisms and architectural commitments. The present example composes mechanisms locally, for one task, without committing to any general architecture. The longer-term aim is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within one shared framework.
 }
 
 \begin{frame}{What a proof shows, and what it doesn't}

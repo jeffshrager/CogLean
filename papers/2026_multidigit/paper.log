@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -925,121 +925,121 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [1
 
-{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 8
-4.
+{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 5
+7.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+) [2] [3]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 104.
+(Font)              <10> on input line 112.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 104.
- [3] [4]
-Underfull \hbox (badness 3525) in paragraph at lines 138--139
+(Font)              <7> on input line 112.
+ [4]
+Underfull \hbox (badness 3525) in paragraph at lines 146--147
 []\T1/lmr/m/n/10.95 a con-fu-sion agrees with the stored im-age on ev-ery fea-t
 ure tested on its path
  []
 
 [5] [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 246--247
+Underfull \hbox (badness 10000) in paragraph at lines 254--255
 []\T1/lmr/m/n/10.95 Means--ends anal-y-sis has been in-stan-ti-ated for the sam
 e prob-lem space
  []
 
-
-Underfull \hbox (badness 6910) in paragraph at lines 252--253
+[8]
+Underfull \hbox (badness 6910) in paragraph at lines 260--261
  []\T1/lmr/bx/n/10.95 A bridge.[] \T1/lmr/m/n/10.95 There are two ex-e-cutable 
 de-scrip-tions of col-umn ad-di-tion. \T1/lmtt/m/n/10.95 columns
  []
 
-[8] [9]
+[9]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-299.
+307.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-Underfull \hbox (badness 10000) in paragraph at lines 315--316
+) [10]
+Underfull \hbox (badness 10000) in paragraph at lines 323--324
 []\T1/lmr/m/n/10.95 a prob-lem rec-og-nized as a sharp $\OML/lmm/m/it/10.95 q$ 
 \T1/lmr/m/n/10.95 gets only $\OML/lmm/m/it/10.95 q$\T1/lmr/m/n/10.95 's an-swer
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 316--317
+Underfull \hbox (badness 10000) in paragraph at lines 324--325
 []\T1/lmr/m/n/10.95 so all its whole-problem an-swers are wrong when the sums d
 if-fer
  []
 
 
-Underfull \hbox (badness 1210) in paragraph at lines 317--318
+Underfull \hbox (badness 1210) in paragraph at lines 325--326
 []\T1/lmr/m/n/10.95 backup use af-ter cer-tain recog-ni-tion as $\OML/lmm/m/it/
 10.95 y$ \T1/lmr/m/n/10.95 is $\OT1/lmr/m/n/10.95 (1 \OMS/lmsy/m/n/10.95 ^^@ \O
 ML/lmm/m/it/10.95 R[]\OT1/lmr/m/n/10.95 )[]$\T1/lmr/m/n/10.95 , which de-pends 
 only on $\OML/lmm/m/it/10.95 y$
  []
 
-[10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 363--364
+[11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 371--372
 []\T1/lmr/m/n/10.95 EPAM's dis-crim-i-na-tion net has de-ter-mi-nacy, cer-taint
 y and sta-bil-ity
  []
 
-[12] [13]
-Underfull \hbox (badness 4279) in paragraph at lines 432--432
+[13]
+Underfull \hbox (badness 4279) in paragraph at lines 440--440
 []|\T1/lmr/m/n/10 the com-posed mech-a-nisms
  []
 
 
-Underfull \hbox (badness 2103) in paragraph at lines 432--432
+Underfull \hbox (badness 2103) in paragraph at lines 440--440
 []|\T1/lmr/bx/n/10 Conditional\T1/lmr/m/n/10 : hold
  []
 
 
-Underfull \hbox (badness 3701) in paragraph at lines 432--432
+Underfull \hbox (badness 3701) in paragraph at lines 440--440
 \T1/lmr/m/n/10 given stated con-di-
  []
 
 
-Underfull \hbox (badness 1383) in paragraph at lines 432--432
+Underfull \hbox (badness 1383) in paragraph at lines 440--440
 \T1/lmr/m/n/10 able for EPAM nets, ver-
  []
 
 
-Underfull \hbox (badness 1668) in paragraph at lines 432--432
+Underfull \hbox (badness 1668) in paragraph at lines 440--440
 \T1/lmr/m/n/10 i-fied for the learned net);
  []
 
 
-Underfull \hbox (badness 1527) in paragraph at lines 432--432
+Underfull \hbox (badness 1527) in paragraph at lines 440--440
 \T1/lmr/m/n/10 sharp as-so-ci-a-tions (an un-
  []
 
 
-Underfull \hbox (badness 4156) in paragraph at lines 432--432
+Underfull \hbox (badness 4156) in paragraph at lines 440--440
 \T1/lmr/m/n/10 as-so-ci-a-tions, cri-te-rion and
  []
 
-
-Underfull \hbox (badness 7722) in paragraph at lines 444--446
+[14]
+Underfull \hbox (badness 7722) in paragraph at lines 452--454
 []\T1/lmr/m/n/10.95 The repos-i-tory records an ex-plicit au-dit of this kind f
 or its head-line re-sults
  []
 
-[14] [15] [16] [17] [18] [19] [20] (./paper.bbl [21] [22])
+[15] [16] [17] [18] [19] [20] (./paper.bbl [21] [22] [23])
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[23] [24] [25] [26] [27] (./paper.aux)
+[24] [25] [26] [27] [28] (./paper.aux)
 Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: FDB0C9B9D1FF299D0CD08CA8590F643A;7033.
  ) 
 Here is how much of TeX's memory you used:
- 23370 strings out of 478994
- 420103 string characters out of 5858185
- 733254 words of memory out of 5000000
- 40254 multiletter control sequences out of 15000+600000
+ 23379 strings out of 478994
+ 420240 string characters out of 5858185
+ 732897 words of memory out of 5000000
+ 40260 multiletter control sequences out of 15000+600000
  487189 words of font info for 90 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  113i,11n,116p,1532b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1062,10 +1062,10 @@ st/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2021/texmf-dist/fonts/t
 ype1/public/lm/lmri9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public
 /lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10
 .pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on paper.pdf (27 pages, 424926 bytes).
+Output written on paper.pdf (28 pages, 428033 bytes).
 PDF statistics:
- 548 PDF objects out of 1000 (max. 8388607)
- 491 compressed objects within 5 object streams
- 151 named destinations out of 1000 (max. 500000)
+ 560 PDF objects out of 1000 (max. 8388607)
+ 501 compressed objects within 6 object streams
+ 154 named destinations out of 1000 (max. 500000)
  301 words of extra memory for PDF output out of 10000 (max. 10000000)
 

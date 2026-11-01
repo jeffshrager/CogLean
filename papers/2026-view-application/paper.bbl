@@ -1,4 +1,4 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -159,5 +159,18 @@ Paul Thagard.
 \newblock \emph{Conceptual Revolutions}.
 \newblock Princeton University Press, Princeton, NJ, 1992.
 \newblock \doi{10.1515/9780691186672}.
+
+\bibitem[Laird(2012)]{laird2012}
+John~E. Laird.
+\newblock \emph{The {Soar} Cognitive Architecture}.
+\newblock MIT Press, Cambridge, MA, 2012.
+
+\bibitem[Laird et~al.(2017)Laird, Lebiere, and Rosenbloom]{laird2017}
+John~E. Laird, Christian Lebiere, and Paul~S. Rosenbloom.
+\newblock A standard model of the mind: Toward a common computational framework
+  across artificial intelligence, cognitive science, neuroscience, and
+  robotics.
+\newblock \emph{AI Magazine}, 38\penalty0 (4):\penalty0 13--26, 2017.
+\newblock \doi{10.1609/aimag.v38i4.2744}.
 
 \end{thebibliography}

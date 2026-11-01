@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1366,7 +1366,7 @@ Here is how much of TeX's memory you used:
  42737 multiletter control sequences out of 15000+600000
  481278 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 135i,11n,135p,1102b,781s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 135i,11n,135p,1271b,781s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2021/t
 exmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2021/texmf-dist/
@@ -1381,7 +1381,7 @@ fonts/type1/public/lm/lmsso8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type
 1/public/lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/l
 m/lmtt10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/sy
 mbols/msam10.pfb>
-Output written on talk-notes.pdf (40 pages, 250639 bytes).
+Output written on talk-notes.pdf (40 pages, 251322 bytes).
 PDF statistics:
  316 PDF objects out of 1000 (max. 8388607)
  254 compressed objects within 3 object streams

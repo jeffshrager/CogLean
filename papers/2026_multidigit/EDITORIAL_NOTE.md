@@ -144,3 +144,7 @@ The paper is 27 pages.
 - The paper describes the repository as of 2026-10-31. Tag that commit and cite the tag, so that the theorem names in Appendix A stay valid.
 - §8's "a small number of new lemmas" is qualitative. The earlier draft said three for the 18 predictions; the integrated model adds the lemmas in `Integrated.lean`. Give a count if a reviewer will care.
 - The blind simulation predates the problem solver. The draft claims its results carry over by `Solver.bridge`. That holds for the column backup the simulator implements (the full procedure, exact carrying), not for the buggy procedures.
+
+## Revision (relation to cognitive architectures)
+
+Credited the cognitive-architecture tradition (Newell; Soar; ACT-R; the Common Model) as the main prior effort to make theory cumulative. CogLean is positioned as complementary: it accumulates machine-checked results, reusable deductively and stated across architectural commitments (confident errors / perseveration for classes of memories; laws sufficient, not necessary; no general equivalence or divergence claimed). The novelty claim is the combination only. Talk slides updated to match. Added refs laird1987, laird2012 / laird2017.
