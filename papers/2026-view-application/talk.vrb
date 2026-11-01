@@ -1,0 +1,15 @@
+\frametitle{The learner, in Lean}
+\begin{Verbatim}[fontsize=\small]
+structure Reviser (Θ M Act Resp C B : Type) where
+  predicts : Θ → List Act → Option Resp
+  revise   : C → Θ → M → Dist (Θ × M × B)
+  cues     : List Act × Resp → List C
+  once     : Bool
+\end{Verbatim}
+  \medskip
+  \small
+  \begin{itemize}
+    \item \texttt{CogLib/Process/TheoryRevision}: the loop, for any \texttt{Reviser}.
+    \item \texttt{CogLib/Process/ViewRevision}: view application is \emph{one} reviser.
+    \item Others (rule induction; hypothesis-space search, Klahr \& Dunbar 1988) can plug in and inherit the loop's theorems.
+  \end{itemize}
