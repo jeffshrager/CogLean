@@ -62,3 +62,14 @@ All others were checked against Crossref on 2026-11-01. The reference list is al
 - The talk has three new slides ("Views from parts", "Why concepts must split", "Differentiation: split, then re-interpret") and updated concept-formation, limitations and take-home slides.
 
 The paper is 13 pages; the talk is 19 slides.
+
+## Revision of 2026-11-01 (splitting explained)
+
+**In §6, three new paragraphs:**
+- "A split, step by step", with Figure 1: the microwave before, after the split, and after re-interpreting the copy;
+- "Aiming a view": why `retarget` is needed, and the change to view application's matching (a view frame is reserved for the theory frame of the same name); every earlier result checks unchanged;
+- "What a split costs": conservative, but one more type to keep track of, which is why the learner splits only when forced.
+
+**In the talk,** a new slide, "A split, step by step", with the same three panels and spoken notes covering aiming and cost.
+
+The paper is 14 pages; the talk is 20 slides.

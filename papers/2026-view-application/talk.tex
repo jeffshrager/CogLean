@@ -231,6 +231,44 @@ A view like set-a-time actually bundles two ideas: that the key enters a number,
 Now the important part. Views act on types: every instance of a type changes together. We prove that two actions of one type are read alike. In the microwave that becomes an impossibility theorem for every theory: if TIME COOK and CLOCK share a type and both enter a number, then nine zero START is predicted the same after either, so no such theory can predict both cooking for ninety seconds and an invalid clock time. No choice of view, no amount of revision, fixes that. The concept has to split. Accounts of conceptual change call that differentiation.
 }
 
+\begin{frame}{A split, step by step}
+  \centering
+  \resizebox{0.97\linewidth}{!}{\begin{tikzpicture}[font=\scriptsize,
+    ty/.style={draw, rounded corners, align=left, inner sep=3pt, fill=black!5},
+    in/.style={draw, align=center, inner sep=2pt},
+    isa/.style={-{Stealth[length=1.6mm]}},
+    lab/.style={font=\footnotesize\bfseries}]
+    \node[lab] at (0,2.1) {(a) before};
+    \node[ty] (a1) at (0,1.2) {\textit{key type}\\enters a number\\means: duration};
+    \node[in] (a2) at (-1.0,0) {TIME COOK};
+    \node[in] (a3) at (1.0,0) {CLOCK};
+    \draw[isa] (a2) -- (a1); \draw[isa] (a3) -- (a1);
+    \node[lab] at (4.95,2.1) {(b) split};
+    \node[ty] (b1) at (3.6,1.2) {\textit{key type}\\enters a number\\means: duration};
+    \node[ty] (b2) at (6.3,1.2) {\textit{copy}\\enters a number\\means: duration};
+    \node[in] (b3) at (3.6,0) {TIME COOK};
+    \node[in] (b4) at (6.3,0) {CLOCK};
+    \draw[isa] (b3) -- (b1); \draw[isa] (b4) -- (b2);
+    \node[lab] at (10.65,2.1) {(c) re-interpret the copy};
+    \node[ty] (c1) at (9.3,1.2) {\textit{key type}\\enters a number\\means: duration};
+    \node[ty] (c2) at (12.0,1.2) {\textit{copy}\\enters a number\\means: \textbf{time}};
+    \node[in] (c3) at (9.3,0) {TIME COOK};
+    \node[in] (c4) at (12.0,0) {CLOCK};
+    \draw[isa] (c3) -- (c1); \draw[isa] (c4) -- (c2);
+  \end{tikzpicture}}
+  \medskip
+  \raggedright\small
+  \begin{itemize}
+    \item (a) CLOCK fails; re-interpreting the shared type would break TIME COOK.
+    \item (b) Copy the type for CLOCK: \textbf{nothing predicts differently yet}.
+    \item (c) Aim NUMBER-IS-A-TIME at the copy: CLOCK changes, TIME COOK doesn't.
+    \item A split isn't free (one more type to keep track of), so the learner splits only when forced.
+  \end{itemize}
+\end{frame}
+\note{
+Here's a split, step by step. In panel a, after the first episode, both keys are instances of one type, which enters a number and says the number is a duration. CLOCK's episode fails: the theory predicts cooking, and the device says invalid time. Re-interpreting the shared type as a time would fix CLOCK and break TIME COOK, which the learner already explained. So in panel b the learner copies the type for CLOCK. The copy has the same slots, so nothing predicts differently yet: that's the conservativeness theorem. In panel c, number-is-a-time is aimed at the copy alone, and now each key has its own type and both are right. Two details. A view names the type it re-interprets, so to aim it at the copy we rename the view's frame; and view application now reserves a view frame for the theory frame of the same name, which was needed for that, and changed none of the earlier results. And a split isn't free: the theory gains a type to keep track of. That's why the learner splits only when forced, when re-interpreting the shared type would undo an explanation.
+}
+
 \begin{frame}{Differentiation: split, then re-interpret}
   \begin{itemize}
     \item \textbf{Split} copies an action's type and moves the action to the copy. Proved:

@@ -178,6 +178,44 @@ Both are mechanism-independent predicates; as with the confusion-error pattern, 
 
 \paragraph{Splitting a type.} \code{splitType} copies an action's type, with the same kind and slots, and re-parents the action to the copy; \code{retarget} aims a view at a chosen type. Two general results: a split by itself changes no prediction (\lean{split\_conservative}), and it separates the action from the other instances of its old type (\lean{split\_separates}). Differentiation is therefore conservative: it does not change what the learner believes, only what it can come to believe. This matches the accounts of conceptual change in which one undifferentiated concept becomes two \citep{carey1985,thagard1992}.
 
+\paragraph{A split, step by step.} Figure~\ref{fig:split} follows the microwave learner. After the first episode, TIME COOK and CLOCK are both instances of one operation type, which enters a number and says the number is a duration (panel~a). CLOCK's episode then fails: the theory predicts cooking, and the device reports an invalid time. Re-interpreting the shared type as NUMBER-IS-A-TIME would fix CLOCK and break TIME COOK, which the learner has already explained. So the learner first copies the type for CLOCK (panel~b). The copy has the same slots, so nothing predicts differently yet (\lean{split\_conservative}). It then applies NUMBER-IS-A-TIME to the copy alone (panel~c). Now each key has its own type, and both are predicted correctly.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\footnotesize,
+  ty/.style={draw, rounded corners, align=left, inner sep=3pt, fill=black!5},
+  in/.style={draw, align=center, inner sep=2pt},
+  isa/.style={-{Stealth[length=1.6mm]}},
+  lab/.style={font=\small\bfseries}]
+  % (a)
+  \node[lab] at (0,2.1) {(a) before};
+  \node[ty] (a1) at (0,1.2) {\textit{key type}\\enters a number\\means: duration};
+  \node[in] (a2) at (-1.0,0) {TIME COOK};
+  \node[in] (a3) at (1.0,0) {CLOCK};
+  \draw[isa] (a2) -- (a1); \draw[isa] (a3) -- (a1);
+  % (b)
+  \node[lab] at (4.95,2.1) {(b) split};
+  \node[ty] (b1) at (3.6,1.2) {\textit{key type}\\enters a number\\means: duration};
+  \node[ty] (b2) at (6.3,1.2) {\textit{copy}\\enters a number\\means: duration};
+  \node[in] (b3) at (3.6,0) {TIME COOK};
+  \node[in] (b4) at (6.3,0) {CLOCK};
+  \draw[isa] (b3) -- (b1); \draw[isa] (b4) -- (b2);
+  % (c)
+  \node[lab] at (10.65,2.1) {(c) re-interpret the copy};
+  \node[ty] (c1) at (9.3,1.2) {\textit{key type}\\enters a number\\means: duration};
+  \node[ty] (c2) at (12.0,1.2) {\textit{copy}\\enters a number\\means: \textbf{time}};
+  \node[in] (c3) at (9.3,0) {TIME COOK};
+  \node[in] (c4) at (12.0,0) {CLOCK};
+  \draw[isa] (c3) -- (c1); \draw[isa] (c4) -- (c2);
+\end{tikzpicture}
+\caption{Differentiation in the microwave. (a) Both keys share a type, so they are read alike, and no view on that type can make both right (\lean{never\_both\_shared}). (b) Splitting copies the type for CLOCK; nothing predicts differently yet (\lean{split\_conservative}). (c) NUMBER-IS-A-TIME, aimed at the copy, changes CLOCK only (\lean{split\_separates}).}
+\label{fig:split}
+\end{figure}
+
+\paragraph{Aiming a view.} A view names the type it re-interprets, and view application matches it to a theory type of the same name or, failing that, to one of the same kind. After a split there are two types of the same kind, so a view must be aimed at one of them. \code{retarget} renames the view's frame to the chosen type. For the name to be decisive, view application now reserves a view frame for the theory frame of the same name, so that another theory frame of the same kind cannot take it first. This is the reading of Shrager's ``the view's frame of the same abstract type'' \citep{shrager1987}, and every earlier result (BigTrak, number concepts, view selection) checks unchanged.
+
+\paragraph{What a split costs.} A split is conservative, but not free: the theory gains a type, and with it a distinction that later revisions must keep track of. A learner that split freely would multiply types for no reason. The conflict-driven policy below splits only when forced, when the one alternative, re-interpreting the shared type, would undo an explanation.
+
 \paragraph{When to split.} The learner (\code{viewSplitReviser}) splits when re-interpreting the failing action's type would break an episode it has already explained, which is conflict-driven differentiation; otherwise it applies retrieved views to the failing action's type. To support this, the revision loop now records the episodes it has explained, and a learner's cues may depend on them and on the current theory; the loop's theorems are unchanged.
 
 \paragraph{Consequences.} With the microwave's episodes TIME COOK, then CLOCK, then TIME COOK again, a learner that cannot split never ends knowing both keys, as the impossibility theorem requires, and every such learner that finishes \emph{oscillates}: the clock's meaning displaces cooking's, and cooking's comes back. A learner that splits on conflict ends knowing both whenever it finishes, and never oscillates (\lean{no\_split\_session}, \lean{split\_session}). Oscillation is stated, like the garden path, as a mechanism-independent predicate over the interpretations adopted for a type (\code{oscillates}). These results concern representation, not memory, so the sessions use EPAM's net only.
