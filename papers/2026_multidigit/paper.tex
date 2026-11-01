@@ -39,11 +39,11 @@
 \medskip
 
 \begin{abstract}
-Cognitive science has many computational theories, but little cumulative theoretical knowledge. Theories are implemented as separate programs, so combining two of them usually means writing a third, and what a theory predicts is usually established by running it. We describe CogLean, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics. CogLean is not a new theory of cognition. Its shared library, CogLib, holds representations, mechanisms, theory-neutral statements of phenomena, and theorems about them. Existing theories are expressed as choices of those mechanisms, and their consequences are proved, not simulated.
+Cognitive science has many computational theories, but little cumulative theoretical knowledge. Theories are implemented as separate programs, so combining two of them usually means writing a third, and what a theory predicts is usually established by running it at chosen parameter settings. We describe CogLean, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics. CogLean is not a new theory of cognition. Its shared library, CogLib, holds representations, mechanisms, theory-neutral statements of phenomena, and machine-checked theorems relating them. Existing theories are expressed as choices of those mechanisms.
 
-The central demonstration composes two independently formalized theories: EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager). They are joined with a problem solver in the GPS and repair-theory tradition to produce a model of three-digit addition. The components, and most of the theorems the composition relies on, were established before it; the composition adds linking lemmas but no new psychological assumptions. The composed model computes all of its answers; no route is given the correct sum. One consequence is the \emph{confident error}: a problem confused with a familiar one gets the familiar problem's answer, wrongly, with exactly as much use of the backup procedure as the familiar problem itself, which is rare when retrieval on the familiar problem usually succeeds. Neither theory makes this prediction alone. Others are that improving the fallback solver cannot reduce such errors, and that a confused problem has two sources of error. Replacing EPAM's memory with ACT-R's declarative memory, and changing nothing else, removes the conditions under which the confident-error theorem applies; ACT-R still produces graded errors of a similar kind, and laws of memory that one memory has and the other lacks explain the difference. Formalization alone also produced a correction to one of the original theories: making a distribution of associations more peaked can \emph{increase} overt strategy use, contrary to an informal claim of the original chapter.
+We demonstrate a way of doing cumulative theoretical cognitive science. Two independently formalized theories, EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager), are composed with a general problem solver into an executable model of three-digit addition, and their established theorems are reused to derive consequences of the composition. The results form a hierarchy. At the most general level, a theorem relates recognition, associative retrieval and backup use for any problems and answers: a problem confused with a familiar one exhibits a theory-neutral \emph{confusion-error pattern}, stated separately from any mechanism. The same pattern is then proved for \emph{every} memory that satisfies three stated laws (determinacy, certainty and stability), so that a class of mechanisms inherits it; EPAM's memory has all three laws and ACT-R's declarative memory, proved for every parameter setting, has none. Other results separate what follows from a mechanism regardless of representation from what requires particular representational properties. Concrete settings, with exact values relegated to an appendix, serve as witnesses that the hypotheses can be met and that model families diverge. Formalization alone also corrected one of the original theories: making a distribution of associations more peaked can \emph{increase} overt strategy use, contrary to an informal claim of the original chapter.
 
-We separate results that hold for every setting of the mechanisms from results that need stated conditions, and both from exact values at illustrative settings. We also report what an independent, blind simulation found that the proofs did not: theorem hypotheses that were never realized in the tested learning conditions, and an unstated assumption on which a predicted learning sequence depends.
+The multi-digit model is a demonstration of method, not a theory of arithmetic. We distinguish what has been proved from what remains an aspiration: identifying the weakest assumptions sufficient for a phenomenon, and the conditions under which whole classes of theories agree or diverge.
 \end{abstract}
 
 \section{Introduction}
@@ -60,12 +60,17 @@ This paper asks whether the same organization can work for cognitive theory:
 
 We describe CogLean \citep{coglean}, an initial library built to test this, and give a concrete, checked answer in one case. The case is three-digit addition, composed from EPAM's discrimination nets \citep{feigenbaum1959,feigenbaum1962}, Siegler and Shrager's distributions-of-associations (DOA) model of strategy choice \citep{siegler1984}, and a problem solver in the tradition of GPS and repair theory \citep{newell1972,brown1980}. Arithmetic is the demonstration, not the objective. We are not proposing a new theory of children's arithmetic. Multi-digit addition is a familiar task, complex enough to need several mechanisms, and two of the needed theories already exist.
 
-The argument is organized around three capabilities, in increasing order of importance.
+The argument is organized around four capabilities, in increasing order of importance.
 \begin{enumerate}
   \item \textbf{Formalization.} Existing theories are stated as definitions, postulates and theorems. Each theorem's assumptions are explicit.
   \item \textbf{Composition.} Formalized mechanisms are reused in new contexts, and so are the \emph{theorems} about them. A library of reusable cognitive algorithms would be useful software. A library of reusable \emph{results} is a contribution to theory.
-  \item \textbf{Discovery.} Composition establishes consequences that the original theories' authors did not state. Formalization also exposes unstated assumptions, results that depend on parameters, results that hold for whole classes of models, and conditions under which theories diverge. It can also correct a theory: in Section~\ref{sec:peak}, an informal claim of the DOA chapter turns out not to follow from the model's own postulates.
+  \item \textbf{Generalization over classes.} Phenomena are stated independently of mechanisms, and theorems are proved for every mechanism that satisfies stated laws, and for every representation with stated properties. A new theory that satisfies the laws inherits the results.
+  \item \textbf{Discovery}, in a limited sense. Formalization exposes unstated assumptions, results that hold only under conditions, and conditions under which theories diverge. It can also correct a theory: in Section~\ref{sec:peak}, an informal claim of the DOA chapter turns out not to follow from the model's own postulates.
 \end{enumerate}
+
+\paragraph{The aspiration.} The longer-term objective of CogLean is not merely to provide executable implementations of cognitive theories, or even machine-checked proofs about particular implementations. It is to develop a cumulative mathematical theory of cognition, in which the assumptions responsible for psychological phenomena can be isolated, compared and generalized. Rather than asking only what a particular model predicts at a particular parameter setting, we seek to establish which properties of cognitive mechanisms and representations are sufficient (or, where possible, necessary) for classes of behavioral phenomena. Such results would characterize relationships among theories, identify their common commitments, reveal the conditions under which they diverge, and let new theories inherit established results by satisfying previously formalized laws. This paper does not achieve that. It shows that some of the constituent capabilities already work, and Section~\ref{sec:program} separates what is proved from what is aspiration.
+
+The numerical predictions of the example are illustrative. They depend on chosen problems, learning histories, encodings, strengths, criteria and backup procedures, and a simulation could produce comparable numbers. Their roles are to show that the composition runs, that the theorems' hypotheses can be met, and that model families can diverge. They are collected in Appendix~\ref{app:setting}.
 
 Lean checks that conclusions follow from premises, not that the premises describe people or that a valid derivation explains anything (Section~\ref{sec:status}).
 
@@ -107,20 +112,21 @@ CogLean has four layers (Figure~\ref{fig:arch}).
 
 The contribution is not a programming language or a new syntax for cognitive models. Any model could be written in Lean as a program. What CogLean contributes is an \emph{organization} of theoretical knowledge: mechanisms defined once, phenomena stated independently of any mechanism, and theorems relating them, all in one place where later work can cite them. CogLean is far from Mathlib's scale or maturity. It is a demonstration that the approach can work, not a finished library.
 
-\subsection{Mechanisms, phenomena, theorems and conditions}
+\subsection{Mechanisms, representations, phenomena, theorems and conditions}
 
-Four kinds of object must be kept apart.
+A cognitive model combines kinds of commitment that conventional implementations tend to intertwine. CogLean keeps them apart.
 \begin{enumerate}
   \item \textbf{Mechanisms and their postulates}: definitions, such as how a discrimination net sorts a code, or how retrieval samples an answer in proportion to its associative strength.
-  \item \textbf{Phenomena}: predicates, stated without reference to any mechanism. A predicate asserts nothing. It is a target, which some mechanism may or may not be proved to satisfy.
-  \item \textbf{Theorems}: proofs that a mechanism produces behavior satisfying a predicate.
+  \item \textbf{Representations}: which features encode a stimulus, and what information those features preserve. A representation is a parameter of the mechanisms, and its properties can be stated separately (``every digit has a feature saying whether it is zero'').
+  \item \textbf{Phenomena}: predicates over observable outcomes, stated without reference to any mechanism. A predicate asserts nothing. It is a target, which some mechanism may or may not be proved to satisfy.
+  \item \textbf{Theorems}: proofs that a mechanism, or every mechanism of a class, produces behavior satisfying a predicate.
   \item \textbf{Conditions}: the hypotheses under which a theorem holds. Some are situational (``problem $x$ is confused with problem $q$''), some are empirical premises that remain unexplained (``$q$'s associations are sharp''), and some are well-formedness requirements (``the strengths have positive total'').
 \end{enumerate}
 A theorem that has a phenomenon among its hypotheses is a relation between phenomena, not a prediction of a model. It becomes a prediction only when some mechanism discharges the hypothesis by proving it. CogLean's catalog of theorems, generated from Lean, marks such conditional results mechanically \citep{coglean}.
 
 Shared definitions make theories comparable at the level of proofs. For example, CogLib proves once that any learner whose learning never disturbs what it already knows reaches a learning criterion (\lean{criterion\_of\_nonInterference}). It separately proves that discrimination-net learning never disturbs prior learning (\lean{netLearner\_nonInterference}). EPAM's learning to criterion then follows in a line, and so will that of any later theory whose learning is non-interfering.
 
-\section{Two theories, formalized independently}
+\section{Components, formalized independently}
 \label{sec:theories}
 
 \subsection{EPAM: recognition by discrimination}
@@ -162,6 +168,16 @@ The DOA chapter's central idea is that the peakedness of a problem's distributio
 \end{itemize}
 
 The chapter's claim is not wrong in general; it needs a condition the chapter does not state, roughly that no competitor sits near a criterion. Nothing about this required composition or new mechanisms. It came from stating the postulates precisely and asking whether the informal claim followed. It is the clearest case in the library of formalization correcting a theory's description of its own consequences.
+
+\subsection{General problem solving}
+\label{sec:ps}
+
+CogLib's problem-solving framework (\code{CogLib/Process/ProblemSolving.lean}) is task-general:
+\begin{itemize}
+  \item a \emph{problem space} has states and operators; each operator has a precondition and an effect, and an effect is a distribution over states, so an operator can include a probabilistic process;
+  \item a \emph{decision cycle} runs a procedure that proposes an operator in each state; a proposed operator whose precondition is violated is an \emph{impasse}, which repair heuristics, filtered by critics, resolve \citep{brown1980}.
+\end{itemize}
+CogLib also implements GPS-style means--ends analysis, with goals, subgoals and backtracking \citep{newell1972}. Neither knows anything about arithmetic.
 
 \section{Composing theories: multi-digit addition}
 \label{sec:compose}
@@ -223,16 +239,11 @@ An earlier version of the example, still in the repository (\code{MultiDigit/Exa
 
 \subsection{The executable backup: arithmetic as general problem solving}
 
-When whole-problem retrieval fails, the integrated model invokes an executable column-addition solver. It is an instance of CogLib's general problem-solving framework (\code{CogLib/Process/ProblemSolving.lean}), not a separate arithmetic program. The framework is task-general:
-\begin{itemize}
-  \item a \emph{problem space} has states and operators; each operator has a precondition and an effect, and an effect is a distribution over states, so an operator can include a probabilistic process;
-  \item a \emph{decision cycle} runs a procedure that proposes an operator in each state; a proposed operator whose precondition is violated is an \emph{impasse}, which repair heuristics, filtered by critics, resolve \citep{brown1980}.
-\end{itemize}
-The arithmetic instance (\code{MultiDigit/Solver.lean}) defines operators to add a column, write its digit, write and carry, and finish. The procedure \code{full} proposes them as the calculation progresses, units first. \code{Solver.answers} runs CogLib's decision cycle, for a bounded number of cycles (eight, enough for three columns), and reads off the written answer. In \code{solverBackup}, \code{F.fact} supplies the single-digit process and \code{Solver.lenient} the repair policy; with the full procedure, no impasse arises.
+When whole-problem retrieval fails, the integrated model invokes an executable column-addition solver. It is an instance of the general framework of Section~\ref{sec:ps}, not a separate arithmetic program. The arithmetic instance (\code{MultiDigit/Solver.lean}) defines operators to add a column, write its digit, write and carry, and finish. The procedure \code{full} proposes them as the calculation progresses, units first. \code{Solver.answers} runs CogLib's decision cycle, for a bounded number of cycles (eight, enough for three columns), and reads off the written answer. In \code{solverBackup}, \code{F.fact} supplies the single-digit process and \code{Solver.lenient} the repair policy; with the full procedure, no impasse arises.
 
 Each \emph{add} operator performs a DOA trial on its column's digits and returns a distribution of possible digit sums. The framework composes such steps with \code{Dist.bind}, which carries every possible outcome, with its probability, through the operations that follow. Nothing is sampled, and nothing consults the correct answer. The result is a distribution over complete multi-digit answers, errors included.
 
-CogLib also implements GPS-style means--ends analysis, with goals, subgoals and backtracking. It has been instantiated for the same arithmetic problem space (\code{MultiDigit/SolverGPS.lean}), where it is proved to work units first and to answer every problem exactly when the single-digit facts are exact. The integrated demonstration uses the decision cycle, not means--ends analysis. The GPS results are complementary: they concern goal-directed operator selection.
+Means--ends analysis has been instantiated for the same problem space (\code{MultiDigit/SolverGPS.lean}), where it is proved to work units first and to answer every problem exactly when the single-digit facts are exact. The integrated model uses the decision cycle; the GPS results concern goal-directed operator selection.
 
 \subsection{Composition of theorems}
 
@@ -256,14 +267,28 @@ The equivalence is proved, not established by testing examples. Every theorem pr
 \end{itemize}
 A parallel chain proves that every weight is nonnegative, given nonnegative strengths and rates (\lean{nonneg\_search}, \lean{SC.nonneg\_trial}, \lean{nonneg\_solverBackup}, \lean{nonneg\_itrial}). Both are needed: CogLib's distributions are lists of rational weights, and total mass 1 alone does not exclude negative weights. These lemmas contribute no psychology. They are what allows theorems written for an abstract backup to apply to a concrete, computing one, and the integrated trial to be read as a probability distribution.
 
-\section{Derived consequences}
+\section{A theory-neutral phenomenon}
+\label{sec:phen}
+
+In DOA alone, a problem's errors and its use of backup strategies come from the same distribution. A flat distribution of associations produces both more retrieval errors and more backup use, so errors and hesitation go together. Recognition can break this tie: a problem confused with a familiar one is retrieved from the familiar problem's distribution, with that problem's backup use and with its answers, which are wrong for the confused problem.
+
+CogLib states the resulting pattern once, as a predicate over observable outcomes (\code{CogLib/Phenomena/ConfusionErrors.lean}):
+\begin{Verbatim}[fontsize=\small]
+def ConfusionErrorPattern trial wholeWrong isWhole isBackup x q : Prop :=
+  prob (trial q) (wholeWrong q) = 0 ∧                            -- (i)
+  prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧       -- (ii)
+  prob (trial x) isBackup = prob (trial q) isBackup              -- (iii)
+\end{Verbatim}
+For any problems and outcomes: (i) the familiar $q$ is never answered wrongly by retrieval; (ii) every retrieved answer to $x$ is wrong; (iii) $x$ uses the backup exactly as often as $q$. The definition names no mechanism, and none of the conditions under which mechanisms produce the pattern is part of it. They belong to the theorems.
+
+Equal backup use is not low backup use. CogLib therefore states a second, stronger phenomenon, \lean{ConfidentErrors r}: the pattern with backup use at most $r$. The bound is an argument, not a fixed threshold, so the predicate does not build in an arbitrary standard of ``confidence''. Two predicates for one informal idea is the point: the informal notion of a confident error turns out to combine a structural relation, which holds whenever recognition hands one problem another's associations, and a quantitative one, which depends on how well those associations are learned.
+
+\section{General deductions}
 \label{sec:results}
 
-We present four results, chosen because their explanatory status differs. The first is explained in detail.
+The results of this section hold for every encoding, net, strength set, criterion, search length and single-digit process, under the conditions each states. None depends on the illustrative numbers.
 
 \subsection{Confident errors}
-
-In DOA alone, a problem's errors and its use of backup strategies come from the same distribution. A flat distribution of associations produces both more retrieval errors and more backup use, so errors and hesitation go together. Recognition breaks this tie. A problem confused with a familiar one is retrieved from the familiar problem's distribution: with that problem's low backup use, and with all of its answers, which are wrong for the confused problem.
 
 The theorem, as stated for the integrated model (lightly abridged):
 \begin{Verbatim}[fontsize=\small]
@@ -274,16 +299,8 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str ...) (F : Fact
     (hs : Sharp str cc (E.code q) q)                  -- only q's sum clears the criterion
     (hne : x.sum ≠ q.sum) :
     ConfusionErrorPattern (itrial ...) wholeWrong isWhole isColumns x q
-
--- CogLib's statement of the phenomenon, for any trial and outcomes:
-def ConfusionErrorPattern trial wholeWrong isWhole isBackup x q : Prop :=
-  prob (trial q) (wholeWrong q) = 0 ∧                            -- (i)
-  prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧       -- (ii)
-  prob (trial x) isBackup = prob (trial q) isBackup              -- (iii)
 \end{Verbatim}
-The phenomenon is defined once, in CogLib (\code{Phenomena/ConfusionErrors}), in terms of observable outcomes only. It names no mechanism, and none of the theorem's conditions (confusion, sharpness, proper distributions) is part of it; they are hypotheses of the theorems that establish it. In words: (i) whole-problem retrieval never errs on $q$; (ii) every whole-problem answer to $x$ is wrong; (iii) $x$ goes to the column solver exactly as often as $q$ does. The confused problem is answered wrongly with the same fluency as the familiar one.
-
-Equal backup use is not low backup use. Whether the errors are \emph{confident}, in the sense that the solver is rarely invoked, is a separate, quantitative matter. The rate is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}). If $R_q \ge r$, the confused problem reaches the solver with probability at most $(1-r)^n$ (\lean{integrated\_backup\_le}). In the illustrative setting, $R_q = 45/46$ and $n = 1$, so the solver is reached $1/46$ of the time. With flat associations on $q$, the same theorem would hold, and the errors would not be confident. CogLib accordingly states a second, stronger phenomenon, \lean{ConfidentErrors r}: the pattern with backup use at most $r$, where the bound is an argument, not a fixed threshold. The integrated model has it with $r = (1-r_q)^n$ for any lower bound $r_q$ on $R_q$ (\lean{integrated\_confident\_errors\_le}), and the setting has it with $r = 1/46$ (\lean{setting\_confident\_errors\_bound}).
+The confused problem is answered wrongly with the same fluency as the familiar one. Whether that fluency is high is separate: the rate of backup use is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}), and if $R_q \ge r$ the model has \lean{ConfidentErrors} with bound $(1-r)^n$ (\lean{integrated\_confident\_errors\_le}). With flat associations on $q$ the pattern still holds and the errors are not confident.
 
 \paragraph{What is assumed.} The postulates are the mechanisms: the net, DOA retrieval and the solver. The conditions are of three kinds.
 \begin{itemize}
@@ -301,14 +318,6 @@ No hypothesis mentions confident errors, or any relation between errors and back
 \end{itemize}
 The last lemma is DOA's retrieval-probability result, lifted to a recognized item.
 
-\paragraph{Generalizing over memories.} The same pattern is proved from laws of memory instead of from a particular net (\lean{RR.confident\_errors\_of\_laws}). Any memory with three properties produces confident errors whenever a stranger can be taken for a studied item with sharp associations:
-\begin{itemize}
-  \item \emph{determinacy}: retrieval calls up a single item for certain;
-  \item \emph{certainty}: a studied item retrieves itself;
-  \item \emph{stability}: studying one item does not change another's retrieval of itself.
-\end{itemize}
-This is a result about a class of models, not about one model.
-
 \subsection{Whole-problem errors do not depend on the solver}
 
 Once $x$ is recognized as $q$, the chance of a whole-problem answer with any property is that of retrieval on $q$'s associations, whatever the backup (\lean{whole\_independent\_of\_solver}). This is a general consequence of the composition, at every setting. Its psychological content is a prediction about intervention: improving column skill, for instance by teaching carrying, cannot reduce errors that arise from mistaken recognition. Only learning that changes recognition or associations can.
@@ -324,91 +333,84 @@ This result is \emph{compositional}. Neither recognition nor DOA says it alone, 
 
 The two sources tend to leave different signatures, but only the first is guaranteed. A whole-route error is always the confused neighbour's sum. A column-route error has a simple signature only when one column errs: if the other columns are exact, the problem is wrong exactly when that column's DOA trial is, and off by $10^j\delta$ when column $j$ errs by $\delta$ (\lean{solver\_error\_is\_doa\_error}). Several columns can err on the same trial, and a column error can propagate through a carry. Errors can even cancel. Exact single-digit facts in every column are sufficient for an exact answer (\lean{solver\_exact\_of\_exact}), but not necessary: for $150+100$, a units result of 10 and a tens result of 4 still give 250 (\lean{compensating\_errors}).
 
-\subsection{Memory substitution}
-
-Because recognition is stated for any retriever, EPAM's net can be replaced by ACT-R's declarative memory \citep{anderson2007}, with everything else unchanged: the encoding, the associations, the criterion, the search length and the solver. CogLib implements an ACT-R-style memory with base-level activation, partial matching and a retrieval threshold, for decay 1 and temperature 1, so that probabilities stay rational (\code{CogLib/Memory/Activation.lean}).
-
-The two memories differ in the laws just listed. Both cells are proved, for every parameter setting:
-\begin{itemize}
-  \item the discrimination net has determinacy, certainty and stability (\lean{Matrix.Discrimination.determinate}, \lean{.certainty}, \lean{.stability});
-  \item ACT-R's memory has none of them (\lean{Matrix.Activation.never\_determinate}, \lean{never\_certainty}, \lean{never\_stability}).
-\end{itemize}
-So the general confident-errors theorem applies to EPAM and never to ACT-R: its hypotheses cannot be met, because nothing is retrieved for certain (\lean{Act.retrieve\_not\_certain}). That the theorem does not apply does not show that ACT-R cannot produce similar behavior, and at the illustrative setting it does: $150+100$ is answered 200 by retrieval with probability $.43$. What fails is the exact pattern, and at the setting this is proved, not just observed: with ACT-R's memory the trial does not have \lean{ConfusionErrorPattern} (\lean{setting\_actr\_not\_pattern}). Retrieval of the confused problem is graded, and its solver use differs from the familiar problem's ($383/1058$ against $107/782$), so (iii) fails. This is a counterexample at one setting, not a proof that ACT-R's memory lacks the pattern at every setting. A graded analogue of confident errors for memories like ACT-R's would need its own theorem, and its own laws. Table~\ref{tab:memories} shows the consequences at one setting.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabularx}{\linewidth}{@{}Xcc@{}}
-\toprule
-\multicolumn{3}{@{}l}{\textbf{A. Separate column-fact table.} Memory holds $100+100$, $100+200$; columns use DOA's own table} \\
-\midrule
-& EPAM net & ACT-R memory \\
-\midrule
-$150+100$ retrieves $100+100$ & certainly & with probability $10/23$ \\
-$150+100$ answered 200 by whole-problem retrieval & $45/46$ & $225/529 \approx .43$ \\
-$150+100$ answered 300 (taken for $100+200$) & $0$ & $225/1058 \approx .21$ \\
-$150+100$: solver invoked & $1/46 \approx .022$ & $383/1058 \approx .36$ \\
-$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ \\
-$150+100$ answered correctly (250) overall, all via the solver & $\approx .014$ & $\approx .238$ \\
-\midrule
-practiced $100+100$: errors by whole-problem retrieval & $0$ & $225/782 \approx .29$ \\
-practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ \\
-after also studying $100+300$: whole-problem retrieval & $0$ & $3375/5842 \approx .58$ \\
-after also studying $100+300$: overall & $\approx .0073$ (unchanged) & $\approx .616$ \\
-\midrule
-for every setting, with this solver & confident-error theorem applies; & its hypotheses never hold; \\
-& practice never disturbed & interference possible \\
-\bottomrule
-\end{tabularx}
-\caption{The integrated model with two memories, at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver, whose single-digit facts come from DOA's separate association table. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. All values are exact and proved in Lean. ``Correct overall'' is the joint probability that the solver is invoked and is correct: the product of the two rows above it (only the solver ever gives 250). Rows about whole-problem retrieval do not depend on the backup (\lean{whole\_independent\_of\_solver}), so they are the same in \code{ExampleACTR.lean}, which uses an exact backup. Rows about answers overall use the integrated model (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_actr\_x}, \lean{setting\_practiced\_errors}). EPAM's overall errors on $100+100$ are the solver's own; after studying $100+300$ they are unchanged, by \lean{MD.learning\_preserves\_trial}, which holds for every backup that learning leaves fixed, as this solver's table is. The last row states what holds at every setting for this configuration.}
-\label{tab:memories}
-\end{table}
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabularx}{\linewidth}{@{}Xccc@{}}
-\toprule
-\multicolumn{4}{@{}l}{\textbf{B. One memory.} Memory holds $0+0$, $5+0$, $1+1$, then $100+100$, $100+200$} \\
-\midrule
-& EPAM net & ACT-R, & ACT-R, \\
-& one memory & separate table & one memory \\
-\midrule
-$0+0$ answered 5 by the column process & $0$ & $0$ & $120/2167$ \\
-$150+100$ answered 200 by whole-problem retrieval & $45/46$ & $\approx .396$ & $\approx .396$ \\
-$150+100$: solver invoked & $1/46$ & $\approx .407$ & $\approx .407$ \\
-$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ & $\approx .385$ \\
-$150+100$ answered correctly overall & $\approx .014$ & $\approx .267$ & $\approx .157$ \\
-practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ & $\approx .386$ \\
-\midrule
-\multicolumn{4}{@{}l}{For every setting, EPAM: practice undisturbed, given that the problem and its digit pairs were learned.} \\
-\bottomrule
-\end{tabularx}
-\caption{The model with one memory for whole problems and column facts (\S\ref{sec:shared}). The memory first studies the three digit pairs that $150+100$ and $100+100$ need, then the two problems. The middle column is a control: ACT-R's memory holds the same five items, but the solver uses DOA's separate table, so the memory's contents are as in the last column and only the solver's use of the memory differs. Rows as in Table~\ref{tab:memories}; ``correct overall'' is again the product of the two rows above it. EPAM's values are those of Table~\ref{tab:memories}, by the reduction theorem (\lean{setting\_epam\_reduces}, \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}); ACT-R's are \lean{setting\_act\_control}, \lean{setting\_act\_pairs} and \lean{setting\_act\_values}. ACT-R appears without retrieval as use. The last row is \lean{shared\_learning\_preserves\_trial}; without its condition on the digit pairs, noninterference is not proved for the shared model.}
-\label{tab:shared}
-\end{table}
-
-With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM predicts no interference, for every net and every backup that learning leaves fixed (\lean{MD.learning\_preserves\_trial}); with one memory this needs a condition (\S\ref{sec:shared}). The difference is between kinds of memory, and the laws say which property of memory produces it.
-
 \subsection{One memory for whole problems and column facts}
 \label{sec:shared}
 
-In the integrated model, the solver's single-digit facts come from a DOA association table of their own, separate from the memory that recognizes whole problems. A child has one memory. \code{MultiDigit/SharedMemory.lean} removes the separation, again by composition alone. Each column's digit pair $d+e$ is coded in the problems' own code space, as the problem $d+e$. A column's addition is then recognize--retrieve--back up on that pair (\lean{memFact}): the \emph{same} retriever that recognizes whole problems calls up a stored code, and retrieval searches its associations in the same strength table. When nothing clears the criterion, the column falls back on DOA's fingers and counting. The memory becomes a single parameter, used at both levels; the solver itself is unchanged, since it is parametric in its facts.
+In the integrated model, the solver's single-digit facts come from a DOA association table of their own, separate from the memory that recognizes whole problems. A child has one memory. \code{MultiDigit/SharedMemory.lean} removes the separation, again by composition alone. Each column's digit pair $d+e$ is coded in the problems' own code space, as the problem $d+e$. A column's addition is then recognize--retrieve--back up on that pair (\lean{memFact}): the \emph{same} retriever that recognizes whole problems calls up a stored code, and retrieval searches its associations in the same strength table. The memory becomes a single parameter, used at both levels; the solver is unchanged, since it is parametric in its facts.
 
 Three results follow from theorems already in the library:
 \begin{itemize}
-  \item \textbf{The separate table is a special case.} If the memory recognizes a digit pair as itself, the column fact \emph{is} the DOA fact on that pair's associations (\lean{memFact\_self}). So when each column's pair is recognized as itself, the shared model is the integrated model (\lean{strial\_reduces}, \lean{strial\_net\_reduces}), and every theorem of \S\ref{sec:results} holds of it.
-  \item \textbf{Confident errors one level down.} A digit pair taken for another, whose associations are sharp, shows the confusion-error pattern: every retrieved answer is the other pair's sum, with no more fallback than the other pair (\lean{column\_confident\_errors}). The proof applies \lean{RR.confident\_errors} to digit pairs; it needed no new lemma.
-  \item \textbf{The two memories diverge further.} At the setting (the memory studies $0+0$, $5+0$ and $1+1$, then the two problems), EPAM's net recognizes all five as themselves, and every value is the integrated model's (\lean{setting\_epam\_values}). ACT-R's memory does not: digit pairs and whole problems compete for retrieval, and $0+0$ calls up $5+0$ with probability $15/197$. The consequences are in Table~\ref{tab:shared}. Two things changed at once: the memory holds three more items, and the solver now consults it. The control column separates them. With the extra items but the separate table, ACT-R's whole-problem retrieval of $150+100$ weakens (200 with probability $.396$, against $.43$), it reaches the solver more often, and since that solver is accurate, it is answered correctly \emph{more} often ($.267$, against $.238$); errors on the practiced $100+100$ are unchanged ($.334$). Using the memory inside the solver is what lowers accuracy: the solver's accuracy when invoked falls from $.656$ to $.385$, because digit pairs are confused with one another ($0+0$ is sometimes answered 5), correct answers fall to $.157$, and errors on $100+100$ rise to $.386$.
+  \item \textbf{The separate table is a special case.} If the memory recognizes a digit pair as itself, the column fact \emph{is} the DOA fact on that pair's associations (\lean{memFact\_self}). So when each column's pair is recognized as itself, the shared model is the integrated model (\lean{strial\_reduces}, \lean{strial\_net\_reduces}), and every theorem above holds of it.
+  \item \textbf{Confident errors one level down.} A digit pair taken for another, whose associations are sharp, exhibits the confusion-error pattern (\lean{column\_confident\_errors}). The proof applies the general theorem to digit pairs; it needed no new lemma.
+  \item \textbf{Noninterference needs a condition.} EPAM's practiced problems are never disturbed by learning, by a theorem that holds the backup fixed (\lean{MD.learning\_preserves\_trial}). With one memory, learning can change the backup itself: a digit pair the net has not learned may be sorted differently after it learns something new. The result transfers when the problem and its three digit pairs were all learned (\lean{shared\_learning\_preserves\_trial}). Without that condition, noninterference for the shared model is not proved.
 \end{itemize}
-These ACT-R values carry the limitation stated below: retrieval does not change ACT-R's memory here. And part of ACT-R's loss comes from the fallback to finger counting, which a child doing three-digit addition would not use.
 
-\textbf{Noninterference needs a condition here.} In Table~\ref{tab:memories}, EPAM's practiced problems are never disturbed, by a theorem that holds the backup fixed while the net learns. With one memory, learning can change the backup itself: a digit pair the net has not learned may be sorted differently after it learns something new. The result transfers under a condition: if the problem and its three digit pairs were all learned, learning a new item leaves its trial unchanged (\lean{shared\_learning\_preserves\_trial}), because EPAM's learning preserves those recognitions and the model then reduces to the fixed-table one. Without the condition, noninterference for the shared model is not proved.
+\section{Classes of mechanisms}
+\label{sec:classes}
 
-\section{Three kinds of results}
+The theorems so far quantify over representations and parameters, but each concerns one kind of memory. The next step is to quantify over memories.
+
+\paragraph{A result for every memory satisfying laws.} \lean{RR.confident\_errors\_of\_laws} proves the confusion-error pattern for \emph{any} memory, given only three laws, stated theory-neutrally in CogLib (\code{Phenomena/RetrievalLaws.lean}) against a common retriever interface:
+\begin{itemize}
+  \item \emph{determinacy}: retrieval calls up a single item for certain;
+  \item \emph{certainty}: a studied item retrieves itself;
+  \item \emph{stability}: studying one item does not change another's retrieval of itself.
+\end{itemize}
+Together with the remaining conditions (a stranger can be taken for a studied item, whose associations are sharp, and the correct answers differ), any memory with the three laws exhibits the pattern. A new theory of memory inherits the result by proving the three laws, without reproving anything about recognition, retrieval or backup. This is a result about a class of models, not about one model. It says that the laws are \emph{sufficient}; it does not say they are necessary, nor that human memory satisfies them.
+
+\paragraph{Which memories are in the class.} CogLean's theory matrix (\code{CogMatrix/}) proves, for each memory family and each law, whether the family has the law at every setting, never has it, or lacks it at some setting. For the two memories here, both cells are proved for every parameter setting:
+\begin{itemize}
+  \item EPAM's discrimination net has determinacy, certainty and stability (\lean{Matrix.Discrimination.determinate}, \lean{.certainty}, \lean{.stability});
+  \item ACT-R's declarative memory \citep{anderson2007}, with base-level activation, partial matching and a retrieval threshold, has none of them (\lean{Matrix.Activation.never\_determinate}, \lean{never\_certainty}, \lean{never\_stability}).
+\end{itemize}
+So the class-level theorem covers EPAM and never covers ACT-R, and the explanation of the difference is a property of memory, not an observation at one setting.
+
+\paragraph{What failing a law does and does not show.} That the theorem does not apply to ACT-R does not show that ACT-R cannot produce similar behavior, and at the illustrative setting it does produce graded errors of a similar kind. What can be shown is that the exact pattern fails there: with ACT-R's memory the trial does not satisfy \lean{ConfusionErrorPattern} (\lean{setting\_actr\_not\_pattern}), because the confused problem's backup use differs from the familiar problem's. That is a counterexample at one setting, not a theorem about every setting. A graded analogue of the pattern, with its own laws, would be needed to say what memories like ACT-R's do in general.
+
+\section{The role of representation}
+\label{sec:repr}
+
+The specific prediction that $150+100$ is confused with $100+100$ depends on the illustrative binary-coded representation, the order in which features are noticed, and the learning history that built the net. The theorems about what such a confusion entails do not. CogLean makes this separation explicit, and the library already distinguishes three kinds of result.
+\begin{enumerate}
+  \item \textbf{Representation-independent.} The confusion-error pattern, solver independence and the two sources of error hold for every encoding. The representation enters only through the recognition conditions (which problem is confused with which), and those are hypotheses, not built in.
+  \item \textbf{Requiring representational properties.} Some consequences need the encoding to preserve particular information, stated as properties of encodings, not as particular encodings (\code{MultiDigit/Features.lean}, \code{FeaturePhenomena.lean}):
+  \begin{itemize}
+    \item \emph{Zeros}: each digit has a feature saying whether it is zero. Then a confusion keeps the zeros the net tests (\lean{confusion\_keeps\_zeros}), and a problem confused with a round problem, by a net that tests the relevant zeros, is answered exactly (\lean{round\_confusion\_exact}).
+    \item \emph{Magnitude}: each digit has threshold features (``greater than $k$''). Then a confused digit lies between the same tested thresholds as the true one, and its error is bounded by the gap between them (\lean{confusion\_within\_gap}).
+    \item \emph{Column facts}: each column has features identifying its single-digit fact. Then a confusion with every column's fact tested costs nothing (\lean{facts\_same\_sum}), and with only the low columns' facts tested the error is a multiple of 100 or of 10 (\lean{facts\_mod\_100}, \lean{facts\_mod\_10}).
+  \end{itemize}
+  Each holds for every encoding with the property, every net, and every memory that agrees on the features concerned; versions with no hypothesis on the net hold for every net EPAM learns from an empty one (\lean{round\_confusion\_exact\_learned}, \lean{facts\_same\_sum\_learned}).
+  \item \textbf{Instance-specific.} Which problems are actually confused, and the resulting probabilities, depend on a particular combination of encoding, noticing order, learning history and strengths. These are the values of Appendix~\ref{app:setting}.
+\end{enumerate}
+The simulation of Section~\ref{sec:sim} adds a caution about the middle category: in the learning histories it tested, nets rarely tested enough features for these hypotheses to hold. A theorem that requires a representational property says what follows when the property is used; whether learning makes use of it is a separate question.
+
+\section{Concrete realizations}
+\label{sec:concrete}
+
+The general results are illustrated at one chosen setting: an encoding, a learned net, associations, criterion and search length (Appendix~\ref{app:setting}). The concrete cases do five things. They show that independently formalized mechanisms compose into a model that runs; that the formalizations have nontrivial realizations, since a learned net does meet the conditions of the confident-errors theorem; that different memory families make different predictions, as constructive witnesses; that the abstract results can be understood through cases; and that the formal model can be checked against an independent implementation (Section~\ref{sec:sim}). Table~\ref{tab:qual} summarizes the comparison qualitatively; exact values are in Tables~\ref{tab:memories} and~\ref{tab:shared}.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+& EPAM net & ACT-R memory \\
+\midrule
+Confusion of $150+100$ with $100+100$ & certain & graded; can also retrieve $100+200$, or fail \\
+Errors on the confused problem & confident: the neighbour's sum, with the familiar problem's low backup use & similar errors, but backup use differs from the familiar problem's \\
+Practiced problem after new study & undisturbed (every setting, fixed backup) & interference \\
+Column facts from the same memory & no change (pairs recognized as themselves) & digit pairs confused with each other; solver accuracy falls \\
+General status & in the class of the confident-errors theorem & outside it, at every setting \\
+\bottomrule
+\end{tabularx}
+\caption{The two memories in the same application, qualitatively. The last row is general; the others describe one illustrative setting, given exactly in Appendix~\ref{app:setting}. ACT-R appears without retrieval as use.}
+\label{tab:qual}
+\end{table}
+
+\section{Kinds of results}
 \label{sec:kinds}
 
-Table~\ref{tab:kinds} sorts the results by what they rest on. A reader should be able to tell which statements are library facts about mechanisms, which are deductions from the composition, which hold only given further conditions, and which are numbers at chosen settings. Not every theorem is a psychological prediction, and none here is an empirical finding: the conditional and compositional results become empirical predictions about people only once their conditions can be identified in people and the predictions tested.
+Table~\ref{tab:kinds} sorts the results by what they rest on. A reader should be able to tell which statements are library facts about mechanisms, which are deductions from the composition, which hold only given further conditions, which hold for whole classes of mechanisms, and which are values at chosen settings. Not every theorem is a psychological prediction, and none here is an empirical finding: the conditional, compositional and class-level results become empirical predictions about people only once their conditions can be identified in people and the predictions tested.
 
 \begin{table}[t]
 \centering
@@ -421,20 +423,16 @@ Kind & Results & What they rest on \\
 \addlinespace
 \textbf{Compositional deductions}: hold for every encoding, net, strength set and DOA setting & whole-problem errors are independent of the solver; the column route factors as exhaustion times the solver; the solver's rate of use is $(1-R_q)^n$ & the composed mechanisms alone \\
 \addlinespace
-\textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; a solver error as a single-digit error in place (other columns exact); exactness of the solver (exact facts: sufficient, not necessary); confident errors for any memory with three laws & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); exact columns; for the last, the laws themselves \\
+\textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; a solver error as a single-digit error in place (other columns exact); exactness of the solver (exact facts: sufficient, not necessary); consequences of representational properties (zeros, magnitude, column facts); noninterference with one memory & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); exact columns; properties of the encoding; learned digit pairs \\
 \addlinespace
-\textbf{At chosen settings}: exact values & $150+100$: 200 by retrieval $45/46$; solver invoked $1/46$; solver correct when invoked $\approx .656$; correct overall (joint) $\approx .0143$; Tables~\ref{tab:memories} and~\ref{tab:shared} & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
+\textbf{Class-level}: hold for every mechanism satisfying stated laws & confident errors for any memory with determinacy, certainty and stability; which memory families have the laws (EPAM at every setting; ACT-R at none) & the laws themselves, which are not claimed to describe people \\
+\addlinespace
+\textbf{At chosen settings}: exact values & which problems are confused; route, solver and error probabilities; the EPAM/ACT-R comparisons; counterexamples at a setting (Appendix~\ref{app:setting}) & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
 \bottomrule
 \end{tabularx}
-\caption{The integrated model's results, by kind. Lean names are in Appendix~\ref{app:index}.}
+\caption{The results, by kind. Lean names are in Appendix~\ref{app:index}.}
 \label{tab:kinds}
 \end{table}
-
-\paragraph{The illustrative setting.} The encoding codes each digit of each addend in four bits. The net is learned by EPAM from $100+100$ and $100+200$, scanning hundreds digits first, so it tests only the bit where those two problems differ. The whole-problem associations give strength $.90$ to each familiar problem's correct sum and $.01$ to other answers, with criterion $.50$ and search length 1. Every digit pair has the same single-digit associations: $4/5$ on its sum, $3/25$ on the next number in the counting sequence, and $1/100$ on each other answer from 0 to 19. The single-digit criterion is $1/10$, the search length 1, and finger elaboration, skipping and double-counting are each $1/20$.
-
-At this setting, $150+100$ is answered 200 by whole-problem retrieval with probability $45/46$ and reaches the solver with probability $1/46$. The solver alone answers 250 with probability $\approx .656$. Its main errors are 260, 350 and 251, each $\approx .1$: a tens error, a hundreds error (the counting-sequence neighbour of $1+1$) and a units error. So $150+100$ is answered correctly with probability $\approx .0143$ (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}). The familiar $100+100$ is answered correctly with probability $\approx .993$.
-
-These numbers are exact consequences of the setting, and they show that the conditional theorems' hypotheses can be met by a learned net. They are \emph{not} fitted to children's data and are not predictions about children. (Computing them needed a merged evaluator, proved to be the same distribution as the model, \lean{SC.same\_trialMerged}: written out, counting $k$ objects lists $3^k$ outcomes.)
 
 \section{The scientific status of proofs}
 \label{sec:status}
@@ -500,6 +498,34 @@ Whether any single one of these is novel is a matter for a more complete review.
 
 CogLean is not proposed as an alternative to cognitive architectures such as Soar and ACT-R, or to efforts such as the Common Model of Cognition \citep{laird2017}. It offers a possible formal foundation for expressing, composing and reasoning about their constituent mechanisms and architectural commitments. The present example composes mechanisms at a relatively local level, for one task, without committing to a general cognitive architecture. A longer-term objective is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within a shared framework.
 
+\subsection{The scientific program}
+\label{sec:program}
+
+The central message is methodological. Independently formalized mechanisms can be composed, their established properties reused, and new consequences derived without reconstructing every theory from scratch. More fundamentally, results can be expressed over classes of mechanisms and representations, which helps identify which commitments are responsible for a phenomenon.
+
+\paragraph{Already demonstrated, in this paper and library:}
+\begin{itemize}
+  \item mechanisms formalized independently in a common environment;
+  \item general theorems quantified over arbitrary representations and parameter settings;
+  \item results transferred through instantiation and proved bridges;
+  \item compositional deductions from independently established results;
+  \item theory-neutral phenomenon predicates;
+  \item results for classes of memory mechanisms satisfying common laws, and proofs of which families satisfy them;
+  \item concrete settings at which model families provably differ.
+\end{itemize}
+
+\paragraph{Still largely aspirational:}
+\begin{itemize}
+  \item systematic derivation of the weakest sufficient assumptions for a phenomenon, which would say which theoretical commitments are actually responsible for it;
+  \item necessary-and-sufficient characterizations: the laws of Section~\ref{sec:classes} are shown sufficient, not necessary;
+  \item classifications of behaviorally equivalent representations;
+  \item general theorems saying precisely when different architectures diverge, rather than counterexamples at settings;
+  \item a large, cumulative library connecting many independently developed theories.
+\end{itemize}
+A target of the program would be a theorem of the form: every recognition-and-retrieval mechanism satisfying properties A, B and C exhibits phenomenon P under conditions D and E, for every representation; better, one that also shows A, B and C cannot be weakened. The confident-errors results have the first form for one phenomenon and three laws. They do not yet have the second.
+
+Universal results remain conditional. A theorem about every memory satisfying particular laws does not establish that human memory satisfies those laws. It moves the empirical question to the laws, where it can be asked once for all the theories that share them.
+
 \subsection{What the approach bought}
 
 The examples above show four kinds of gain, of different weight. Some results are \emph{library facts}, such as the bridge and the well-formedness of the composed distributions: unglamorous, but they are what lets theorems transfer. Some are \emph{compositional deductions}, true at every setting: whole-problem errors do not depend on the solver. Some are \emph{conditional}, and the conditions are where the science is: confident errors need confusion and sharp associations, and the proofs say exactly which premise a failed test would implicate. And some are \emph{corrections}: the DOA chapter's claim about peaking, the theorem hypotheses that learning did not realize, and the unstated assumption behind the predicted learning sequence. None of these is yet an empirical result about people.
@@ -534,7 +560,7 @@ The library already contains early work on the last of these: conceptual combina
 
 \subsection{Conclusion}
 
-The question was whether theories represented in a common formal library can be composed to yield meaningful consequences that would otherwise require building a new model from scratch. In one case the answer is yes. EPAM's recognition, DOA's retrieval and strategy choice, and a decision-cycle problem solver, each formalized on its own, compose into a model of three-digit addition with no answer supplied, and its consequences are proved largely by reusing the components' theorems. The larger ambition is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, as mathematical results are reused in Mathlib. One example does not establish that. It shows that the approach can produce results of the right kind.
+The question was whether theories represented in a common formal library can be composed to yield meaningful consequences that would otherwise require building a new model from scratch. In one case the answer is yes. EPAM's recognition, DOA's retrieval and strategy choice, and a decision-cycle problem solver, each formalized on its own, compose into a model of three-digit addition with no answer supplied, and its consequences are proved largely by reusing the components' theorems. The more important results are not the model's numbers but the statements above them: a phenomenon defined apart from any mechanism, a theorem relating it to recognition and retrieval for any task and representation, and a theorem establishing it for every memory that satisfies three laws. The multi-digit model is a preliminary demonstration of method, not a proposed theory of arithmetic. The aspiration is a cumulative, machine-checked mathematical science of cognitive theories; one example does not establish that, but it shows that the approach can produce results of the right kind.
 
 \paragraph{Code.} All definitions and theorems are in the CogLean repository \citep{coglean}, \url{https://github.com/jeffshrager/CogLean}. Every theorem is fully proved, with no \code{sorry}, and depends only on Lean's standard axioms.
 
@@ -580,6 +606,72 @@ Memory laws: EPAM has, ACT-R never has & \lean{Matrix.Discrimination.*}, \lean{M
 Merged evaluation is the same distribution & \lean{SC.same\_trialMerged}, \lean{same\_fastBackup} \\
 \bottomrule
 \end{tabularx}
+\end{table}
+
+\section{The illustrative setting and exact values}
+\label{app:setting}
+
+\paragraph{The setting.} The encoding codes each digit of each addend in four bits. The net is learned by EPAM from $100+100$ and $100+200$, scanning hundreds digits first, so it tests only the bit where those two problems differ. The whole-problem associations give strength $.90$ to each familiar problem's correct sum and $.01$ to other answers, with criterion $.50$ and search length 1. Every digit pair has the same single-digit associations: $4/5$ on its sum, $3/25$ on the next number in the counting sequence, and $1/100$ on each other answer from 0 to 19. The single-digit criterion is $1/10$, the search length 1, and finger elaboration, skipping and double-counting are each $1/20$. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$, with decay 1 and temperature 1 so that probabilities stay rational (\code{CogLib/Memory/Activation.lean}).
+
+\paragraph{EPAM.} $150+100$ is answered 200 by whole-problem retrieval with probability $45/46$ and reaches the solver with probability $1/46$. The solver alone answers 250 with probability $\approx .656$. Its main errors are 260, 350 and 251, each $\approx .1$: a tens error, a hundreds error (the counting-sequence neighbour of $1+1$) and a units error. So $150+100$ is answered correctly with probability $\approx .0143$ (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}), and the familiar $100+100$ with probability $\approx .993$. The model has \lean{ConfidentErrors} with bound $1/46$ (\lean{setting\_confident\_errors\_bound}).
+
+\paragraph{ACT-R.} With the confusion graded, $150+100$ can retrieve either familiar problem, or fail. It reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM's are unchanged (\lean{MD.learning\_preserves\_trial}).
+
+\paragraph{One memory.} The memory first studies $0+0$, $5+0$ and $1+1$, then the two problems. EPAM's net recognizes all five as themselves, and every value is the integrated model's (\lean{setting\_epam\_values}). ACT-R's memory confuses digit pairs: $0+0$ calls up $5+0$ with probability $15/197$. Two things change at once for ACT-R, the memory holds three more items and the solver consults it, and a control column separates them. With the extra items but the separate table, correct answers to $150+100$ rise slightly ($.267$, against $.238$), since more problems reach an accurate solver. Using the memory inside the solver lowers them: the solver's accuracy when invoked falls from $.656$ to $.385$, correct answers to $.157$, and errors on $100+100$ rise to $.386$. Part of ACT-R's loss comes from the fallback to finger counting, which a child doing three-digit addition would not use.
+
+These numbers are exact consequences of the setting. They are \emph{not} fitted to children's data and are not predictions about children. (Computing them needed merged evaluators, proved to be the same distributions as the model, \lean{SC.same\_trialMerged}: written out, counting $k$ objects lists $3^k$ outcomes.)
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}Xcc@{}}
+\toprule
+\multicolumn{3}{@{}l}{\textbf{A. Separate column-fact table.} Memory holds $100+100$, $100+200$; columns use DOA's own table} \\
+\midrule
+& EPAM net & ACT-R memory \\
+\midrule
+$150+100$ retrieves $100+100$ & certainly & with probability $10/23$ \\
+$150+100$ answered 200 by whole-problem retrieval & $45/46$ & $225/529 \approx .43$ \\
+$150+100$ answered 300 (taken for $100+200$) & $0$ & $225/1058 \approx .21$ \\
+$150+100$: solver invoked & $1/46 \approx .022$ & $383/1058 \approx .36$ \\
+$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ \\
+$150+100$ answered correctly (250) overall, all via the solver & $\approx .014$ & $\approx .238$ \\
+\midrule
+practiced $100+100$: errors by whole-problem retrieval & $0$ & $225/782 \approx .29$ \\
+practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ \\
+after also studying $100+300$: whole-problem retrieval & $0$ & $3375/5842 \approx .58$ \\
+after also studying $100+300$: overall & $\approx .0073$ (unchanged) & $\approx .616$ \\
+\midrule
+for every setting, with this solver & confident-error theorem applies; & its hypotheses never hold; \\
+& practice never disturbed & interference possible \\
+\bottomrule
+\end{tabularx}
+\caption{The integrated model with two memories, at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver, whose single-digit facts come from DOA's separate association table. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. All values are exact and proved in Lean. ``Correct overall'' is the joint probability that the solver is invoked and is correct: the product of the two rows above it (only the solver ever gives 250). Rows about whole-problem retrieval do not depend on the backup (\lean{whole\_independent\_of\_solver}), so they are the same in \code{ExampleACTR.lean}, which uses an exact backup. Rows about answers overall use the integrated model (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_actr\_x}, \lean{setting\_practiced\_errors}). EPAM's overall errors on $100+100$ are the solver's own; after studying $100+300$ they are unchanged, by \lean{MD.learning\_preserves\_trial}, which holds for every backup that learning leaves fixed, as this solver's table is. The last row states what holds at every setting for this configuration.}
+\label{tab:memories}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}Xccc@{}}
+\toprule
+\multicolumn{4}{@{}l}{\textbf{B. One memory.} Memory holds $0+0$, $5+0$, $1+1$, then $100+100$, $100+200$} \\
+\midrule
+& EPAM net & ACT-R, & ACT-R, \\
+& one memory & separate table & one memory \\
+\midrule
+$0+0$ answered 5 by the column process & $0$ & $0$ & $120/2167$ \\
+$150+100$ answered 200 by whole-problem retrieval & $45/46$ & $\approx .396$ & $\approx .396$ \\
+$150+100$: solver invoked & $1/46$ & $\approx .407$ & $\approx .407$ \\
+$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ & $\approx .385$ \\
+$150+100$ answered correctly overall & $\approx .014$ & $\approx .267$ & $\approx .157$ \\
+practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ & $\approx .386$ \\
+\midrule
+\multicolumn{4}{@{}l}{For every setting, EPAM: practice undisturbed, given that the problem and its digit pairs were learned.} \\
+\bottomrule
+\end{tabularx}
+\caption{The model with one memory for whole problems and column facts (\S\ref{sec:shared}). The memory first studies the three digit pairs that $150+100$ and $100+100$ need, then the two problems. The middle column is a control: ACT-R's memory holds the same five items, but the solver uses DOA's separate table, so the memory's contents are as in the last column and only the solver's use of the memory differs. Rows as in Table~\ref{tab:memories}; ``correct overall'' is again the product of the two rows above it. EPAM's values are those of Table~\ref{tab:memories}, by the reduction theorem (\lean{setting\_epam\_reduces}, \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}); ACT-R's are \lean{setting\_act\_control}, \lean{setting\_act\_pairs} and \lean{setting\_act\_values}. ACT-R appears without retrieval as use. The last row is \lean{shared\_learning\_preserves\_trial}; without its condition on the digit pairs, noninterference is not proved for the shared model.}
+\label{tab:shared}
 \end{table}
 
 \end{document}

@@ -53,6 +53,30 @@ Other changes:
 - New Lean theorems: `setting_epam_solver`, `setting_00_not_5`, `setting_act_control`, `shared_learning_preserves_trial`. Every number in Table 2 now cites a theorem.
 - The talk's memory-swap slide uses the same row definitions. The one-memory slide is split into two: theorems, then numbers with the control.
 
+## Revision of 2026-10-31 (reorientation toward general results)
+
+This follows the revision guidance "Reorient the CogLean Paper Toward General Theoretical Results". The mathematics and the Lean code are unchanged.
+
+**Restructured around the levels of results**
+1. Components, formalized independently: EPAM, DOA, and general problem solving (now its own subsection).
+2. The composition, including the bridge.
+3. A theory-neutral phenomenon (new §5): `ConfusionErrorPattern` and `ConfidentErrors r`.
+4. General deductions (§6): confident errors, solver independence, two sources, and one memory.
+5. Classes of mechanisms (new §7): `confident_errors_of_laws`, the memory-law matrix, and what failing a law does and does not show.
+6. The role of representation (new §8): representation-independent results; results that need properties of the encoding (Zeros, Magnitude, ColumnFacts in `FeaturePhenomena.lean`); and instance-specific results.
+7. Concrete realizations (new §9): the five purposes of the numbers, and a qualitative EPAM/ACT-R table.
+
+**Numbers moved to an appendix.** The exact-value tables, the setting and the numerical narrative are now Appendix B.
+
+**Other changes**
+- Abstract and introduction rewritten: a capability added for generalization over classes, an "aspiration" paragraph, and the numbers described as illustrative.
+- §2's kinds of object now include representations.
+- New Discussion subsection, "The scientific program", lists what has been demonstrated and what is still largely aspirational: weakest sufficient assumptions, necessary and sufficient conditions, equivalent representations, and general divergence theorems. It notes that the laws are shown sufficient, not necessary, and that universal results remain conditional.
+- The kinds table gains a "class-level" row and representational properties.
+- The conclusion now gives the central message.
+
+The paper is 27 pages.
+
  of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:
