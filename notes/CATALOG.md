@@ -193,7 +193,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-178 theorems: 146 general, 32 instances; 72 headline; 9 about laws; 5 conditional on laws.
+200 theorems: 163 general, 37 instances; 80 headline; 10 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -207,6 +207,7 @@ How to read it:
 | `MD.Integrated.integrated_confident_errors` | ConfusionErrorPattern | has | general | derived |
 | `MD.Integrated.setting_actr_not_pattern` | ConfusionErrorPattern | lacks | instance | derived |
 | `MD.Integrated.setting_confident_errors` | ConfusionErrorPattern | can hold | instance | derived |
+| `MD.Shared.column_confident_errors` | ConfusionErrorPattern | has | general | derived |
 | `MD.confident_errors` | ConfusionErrorPattern | has | general | derived |
 
 **Headline theorems**
@@ -277,6 +278,14 @@ How to read it:
 | `MD.same_sum_confusion_harmless` | general | — | Confusion with a problem of the same sum is harmless. If `x` is recognized as the stored `code q`, which the net recognizes as itself, and the two sums agree, then whole-problem retrieval errs ... |
 | `MD.similar_problems_cost_time` | general | — | Similar problems take longer to recognize. Codes that agree on the first `k` features of the noticing order cost at least `k` scanning steps to tell apart (EPAM). |
 | `MD.whole_depends_only_on_route` | general | — | Whole-problem retrieval depends only on the route. If `x` is recognized as `y`, whole-problem retrieval on `x` states an answer with property `P` exactly as often as retrieval on `y`'s associat... |
+| `MD.Shared.column_confident_errors` | general | — | Confident errors at the column level. Given that the memory recognizes the digit pair `(d', e')` as itself and takes `(d, e)` for it, that `(d', e')`'s associations are sharp, that the sums dif... |
+| `MD.Shared.confused_column_gives_neighbours_sum` | general | — | A confused column retrieves the confusing pair's sum. Given that `(d, e)` is taken for `(d', e')` for certain, with sharp associations, the column fact is never a retrieved answer other than `d... |
+| `MD.Shared.memFact_self` | general | — | With a pair recognized as itself, the column fact is the DOA fact on the pair's own associations. |
+| `MD.Shared.setting_act_pairs` | instance | — | Digit pairs are confused with each other under ACT-R. The code of 0 + 0 calls up itself with probability 48/197 and 5 + 0 with 15/197; so 0 + 0 is answered 5 (5 + 0's sum, retrieved) with proba... |
+| `MD.Shared.setting_act_values` | instance | — | With ACT-R's memory, sharing hurts. Compare `Integrated.setting_actr_x` and `setting_practiced_errors`, where ACT-R holds only the two problems and the columns use DOA's separate table: * 150 +... |
+| `MD.Shared.setting_epam_reduces` | instance | — | With EPAM's net, the shared model is the integrated model on 150 + 100 (`strial_net_reduces`): the net recognizes each column's digit pair as itself. |
+| `MD.Shared.setting_epam_values` | instance | — | The same values as `Integrated.lean`: 150 + 100 answered 200 with probability about .978 and 250 about .014; 100 + 100 answered correctly about .993. |
+| `MD.Shared.strial_reduces` | general | — | The shared model reduces to the integrated model when `x`'s digit pairs are recognized as themselves: the same distribution, so every theorem of `Integrated.lean` holds of it. |
 | `MD.Solver.bridge` | general | — | The bridge: the full procedure answers exactly as the column backup `columns` does, for every problem and every single-digit process. |
 | `MD.Solver.bugs_15_17` | instance | — | The four bugs of 15 + 17: blank units (20), quit (0), no carry (22), two digits in a cell (212), each with probability 1/4. |
 | `MD.Solver.noCarry_bug` | general | — | The no-carry bug. Without the carry rule, and with critics against blank cells, quitting and two-digit cells, every problem is answered by adding the columns without carrying. |
@@ -468,10 +477,10 @@ How to read it:
 | CogLib: the general library | 209 | 204 | 5 | 29 | 24 | 79 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
-| Multi-digit addition (with the problem solver) | 178 | 146 | 32 | 9 | 5 | 72 |
+| Multi-digit addition (with the problem solver) | 200 | 163 | 37 | 10 | 5 | 80 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 2 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 591 | 476 | 115 | 89 | 36 | 247 |
+| **All** | 613 | 493 | 120 | 90 | 36 | 255 |

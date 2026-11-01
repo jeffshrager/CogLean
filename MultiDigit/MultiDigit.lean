@@ -11,3 +11,4 @@ import MultiDigit.ExampleACTR
 import MultiDigit.Solver
 import MultiDigit.SolverGPS
 import MultiDigit.Integrated
+import MultiDigit.SharedMemory
