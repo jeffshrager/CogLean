@@ -90,7 +90,7 @@ abbrev epam1 := learner (fun (N : Net) => N.retrieve) labelOnly false
 abbrev act1 := learner (Act.retrieve P) labelOnly false
 
 /-- The start of a session. -/
-def start {M : Type} (m : M) : LS M := ⟨theory0, m, [ep], [], []⟩
+def start {M : Type} (m : M) : LS M := ⟨theory0, m, [ep], [], [], []⟩
 
 /-- The session's final theory predicts the episode. -/
 def solved {M : Type} (s : LS M) : Bool := predicts s.theory cook90 == some (.cooks 90)
@@ -208,7 +208,7 @@ theorem act_label_only :
 episode, so no session from it revises it (`correct_theory_stable`; shown
 for EPAM's two-cue learner, and the general theorem holds for any). -/
 theorem duration_kept (k : Nat) (T : KNet A Lbl) (hT : T ∈ (applyView K durView theory0).map (·.1)) :
-    ∀ x ∈ epam2.session k ⟨T, net, [ep], [], []⟩, x.1.theory = T := by
+    ∀ x ∈ epam2.session k ⟨T, net, [ep], [], [], []⟩, x.1.theory = T := by
   apply correct_theory_stable
   intro e he
   simp only [List.mem_singleton] at he

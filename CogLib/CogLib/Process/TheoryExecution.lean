@@ -48,6 +48,50 @@ theorem predict_congr (fnL : L) (den : Term A → S → Option S) (T T' : KNet A
       · rfl
       · exact ih (fun k' hk => h k' (List.mem_cons_of_mem _ hk)) _
 
+/-- **Predict, with denotations that may read the theory.** The denotation
+of an action's function term may also depend on the theory and on the
+acting frame: for instance, on a slot of the action's type (what a number
+it enters *means*). -/
+def predictT (fnL : L) (den : KNet A L → A → Term A → S → Option S) (T : KNet A L) :
+    List A → S → Option S
+  | [], s => some s
+  | k :: ks, s => match T.slot k fnL with
+    | none => none
+    | some f => match den T k f s with
+      | none => none
+      | some s' => predictT fnL den T ks s'
+
+/-- `predict` is `predictT` with denotations that ignore the theory. -/
+theorem predict_eq_predictT (fnL : L) (den : Term A → S → Option S) (T : KNet A L) (acts : List A)
+    (s : S) : predict fnL den T acts s = predictT fnL (fun _ _ f => den f) T acts s := by
+  induction acts generalizing s with
+  | nil => rfl
+  | cons k ks ih =>
+    simp only [predict, predictT]
+    split
+    · rfl
+    · split
+      · rfl
+      · exact ih _
+
+/-- Two theories predict alike if they agree on the actions' function slots
+and on what the denotations read of them. -/
+theorem predictT_congr (fnL : L) (den : KNet A L → A → Term A → S → Option S) (T T' : KNet A L)
+    (acts : List A)
+    (h : ∀ k ∈ acts, T.slot k fnL = T'.slot k fnL ∧ ∀ f s, den T k f s = den T' k f s) (s : S) :
+    predictT fnL den T acts s = predictT fnL den T' acts s := by
+  induction acts generalizing s with
+  | nil => rfl
+  | cons k ks ih =>
+    obtain ⟨h1, h2⟩ := h k (List.mem_cons_self ..)
+    simp only [predictT, h1]
+    split
+    · rfl
+    · rw [h2]
+      split
+      · rfl
+      · exact ih (fun k' hk => h k' (List.mem_cons_of_mem _ hk)) _
+
 /-- Predicting a sequence in two parts. -/
 theorem predict_append (fnL : L) (den : Term A → S → Option S) (T : KNet A L) (ks ks' : List A)
     (s : S) :

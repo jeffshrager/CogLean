@@ -88,12 +88,14 @@ def uniform {α : Type} (xs : List α) : Dist α := xs.map fun x => (x, 1 / (xs.
 
 /-- Step 2's matchings: each theory type frame in turn, to the view's frame of
 the same abstract type if there is one, else to an unused view type frame
-of the same kind, chosen uniformly; unmatched if there is none. -/
+of the same kind, chosen uniformly; unmatched if there is none. A view frame
+of the same abstract type as some theory frame is reserved for it. -/
 def matchings (V T : KNet A L) (kindL : L) : List A → Matching A → Dist (Matching A)
   | [], used => Dist.pure used
   | t :: ts, used =>
     let cands := (V.typeFrames kindL).filter fun v =>
-      V.slot v kindL == T.slot t kindL && !(used.any fun p => p.2 == v)
+      V.slot v kindL == T.slot t kindL && !(used.any fun p => p.2 == v) &&
+        (v == t || !(T.typeFrames kindL).contains v)
     if cands.contains t then matchings V T kindL ts ((t, t) :: used)
     else if cands = [] then matchings V T kindL ts used
     else Dist.bind (uniform cands) fun v => matchings V T kindL ts ((t, v) :: used)

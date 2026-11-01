@@ -58,3 +58,27 @@ Not yet modelled (OPEN_ISSUES #26):
 - the full 1987 mechanisms;
 - splitting an operation type when its keys behave differently;
 - retrieval as use.
+
+## Decomposed views and differentiation (`Differentiation.lean`)
+
+SET-A-TIME and DURATION are broken into parts. SET-A-NUMBER says the key enters a number. NUMBER-IS-A-TIME and NUMBER-IS-A-DURATION say what the number means. Each part is one slot of the keys' type, and interpreting a key takes two of them.
+
+- **Composition:**
+  - one view is not enough (`one_view_not_enough`);
+  - two compose, in either order (`two_views_compose`);
+  - replacing the meaning keeps "enters a number" (`revision_keeps_number`, an instance of `merge_keeps_unmentioned`).
+- **Why splitting is needed** (`never_both_shared`, for every theory): if TIME COOK and CLOCK have one type and both enter a number, the theory predicts them alike. So no such theory predicts both cooking for 90 seconds and an invalid clock time.
+- **Splitting (CogLib `Process/TypeSplit`):**
+  - copying an action's type changes no prediction (`split_conservative`);
+  - it separates the action from the type's other instances (`split_separates`).
+
+  The learner splits when re-interpreting a shared type would break an episode it has already explained (conflict-driven differentiation, `viewSplitReviser`).
+- **Sessions** (EPAM's net; episodes TIME COOK, CLOCK, TIME COOK; 12 cycles):
+
+  | Learner | Knows both | Finishes | Oscillates |
+  |---|---|---|---|
+  | never splits | 0 | 5/6 | 5/6 (every one that finishes) |
+  | splits on conflict | 5/6 (every one that finishes) | 5/6 | 0 |
+
+These results concern representation, so the sessions use EPAM's net only. The EPAM/ACT-R contrast remains in `Session.lean`.
+

@@ -104,7 +104,10 @@
     Open:
     - **Learning in memory.** Revisions retrieve but do not study, so a cue never comes to retrieve a better view. Associative learning of cue and view, and EPAM's discrimination of a cue after an error, are needed.
     - **The 1987 mechanisms.** Multiple view sources, spreading-activation selection (`ViewApplication/Selection`) combined with retrieval, and the other IE mechanisms.
-    - **Representation.** Each view re-interprets an operation *type*, so it re-interprets every key of that type (TIME COOK and CLOCK alike). Splitting a type when its keys behave differently is needed for the correct two-key theory.
+    - ~~**Representation.**~~ Done (2026-11-01). Decomposed views (SET-A-NUMBER, NUMBER-IS-A-TIME/-DURATION) and type splitting (`Process/TypeSplit`, `viewSplitReviser`): `never_both_shared`, `split_conservative`, and sessions where splitting is the difference between never and always learning both keys. Open:
+      - the commutation law for views on disjoint slots (`Process/ViewComposition`; certified only in instances);
+      - splitting is conflict-driven and offered alone. A learner that weighs splitting against overwriting would need weighted repair choice or result-testing critics (the solver gaps below).
+      - View application's matching now reserves a view frame for the theory frame of the same name. This was needed to aim a view at a split type. BigTrak, Numbers and Selection are unchanged.
     - **Retrieval as use** (#24).
     - **Solver generalizations** found here, not yet needed by any model:
       - weighted choice among repairs (`step` chooses uniformly);

@@ -43,22 +43,26 @@ abbrev Episode (Act Resp : Type) := List Act × Resp
 
 /-- What a learner by revision needs: prediction, revision and cues. A
 revision gives the new theory, the new memory, and what it brought in
-(`B`), with probabilities. -/
+(`B`), with probabilities. The cues a failed episode offers may depend on
+the current theory and on the episodes already explained (so that, for
+instance, a conflict with an explained episode can prompt a different kind
+of revision). -/
 structure Reviser (Θ M Act Resp C B : Type) where
   predicts : Θ → List Act → Option Resp
   revise : C → Θ → M → Dist (Θ × M × B)
-  cues : Episode Act Resp → List C
+  cues : Θ → List (Episode Act Resp) → Episode Act Resp → List C
   once : Bool
 
 /-- The learner's state: the theory, the memory, the episodes still to
-explain, the cues tried on the current one, and what each revision brought
-in, in order. -/
+explain, the cues tried on the current one, what each revision brought in,
+in order, and the episodes already explained. -/
 structure LState (Θ M Act Resp C B : Type) where
   theory : Θ
   mem : M
   todo : List (Episode Act Resp)
   tried : List C
   adopted : List B
+  done : List (Episode Act Resp) := []
 
 /-- The operators. -/
 inductive LOp (C : Type) where
@@ -79,9 +83,9 @@ def Reviser.space : Space (LState Θ M Act Resp C B) (LOp C) where
       | e :: _ => G.fits s.theory e
     | .revise _, _ => true
   apply
-    | .confirm, s => Dist.pure { s with todo := s.todo.tail, tried := [] }
+    | .confirm, s => Dist.pure { s with todo := s.todo.tail, tried := [], done := s.done ++ s.todo.take 1 }
     | .revise c, s => Dist.bind (G.revise c s.theory s.mem) fun r =>
-        Dist.pure ⟨r.fst, r.snd.fst, s.todo, c :: s.tried, s.adopted ++ [r.snd.snd]⟩
+        Dist.pure ⟨r.fst, r.snd.fst, s.todo, c :: s.tried, s.adopted ++ [r.snd.snd], s.done⟩
 
 /-- Keep confirming while episodes remain. -/
 def Reviser.procedure (_ : Reviser Θ M Act Resp C B) : Procedure (LState Θ M Act Resp C B) (LOp C) :=
@@ -92,7 +96,7 @@ cue only once per failure. -/
 def Reviser.repairer : Repairer (LState Θ M Act Resp C B) (LOp C) where
   heuristics _ s := match s.todo with
     | [] => []
-    | e :: _ => (G.cues e).map .revise
+    | e :: _ => (G.cues s.theory s.done e).map .revise
   critic o s := match o with
     | .revise c => G.once && s.tried.contains c
     | .confirm => false
@@ -139,7 +143,7 @@ theorem correct_theory_stable (k : Nat) (s : LState Θ M Act Resp C B)
       intro x hx
       simp only [Reviser.session, run, step, hp, hpre, ite_true] at hx
       simp only [Reviser.space, bind_pure_left] at hx
-      exact ih { s with todo := s.todo.tail, tried := [] } (by
+      exact ih { s with todo := s.todo.tail, tried := [], done := s.done ++ s.todo.take 1 } (by
         intro e' he'; simp only [ht, List.tail_cons] at he'; exact h e' (by simp [ht, he'])) x hx
 
 /-- If the reviser never changes memory, no operator does. -/

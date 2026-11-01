@@ -27,6 +27,7 @@ read, `appendDigit` adds a digit, `beginCook` reports the outcome.
 -/
 
 import CogLib.Process.TheoryExecution
+import CogLib.Process.TypeSplit
 
 namespace DeviceLearning
 
@@ -38,9 +39,10 @@ inductive A
   | kSetting | kKnown
   | doSomething | setTime | setDuration | appendDigit | beginCook
   | tcAct | clkAct | nine | zero | goAct | arg
+  | enterNumber | timeOfDay | durationM | modeOpB
   deriving DecidableEq, Repr
 
-inductive Lbl | isa | kind | function | indicates
+inductive Lbl | isa | kind | function | indicates | meaning
   deriving DecidableEq, Repr
 
 open A
@@ -125,5 +127,65 @@ def predicts (T : KNet A Lbl) (keys : List A) : Option Obs :=
 /-- Cooking for 90 seconds, and setting the clock to 90. -/
 def cook90 : List A := [tcKey, d9, d0, startKey]
 def clock90 : List A := [clkKey, d9, d0, startKey]
+
+/-! ### Decomposed views
+
+SET-A-TIME and DURATION, broken into parts: SET-A-NUMBER says the key
+enters a number; NUMBER-IS-A-TIME and NUMBER-IS-A-DURATION say what the
+number means, as a `meaning` slot of the key's type. Each view mentions one
+slot of the type `modeOp`, so view application matches it by identity and
+keeps the slots it does not mention (`merge_keeps_unmentioned`): applied in
+turn, they build an interpretation up. -/
+
+/-- SET-A-NUMBER. -/
+def numberView : KNet A Lbl :=
+  ⟨[(a modeOp, .kind, a kSetting), (a modeOp, .function, ap enterNumber [h arg])], .isa⟩
+
+/-- NUMBER-IS-A-TIME. -/
+def timeMView : KNet A Lbl := ⟨[(a modeOp, .kind, a kSetting), (a modeOp, .meaning, a timeOfDay)], .isa⟩
+
+/-- NUMBER-IS-A-DURATION. -/
+def durMView : KNet A Lbl := ⟨[(a modeOp, .kind, a kSetting), (a modeOp, .meaning, a durationM)], .isa⟩
+
+/-- Denotations reading the key's type: entering a number sets how the
+digits are read from what the type says a number means; with no meaning,
+nothing is predicted. -/
+def den2 (slots : Lbl → Option (Term A)) : Term A → St → Option St
+  | .app A.enterNumber _, (_, _, o) => match slots .meaning with
+    | some (.atom A.timeOfDay) => some (.clock, [], o)
+    | some (.atom A.durationM) => some (.duration, [], o)
+    | _ => none
+  | f, s => den f s
+
+/-- The theory-aware denotation: `den2` on the slots of the acting key's type. -/
+def denT (T : KNet A Lbl) (k : A) (f : Term A) (s : St) : Option St :=
+  den2 (fun l => (T.parent k).bind fun p => T.slot p l) f s
+
+theorem denT_parentReader : ParentReader denT := ⟨den2, fun _ _ _ _ => rfl⟩
+
+/-- What a theory predicts, reading types. -/
+def predicts2 (T : KNet A Lbl) (keys : List A) : Option Obs :=
+  (predictT Lbl.function denT T keys s0).map (·.2.2)
+
+/-- **Without a split, never both.** If TIME COOK and CLOCK have the same type
+and both enter a number, the theory predicts 9 0 START alike after either,
+so it cannot predict both cooking for 90 seconds and an invalid time. This
+holds for every theory of that form (`same_parent_same_reading`,
+`predictT_head_congr`). -/
+theorem never_both_shared (T : KNet A Lbl) (h : T.parent tcKey = T.parent clkKey) (x y : Term A)
+    (hx : T.slot tcKey .function = some (ap enterNumber [x]))
+    (hy : T.slot clkKey .function = some (ap enterNumber [y])) :
+    ¬ (predicts2 T cook90 = some (device cook90) ∧ predicts2 T clock90 = some (device clock90)) := by
+  have hden : ∀ s, denT T tcKey (ap enterNumber [x]) s = denT T clkKey (ap enterNumber [y]) s := by
+    intro s
+    rw [same_parent_same_reading denT denT_parentReader T tcKey clkKey h]
+    obtain ⟨m, ds, o⟩ := s
+    rfl
+  have heq : predicts2 T cook90 = predicts2 T clock90 := by
+    unfold predicts2 cook90 clock90
+    rw [predictT_head_congr _ _ T tcKey clkKey _ _ _ _ hx hy (hden _)]
+  intro ⟨h1, h2⟩
+  rw [heq, h2] at h1
+  exact absurd h1 (by decide)
 
 end DeviceLearning

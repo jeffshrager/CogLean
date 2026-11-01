@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-226 theorems: 221 general, 5 instances; 86 headline; 30 about laws; 26 conditional on laws.
+243 theorems: 238 general, 5 instances; 90 headline; 30 about laws; 26 conditional on laws.
 
 **Laws**
 
@@ -117,7 +117,11 @@ How to read it:
 | `Cog.predict_congr` | general | — | A prediction depends only on the actions' function slots. Two theories that agree on those slots predict alike, whatever else they say. |
 | `Cog.correct_theory_stable` | general | — | A correct theory is never revised. If the theory predicts every episode still to explain, every outcome of the session keeps it. |
 | `Cog.impasse_iff_fails` | general | — | An impasse is a failed prediction. |
+| `Cog.same_parent_same_reading` | general | — | Actions of one type are read alike. |
+| `Cog.split_conservative` | general | — | A split changes no prediction. For a denotation that reads an action's type only through its slots, and actions that are not `newT` and not instances of `inst`, every prediction is the same aft... |
+| `Cog.split_separates` | general | — | A split separates: afterwards `inst` and another instance `k` of its old type have different types. |
 | `Cog.merge_view_wins` | general | — | On a matched frame the view wins: where the view says something about a slot of frame `v`, the merged net says exactly what the view says, provided only matched theory frames are renamed to `v`. |
+| `Cog.merge_keeps_unmentioned` | general | — | A view keeps what it does not mention. A link of a matched theory frame `f` (matched to the view's `b`) survives the merge, renamed, if the view says nothing about that slot of `b`. |
 | `Cog.confusion_gives_neighbours_view` | general | — | A confused cue brings in its neighbour's view. If `x` calls up `y` for certain, and so does `q`, the two cues revise every theory identically. |
 | `Cog.view_confusion_pattern` | general | — | The confusion-error pattern, for view retrieval. Let cue `q` call up `y` for certain, and `x` call up `y` too; let `y`'s view, applied to the theory, answer `q` correctly and `x` wrongly, on ev... |
 | `Cog.view_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In any state reachable by study, a memory with the law of determinacy makes each cue bring in one view: the same at every attempt and for every theory. |
@@ -483,7 +487,7 @@ How to read it:
 
 ## Device learning: retrieved views and theory revision (microwave)
 
-10 theorems: 1 general, 9 instances; 9 headline; 1 about laws; 0 conditional on laws.
+18 theorems: 2 general, 16 instances; 15 headline; 1 about laws; 0 conditional on laws.
 
 **Laws**
 
@@ -495,6 +499,12 @@ How to read it:
 
 | Theorem | Scope | Given | Statement |
 |---|---|---|---|
+| `DeviceLearning.Diff.no_split_session` | instance | — | Without splitting: never both, and oscillation. A learner that may not split never ends knowing both keys (as `never_both_shared` requires). |
+| `DeviceLearning.Diff.one_view_not_enough` | instance | — | One view is not enough. No single part, applied to the initial theory, predicts what TIME COOK 9 0 START does: SET-A-NUMBER leaves the number's meaning open, and a meaning alone leaves the key'... |
+| `DeviceLearning.Diff.revision_keeps_number` | instance | — | A revision keeps the right part. Replacing NUMBER-IS-A-TIME by NUMBER-IS-A-DURATION keeps SET-A-NUMBER: the key still enters a number, and now predicts cooking (`merge_keeps_unmentioned`). |
+| `DeviceLearning.Diff.split_session` | instance | — | With conflict-driven splitting: both, without oscillation. Every learner that finishes (5/6) has split the shared type and knows both keys; none oscillates. |
+| `DeviceLearning.Diff.two_views_compose` | instance | — | Two views compose, in either order. SET-A-NUMBER with NUMBER-IS-A-DURATION predicts cooking for 90 seconds, whichever is applied first; with NUMBER-IS-A-TIME, an invalid time, whichever first. |
+| `DeviceLearning.never_both_shared` | general | — | Without a split, never both. If TIME COOK and CLOCK have the same type and both enter a number, the theory predicts 9 0 START alike after either, so it cannot predict both cooking for 90 second... |
 | `DeviceLearning.act_graded` | instance | — | ACT-R's retrieval is graded. TIME COOK calls up SET TIME with probability 5/23 and the kitchen timer with 10/23 (equally similar, the timer more recent), and nothing with 8/23. |
 | `DeviceLearning.act_label_only` | instance | — | ACT-R, label only: graded retrieval escapes. Solved within four cycles with probability 251280/279841 (about .90); perseveration about .10; a garden path about .24. |
 | `DeviceLearning.act_two_cues` | instance | — | ACT-R, two cues: a garden path with probability 125/1219 (about .10), solved with 1050/1219 (about .86), and perseveration with 25/1219 (the display, too, can call up SET TIME). |
@@ -509,7 +519,7 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 226 | 221 | 5 | 30 | 26 | 86 |
+| CogLib: the general library | 243 | 238 | 5 | 30 | 26 | 90 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
 | Multi-digit addition (with the problem solver) | 204 | 164 | 40 | 10 | 5 | 83 |
@@ -518,5 +528,5 @@ How to read it:
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| Device learning: retrieved views and theory revision (microwave) | 10 | 1 | 9 | 1 | 0 | 9 |
-| **All** | 644 | 512 | 132 | 92 | 38 | 274 |
+| Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
+| **All** | 669 | 530 | 139 | 92 | 38 | 284 |

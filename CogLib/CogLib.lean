@@ -16,6 +16,8 @@ import CogLib.Process.TheoryExecution
 import CogLib.Process.ViewRetrieval
 import CogLib.Process.TheoryRevision
 import CogLib.Process.ViewRevision
+import CogLib.Process.ViewComposition
+import CogLib.Process.TypeSplit
 import CogLib.Process.Combination
 import CogLib.Process.ViewApplication
 import CogLib.Process.Categorize
