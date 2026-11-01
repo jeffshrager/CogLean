@@ -1,5 +1,6 @@
 \documentclass[aspectratio=169,11pt]{beamer}
 \input{../../presentations/preamble}
+\input{../../presentations/leancode}
 \usepackage{array}
 
 \title{CogLean}
@@ -32,6 +33,28 @@ This talk goes with the paper of the same name, which is a draft for comment. It
 \end{frame}
 \note{
 The problem is an old one. Cognitive science has many computational theories, but little theory that can be reused. A theory of memory developed for verbal learning has to be reimplemented before it can take part in a model of arithmetic. Combining two theories means writing a third program and exploring it by simulation. And what a theory predicts is established by running it, at one setting at a time. Newell complained in 1973 that we play twenty questions with nature and never assemble the answers. The question for this talk is whether a common formal library can change that: whether theories in such a library can be composed to give meaningful consequences that we would otherwise need a whole new model to find.
+}
+
+\begin{frame}{Prior formal approaches to cognitive theory}
+  \scriptsize
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}}
+    \toprule
+    Work & Formalism & What it establishes\\
+    \midrule
+    Soar specified in Z (Milnes et al.\ 1992) & Z notation & a complete, low-level, non-executable specification of one architecture\\
+    Sceptic (Cooper, Fox, Farringdon \& Shallice 1996) & executable specification language & models (Soar among them) stated in a language designed for cognitive models\\
+    Reconstructing ACT-R (Stewart \& West 2007) & Python reimplementation & core commitments separated from implementation; alternative components\\
+    ACT-R operational semantics (Gall \& Fr\"uhwirth 2018) & abstract semantics; CHR & a translation proved sound and complete; confluence tests\\
+    ACT-R as timed automata (Langenfeld et al.\ 2019, 2021) & timed automata & exhaustive defect analysis of models; the semantics proved correct\\
+    A common formal ground for architectures (Ragni et al.\ 2018) & formal framework & ACT-R and Soar embedded for comparison\\
+    Soar to PRISM (Ganeriwala et al.\ 2026) & Markov chains, PRISM & probabilistic model checking of stochastic models\\
+    Verbal theories as logic programs; as automata (Rohner \& Kjellerstrand 2021; Finkel et al.\ 2025) & Prolog; automata & what a verbal theory's premises entail\\
+    Critical tests from core assumptions (Fisher et al.\ 2025) & proofs in prose over model classes & which processing structures ACT-R's core rules out\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+CogLean is far from the first formal treatment of cognitive theory, and it's worth seeing what came before. In 1992 Milnes and colleagues specified Soar in the Z notation: complete, but low-level and not executable. Cooper, Fox, Farringdon and Shallice argued in 1996 for languages designed for specifying cognitive models, and built one, Sceptic. Stewart and West rebuilt ACT-R to separate its core commitments from its implementation. For ACT-R there's a formal operational semantics with a translation proved sound and complete, and a line of work translating ACT-R models into timed automata for exhaustive defect checking. Ragni and colleagues proposed a common formal ground into which ACT-R and Soar can be embedded. Most recently, Soar models have been compiled for the PRISM probabilistic model checker. Outside architectures, verbal theories have been formalized as logic programs and as automata, and Fisher and colleagues derived critical tests of ACT-R from its core assumptions. Almost all of this work formalizes one architecture or one model at a time, and establishes properties of that system. That's the contrast I'll come back to.
 }
 
 \begin{frame}{The analogy: Mathlib}
@@ -87,7 +110,7 @@ Four kinds of object have to be kept apart. Mechanisms and their postulates are 
       \item reusable algorithms: useful software;
       \item reusable \emph{results}: a contribution to theory.
     \end{itemize}
-    \item \textbf{Discovery}: consequences the original authors didn't state; unstated assumptions; results for whole classes of models; where theories diverge.
+    \item \textbf{Discovery}, of a specific kind: consequences of proposed theories that their authors didn't state; unstated assumptions; results for whole classes of models; where theories diverge. (Not new hypotheses: see the end.)
   \end{enumerate}
 \end{frame}
 \note{
@@ -115,7 +138,7 @@ The argument has three parts, in increasing order of importance. Formalization: 
 The demonstration uses two theories, each formalized on its own first. EPAM, Feigenbaum and Simon's model, recognizes a stimulus by sorting its code down a discrimination net; learning grows a test only where two codes are confused. Proved for every net: recognition depends only on the features tested, and learning never disturbs what's already learned. And the distributions-of-associations model that Bob Siegler and I proposed in 1984: a child samples answers in proportion to strength, states one that clears a confidence criterion, and otherwise falls back on fingers and counting. Proved for every setting: retrieval is used with probability one minus one minus R to the n, and counting errors don't depend on the associations at all, which was the chapter's nonintuitive prediction.
 }
 
-\begin{frame}{A discovery from formalization alone}
+\begin{frame}{Formalization alone corrected a theory's claim}
   The DOA chapter: ``a peaked distribution results in less frequent use of overt strategies.''
   \medskip
   \begin{itemize}
@@ -213,6 +236,85 @@ Three kinds of reuse make the composition deductive rather than just executable.
 The first result is confident errors. Suppose a familiar problem q is recognized as itself, a stranger x is confused with it, q's associations are sharp, meaning only q's correct sum clears the criterion, and the two sums differ. Then retrieval never errs on q, every whole-problem answer to x is wrong, and x goes to the solver exactly as often as q does. Neither theory says this alone: in strategy choice, a problem's errors and its backup use come from the same distribution, so they go together. Recognition breaks the tie by handing x another problem's distribution. The proof is one line, applying a library theorem that holds for any task with problems, a familiar set and a backup. And the conditions are explicit: confusion, which is derived for learned nets; sharpness, which is assumed and not yet explained; and positive strengths.
 }
 
+\begin{frame}{In words: the theorem on the next slide}
+  CogLib's \code{confident\_errors}, for \emph{any} task, memory and backup:
+  \begin{itemize}
+    \item \textbf{Parameters}: how problems are coded, what memory calls up (\code{retrieve}), the associations (\code{str}), the criterion and search length, and the backup.
+    \item \textbf{Hypotheses}:
+    \begin{itemize}
+      \item strengths have positive totals; the backup is a proper distribution;
+      \item $q$ calls up itself, for certain (\code{hq});
+      \item $x$ calls up $q$, for certain (\code{hx}): the confusion;
+      \item $q$'s associations are sharp (\code{hs}); the correct answers differ (\code{hne}).
+    \end{itemize}
+    \item \textbf{Conclusion}: three equations, (i)--(iii) of the last slide.
+    \item \textbf{Proof}: three lines, citing three earlier lemmas.
+  \end{itemize}
+\end{frame}
+\note{
+The next slide shows the actual Lean theorem, so here it is in words first. It's the library's version, which holds for any task, any memory and any backup. Its parameters are how problems are coded, what memory calls up for a code, the associations, the criterion and search length, and the backup. Its hypotheses: well-formedness of the strengths and the backup; the familiar problem calls up itself for certain; the stranger calls up the familiar problem for certain, which is the confusion; the familiar problem's associations are sharp; and the correct answers differ. The conclusion is the three equations from the previous slide. And the proof is three lines, each citing an earlier lemma.
+}
+
+\begin{frame}[fragile]{The theorem, in Lean}
+\begin{Verbatim}[fontsize=\scriptsize, breaklines=false]
+theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (str y) ≠ 0)
+    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hq : retrieve (code q) = pure (some (code q)))
+    (hx : retrieve (code x) = pure (some (code q)))
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    prob (recognizeRetrieve code retrieve str as cc n backup q)
+        (wholeWrong correct q) = 0 ∧
+      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeWrong correct x) =
+        prob (recognizeRetrieve code retrieve str as cc n backup x) isWhole ∧
+      prob (recognizeRetrieve code retrieve str as cc n backup x) isBackup =
+        prob (recognizeRetrieve code retrieve str as cc n backup q) isBackup := by
+  refine ⟨confusion_gives_neighbours_answer code retrieve str as cc n backup
+      correct q q (hT _) hq hs,
+    wrong_eq_whole_of_sharp code retrieve str as cc n backup
+      correct x _ _ (hT _) hx hs hne, ?_⟩
+  rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT,
+    backup_prob_certain code retrieve str as cc n backup q _ hq hbq hT]
+\end{Verbatim}
+  \small From \code{CogLib/Process/RecognizeRetrieve.lean}, verbatim but for line breaks. The multi-digit model's version is a one-line instance of it.
+\end{frame}
+\note{
+Here's the theorem itself, verbatim from the library. The first five lines are the hypotheses, each named: h T, the two backup hypotheses, h q, h x, h s and h n e. Then the conclusion, three equations joined by and. Then the proof. The first clause is the lemma that a problem recognized as a sharp q gets only q's answer; the second is the lemma that all its whole-problem answers are then wrong; and the third rewrites both backup probabilities with the lemma that backup use after certain recognition depends only on what's recognized. Nothing in the statement mentions arithmetic, EPAM or ACT-R. The multi-digit model's theorem is a one-line instance of this one.
+}
+
+\begin{frame}{One clause, unpacked: the confusion}
+  \begin{center}
+  \begin{tikzpicture}[font=\ttfamily\large, inner sep=1pt, baseline]
+    \node (h) {hx :};
+    \node[right=1.5mm of h, text=blue!70!black] (r) {retrieve};
+    \node[right=1mm of r, text=green!45!black] (c) {(code x)};
+    \node[right=1mm of c] (e) {=};
+    \node[right=1mm of e, text=red!70!black] (p) {pure};
+    \node[right=1mm of p, text=orange!80!black] (s) {(some (code q))};
+    \draw[blue!70!black, thick] (r.south west) -- (r.south east);
+    \draw[green!45!black, thick] (c.south west) -- (c.south east);
+    \draw[red!70!black, thick] (p.south west) -- (p.south east);
+    \draw[orange!80!black, thick] (s.south west) -- (s.south east);
+    \node[font=\footnotesize\sffamily, text width=4.4cm, align=center, text=blue!70!black, above=12mm of r] (ar) {\textbf{the memory}: any one; a parameter of the theorem};
+    \node[font=\footnotesize\sffamily, text width=3.4cm, align=center, text=green!45!black, below=14mm of c, xshift=-8mm] (ac) {\textbf{the stranger's code}: the features of $150+100$};
+    \node[font=\footnotesize\sffamily, text width=3.6cm, align=center, text=red!70!black, above=12mm of p, xshift=6mm] (ap) {\textbf{for certain}: probability 1, no other outcome};
+    \node[font=\footnotesize\sffamily, text width=4.6cm, align=center, text=orange!80!black, below=14mm of s, xshift=6mm] (as) {\textbf{calls up the familiar problem's stored code}: the confusion};
+    \draw[arr, blue!70!black] (ar) -- (r);
+    \draw[arr, green!45!black] (ac) -- (c.south);
+    \draw[arr, red!70!black] (ap) -- (p);
+    \draw[arr, orange!80!black] (as) -- (s.south);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{-2mm}
+  \small
+  \begin{itemize}
+    \item \textbf{EPAM}: holds for the net learned from $100+100$ and $100+200$ (checked); every learned net recognizes its own images.
+    \item \textbf{ACT-R}: \emph{never} holds, because \code{pure} is too strong: retrieval is graded, never certain. That is why the theorem doesn't apply to it.
+  \end{itemize}
+\end{frame}
+\note{
+Let's unpack one clause, the confusion, h x. Read it left to right. Retrieve is the memory, and it's a parameter: the theorem holds for any memory you plug in. Code x is the stranger's feature code, here the features of one fifty plus one hundred. Pure means for certain: the distribution with a single outcome, at probability one. And some code q says the outcome is the familiar problem's stored code. So the clause says: this memory calls up the familiar problem, for certain, when given the stranger. For EPAM it holds: the net learned from one hundred plus one hundred and one hundred plus two hundred is checked to do exactly this. For ACT-R it never holds, and the culprit is the word pure: ACT-R's retrieval is graded and never certain. That single word is why the theorem applies to one memory and not the other.
+}
+
 \begin{frame}{Equal is not low}
   \begin{itemize}
     \item The theorem gives \emph{equal} solver use for $x$ and $q$, not \emph{low} solver use.
@@ -292,19 +394,6 @@ Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's
 For credibility, it's essential to say what each result rests on. Some are library facts, like the bridge and well-formedness: needed, but not psychology. Some are compositional deductions that hold at every setting, like solver independence. Some are conditional, like confident errors, and the conditions are where the science is: the proofs say exactly which premise a failed test would implicate. And some are just numbers at chosen settings. None of these is yet an empirical finding about people, and the numbers are illustrations, not fits to children's data.
 }
 
-\begin{frame}{Valid is not explanatory}
-  \begin{itemize}
-    \item Lean guarantees \textbf{validity}: conclusions follow from premises.
-    \item Not \textbf{empirical adequacy}: whether the premises describe people.
-    \item Not \textbf{explanation}: whether the premises already contain the phenomenon.
-    \item Example: a serial-position result whose mechanism was a bowed schedule. Valid, nearly empty. Now derived from an attention rule, which also gives the isolation effect.
-    \item An explicit audit sorts results as definitional, close, derived, compositional.
-  \end{itemize}
-\end{frame}
-\note{
-A word on what proofs do and don't show. Lean guarantees validity. It doesn't guarantee that the premises describe people, and it doesn't guarantee explanation, because the premises might already contain the phenomenon. We had exactly that case: a serial-position result whose mechanism was a bowed schedule, so proving a bowed curve was valid and nearly empty. It's now derived from an attention rule over anchors, which also gives the isolation effect, a second consequence of the same mechanism. The library keeps an explicit audit that sorts its results as definitional, close, derived or compositional. That's a judgment, written down in the open.
-}
-
 \begin{frame}{Checking the formalization: a blind simulation}
   \begin{itemize}
     \item A prose specification, no Lean; preregistered checks; a fresh agent wrote a simulator from the prose alone.
@@ -328,8 +417,8 @@ Lean checks that the theorems follow from the definitions, not that the definiti
     \item \textbf{Deductive proof} (CogLean) establishes results for whole classes of models satisfying theoretical assumptions.
   \end{itemize}
   \medskip
-  The contrast is \emph{model verification} versus \emph{theoretical deduction}. Complementary, not competitors.\\
-  Much prior formal work: Soar in Z, Sceptic, ACT-R semantics and model checking, SFT-GMA. CogLean's claim is the combination: a shared, cumulative library with reusable proofs, cross-theory composition, and deductive discovery.
+  The contrast is \emph{model verification} versus \emph{theoretical deduction}. Complementary, not competitors.\\[1mm]
+  CogLean's claim is not formal methods (see the prior work), but the combination: a shared, cumulative library with reusable proofs, cross-theory composition, and deductive discovery.
 \end{frame}
 \note{
 Where does this sit? There's a lot of prior formal work on cognitive architectures: a specification of Soar in Z, the Sceptic specification language, formal semantics and model checking for ACT-R, and recently Soar models compiled for the PRISM probabilistic model checker. It helps to separate three approaches. Simulation samples executions. Probabilistic model checking analyzes a specified model exhaustively; that's real formal verification, not simulation, and it can treat parameters symbolically. Deductive proof establishes results for whole classes of models that satisfy theoretical assumptions. So the contrast isn't simulation versus verification; it's model verification versus theoretical deduction, and they're complementary. CogLean doesn't introduce formal methods to cognitive science. What's new is the combination: a shared, cumulative library with reusable proofs, composition across theories, and deductive discovery.
@@ -345,6 +434,48 @@ Where does this sit? There's a lot of prior formal work on cognitive architectur
 \end{frame}
 \note{
 And to be clear about cognitive architectures. CogLean isn't proposed as an alternative to Soar, ACT-R, or the Common Model of Cognition. It's a possible formal foundation for expressing, composing and reasoning about their mechanisms and architectural commitments. The present example composes mechanisms locally, for one task, without committing to any general architecture. The longer-term aim is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within one shared framework.
+}
+
+\begin{frame}{What a proof shows, and what it doesn't}
+  \begin{itemize}
+    \item Lean guarantees \textbf{validity}: conclusions follow from premises.
+    \item Not \textbf{empirical adequacy}: whether the premises describe people.
+    \item Not \textbf{explanation}: whether the premises already contain the phenomenon.
+    \item Example: a serial-position result whose mechanism was a bowed schedule. Valid, nearly empty. Now derived from an attention rule, which also gives the isolation effect.
+    \item An explicit audit sorts results as definitional, close, derived, compositional.
+  \end{itemize}
+\end{frame}
+\note{
+A word on what proofs do and don't show. Lean guarantees validity. It doesn't guarantee that the premises describe people, and it doesn't guarantee explanation, because the premises might already contain the phenomenon. We had exactly that case: a serial-position result whose mechanism was a bowed schedule, so proving a bowed curve was valid and nearly empty. It's now derived from an attention rule over anchors, which also gives the isolation effect, a second consequence of the same mechanism. The library keeps an explicit audit that sorts its results as definitional, close, derived or compositional. That's a judgment, written down in the open.
+}
+
+\begin{frame}{What CogLean is, and isn't}
+  \small
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{It doesn't}
+    \begin{itemize}
+      \item generate hypotheses or theories: people (or AIs) propose them;
+      \item find phenomena in data, or fit parameters;
+      \item show that a theory is true of people;
+      \item decide whether a derivation is an explanation;
+      \item replace simulation or experiment.
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{It does}
+    \begin{itemize}
+      \item check whether a proposed consequence follows, and from exactly what;
+      \item find counterexamples to informal claims (peaking);
+      \item expose unstated assumptions and conditions;
+      \item say for which class of models a result holds;
+      \item let proved results be reused across theories and tasks.
+    \end{itemize}
+  \end{columns}
+  \medskip
+  ``Discovery'' here means finding out what does, or doesn't, follow from theories people propose.
+\end{frame}
+\note{
+So, to be clear about what this is and isn't. CogLean doesn't generate hypotheses or theories; people, or AIs, propose them. It doesn't find phenomena in data or fit parameters. It doesn't show that a theory is true of people, and it can't decide whether a derivation is an explanation; that's a scientific judgment. And it doesn't replace simulation or experiment. What it does is check whether a proposed consequence actually follows, and from exactly which premises. It finds counterexamples to informal claims, like the peaking claim. It exposes assumptions and conditions that theories leave unstated. It says for which class of models a result holds. And it lets proved results be reused across theories and tasks. When I say discovery, that's what I mean: finding out what does, or doesn't, follow from theories that people propose.
 }
 
 \begin{frame}{Limitations, and next}
