@@ -496,7 +496,7 @@ How to read it:
 | Theorem | Scope | Given | Statement |
 |---|---|---|---|
 | `DeviceLearning.act_graded` | instance | — | ACT-R's retrieval is graded. TIME COOK calls up SET TIME with probability 5/23 and the kitchen timer with 10/23 (equally similar, the timer more recent), and nothing with 8/23. |
-| `DeviceLearning.act_label_only` | instance | — | ACT-R, label only: graded retrieval escapes. Solved within four cycles with probability 251280/279841 (about .90); perseveration about .10. |
+| `DeviceLearning.act_label_only` | instance | — | ACT-R, label only: graded retrieval escapes. Solved within four cycles with probability 251280/279841 (about .90); perseveration about .10; a garden path about .24. |
 | `DeviceLearning.act_two_cues` | instance | — | ACT-R, two cues: a garden path with probability 125/1219 (about .10), solved with 1050/1219 (about .86), and perseveration with 25/1219 (the display, too, can call up SET TIME). |
 | `DeviceLearning.duration_kept` | general | — | A correct theory is kept. After DURATION, the theory predicts the episode, so no session from it revises it (`correct_theory_stable`; shown for EPAM's two-cue learner, and the general theorem h... |
 | `DeviceLearning.epam_confusion_pattern` | instance | — | Confident misinterpretation. With EPAM's net, the TIME COOK label is taken for SET TIME, as is the CLOCK label. |

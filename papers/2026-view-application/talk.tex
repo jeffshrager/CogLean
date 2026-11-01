@@ -1,0 +1,302 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../presentations/preamble}
+\input{../../presentations/leancode}
+\usepackage{array}
+\usepackage{newunicodechar}
+\newunicodechar{Θ}{\ensuremath{\Theta}}
+\newunicodechar{×}{\ensuremath{\times}}
+
+\title{Concept Formation by View Application}
+\subtitle{A second domain on shared foundations in CogLean}
+\author{Jeff Shrager}
+\date{November 2026\\[2mm]\small\textcolor{red!70!black}{\textbf{Draft for comment --- not for circulation}}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{
+This talk goes with a draft paper of the same name, which is not for circulation and hasn't been carefully checked. It follows the CogLean paper, which introduced the library and the method using multi-digit arithmetic. This one is not an introduction to CogLean. It asks whether the library carries over to a completely different area of cognition, concept formation, and what it brings with it when it does.
+}
+
+\begin{frame}{The question}
+  \begin{itemize}
+    \item The CogLean paper: mechanisms defined once, phenomena stated apart from mechanisms, theorems reused when theories are composed. Demonstrated on \textbf{multi-digit arithmetic}.
+    \item One domain doesn't show a library is cumulative: it could just be a tidy model of arithmetic.
+    \item \textbf{The test:} do its components serve a domain they weren't built for?
+  \end{itemize}
+  \bigskip
+  \emph{Take CogLean to concept formation: how people understand something new by applying concepts they already have.}
+\end{frame}
+\note{
+Here's the question. The first paper argued that if you define mechanisms once, state phenomena apart from any mechanism, and prove consequences rather than simulate them, then theoretical results can accumulate, and it showed that on multi-digit arithmetic. But one domain doesn't show a library is cumulative. A library built around arithmetic might just be a well-organized model of arithmetic. The real test is whether its pieces serve a domain they weren't designed for. So we took it to concept formation: how people make sense of something new by applying concepts they already have.
+}
+
+\begin{frame}{Forming concepts from old ones}
+  \begin{itemize}
+    \item Concepts live inside theories (Murphy \& Medin 1985); they change by restructuring (Carey 1985; Rumelhart \& Norman 1976).
+    \item Analogy maps a known structure onto a new one (Gentner 1983); frames supply defaults (Minsky 1975).
+    \item Learners build mental models of devices (Kieras \& Bovair 1984).
+    \item \textbf{View application} (Shrager 1987): a learner exploring a device with no instructions (Shrager \& Klahr 1986) revises its theory by merging in a \emph{view}, a schema of a familiar kind of thing.
+  \end{itemize}
+  \bigskip
+  Left open in 1987: \textbf{which} view is brought in, and \textbf{when} the theory is revised.
+\end{frame}
+\note{
+Concept formation has been described in many ways. Concepts are embedded in theories that make them coherent. Children's concepts change by restructuring, not just by adding facts. Analogy maps the structure of something known onto something new, and frames supply defaults. People learning a device build a mental model of it. View application, from my 1987 paper, is a computational version of part of this. A learner exploring a device with no instructions has a theory of it, and changes that theory by applying a view: a schema of a familiar kind of thing, like a device that stores a program and runs it. The view is merged into the theory, overriding it where they conflict. That account left two things open: which view a learner brings in, and when the theory gets revised. Both, it turns out, were already in the library.
+}
+
+\begin{frame}{View application in CogLib}
+  \small
+  Theories and views are \textbf{knowledge nets}: semantic nets over terms, the same representation as CogLib's concepts and semantic memory.
+  \begin{enumerate}
+    \item copy the view;\quad 2. merge the theory in (match types; at random where ambiguous);
+    \item[3.] coerce re-parented instances;\quad 4. bind holes;\quad 5. one function per object.
+  \end{enumerate}
+  \medskip
+  Proved for any view and theory:
+  \begin{itemize}
+    \item the view is kept; \textbf{the view wins} on matched frames (non-monotonic change);
+    \item unmatched theory frames survive; instances of matched types are re-parented.
+  \end{itemize}
+  \medskip
+  Already in the library: BigTrak's Table 4 reproduced exactly (probability 1/2).
+\end{frame}
+\note{
+In CogLib, theories and views are knowledge nets: semantic nets whose nodes are terms, with frames, slots and patterns. It's the same representation the library uses for concepts and semantic memory, so view application doesn't bring a representation of its own. The process has the 1987 paper's five steps: copy the view, merge the theory into it, coerce re-parented instances, bind holes, and give each object a single function. Ambiguity is resolved at random, so applying a view gives a distribution over theories. For any view and theory, we prove the view is kept, that where both speak, the view wins, which is a non-monotonic change, that unmatched parts of the theory survive, and that instances get re-parented. And the library already reproduces the 1987 paper's BigTrak example exactly, half the time, which is what its random tie-breaking implies.
+}
+
+\begin{frame}{A concept result already there: number concepts}
+  \begin{itemize}
+    \item Prototype concepts (\emph{even}, \emph{multiple of 3}) combined by selective modification (Smith et al.\ 1988), graded membership (Hampton 2007): 14 is an \emph{even multiple of 3} to degree $\approx .80$. Over-extension.
+    \item Apply an \textbf{ARITHMETIC view}:
+    \begin{itemize}
+      \item \emph{even multiple of 3} becomes exactly divisibility by 6, for every number;
+      \item no over-extension anywhere; \textbf{typicality unchanged}, for every number.
+    \end{itemize}
+    \item So typicality and membership \textbf{dissociate}, as Armstrong, Gleitman \& Gleitman (1983) found for \emph{odd number}; impossible before the view.
+  \end{itemize}
+\end{frame}
+\note{
+There's already a concept-formation result in the library. Number concepts like even and multiple of three, learned as prototypes and combined by selective modification with graded membership, over-extend: fourteen counts as an even multiple of three to degree about point eight. Apply an arithmetic view, which replaces how the concept frame categorizes, and even multiple of three becomes exactly divisibility by six, for every number. Over-extension disappears everywhere, but typicality is unchanged, for every number. So typicality and membership come apart, which is what Armstrong and the Gleitmans found for odd number: graded typicality in a concept with all-or-none membership. Before the view that's provably impossible. A change of theory, not of examples, turned a prototype concept into a definitional one.
+}
+
+\begin{frame}{Which view? Retrieval through the shared memory}
+  \begin{itemize}
+    \item Already: \textbf{spreading activation} (Collins \& Loftus 1975). The same ``+'' key: \emph{adds} with probability 2/3 for a naive learner; \emph{appends a step} with 3/5 for one whose theory has a memory.
+    \item New: \textbf{retrieval}. A cue (a key's label, the display) is coded and recognized by a memory, through CogLib's \texttt{Retriever} interface, the one the arithmetic model used. The stored view is applied.
+  \end{itemize}
+  \medskip
+  For any memory:
+  \begin{itemize}
+    \item a cue confused with another brings in the other's view;
+    \item a memory with the law of \textbf{determinacy} brings in one view per cue, at every attempt.
+  \end{itemize}
+  EPAM's net has determinacy at every setting; ACT-R's memory at none (the memory matrix).
+\end{frame}
+\note{
+So, which view? The library already had one selector: spreading activation, where the same plus key is read as adding by a naive learner but as appending a program step by a learner whose theory already includes a memory. The new selector is retrieval. A cue, like a key's label or the display, is coded and recognized by a memory through the same retriever interface the arithmetic model used to recognize problems. Whatever's called up has a view stored with it, and that view is applied. Because it's the same interface, what we proved about memories applies. A cue confused with another brings in the other's view. And a memory with the law of determinacy brings in one view per cue, the same every time. The memory matrix from the first paper proves EPAM's net has that law at every setting and ACT-R's memory has it at none.
+}
+
+\begin{frame}{When to revise? The decision cycle, again}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}}
+    \toprule
+    Learning by revision & Decision cycle (as in the arithmetic solver)\\
+    \midrule
+    theory, memory, episodes to explain & the state\\
+    accept the prediction & \texttt{confirm}: precondition, it's right\\
+    \textbf{a failed prediction} & \textbf{an impasse}\\
+    \textbf{revise, prompted by a cue} & \textbf{a repair}\\
+    which cues to consult & repair heuristics\\
+    don't consult a cue twice per failure & a critic\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  Not a new control structure: the decision cycle that ran the arithmetic backup.
+\end{frame}
+\note{
+And when to revise? The arithmetic model's backup was a problem solver running on CogLib's decision cycle, with impasses and repairs, in the tradition of repair theory and Soar. Revising a theory when a prediction fails has exactly that shape. The state is the theory, the memory and the episodes still to explain. Confirming a prediction is an operator whose precondition is that the prediction is right. A failed prediction is an impasse. Revising the theory, prompted by some cue, is the repair. Which cues to consult are the repair heuristics, and not consulting the same cue twice for one failure is a critic. So the learning loop is not a new control structure. It's the same decision cycle.
+}
+
+\begin{frame}{In words: the next slide}
+  The loop asks a learner for only three things:
+  \begin{itemize}
+    \item how a theory \textbf{predicts} the response to a sequence of actions;
+    \item how a cue \textbf{revises} a theory: any process, any memory, a distribution of results;
+    \item which \textbf{cues} an episode offers.
+  \end{itemize}
+  \medskip
+  No knowledge nets, no views, no devices. Proved for every such learner:
+  \begin{itemize}
+    \item an impasse is exactly a failed prediction;
+    \item a theory that predicts every episode is never revised.
+  \end{itemize}
+\end{frame}
+\note{
+The next slide shows the Lean definition, so here it is in words. The loop asks a learner for only three things: how a theory predicts the response to a sequence of actions, how a cue revises a theory, which can be any process with any memory and gives a distribution over results, and which cues an episode offers. There's nothing about knowledge nets, views or devices at this level. And for every such learner we prove two things: being at an impasse is exactly having a failed prediction, and a theory that predicts every episode is never revised, whatever the revision process is.
+}
+
+\begin{frame}[fragile]{The learner, in Lean}
+\begin{Verbatim}[fontsize=\small]
+structure Reviser (Θ M Act Resp C B : Type) where
+  predicts : Θ → List Act → Option Resp
+  revise   : C → Θ → M → Dist (Θ × M × B)
+  cues     : List Act × Resp → List C
+  once     : Bool
+\end{Verbatim}
+  \medskip
+  \small
+  \begin{itemize}
+    \item \texttt{CogLib/Process/TheoryRevision}: the loop, for any \texttt{Reviser}.
+    \item \texttt{CogLib/Process/ViewRevision}: view application is \emph{one} reviser.
+    \item Others (rule induction; hypothesis-space search, Klahr \& Dunbar 1988) can plug in and inherit the loop's theorems.
+  \end{itemize}
+\end{frame}
+\note{
+Here's the definition. A reviser has a theory type, a memory type, actions, responses, cues, and whatever a revision brings in. It supplies predicts, revise, cues, and a flag for whether a cue may be consulted twice. The loop is defined for any reviser. View application is one of them, in its own module. Others could be added, rule induction, say, or search in a hypothesis space guided by experiments, and they'd inherit the loop's theorems without reproving them.
+}
+
+\begin{frame}{A phenomenon that transfers}
+  \small
+  The CogLean paper's \textbf{confusion-error pattern}, stated for arithmetic, apart from any mechanism:
+  \begin{itemize}
+    \item the familiar $q$ is never answered wrongly by retrieval;
+    \item every retrieved answer to the confused $x$ is wrong;
+    \item $x$ falls back exactly as often as $q$.
+  \end{itemize}
+  \medskip
+  For view retrieval (answer = the revised theory's prediction; fallback = exploration), the \textbf{same predicate holds}, given:
+  \begin{itemize}
+    \item both cues call up the same stored view, for certain;
+    \item that view predicts $q$ correctly and $x$ wrongly.
+  \end{itemize}
+  \medskip
+  \textbf{Confident misinterpretation.} A different mechanism; the phenomenon carried over unchanged.
+\end{frame}
+\note{
+Now the phenomena. The first paper defined the confusion-error pattern for arithmetic, as a predicate that names no mechanism: the familiar problem is never answered wrongly by retrieval, every retrieved answer to the confused one is wrong, and the confused one falls back exactly as often as the familiar one. For view retrieval, read the answer as the revised theory's prediction, and the fallback as exploring. Then the same predicate holds, given that both cues call up the same view for certain and that view predicts one correctly and the other wrongly. That's confident misinterpretation. The mechanism is different: there's no associative search with a criterion here. We deliberately didn't force view retrieval into the arithmetic mechanism. What transfers is the phenomenon, and that's exactly what stating phenomena apart from mechanisms is for.
+}
+
+\begin{frame}{New phenomena: garden paths and perseveration}
+  \begin{itemize}
+    \item \textbf{Garden path}: the first interpretation adopted is later replaced.
+    \item \textbf{Perseveration}: the same interpretation adopted at two successive failures.
+  \end{itemize}
+  Both stated over the sequence of interpretations, naming no mechanism.
+  \bigskip
+
+  \textbf{Perseveration, for a class of memories.} For \emph{every} memory with determinacy (unchanged by revising): revisions by a given cue bring in one and the same retrieval, every time, from every theory.
+  \begin{itemize}
+    \item A learner who keeps consulting that cue keeps re-applying a failed interpretation: a relative of \emph{Einstellung} (Luchins 1942).
+    \item ACT-R's memory lacks the law and can escape.
+    \item Sufficient, not necessary; and not a claim that people's memories have the law.
+  \end{itemize}
+\end{frame}
+\note{
+There are two new phenomena, both defined over the sequence of interpretations a learner brings in. A garden path: the first interpretation is later replaced. Perseveration: the same interpretation is adopted at two failures in a row. Then a class-level result. For every memory with the law of determinacy, provided revising doesn't change it, revisions by a given cue always bring in the same thing. So a learner who keeps consulting that cue keeps re-applying an interpretation that already failed. That's a formal relative of Einstellung, and the persistence comes from a property of memory, not of the device or the view. ACT-R's memory lacks the law and can escape. As always: the law is sufficient, not shown necessary, and nothing here says people's memories have it.
+}
+
+\begin{frame}{What was shared, and what was new}
+  \small
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.43\linewidth}ccc}
+    \toprule
+    CogLib component & Arithmetic & Concepts\\
+    \midrule
+    Exact distributions; \texttt{bind} & yes & yes\\
+    Retriever interface; EPAM; ACT-R & yes & yes\\
+    Laws of memory & yes & yes\\
+    \texttt{ConfusionErrorPattern} & yes & yes\\
+    Decision cycle, impasses, repairs & solver & revision loop\\
+    Knowledge nets; view application & --- & yes\\
+    \midrule
+    \emph{New, general:} theory execution, view retrieval, the revision loop, garden paths, perseveration & --- & new\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  Reused by \emph{citing proofs}, not by imitation. The device is data in its own package.
+\end{frame}
+\note{
+Here's the accounting. Exact distributions, the retriever interface with EPAM and ACT-R, the laws of memory, the confusion-error pattern and the decision cycle were all used in arithmetic and all used again here. Knowledge nets and view application come from the library's concept work. And what's new, theory execution, view retrieval, the revision loop and the two phenomena, went into CogLib in general form, with nothing about devices in it. Two points. The shared parts were reused by citing their proofs, not by writing look-alikes. And the microwave you're about to see is just data in its own package.
+}
+
+\begin{frame}{A worked case: learning a microwave}
+  \small
+  \begin{itemize}
+    \item Keys TIME COOK, CLOCK, 9, 0, START. After TIME COOK, 9 0 START cooks 90 seconds; after CLOCK, 90 is an invalid time.
+    \item The learner understands digits and START; TIME COOK and CLOCK: unknown. It's at an impasse at once.
+    \item Views: \textbf{SET-A-TIME}, \textbf{DURATION}. Prior knowledge: a VCR's SET TIME (with SET-A-TIME), a kitchen timer (with DURATION).
+    \item EPAM's net notices the countdown first: \textbf{both labels call up the VCR}. ACT-R: graded.
+  \end{itemize}
+  \medskip
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}}
+    \toprule
+    & EPAM & ACT-R\\
+    \midrule
+    label + display & garden path when the label comes first; always solved & garden paths rarer; usually solved\\
+    label only & \textbf{certain perseveration}; never solved & escapes; usually solved\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+The worked case is a generic microwave. After TIME COOK, nine zero START cooks for ninety seconds; after CLOCK, ninety is an invalid time. The learner understands the digits and START but not TIME COOK or CLOCK, so its first prediction fails. There are two views, set-a-time and duration, and the learner's prior knowledge is a VCR's SET TIME key and a kitchen timer. EPAM's net happens to notice the countdown first, so both key labels call up the VCR. ACT-R retrieves gradedly. With the label and the display as cues, EPAM goes down a garden path whenever it looks at the label first, set-a-time, fails, then duration, and always ends up right. With the label only, EPAM perseverates for certain, exactly as the class-level theorem says, and never gets it. ACT-R's graded retrieval usually escapes. Exact values are in the paper's appendix; they're witnesses, not predictions about people.
+}
+
+\begin{frame}{What it says about concept formation}
+  \begin{itemize}
+    \item \textbf{Which prior concept is recruited is a memory question.} Properties of memory become predictions: determinacy $\Rightarrow$ perseveration; confusion $\Rightarrow$ confident misinterpretation.
+    \item \textbf{When to revise is problem solving}: the impasse structure, connecting theory change to repair theory and Soar.
+    \item \textbf{Views act on types.} TIME COOK and CLOCK share a type, so one view changes both; no single view gets both right. Fixing that means \emph{splitting} the type: differentiation, in the conceptual-change sense (Carey; Thagard). Not yet in CogLean.
+  \end{itemize}
+\end{frame}
+\note{
+What does formalizing this say about concept formation? Three things. First, which prior concept gets recruited is a memory question, so properties of memory turn into predictions about concept formation: determinacy gives perseveration, confusion gives confident misinterpretation. Second, when to revise isn't a separate learning mechanism; it's the impasse structure of problem solving. Third, views act on types. In the microwave, TIME COOK and CLOCK share a type, so any view changes both together, and no single view gets both right. Getting both right means splitting the type, which is a formal version of what accounts of conceptual change call differentiation. CogLean doesn't do that yet, and it's one of the most interesting next steps.
+}
+
+\begin{frame}{Limitations, and next}
+  \begin{columns}[T]
+    \column{0.48\linewidth}
+    \textbf{Limitations}
+    \begin{itemize}
+      \item Memory doesn't learn during revision.
+      \item No type splitting (differentiation).
+      \item An illustrative device; no data.
+      \item ACT-R without retrieval as use.
+      \item Parts of the 1987 learner not formalized.
+    \end{itemize}
+    \column{0.48\linewidth}
+    \textbf{Next}
+    \begin{itemize}
+      \item Learning which views succeed for which cues.
+      \item Type splitting as differentiation.
+      \item A second reviser on the same loop.
+      \item Contact with data: instructionless-learning protocols (Shrager \& Klahr 1986).
+    \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+The limitations are real. Memory doesn't learn while the theory is being revised, so a cue never comes to retrieve a better view. Type splitting isn't formalized. The device and the prior knowledge are illustrative, and there's no data. ACT-R appears without retrieval changing memory, as in the first paper. And several mechanisms of the 1987 learner aren't formalized. Next: learning which views succeed for which cues; type splitting as differentiation; a second, different reviser on the same loop, to see the loop's results transfer between revision processes the way the confusion pattern transferred between domains; and contact with data, starting with the instructionless-learning protocols.
+}
+
+\begin{frame}{Take-home}
+  \begin{itemize}
+    \item CogLean was built around arithmetic. Taken to concept formation, it supplied:
+    \begin{itemize}
+      \item the memory interface and its laws;
+      \item a phenomenon first stated for arithmetic;
+      \item the decision cycle.
+    \end{itemize}
+    \item The new parts went into the library in general form.
+    \item Results at every level: for every learner; for every memory with a law; at a setting, as witnesses.
+  \end{itemize}
+  \bigskip
+  \centering\emph{That's what a cumulative library should do.}
+\end{frame}
+\note{
+To sum up. CogLean was built around arithmetic. Taken to a very different domain, concept formation, it supplied the memory interface and its laws, a phenomenon first written down for arithmetic, and the decision cycle. What had to be added went into the library in general form, ready for the next domain. And the results came out at the levels the first paper laid out: for every learner, for every memory with a law, and at a particular setting, as a witness. The library is still small. But that's the behavior a cumulative library should show.
+}
+
+\end{document}

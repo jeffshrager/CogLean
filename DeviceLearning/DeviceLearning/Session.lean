@@ -189,15 +189,19 @@ theorem act_two_cues :
 calls up SET TIME at every failure (`epam_revisions_same`). -/
 theorem epam_label_only :
     Dist.prob (epam1.session 4 (start net)) (fun s => Phenomena.perseverates (views s)) = 1 ∧
-      Dist.prob (epam1.session 4 (start net)) solved = 0 := by
+      Dist.prob (epam1.session 4 (start net)) solved = 0 ∧
+      Dist.prob (epam1.session 4 (start net)) (fun s => Phenomena.gardenPath (views s)) = 0 := by
   decide +kernel
 
 /-- **ACT-R, label only: graded retrieval escapes.** Solved within four cycles
-with probability 251280/279841 (about .90); perseveration about .10. -/
+with probability 251280/279841 (about .90); perseveration about .10; a garden
+path about .24. -/
 theorem act_label_only :
     Dist.prob (act1.session 4 (start mem)) solved = 251280 / 279841 ∧
       Dist.prob (act1.session 4 (start mem)) (fun s => Phenomena.perseverates (views s)) =
-        27225 / 279841 := by
+        27225 / 279841 ∧
+      Dist.prob (act1.session 4 (start mem)) (fun s => Phenomena.gardenPath (views s)) =
+        67450 / 279841 := by
   decide +kernel
 
 /-- **A correct theory is kept.** After DURATION, the theory predicts the
