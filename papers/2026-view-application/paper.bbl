@@ -1,0 +1,163 @@
+\begin{thebibliography}{24}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Shrager(2026{\natexlab{a}})]{shrager2026coglean}
+Jeff Shrager.
+\newblock {CogLean}: Towards a cumulative, machine-checked theory of cognition.
+\newblock Draft for comment, \texttt{papers/2026\_multidigit/} in the CogLean
+  repository, 2026{\natexlab{a}}.
+
+\bibitem[Shrager(2026{\natexlab{b}})]{coglean}
+Jeff Shrager.
+\newblock {CogLean}: A library of cognitive theory in {Lean} 4.
+\newblock \url{https://github.com/jeffshrager/CogLean}, 2026{\natexlab{b}}.
+
+\bibitem[Feigenbaum and Simon(1962)]{feigenbaum1962}
+Edward~A. Feigenbaum and Herbert~A. Simon.
+\newblock A theory of the serial position effect.
+\newblock \emph{British Journal of Psychology}, 53\penalty0 (3):\penalty0
+  307--320, 1962.
+\newblock \doi{10.1111/j.2044-8295.1962.tb00836.x}.
+
+\bibitem[Murphy and Medin(1985)]{murphy1985}
+Gregory~L. Murphy and Douglas~L. Medin.
+\newblock The role of theories in conceptual coherence.
+\newblock \emph{Psychological Review}, 92\penalty0 (3):\penalty0 289--316,
+  1985.
+\newblock \doi{10.1037/0033-295X.92.3.289}.
+
+\bibitem[Carey(1985)]{carey1985}
+Susan Carey.
+\newblock \emph{Conceptual Change in Childhood}.
+\newblock MIT Press, Cambridge, MA, 1985.
+\newblock Unverified.
+
+\bibitem[Rumelhart and Norman(1976)]{rumelhart1976}
+David~E. Rumelhart and Donald~A. Norman.
+\newblock Accretion, tuning and restructuring: Three modes of learning.
+\newblock Technical Report ADA030406, Defense Technical Information Center,
+  1976.
+
+\bibitem[Gentner(1983)]{gentner1983}
+Dedre Gentner.
+\newblock Structure-mapping: A theoretical framework for analogy.
+\newblock \emph{Cognitive Science}, 7\penalty0 (2):\penalty0 155--170, 1983.
+\newblock \doi{10.1016/S0364-0213(83)80009-3}.
+
+\bibitem[Minsky(1975)]{minsky1975}
+Marvin Minsky.
+\newblock A framework for representing knowledge.
+\newblock In Patrick~H. Winston, editor, \emph{The Psychology of Computer
+  Vision}, pages 211--277. McGraw-Hill, New York, 1975.
+\newblock Unverified.
+
+\bibitem[Gentner and Stevens(1983)]{gentner1983mm}
+Dedre Gentner and Albert~L. Stevens, editors.
+\newblock \emph{Mental Models}.
+\newblock Lawrence Erlbaum, Hillsdale, NJ, 1983.
+\newblock Unverified (reprinted by Psychology Press, 2014,
+  doi:10.4324/9781315802725).
+
+\bibitem[Kieras and Bovair(1984)]{kieras1984}
+David~E. Kieras and Susan Bovair.
+\newblock The role of a mental model in learning to operate a device.
+\newblock \emph{Cognitive Science}, 8\penalty0 (3):\penalty0 255--273, 1984.
+\newblock \doi{10.1207/s15516709cog0803_3}.
+
+\bibitem[Shrager(1987)]{shrager1987}
+Jeff Shrager.
+\newblock Theory change via view application in instructionless learning.
+\newblock \emph{Machine Learning}, 2\penalty0 (3):\penalty0 247--276, 1987.
+\newblock \doi{10.1023/A:1022659315124}.
+
+\bibitem[Shrager and Klahr(1986)]{shrager1986}
+Jeff Shrager and David Klahr.
+\newblock Instructionless learning about a complex device: The paradigm and
+  observations.
+\newblock \emph{International Journal of Man-Machine Studies}, 25\penalty0
+  (2):\penalty0 153--189, 1986.
+\newblock \doi{10.1016/S0020-7373(86)80075-X}.
+
+\bibitem[Brown and VanLehn(1980)]{brown1980}
+John~Seely Brown and Kurt VanLehn.
+\newblock Repair theory: A generative theory of bugs in procedural skills.
+\newblock \emph{Cognitive Science}, 4\penalty0 (4):\penalty0 379--426, 1980.
+\newblock \doi{10.1207/s15516709cog0404_3}.
+
+\bibitem[Laird et~al.(1987)Laird, Newell, and Rosenbloom]{laird1987}
+John~E. Laird, Allen Newell, and Paul~S. Rosenbloom.
+\newblock {SOAR}: An architecture for general intelligence.
+\newblock \emph{Artificial Intelligence}, 33\penalty0 (1):\penalty0 1--64,
+  1987.
+\newblock \doi{10.1016/0004-3702(87)90050-6}.
+
+\bibitem[Smith et~al.(1988)Smith, Osherson, Rips, and Keane]{smith1988}
+Edward~E. Smith, Daniel~N. Osherson, Lance~J. Rips, and Margaret Keane.
+\newblock Combining prototypes: A selective modification model.
+\newblock \emph{Cognitive Science}, 12\penalty0 (4):\penalty0 485--527, 1988.
+\newblock \doi{10.1207/s15516709cog1204_1}.
+
+\bibitem[Hampton(2007)]{hampton2007}
+James~A. Hampton.
+\newblock Typicality, graded membership, and vagueness.
+\newblock \emph{Cognitive Science}, 31\penalty0 (3):\penalty0 355--384, 2007.
+\newblock \doi{10.1080/15326900701326402}.
+
+\bibitem[Hampton(1988)]{hampton1988}
+James~A. Hampton.
+\newblock Overextension of conjunctive concepts: Evidence for a unitary model
+  of concept typicality and class inclusion.
+\newblock \emph{Journal of Experimental Psychology: Learning, Memory, and
+  Cognition}, 14\penalty0 (1):\penalty0 12--32, 1988.
+\newblock \doi{10.1037/0278-7393.14.1.12}.
+
+\bibitem[Armstrong et~al.(1983)Armstrong, Gleitman, and
+  Gleitman]{armstrong1983}
+Sharon~Lee Armstrong, Lila~R. Gleitman, and Henry Gleitman.
+\newblock What some concepts might not be.
+\newblock \emph{Cognition}, 13\penalty0 (3):\penalty0 263--308, 1983.
+\newblock \doi{10.1016/0010-0277(83)90012-4}.
+
+\bibitem[Collins and Loftus(1975)]{collins1975}
+Allan~M. Collins and Elizabeth~F. Loftus.
+\newblock A spreading-activation theory of semantic processing.
+\newblock \emph{Psychological Review}, 82\penalty0 (6):\penalty0 407--428,
+  1975.
+\newblock \doi{10.1037/0033-295X.82.6.407}.
+
+\bibitem[Anderson(2007)]{anderson2007}
+John~R. Anderson.
+\newblock \emph{How Can the Human Mind Occur in the Physical Universe?}
+\newblock Oxford University Press, New York, 2007.
+
+\bibitem[Holland et~al.(1986)Holland, Holyoak, Nisbett, and
+  Thagard]{holland1986}
+John~H. Holland, Keith~J. Holyoak, Richard~E. Nisbett, and Paul~R. Thagard.
+\newblock \emph{Induction: Processes of Inference, Learning, and Discovery}.
+\newblock MIT Press, Cambridge, MA, 1986.
+\newblock \doi{10.7551/mitpress/3729.001.0001}.
+
+\bibitem[Klahr and Dunbar(1988)]{klahr1988}
+David Klahr and Kevin Dunbar.
+\newblock Dual space search during scientific reasoning.
+\newblock \emph{Cognitive Science}, 12\penalty0 (1):\penalty0 1--48, 1988.
+\newblock \doi{10.1207/s15516709cog1201_1}.
+
+\bibitem[Luchins(1942)]{luchins1942}
+Abraham~S. Luchins.
+\newblock Mechanization in problem solving: The effect of {Einstellung}.
+\newblock \emph{Psychological Monographs}, 54\penalty0 (6):\penalty0 i--95,
+  1942.
+\newblock \doi{10.1037/h0093502}.
+
+\bibitem[Thagard(1992)]{thagard1992}
+Paul Thagard.
+\newblock \emph{Conceptual Revolutions}.
+\newblock Princeton University Press, Princeton, NJ, 1992.
+\newblock \doi{10.1515/9780691186672}.
+
+\end{thebibliography}

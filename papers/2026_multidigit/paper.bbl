@@ -1,0 +1,229 @@
+\begin{thebibliography}{31}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Newell(1973)]{newell1973}
+Allen Newell.
+\newblock You can't play 20 questions with nature and win: Projective comments
+  on the papers of this symposium.
+\newblock In William~G. Chase, editor, \emph{Visual Information Processing},
+  pages 283--308. Academic Press, New York, 1973.
+
+\bibitem[Newell(1990)]{newell1990}
+Allen Newell.
+\newblock \emph{Unified Theories of Cognition}.
+\newblock Harvard University Press, Cambridge, MA, 1990.
+
+\bibitem[Guest and Martin(2021)]{guest2021}
+Olivia Guest and Andrea~E. Martin.
+\newblock How computational modeling can force theory building in psychological
+  science.
+\newblock \emph{Perspectives on Psychological Science}, 16\penalty0
+  (4):\penalty0 789--802, 2021.
+\newblock \doi{10.1177/1745691620970585}.
+
+\bibitem[van Rooij and Baggio(2021)]{vanrooij2021}
+Iris van Rooij and Giosu{\`e} Baggio.
+\newblock Theory before the test: How to build high-verisimilitude explanatory
+  theories in psychological science.
+\newblock \emph{Perspectives on Psychological Science}, 16\penalty0
+  (4):\penalty0 682--697, 2021.
+\newblock \doi{10.1177/1745691620970604}.
+
+\bibitem[{The mathlib Community}(2020)]{mathlib2020}
+{The mathlib Community}.
+\newblock The {Lean} mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International Conference
+  on Certified Programs and Proofs (CPP 2020)}, pages 367--381. ACM, 2020.
+\newblock \doi{10.1145/3372885.3373824}.
+
+\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
+Leonardo de~Moura and Sebastian Ullrich.
+\newblock The {Lean} 4 theorem prover and programming language.
+\newblock In \emph{Automated Deduction -- CADE 28}, volume 12699 of
+  \emph{Lecture Notes in Computer Science}, pages 625--635. Springer, 2021.
+\newblock \doi{10.1007/978-3-030-79876-5_37}.
+
+\bibitem[Shrager(2026)]{coglean}
+Jeff Shrager.
+\newblock {CogLean}: A library of cognitive theory in {Lean} 4.
+\newblock \url{https://github.com/jeffshrager/CogLean}, 2026.
+
+\bibitem[Feigenbaum(1959)]{feigenbaum1959}
+Edward~A. Feigenbaum.
+\newblock An information processing theory of verbal learning.
+\newblock RAND Paper P-1817, RAND Corporation, Santa Monica, CA, 1959.
+
+\bibitem[Feigenbaum and Simon(1962)]{feigenbaum1962}
+Edward~A. Feigenbaum and Herbert~A. Simon.
+\newblock A theory of the serial position effect.
+\newblock \emph{British Journal of Psychology}, 53\penalty0 (3):\penalty0
+  307--320, 1962.
+\newblock \doi{10.1111/j.2044-8295.1962.tb00836.x}.
+
+\bibitem[Siegler and Shrager(1984)]{siegler1984}
+Robert~S. Siegler and Jeff Shrager.
+\newblock Strategy choices in addition and subtraction: How do children know
+  what to do?
+\newblock In Catherine Sophian, editor, \emph{Origins of Cognitive Skills},
+  pages 229--293. Erlbaum, Hillsdale, NJ, 1984.
+
+\bibitem[Newell and Simon(1972)]{newell1972}
+Allen Newell and Herbert~A. Simon.
+\newblock \emph{Human Problem Solving}.
+\newblock Prentice-Hall, Englewood Cliffs, NJ, 1972.
+
+\bibitem[Brown and VanLehn(1980)]{brown1980}
+John~Seely Brown and Kurt VanLehn.
+\newblock Repair theory: A generative theory of bugs in procedural skills.
+\newblock \emph{Cognitive Science}, 4\penalty0 (4):\penalty0 379--426, 1980.
+\newblock \doi{10.1207/s15516709cog0404_3}.
+
+\bibitem[Anderson(2007)]{anderson2007}
+John~R. Anderson.
+\newblock \emph{How Can the Human Mind Occur in the Physical Universe?}
+\newblock Oxford University Press, New York, 2007.
+
+\bibitem[Avi{\v z}ienis(1985)]{avizienis1985}
+Algirdas Avi{\v z}ienis.
+\newblock The {N}-version approach to fault-tolerant software.
+\newblock \emph{IEEE Transactions on Software Engineering}, SE-11\penalty0
+  (12):\penalty0 1491--1501, 1985.
+\newblock \doi{10.1109/TSE.1985.231893}.
+
+\bibitem[Milnes et~al.(1992)Milnes, Pelton, Doorenbos, Hucka, Laird,
+  Rosenbloom, and Newell]{milnes1992}
+Brian~G. Milnes, Garrett Pelton, Robert Doorenbos, Mike Hucka, John Laird, Paul
+  Rosenbloom, and Allen Newell.
+\newblock A specification of the {Soar} cognitive architecture in {Z}.
+\newblock Technical Report CMU-CS-92-169, School of Computer Science, Carnegie
+  Mellon University, Pittsburgh, PA, 1992.
+
+\bibitem[Cooper et~al.(1996)Cooper, Fox, Farringdon, and Shallice]{cooper1996}
+Richard Cooper, John Fox, Jonathan Farringdon, and Tim Shallice.
+\newblock A systematic methodology for cognitive modelling.
+\newblock \emph{Artificial Intelligence}, 85\penalty0 (1--2):\penalty0 3--44,
+  1996.
+\newblock \doi{10.1016/0004-3702(95)00112-3}.
+
+\bibitem[Stewart and West(2007)]{stewart2007}
+Terrence~C. Stewart and Robert~L. West.
+\newblock Deconstructing and reconstructing {ACT-R}: Exploring the
+  architectural space.
+\newblock \emph{Cognitive Systems Research}, 8\penalty0 (3):\penalty0 227--236,
+  2007.
+\newblock \doi{10.1016/j.cogsys.2007.06.006}.
+
+\bibitem[Ragni et~al.(2018)Ragni, Sauerwald, Bock, Kern-Isberner, Friemann, and
+  Beierle]{ragni2018}
+Marco Ragni, Kai Sauerwald, Tanja Bock, Gabriele Kern-Isberner, Paulina
+  Friemann, and Christoph Beierle.
+\newblock Towards a formal foundation of cognitive architectures.
+\newblock In Chuck Kalish, Martina~A. Rau, Xiaojin Zhu, and Timothy~T. Rogers,
+  editors, \emph{Proceedings of the 40th Annual Conference of the Cognitive
+  Science Society}, Madison, WI, 2018.
+
+\bibitem[Gall and Fr{\"u}hwirth(2018)]{gall2018}
+Daniel Gall and Thom Fr{\"u}hwirth.
+\newblock An operational semantics for the cognitive architecture {ACT-R} and
+  its translation to {Constraint Handling Rules}.
+\newblock \emph{ACM Transactions on Computational Logic}, 19\penalty0
+  (3):\penalty0 22:1--22:42, 2018.
+\newblock \doi{10.1145/3218818}.
+\newblock Preprint arXiv:1702.01606 (2017).
+
+\bibitem[Gall and Fr{\"u}hwirth(2017)]{gall2017confluence}
+Daniel Gall and Thom Fr{\"u}hwirth.
+\newblock A decidable confluence test for cognitive models in {ACT-R}, 2017.
+\newblock arXiv:1705.08392.
+
+\bibitem[Langenfeld et~al.(2019)Langenfeld, Westphal, and
+  Podelski]{langenfeld2019}
+Vincent Langenfeld, Bernd Westphal, and Andreas Podelski.
+\newblock On formal verification of {ACT-R} architectures and models.
+\newblock In \emph{Proceedings of the 41st Annual Conference of the Cognitive
+  Science Society}, pages 618--624, 2019.
+
+\bibitem[Langenfeld et~al.(2021)Langenfeld, Westphal, and
+  Podelski]{langenfeld2021}
+Vincent Langenfeld, Bernd Westphal, and Andreas Podelski.
+\newblock A formal operational model of {ACT-R}: Structure and behaviour.
+\newblock In \emph{Proceedings of the 43rd Annual Conference of the Cognitive
+  Science Society}, 2021.
+
+\bibitem[Macklem and Mili(2006)]{macklem2006}
+Andrea Macklem and Fatma Mili.
+\newblock Formal verification of cognitive models.
+\newblock In \emph{Proceedings of the Nineteenth International Florida
+  Artificial Intelligence Research Society Conference (FLAIRS 2006)}. AAAI
+  Press, 2006.
+
+\bibitem[Laird et~al.(2017)Laird, Lebiere, and Rosenbloom]{laird2017}
+John~E. Laird, Christian Lebiere, and Paul~S. Rosenbloom.
+\newblock A standard model of the mind: Toward a common computational framework
+  across artificial intelligence, cognitive science, neuroscience, and
+  robotics.
+\newblock \emph{AI Magazine}, 38\penalty0 (4):\penalty0 13--26, 2017.
+\newblock \doi{10.1609/aimag.v38i4.2744}.
+
+\bibitem[Ganeriwala et~al.(2025)Ganeriwala, Matsumuro, Ritter, and
+  Bhattacharyya]{ganeriwala2025}
+Parth Ganeriwala, Miki Matsumuro, Frank~E. Ritter, and Siddhartha
+  Bhattacharyya.
+\newblock Enabling formal verification in a common model of cognition.
+\newblock Working paper, SBP-BRiMS 2025, 2025.
+\newblock
+  \url{https://sbp-brims.org/2025/papers/working-papers/2025_SBP-BRiMS_paper_18.pdf}.
+
+\bibitem[Ganeriwala et~al.(2026)Ganeriwala, Chambers, Lathrop, Bhattacharyya,
+  Babar, Gilbert, Amundson, Dorneich, and Khan]{ganeriwala2026}
+Parth Ganeriwala, Candice Chambers, James~I. Lathrop, Siddhartha Bhattacharyya,
+  Junaid Babar, Stephen~B. Gilbert, Isaac Amundson, Michael~C. Dorneich, and
+  Mohammed Abdul~Hafeez Khan.
+\newblock Formal analysis of stochastic cognitive models: A translation
+  framework from {Soar} to {PRISM}.
+\newblock In \emph{NASA Formal Methods}, Lecture Notes in Computer Science,
+  pages 192--213, Cham, 2026. Springer.
+\newblock \doi{10.1007/978-3-032-28079-4_9}.
+
+\bibitem[Kwiatkowska et~al.(2011)Kwiatkowska, Norman, and
+  Parker]{kwiatkowska2011}
+Marta Kwiatkowska, Gethin Norman, and David Parker.
+\newblock {PRISM} 4.0: Verification of probabilistic real-time systems.
+\newblock In \emph{Computer Aided Verification (CAV 2011)}, volume 6806 of
+  \emph{Lecture Notes in Computer Science}, pages 585--591. Springer, 2011.
+\newblock \doi{10.1007/978-3-642-22110-1_47}.
+
+\bibitem[Rohner and Kjellerstrand(2021)]{rohner2021}
+Jean-Christophe Rohner and H{\aa}kan Kjellerstrand.
+\newblock Using logic programming for theory representation and scientific
+  inference.
+\newblock \emph{New Ideas in Psychology}, 61:\penalty0 100838, 2021.
+\newblock \doi{10.1016/j.newideapsych.2020.100838}.
+
+\bibitem[Finkel et~al.(2025)Finkel, Fougea, and Le~Roux]{finkel2025}
+Alain Finkel, Gaspard Fougea, and St{\'e}phane Le~Roux.
+\newblock An automata-based method to formalize psychological theories: The
+  case study of {Lazarus} and {Folkman's} stress theory.
+\newblock In \emph{Proceedings of MODELSWARD 2025}, 2025.
+\newblock arXiv:2501.05185.
+
+\bibitem[Fisher et~al.(2025)Fisher, Houpt, Larue, and Schmidt]{fisher2025}
+Christopher~R. Fisher, Joseph~W. Houpt, Othalia Larue, and Kevin Schmidt.
+\newblock Using systems factorial technology for global model analysis of
+  {ACT-R}'s core architectural assumptions.
+\newblock \emph{Journal of Mathematical Psychology}, 125:\penalty0 102924,
+  2025.
+\newblock \doi{10.1016/j.jmp.2025.102924}.
+
+\bibitem[Hahn et~al.(2011)Hahn, Hermanns, and Zhang]{hahn2011}
+Ernst~Moritz Hahn, Holger Hermanns, and Lijun Zhang.
+\newblock Probabilistic reachability for parametric {Markov} models.
+\newblock \emph{International Journal on Software Tools for Technology
+  Transfer}, 13\penalty0 (1):\penalty0 3--19, 2011.
+\newblock \doi{10.1007/s10009-010-0146-x}.
+
+\end{thebibliography}
