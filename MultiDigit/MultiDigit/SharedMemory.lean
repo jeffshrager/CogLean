@@ -387,7 +387,10 @@ the columns use DOA's separate table:
 * the solver gets 150 + 100 right with probability about .385 (against .656),
   so it is answered 250 overall with about .157 (against .238);
 * the practiced 100 + 100 is answered wrongly with about .386 (against .334).
-Whole problems and digit pairs compete for retrieval in one memory. -/
+Whole problems and digit pairs compete for retrieval in one memory. This is
+ACT-R's retrieval rule without retrieval as use: memory changes only by study,
+not by the retrievals of the trial, so these values will change when that is
+added (OPEN_ISSUES #24, stage 2). -/
 theorem setting_act_values :
     prob (sit sact x) (wholeSuch (· == 200)) = 10800 / 27301 ∧
       prob (sit sact x) isColumns = 11101 / 27301 ∧
