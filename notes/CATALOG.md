@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-202 theorems: 197 general, 5 instances; 79 headline; 24 about laws; 20 conditional on laws.
+209 theorems: 204 general, 5 instances; 79 headline; 29 about laws; 24 conditional on laws.
 
 **Laws**
 
@@ -30,6 +30,11 @@ How to read it:
 | `Cog.overExtends_of_conjunctionEffect` | OverExtends | has | general | ConjunctionEffect |
 | `Cog.overExtends_binary_of_conjunctionEffect` | OverExtendsBinary | has | general | ConjunctionEffect |
 | `Cog.net_agreesOn` | AgreesOn | has | general | derived |
+| `Cog.Phenomena.ConfusionErrorPattern.confident` | ConfidentErrors | has | general | ConfusionErrorPattern |
+| `Cog.RR.confident_errors_rate` | ConfidentErrors | has | general | derived |
+| `Cog.Phenomena.not_confusionErrorPattern_of_backup_ne` | ConfusionErrorPattern | never | general | derived |
+| `Cog.RR.confident_errors` | ConfusionErrorPattern | has | general | derived |
+| `Cog.RR.confident_errors_of_laws` | ConfusionErrorPattern | has | general | Determinate, Certainty, Stability |
 | `Cog.netLearner_nonInterference` | NonInterference | has | general | derived |
 | `Cog.netResponder_oscillation` | Oscillation | has | general | derived |
 | `Cog.Phenomena.criterion_of_nonInterference` | ReachesCriterion | has | general | NonInterference |
@@ -188,13 +193,21 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-175 theorems: 145 general, 30 instances; 70 headline; 1 about laws; 5 conditional on laws.
+178 theorems: 146 general, 32 instances; 72 headline; 9 about laws; 5 conditional on laws.
 
 **Laws**
 
 | Theorem | Law | Verdict | Scope | Given |
 |---|---|---|---|---|
 | `MD.ExampleACTR.act_not_agreesOn` | AgreesOn | lacks | instance | derived |
+| `MD.Integrated.integrated_confident_errors_le` | ConfidentErrors | has | general | derived |
+| `MD.Integrated.setting_confident_errors_bound` | ConfidentErrors | can hold | instance | derived |
+| `MD.AnyMemory.confident_errors` | ConfusionErrorPattern | has | general | derived |
+| `MD.Example.example_confident_errors` | ConfusionErrorPattern | has | general | derived |
+| `MD.Integrated.integrated_confident_errors` | ConfusionErrorPattern | has | general | derived |
+| `MD.Integrated.setting_actr_not_pattern` | ConfusionErrorPattern | lacks | instance | derived |
+| `MD.Integrated.setting_confident_errors` | ConfusionErrorPattern | can hold | instance | derived |
+| `MD.confident_errors` | ConfusionErrorPattern | has | general | derived |
 
 **Headline theorems**
 
@@ -238,7 +251,9 @@ How to read it:
 | `MD.Integrated.errors_two_sources` | general | — | Two sources of error on a confused problem. Under the same conditions, `x` is answered wrongly by whole-problem retrieval whenever that route is taken, and wrongly by the column route with prob... |
 | `MD.Integrated.integrated_backup_rate` | general | — | How often a confused problem reaches the solver. `integrated_confident_errors` says only that `x` reaches it as often as `q`. |
 | `MD.Integrated.integrated_confident_errors` | general | — | Confident errors, with the solver as backup. Given that the net recognizes `q` as itself and confuses `x` with it, that `q`'s associations are sharp, and that the DOA strengths are proper: * wh... |
+| `MD.Integrated.integrated_confident_errors_le` | general | — | Confident errors in the integrated model, with a bound: under the conditions of `integrated_confident_errors`, and nonnegative strengths, if one search of `q`'s associations clears the criterio... |
 | `MD.Integrated.nonneg_itrial` | general | — | An integrated trial is a probability distribution: nonnegative weights (with valid parameters and nonnegative whole-problem strengths) and, by `mass_solverBackup` and the trial's own structure,... |
+| `MD.Integrated.setting_actr_not_pattern` | instance | — | ACT-R's memory does not produce the pattern in the setting (a counterexample, not merely a failed hypothesis): 150 + 100 reaches the solver with probability 383/1058, the practiced 100 + 100 wi... |
 | `MD.Integrated.setting_actr_x` | instance | — | With ACT-R's memory in place of the net (`ExampleACTR`): the same application with one part swapped. 150 + 100 is answered 200 by retrieval with probability 225/529, as before; it reaches the s... |
 | `MD.Integrated.setting_confident_errors` | instance | — | Confident errors in the setting: the conditional theorem, its conditions met by the net EPAM learned and the chosen strengths. |
 | `MD.Integrated.setting_overall_q1` | instance | — | 100 + 100 overall: correct with probability about .993, by retrieval (45/46) and by the solver (1/46 × about .664). |
@@ -348,7 +363,14 @@ How to read it:
 
 ## Experiments written against the memory interface
 
-45 theorems: 25 general, 20 instances; 13 headline; 0 about laws; 5 conditional on laws.
+45 theorems: 25 general, 20 instances; 13 headline; 2 about laws; 5 conditional on laws.
+
+**Laws**
+
+| Theorem | Law | Verdict | Scope | Given |
+|---|---|---|---|---|
+| `Cog.Exp.FaceNaming.epam_confident_misnaming` | ConfusionErrorPattern | has | general | derived |
+| `Cog.Exp.FaceNaming.epam_confident_misnaming_of_laws` | ConfusionErrorPattern | has | general | derived |
 
 **Headline theorems**
 
@@ -443,13 +465,13 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 202 | 197 | 5 | 24 | 20 | 79 |
+| CogLib: the general library | 209 | 204 | 5 | 29 | 24 | 79 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
-| Multi-digit addition (with the problem solver) | 175 | 145 | 30 | 1 | 5 | 70 |
+| Multi-digit addition (with the problem solver) | 178 | 146 | 32 | 9 | 5 | 72 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
-| Experiments written against the memory interface | 45 | 25 | 20 | 0 | 5 | 13 |
+| Experiments written against the memory interface | 45 | 25 | 20 | 2 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 581 | 468 | 113 | 74 | 32 | 245 |
+| **All** | 591 | 476 | 115 | 89 | 36 | 247 |

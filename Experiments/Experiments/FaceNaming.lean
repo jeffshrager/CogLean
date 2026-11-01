@@ -107,16 +107,8 @@ theorem net_carl : net.retrieve carl.face = pure (some bob.face) :=
 /-- **Confident misnaming**, inherited from `Cog.RR.confident_errors`, for
 every search length. -/
 theorem epam_confident_misnaming (n : Nat) :
-    prob (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup bob)
-        (RR.wholeWrong Person.name bob) = 0 ∧
-      prob (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup carl)
-          (RR.wholeWrong Person.name carl) =
-        prob (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup carl)
-          RR.isWhole ∧
-      prob (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup carl)
-          RR.isBackup =
-        prob (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup bob)
-          RR.isBackup :=
+    Phenomena.ConfusionErrorPattern (recognizeRetrieve Person.face net.retrieve str names (1 / 2) n backup)
+      (RR.wholeWrong Person.name) RR.isWhole RR.isBackup carl bob :=
   RR.confident_errors Person.face net.retrieve str names (1 / 2) n backup Person.name carl bob
     total_ne (mass_backup carl) (mass_backup bob) net_bob net_carl sharp_bob (by decide)
 
@@ -125,16 +117,9 @@ from matrix cells: discrimination is determinate, certain (on the 3-bit
 codes, which it can tell apart) and stable. The only computed fact is that
 Carl can be taken for Bob. -/
 theorem epam_confident_misnaming_of_laws (n : Nat) :
-    prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
-        bob) (RR.wholeWrong Person.name bob) = 0 ∧
-      prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
-          carl) (RR.wholeWrong Person.name carl) =
-        prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n
-          backup carl) RR.isWhole ∧
-      prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup
-          carl) RR.isBackup =
-        prob (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n
-          backup bob) RR.isBackup :=
+    Phenomena.ConfusionErrorPattern
+      (recognizeRetrieve Person.face ((netRetriever F3).retrieve net) str names (1 / 2) n backup)
+      (RR.wholeWrong Person.name) RR.isWhole RR.isBackup carl bob :=
   RR.confident_errors_of_laws Person.face str names (1 / 2) n backup (netRetriever F3) (Net.leaf none)
     U3 (Discrimination.determinate F3 U3) (Discrimination.certainty F3 U3 noticeable_U3)
     (Discrimination.stability F3 U3) [ann.face, bob.face] (by decide) (by decide) Person.name carl bob

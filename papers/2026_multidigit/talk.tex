@@ -314,12 +314,12 @@ The first result is confident errors. Suppose a familiar problem q is recognized
       \item $x$ calls up $q$, for certain (\code{hx}): the confusion;
       \item $q$'s associations are sharp (\code{hs}); the correct answers differ (\code{hne}).
     \end{itemize}
-    \item \textbf{Conclusion}: three equations, (i)--(iii) of the last slide.
+    \item \textbf{Conclusion}: the \emph{confusion-error pattern}, a phenomenon defined once in CogLib, apart from any mechanism: three equations, (i)--(iii) of the last slide.
     \item \textbf{Proof}: three lines, citing three earlier lemmas.
   \end{itemize}
 \end{frame}
 \note{
-The next slide shows the actual Lean theorem, so here it is in words first. It's the library's version, which holds for any task, any memory and any backup. Its parameters are how problems are coded, what memory calls up for a code, the associations, the criterion and search length, and the backup. Its hypotheses: well-formedness of the strengths and the backup; the familiar problem calls up itself for certain; the stranger calls up the familiar problem for certain, which is the confusion; the familiar problem's associations are sharp; and the correct answers differ. The conclusion is the three equations from the previous slide. And the proof is three lines, each citing an earlier lemma.
+The next slide shows the actual Lean theorem, so here it is in words first. It's the library's version, which holds for any task, any memory and any backup. Its parameters are how problems are coded, what memory calls up for a code, the associations, the criterion and search length, and the backup. Its hypotheses: well-formedness of the strengths and the backup; the familiar problem calls up itself for certain; the stranger calls up the familiar problem for certain, which is the confusion; the familiar problem's associations are sharp; and the correct answers differ. The conclusion is the confusion-error pattern, which the library defines once, as a phenomenon, with no mechanism in it: the three equations from the previous slide. And the proof is three lines, each citing an earlier lemma.
 }
 
 \begin{frame}[fragile]{The theorem, in Lean}
@@ -329,23 +329,25 @@ theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (st
     (hq : retrieve (code q) = pure (some (code q)))
     (hx : retrieve (code x) = pure (some (code q)))
     (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
-    prob (recognizeRetrieve code retrieve str as cc n backup q)
-        (wholeWrong correct q) = 0 ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeWrong correct x) =
-        prob (recognizeRetrieve code retrieve str as cc n backup x) isWhole ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) isBackup =
-        prob (recognizeRetrieve code retrieve str as cc n backup q) isBackup := by
+    Phenomena.ConfusionErrorPattern (recognizeRetrieve code retrieve str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q := by
   refine ⟨confusion_gives_neighbours_answer code retrieve str as cc n backup
       correct q q (hT _) hq hs,
     wrong_eq_whole_of_sharp code retrieve str as cc n backup
       correct x _ _ (hT _) hx hs hne, ?_⟩
   rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT,
     backup_prob_certain code retrieve str as cc n backup q _ hq hbq hT]
+
+def ConfusionErrorPattern (trial : P → Dist O) (wholeWrong : P → O → Bool)
+    (isWhole isBackup : O → Bool) (x q : P) : Prop :=
+  prob (trial q) (wholeWrong q) = 0 ∧
+    prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧
+    prob (trial x) isBackup = prob (trial q) isBackup
 \end{Verbatim}
-  \small From \code{CogLib/Process/RecognizeRetrieve.lean}, verbatim but for line breaks. The multi-digit model's version is a one-line instance of it.
+  \footnotesize Verbatim from CogLib (\code{Process/RecognizeRetrieve}, \code{Phenomena/ConfusionErrors}). The multi-digit version is a one-line instance.
 \end{frame}
 \note{
-Here's the theorem itself, verbatim from the library. The first five lines are the hypotheses, each named: h T, the two backup hypotheses, h q, h x, h s and h n e. Then the conclusion, three equations joined by and. Then the proof. The first clause is the lemma that a problem recognized as a sharp q gets only q's answer; the second is the lemma that all its whole-problem answers are then wrong; and the third rewrites both backup probabilities with the lemma that backup use after certain recognition depends only on what's recognized. Nothing in the statement mentions arithmetic, EPAM or ACT-R. The multi-digit model's theorem is a one-line instance of this one.
+Here's the theorem itself, verbatim from the library. The first five lines are the hypotheses, each named: h T, the two backup hypotheses, h q, h x, h s and h n e. Then the conclusion: the trial has the confusion-error pattern. Then the proof. At the bottom is that pattern's definition, three equations joined by and, about observable outcomes only. The first clause is the lemma that a problem recognized as a sharp q gets only q's answer; the second is the lemma that all its whole-problem answers are then wrong; and the third rewrites both backup probabilities with the lemma that backup use after certain recognition depends only on what's recognized. Nothing in the statement mentions arithmetic, EPAM or ACT-R. The multi-digit model's theorem is a one-line instance of this one.
 }
 
 \begin{frame}{One clause, unpacked: the confusion}
@@ -433,7 +435,7 @@ Two more consequences. First, whole-problem errors don't depend on the solver at
   \medskip
   \begin{itemize}
     \item The confident-error theorem holds for \emph{any} memory with the three laws.
-    \item For ACT-R it doesn't apply. That doesn't mean ACT-R can't err similarly (it does, gradedly); the exact pattern fails.
+    \item For ACT-R it doesn't apply. That doesn't mean ACT-R can't err similarly (it does, gradedly); the exact pattern fails, and at this setting that is proved (\code{setting\_actr\_not\_pattern}).
   \end{itemize}
 \end{frame}
 \note{

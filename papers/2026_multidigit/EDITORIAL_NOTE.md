@@ -24,6 +24,10 @@ Each technical point was checked against the Lean source. New theorems were adde
    - The paper says none of these is yet an empirical finding.
 9. **Discussion.** "What the approach bought" was rewritten as one paragraph on the four kinds of gain. The conclusion was shortened. The intro caution was condensed.
 
+## Revision of 2026-10-31 (confusion-error predicate)
+
+The confident-errors theorems now conclude one theory-neutral predicate, CogLib's `Phenomena.ConfusionErrorPattern`; `ConfidentErrors r` adds a bound on backup use. The paper's statement of `integrated_confident_errors` shows the predicate and its definition. New: `integrated_confident_errors_le`, `setting_confident_errors_bound`, and `setting_actr_not_pattern`. The last one proves that ACT-R lacks the pattern at the setting, so §5 now says "proved at this setting" where it said "fails". The talk's Lean slide and its ACT-R slide are updated to match.
+
  of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:

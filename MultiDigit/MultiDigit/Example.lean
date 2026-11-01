@@ -128,11 +128,8 @@ theorem mass_backup (p : Problem) : mass (backup p) = 1 := by
 whole-problem retrieval on it errs, it never errs on 100 + 100, and backup
 use is the same on both. -/
 theorem example_confident_errors (n : Nat) :
-    prob (trial bcd net str answers (1 / 2) n backup q1) (wholeWrong q1) = 0 ∧
-      prob (trial bcd net str answers (1 / 2) n backup x) (wholeWrong x) =
-        prob (trial bcd net str answers (1 / 2) n backup x) isWhole ∧
-      prob (trial bcd net str answers (1 / 2) n backup x) isColumns =
-        prob (trial bcd net str answers (1 / 2) n backup q1) isColumns :=
+    Phenomena.ConfusionErrorPattern (trial bcd net str answers (1 / 2) n backup) wholeWrong isWhole
+      isColumns x q1 :=
   confident_errors bcd net str answers (1 / 2) n backup x q1 total_ne (mass_backup x)
     (mass_backup q1) net_facts.2.1 net_facts.2.2.2 sharp_q1 (by decide)
 

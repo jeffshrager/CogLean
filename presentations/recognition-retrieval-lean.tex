@@ -295,19 +295,22 @@ theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (st
     (hq : retrieve (code q) = pure (some (code q)))
     (hx : retrieve (code x) = pure (some (code q)))
     (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
-    prob (recognizeRetrieve code retrieve str as cc n backup q) (wholeWrong correct q) = 0 ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeWrong correct x) =
-        prob (recognizeRetrieve code retrieve str as cc n backup x) isWhole ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) isBackup =
-        prob (recognizeRetrieve code retrieve str as cc n backup q) isBackup := by
+    Phenomena.ConfusionErrorPattern (recognizeRetrieve code retrieve str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q := by
   refine ⟨confusion_gives_neighbours_answer code retrieve str as cc n backup correct q q (hT _) hq hs,
     wrong_eq_whole_of_sharp code retrieve str as cc n backup correct x _ _ (hT _) hx hs hne, ?_⟩
   rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT,
     backup_prob_certain code retrieve str as cc n backup q _ hq hbq hT]
+
+def ConfusionErrorPattern (trial : P → Dist O) (wholeWrong : P → O → Bool)
+    (isWhole isBackup : O → Bool) (x q : P) : Prop :=
+  prob (trial q) (wholeWrong q) = 0 ∧
+    prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧
+    prob (trial x) isBackup = prob (trial q) isBackup
 \end{Verbatim}
 \end{frame}
 \note{
-And here is the actual Lean. You don't need to read it in detail. The statement at the top is the theorem I just described, and the proof is the last five lines, which assemble those three lemmas. It's that short because the real work sits in general lemmas underneath: about probability distributions, about the search process, about nets. That's the point I want to make with this slide. In a library, a behavioral theorem is assembled from reusable parts, the way Mathlib assembles algebra.
+And here is the actual Lean. You don't need to read it in detail. The statement at the top is the theorem I just described. Its conclusion names a phenomenon, the confusion-error pattern, whose definition is at the bottom: three equations about observable outcomes, with no mechanism in them. The proof is the four lines in between, which assemble those three lemmas. It's that short because the real work sits in general lemmas underneath: about probability distributions, about the search process, about nets. That's the point I want to make with this slide. In a library, a behavioral theorem is assembled from reusable parts, the way Mathlib assembles algebra.
 }
 
 \begin{frame}{In words: One supporting lemma}

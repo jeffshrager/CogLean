@@ -85,3 +85,10 @@
       - Fix: add a `use : State → Stim → State` (identity for EPAM, strength, MINERVA; a new reference for ACT-R), and thread the memory state through the solver. The solver's state gains a memory field, and the bridge must be restated against a state-threading `columns`.
       - Then re-check: the ACT-R matrix cells (the "has" cells: recency, stored-only; also confirm the "never" cells), study-test sequence results in `Experiments/`, and the paper's ACT-R claims. The single-retrieval values hold for their study histories, but "practiced" there means studied only.
       - New consequences: column-order effects for ACT-R, never for EPAM; retrieval practice (the testing effect) as a law ACT-R has and EPAM lacks.
+
+25. **Phenomena as predicates, beyond confident errors** (2026-10-31). The confident-errors family now concludes one theory-neutral predicate, `Phenomena.ConfusionErrorPattern` (`CogLib/Phenomena/ConfusionErrors.lean`), with `ConfidentErrors r` for the bounded version; mechanism theorems (`RR.confident_errors`, `_of_laws`, `_rate`, the MultiDigit and face-naming instances) establish it, and `setting_actr_not_pattern` refutes it for ACT-R at one setting. Deferred:
+    - the same treatment for `same_correct_confusion_harmless` and its instances (a second predicate of the same shape);
+    - other repeated conclusions (the DOA phenomena in `StrategyChoice/Phenomena`; the verification laws already follow this form);
+    - ACT-R lacking the pattern at every positive setting (a "never" result, like the matrix's), and a graded pattern ACT-R could have (#16);
+    - a matrix of phenomena × mechanisms, like the laws matrix, read from such theorems.
+

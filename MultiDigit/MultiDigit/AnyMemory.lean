@@ -207,12 +207,9 @@ theorem confident_errors (x q : Problem) (hT : ∀ y, total as (str y) ≠ 0)
     (hq : retrieve (E.code q) = pure (some (E.code q)))
     (hx : retrieve (E.code x) = pure (some (E.code q)))
     (hs : Sharp str cc (E.code q) q) (hne : x.sum ≠ q.sum) :
-    prob (trialWith retrieve E str as cc n backup q) (wholeWrong q) = 0 ∧
-      prob (trialWith retrieve E str as cc n backup x) (wholeWrong x) =
-        prob (trialWith retrieve E str as cc n backup x) isWhole ∧
-      prob (trialWith retrieve E str as cc n backup x) isColumns =
-        prob (trialWith retrieve E str as cc n backup q) isColumns := by
-  simp only [prob_trialWith, wholeWrong_relabel, isWhole_relabel, isColumns_relabel]
+    Phenomena.ConfusionErrorPattern (trialWith retrieve E str as cc n backup) wholeWrong isWhole
+      isColumns x q := by
+  simp only [Phenomena.ConfusionErrorPattern, prob_trialWith, wholeWrong_relabel, isWhole_relabel, isColumns_relabel]
   exact RR.confident_errors E.code retrieve str as cc n backup Problem.sum x q hT hbx hbq hq hx hs hne
 
 /-- **Confusion with a problem of the same sum is harmless.** -/

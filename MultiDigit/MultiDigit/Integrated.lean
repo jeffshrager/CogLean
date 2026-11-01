@@ -22,8 +22,8 @@ What each result rests on:
 | Kind | Results |
 |---|---|
 | **Consequence of the composition** (every encoding, net, strength set and DOA parameter set) | `solverBackup_eq_columns`, `mass_solverBackup`, `nonneg_solverBackup`, `nonneg_itrial`, `whole_independent_of_solver`, `columnsSuch_prob`, `integrated_backup_rate`, `integrated_backup_le`, `solver_error_is_doa_error` |
-| **Conditional**, given the conditions named in its docstring | `integrated_confident_errors` (given confusion, sharp associations, proper DOA strengths), `errors_two_sources` (the same), `solver_exact_of_exact` (given exact facts, which DOA sampling does not supply; sufficient, not necessary: `compensating_errors`) |
-| **The illustrative setting** (chosen numbers) | `setting_*`, including `setting_actr_x` with ACT-R's memory in place of the net |
+| **Conditional**, given the conditions named in its docstring | `integrated_confident_errors` (given confusion, sharp associations, proper DOA strengths; concludes CogLib's `Phenomena.ConfusionErrorPattern`), `integrated_confident_errors_le` (the same, with solver use bounded: `Phenomena.ConfidentErrors`), `errors_two_sources` (the same), `solver_exact_of_exact` (given exact facts, which DOA sampling does not supply; sufficient, not necessary: `compensating_errors`) |
+| **The illustrative setting** (chosen numbers) | `setting_*`, including `setting_actr_x` with ACT-R's memory in place of the net, and `setting_actr_not_pattern` (with ACT-R's memory the trial lacks the pattern: a counterexample at this setting) |
 
 Conditions, and where they stand:
 * *x is confused with q, and q recognized as itself*: a property of the net,
@@ -198,11 +198,7 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str : Item → Nat
     (hT : ∀ y, total as (str y) ≠ 0)
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hs : Sharp str cc (E.code q) q) (hne : x.sum ≠ q.sum) :
-    prob (itrial E N str as cc n F q) (wholeWrong q) = 0 ∧
-      prob (itrial E N str as cc n F x) (wholeWrong x) =
-        prob (itrial E N str as cc n F x) isWhole ∧
-      prob (itrial E N str as cc n F x) isColumns =
-        prob (itrial E N str as cc n F q) isColumns :=
+    Phenomena.ConfusionErrorPattern (itrial E N str as cc n F) wholeWrong isWhole isColumns x q :=
   confident_errors E N str as cc n (solverBackup F) x q hT (mass_solverBackup F hF x)
     (mass_solverBackup F hF q) hq hx hs hne
 
@@ -229,6 +225,21 @@ theorem integrated_backup_le (E : Encoding) (N : Net) (str : Item → Nat → Ra
     prob (itrial E N str as cc n F x) isColumns ≤ (1 - r) ^ n := by
   rw [integrated_backup_rate E N str as cc n F hF x q hT hx]
   exact exhausted_antitone_reach n hr (reach_le_one as _ cc (hstr _) (hT _))
+
+/-- **Confident errors in the integrated model**, with a bound: under the
+conditions of `integrated_confident_errors`, and nonnegative strengths, if one
+search of `q`'s associations clears the criterion with probability at least
+`r`, the pattern holds with solver use on `x` at most `(1 - r)^n`. -/
+theorem integrated_confident_errors_le (E : Encoding) (N : Net) (str : Item → Nat → Rat)
+    (as : List Nat) (cc : Rat) (n : Nat) (F : Facts) (hF : F.Proper) (x q : Problem)
+    (hT : ∀ y, total as (str y) ≠ 0) (hstr : ∀ y a, 0 ≤ str y a)
+    (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
+    (hs : Sharp str cc (E.code q) q) (hne : x.sum ≠ q.sum) (r : Rat)
+    (hr : r ≤ reach as (str (E.code q)) cc) :
+    Phenomena.ConfidentErrors (itrial E N str as cc n F) wholeWrong isWhole isColumns x q
+      ((1 - r) ^ n) :=
+  (integrated_confident_errors E N str as cc n F hF x q hT hq hx hs hne).confident
+    (integrated_backup_le E N str as cc n F hF x q hT hstr hx r hr)
 
 /-- **Two sources of error on a confused problem.** Under the same conditions,
 `x` is answered wrongly by whole-problem retrieval whenever that route is
@@ -342,8 +353,7 @@ theorem setting_mass : mass (solverBackup F0 x) = 1 ∧ mass (solverBackup F0 q1
 /-- **Confident errors in the setting**: the conditional theorem, its
 conditions met by the net EPAM learned and the chosen strengths. -/
 theorem setting_confident_errors :
-    prob (it q1) (wholeWrong q1) = 0 ∧ prob (it x) (wholeWrong x) = prob (it x) isWhole ∧
-      prob (it x) isColumns = prob (it q1) isColumns :=
+    Phenomena.ConfusionErrorPattern it wholeWrong isWhole isColumns x q1 :=
   confident_errors bcd net str answers (1 / 2) 1 (solverBackup F0) x q1 total_ne setting_mass.1
     setting_mass.2 net_facts.2.1 net_facts.2.2.2 sharp_q1 (by decide)
 
@@ -397,6 +407,26 @@ theorem setting_actr_x :
         (solverBackup F0) x) (fun o => o.2 == 250) = 1911678749972988451 / 8045428750000000000 := by
   simp only [prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) x
     (fun h => (same_fastBackup F0 x h).symm)]
+  decide +kernel
+
+/-- In the setting the errors are confident: solver use on 150 + 100 is
+1/46. -/
+theorem setting_confident_errors_bound :
+    Phenomena.ConfidentErrors it wholeWrong isWhole isColumns x q1 (1 / 46) :=
+  setting_confident_errors.confident (by rw [setting_routes.2]; exact Rat.le_refl)
+
+/-- **ACT-R's memory does not produce the pattern** in the setting (a
+counterexample, not merely a failed hypothesis): 150 + 100 reaches the solver
+with probability 383/1058, the practiced 100 + 100 with 107/782. -/
+theorem setting_actr_not_pattern :
+    ¬ Phenomena.ConfusionErrorPattern
+      (trialWith ((actRetriever ExampleACTR.P).retrieve ExampleACTR.mem) bcd str answers (1 / 2) 1
+        (solverBackup F0)) wholeWrong isWhole isColumns x q1 := by
+  apply Phenomena.not_confusionErrorPattern_of_backup_ne
+  simp only [prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) x
+      (fun h => (same_fastBackup F0 x h).symm),
+    prob_trialWith_same _ bcd str answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) q1
+      (fun h => (same_fastBackup F0 q1 h).symm)]
   decide +kernel
 
 theorem setting_valid : F0.Valid ∧ ∀ y a, 0 ≤ str y a := by

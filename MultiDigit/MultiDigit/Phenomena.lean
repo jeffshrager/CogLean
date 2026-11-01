@@ -110,12 +110,9 @@ theorem confident_errors (x q : Problem) (hT : ∀ y, total as (str y) ≠ 0)
     (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
     (hq : N.select (E.code q) = some (E.code q)) (hx : N.select (E.code x) = some (E.code q))
     (hs : Sharp str cc (E.code q) q) (hne : x.sum ≠ q.sum) :
-    prob (trial E N str as cc n backup q) (wholeWrong q) = 0 ∧
-      prob (trial E N str as cc n backup x) (wholeWrong x) =
-        prob (trial E N str as cc n backup x) isWhole ∧
-      prob (trial E N str as cc n backup x) isColumns =
-        prob (trial E N str as cc n backup q) isColumns := by
-  simp only [trial_eq_trialWith]
+    Phenomena.ConfusionErrorPattern (trial E N str as cc n backup) wholeWrong isWhole isColumns
+      x q := by
+  simp only [Phenomena.ConfusionErrorPattern, trial_eq_trialWith]
   exact AnyMemory.confident_errors N.retrieve E str as cc n backup x q hT hbx hbq
     (N.retrieve_of_select _ _ hq) (N.retrieve_of_select _ _ hx) hs hne
 

@@ -25,7 +25,9 @@ With no law of memory:
   - `confusion_gives_neighbours_answer`, `wrong_eq_whole_of_sharp`;
   - `confident_errors`: a problem confused with a familiar one, whose
     associations are sharp, errs on every whole-problem answer, with no more
-    backup use than the familiar problem;
+    backup use than the familiar problem (`Phenomena.ConfusionErrorPattern`);
+  - `confident_errors_rate`: the same with the rate as a bound
+    (`Phenomena.ConfidentErrors`);
   - `same_correct_confusion_harmless`.
 
 From laws of memory (`Phenomena/RetrievalLaws`):
@@ -36,6 +38,7 @@ From laws of memory (`Phenomena/RetrievalLaws`):
 
 import CogLib.Process.SampledRetrieval
 import CogLib.Phenomena.RetrievalLaws
+import CogLib.Phenomena.ConfusionErrors
 
 namespace Cog
 
@@ -247,21 +250,35 @@ theorem wrong_eq_whole_of_sharp (correct : P → A) (x : P) (y : Item) (c : A)
 /-- **Confident errors, with any memory.** Let the familiar `q` call up itself
 for certain, with sharp associations, and let `x`, whose correct answer
 differs, call up `q` for certain. Then retrieval never errs on `q`, always
-errs on `x`, and `x` falls back on the backup exactly as rarely as `q` does. -/
+errs on `x`, and `x` falls back on the backup exactly as often as `q` does:
+`Phenomena.ConfusionErrorPattern`. Equal backup use is not low backup use;
+`backup_prob_certain` gives the rate. -/
 theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (str y) ≠ 0)
     (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
     (hq : retrieve (code q) = pure (some (code q)))
     (hx : retrieve (code x) = pure (some (code q)))
     (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
-    prob (recognizeRetrieve code retrieve str as cc n backup q) (wholeWrong correct q) = 0 ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeWrong correct x) =
-        prob (recognizeRetrieve code retrieve str as cc n backup x) isWhole ∧
-      prob (recognizeRetrieve code retrieve str as cc n backup x) isBackup =
-        prob (recognizeRetrieve code retrieve str as cc n backup q) isBackup := by
+    Phenomena.ConfusionErrorPattern (recognizeRetrieve code retrieve str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q := by
   refine ⟨confusion_gives_neighbours_answer code retrieve str as cc n backup correct q q (hT _) hq hs,
     wrong_eq_whole_of_sharp code retrieve str as cc n backup correct x _ _ (hT _) hx hs hne, ?_⟩
   rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT,
     backup_prob_certain code retrieve str as cc n backup q _ hq hbq hT]
+
+/-- Under the conditions of `confident_errors`, the errors are confident to
+the degree that `q`'s retrieval succeeds: backup use on `x` is at most
+`backupAfter` for `q`'s code, the chance that `n` searches of `q`'s
+associations are exhausted (`Phenomena.ConfidentErrors`). Whether that is
+small depends on the strengths, criterion and search length. -/
+theorem confident_errors_rate (correct : P → A) (x q : P) (hT : ∀ y, total as (str y) ≠ 0)
+    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hq : retrieve (code q) = pure (some (code q)))
+    (hx : retrieve (code x) = pure (some (code q)))
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    Phenomena.ConfidentErrors (recognizeRetrieve code retrieve str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q (backupAfter str as cc n (some (code q))) :=
+  (confident_errors code retrieve str as cc n backup correct x q hT hbx hbq hq hx hs hne).confident
+    (by rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT]; exact Rat.le_refl)
 
 /-- **Confusion with a problem of the same correct answer is harmless.** -/
 theorem same_correct_confusion_harmless (correct : P → A) (x q : P)
@@ -285,16 +302,9 @@ theorem confident_errors_of_laws {S : Type} (R : Retriever S Item) (s0 : S) (U :
     (hconf : 0 < Laws.pRet R (R.studyAll s0 xs) (code x) (code q))
     (hT : ∀ y, total as (str y) ≠ 0) (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
     (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
-    prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup q)
-        (wholeWrong correct q) = 0 ∧
-      prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
-          (wholeWrong correct x) =
-        prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
-          isWhole ∧
-      prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup x)
-          isBackup =
-        prob (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup q)
-          isBackup := by
+    Phenomena.ConfusionErrorPattern
+      (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q := by
   have hr : Laws.Reachable R s0 U (R.studyAll s0 xs) := ⟨xs, hxs, rfl⟩
   have hq' := Laws.retrieve_of_pRet_one R s0 U hdet _ hr (code q) (code q)
     (Laws.studied_selfRetrieval R s0 U hcert hstab xs hxs hnd (code q) hq)

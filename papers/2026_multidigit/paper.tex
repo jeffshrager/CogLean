@@ -273,13 +273,17 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str ...) (F : Fact
     (hx : N.select (E.code x) = some (E.code q))      -- x is confused with q
     (hs : Sharp str cc (E.code q) q)                  -- only q's sum clears the criterion
     (hne : x.sum ≠ q.sum) :
-    prob (itrial ... q) (wholeWrong q) = 0 ∧                          -- (i)
-    prob (itrial ... x) (wholeWrong x) = prob (itrial ... x) isWhole ∧  -- (ii)
-    prob (itrial ... x) isColumns = prob (itrial ... q) isColumns     -- (iii)
-\end{Verbatim}
-In words: (i) whole-problem retrieval never errs on $q$; (ii) every whole-problem answer to $x$ is wrong; (iii) $x$ goes to the column solver exactly as often as $q$ does. The confused problem is answered wrongly with the same fluency as the familiar one.
+    ConfusionErrorPattern (itrial ...) wholeWrong isWhole isColumns x q
 
-Equal backup use is not low backup use. Whether the errors are \emph{confident}, in the sense that the solver is rarely invoked, is a separate, quantitative matter. The rate is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}). If $R_q \ge r$, the confused problem reaches the solver with probability at most $(1-r)^n$ (\lean{integrated\_backup\_le}). In the illustrative setting, $R_q = 45/46$ and $n = 1$, so the solver is reached $1/46$ of the time. With flat associations on $q$, the same theorem would hold, and the errors would not be confident.
+-- CogLib's statement of the phenomenon, for any trial and outcomes:
+def ConfusionErrorPattern trial wholeWrong isWhole isBackup x q : Prop :=
+  prob (trial q) (wholeWrong q) = 0 ∧                            -- (i)
+  prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧       -- (ii)
+  prob (trial x) isBackup = prob (trial q) isBackup              -- (iii)
+\end{Verbatim}
+The phenomenon is defined once, in CogLib (\code{Phenomena/ConfusionErrors}), in terms of observable outcomes only. It names no mechanism, and none of the theorem's conditions (confusion, sharpness, proper distributions) is part of it; they are hypotheses of the theorems that establish it. In words: (i) whole-problem retrieval never errs on $q$; (ii) every whole-problem answer to $x$ is wrong; (iii) $x$ goes to the column solver exactly as often as $q$ does. The confused problem is answered wrongly with the same fluency as the familiar one.
+
+Equal backup use is not low backup use. Whether the errors are \emph{confident}, in the sense that the solver is rarely invoked, is a separate, quantitative matter. The rate is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}). If $R_q \ge r$, the confused problem reaches the solver with probability at most $(1-r)^n$ (\lean{integrated\_backup\_le}). In the illustrative setting, $R_q = 45/46$ and $n = 1$, so the solver is reached $1/46$ of the time. With flat associations on $q$, the same theorem would hold, and the errors would not be confident. CogLib accordingly states a second, stronger phenomenon, \lean{ConfidentErrors r}: the pattern with backup use at most $r$, where the bound is an argument, not a fixed threshold. The integrated model has it with $r = (1-r_q)^n$ for any lower bound $r_q$ on $R_q$ (\lean{integrated\_confident\_errors\_le}), and the setting has it with $r = 1/46$ (\lean{setting\_confident\_errors\_bound}).
 
 \paragraph{What is assumed.} The postulates are the mechanisms: the net, DOA retrieval and the solver. The conditions are of three kinds.
 \begin{itemize}
@@ -329,7 +333,7 @@ The two memories differ in the laws just listed. Both cells are proved, for ever
   \item the discrimination net has determinacy, certainty and stability (\lean{Matrix.Discrimination.determinate}, \lean{.certainty}, \lean{.stability});
   \item ACT-R's memory has none of them (\lean{Matrix.Activation.never\_determinate}, \lean{never\_certainty}, \lean{never\_stability}).
 \end{itemize}
-So the general confident-errors theorem applies to EPAM and never to ACT-R: its hypotheses cannot be met, because nothing is retrieved for certain (\lean{Act.retrieve\_not\_certain}). That the theorem does not apply does not show that ACT-R cannot produce similar behavior, and at the illustrative setting it does: $150+100$ is answered 200 by retrieval with probability $.43$. What fails is the exact pattern. Retrieval of the confused problem is graded, and its solver use differs from the familiar problem's ($383/1058$ against $107/782$), so the dissociation in (iii) does not hold. A graded analogue of confident errors for memories like ACT-R's would need its own theorem, and its own laws. Table~\ref{tab:memories} shows the consequences at one setting.
+So the general confident-errors theorem applies to EPAM and never to ACT-R: its hypotheses cannot be met, because nothing is retrieved for certain (\lean{Act.retrieve\_not\_certain}). That the theorem does not apply does not show that ACT-R cannot produce similar behavior, and at the illustrative setting it does: $150+100$ is answered 200 by retrieval with probability $.43$. What fails is the exact pattern, and at the setting this is proved, not just observed: with ACT-R's memory the trial does not have \lean{ConfusionErrorPattern} (\lean{setting\_actr\_not\_pattern}). Retrieval of the confused problem is graded, and its solver use differs from the familiar problem's ($383/1058$ against $107/782$), so (iii) fails. This is a counterexample at one setting, not a proof that ACT-R's memory lacks the pattern at every setting. A graded analogue of confident errors for memories like ACT-R's would need its own theorem, and its own laws. Table~\ref{tab:memories} shows the consequences at one setting.
 
 \begin{table}[t]
 \centering
@@ -520,7 +524,8 @@ Learned nets recognize each image as itself & \lean{learnAll\_clean} (\code{CogL
 DOA retrieval use, error share, backup independence & \lean{SC.retrieval\_prob}, \lean{retrieval\_error\_share}, \lean{retrieval\_independent\_of\_backup} \\
 Counting errors independent of associations & \lean{SC.counting\_error\_share} \\
 Peaking never raises retrieval errors; but can raise overt strategy use & \lean{SC.peaking\_lowers\_retrieval\_errors}; \lean{SC.peaking\_can\_raise\_overt\_use} \\
-Confident errors, any task & \lean{RR.confident\_errors} (\code{CogLib/Process/RecognizeRetrieve}) \\
+The phenomena: confusion-error pattern; confident errors with a bound & \lean{ConfusionErrorPattern}, \lean{ConfidentErrors} (\code{CogLib/Phenomena/ConfusionErrors}) \\
+Confident errors, any task; with the rate as bound & \lean{RR.confident\_errors}, \lean{RR.confident\_errors\_rate} (\code{CogLib/Process/RecognizeRetrieve}) \\
 Confident errors from laws of memory & \lean{RR.confident\_errors\_of\_laws} \\
 Solver equals the column procedure & \lean{Solver.bridge} (\code{MultiDigit/Solver}) \\
 A column error is a DOA error in place & \lean{MD.column\_error\_is\_doa\_error} (\code{MultiDigit/Columns}) \\
@@ -528,9 +533,9 @@ Integrated: solver is the column backup; mass 1; nonnegative weights & \lean{sol
 Integrated: rate of solver use, and its bound & \lean{integrated\_backup\_rate}, \lean{integrated\_backup\_le} \\
 Integrated: whole-problem errors independent of solver & \lean{whole\_independent\_of\_solver} \\
 Integrated: column route factored & \lean{columnsSuch\_prob} \\
-Integrated: confident errors; two sources & \lean{integrated\_confident\_errors}, \lean{errors\_two\_sources} \\
+Integrated: confident errors; with a bound; two sources & \lean{integrated\_confident\_errors}, \lean{integrated\_confident\_errors\_le}, \lean{errors\_two\_sources} \\
 Integrated: solver error is a DOA error (other columns exact); exact facts sufficient, not necessary & \lean{solver\_error\_is\_doa\_error}, \lean{solver\_exact\_of\_exact}, \lean{compensating\_errors} \\
-Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}, \lean{setting\_practiced\_errors}, \lean{setting\_valid}; \lean{setting\_actr\_x} \\
+Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}, \lean{setting\_practiced\_errors}, \lean{setting\_valid}, \lean{setting\_confident\_errors\_bound}; \lean{setting\_actr\_x}, \lean{setting\_actr\_not\_pattern} \\
 ACT-R: graded confusion; interference & \lean{act\_values}, \lean{act\_interference} (\code{MultiDigit/ExampleACTR}) \\
 EPAM: practice never disturbed & \lean{MD.learning\_preserves\_trial} \\
 Memory laws: EPAM has, ACT-R never has & \lean{Matrix.Discrimination.*}, \lean{Matrix.Activation.never\_*} (\code{CogMatrix}) \\
