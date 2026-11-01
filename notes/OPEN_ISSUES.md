@@ -97,6 +97,8 @@
     - `revise_same_of_determinate`: perseveration for every determinate memory;
     - garden paths and escape, compared across EPAM and ACT-R at a setting.
 
+    Layering (2026-11-01): the loop (`Process/TheoryRevision`) needs only actions, responses, a prediction function, a revision process and cues. View application is one reviser (`Process/ViewRevision`); others (rule induction, Bayesian updating over hypotheses) can be added and inherit `impasse_iff_fails` and `correct_theory_stable`.
+
     Decided: view retrieval is *not* bridged to `recognizeRetrieve`. That would need a criterion search over sampled predictions, which view application does not do. The phenomenon carries over instead of the mechanism.
 
     Open:

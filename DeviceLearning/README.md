@@ -8,19 +8,27 @@ Shrager, J. (1987). Theory change via view application in instructionless learni
 cd DeviceLearning && lake build    # builds CogLib, then this package; core Lean only
 ```
 
-## What is general (CogLib)
+## What is general (CogLib), in layers
 
-- **`Process/TheoryExecution`:** predictions are read off a theory. Each pressed key's function slot is a term, and its denotation, which is task data, acts on a device state. A prediction depends only on the pressed keys' function slots (`predict_congr`).
-- **`Process/ViewRetrieval`:** recognize a cue, retrieve a view, apply it, with any memory.
-  - `confusion_gives_neighbours_view`: a confused cue brings in its neighbour's view.
-  - `view_of_determinate`: a determinate memory brings in one view per cue.
-  - `view_confusion_pattern`: the confusion-error pattern stated for multi-digit addition (`Phenomena/ConfusionErrors`) holds here, for a different mechanism, under the conditions named.
-- **`Process/TheoryRevision`:** the learning loop is an instance of the decision cycle with impasses and repairs (`Process/ProblemSolving`), not a new control structure.
-  - A failed prediction is an impasse (`impasse_iff_fails`).
-  - A repair retrieves a view by a cue and applies it.
-  - A correct theory is never revised (`correct_theory_stable`).
-  - With a determinate memory, every revision by a cue adopts the same retrieval (`revise_same_of_determinate`).
-- **`Phenomena/DeviceLearning`:** `gardenPath` and `perseverates`, defined over the sequence of interpretations a learner adopts.
+1. **`Process/TheoryRevision`: learning by revision, over any theories, actions and responses.** It is an instance of the decision cycle with impasses and repairs (`Process/ProblemSolving`), not a new control structure. A `Reviser` supplies three things:
+   - how a theory predicts the response to a sequence of actions;
+   - how a cue revises a theory (any process, with any memory);
+   - which cues an episode offers.
+
+   Episodes are actions plus observed responses. Proved here, for any reviser:
+   - a failed prediction is an impasse (`impasse_iff_fails`);
+   - a correct theory is never revised (`correct_theory_stable`).
+2. **`Process/ViewRevision`: one reviser, view application with retrieved views** (`viewReviser`, built on `Process/ViewRetrieval`). With a determinate memory, every revision by a cue brings in the same retrieval (`revise_same_of_determinate`).
+3. **`Process/TheoryExecution`: one way a knowledge-net theory predicts.** Each action is a frame whose function slot's denotation acts on a state, in sequence.
+
+Also general:
+- **`Process/ViewRetrieval`:**
+  - `confusion_gives_neighbours_view`;
+  - `view_of_determinate`;
+  - `view_confusion_pattern`, the confusion-error pattern of `Phenomena/ConfusionErrors`, here for view retrieval.
+- **`Phenomena/TheoryChange`:** `gardenPath` and `perseverates`.
+
+Nothing in CogLib mentions keys, devices or microwaves. Other revisers, such as rule induction or Bayesian updating over hypotheses, can plug into layer 1 and inherit its results.
 
 ## The microwave (this package; all of it illustrative)
 

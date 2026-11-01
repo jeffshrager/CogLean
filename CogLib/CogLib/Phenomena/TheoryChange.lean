@@ -1,9 +1,9 @@
 /-
-Phenomena of learning a device by revising a theory, stated theory-neutrally.
+Phenomena of theory change, stated theory-neutrally.
 
-Each is a property of the sequence of knowledge a learner brings in at
-successive failed predictions (in `Process/TheoryRevision`, what each
-revision called up). Neither names a mechanism. They are events, so their
+Each is a property of the sequence of interpretations a learner brings in
+at successive failed predictions (in `Process/TheoryRevision`, what each
+revision brought in). Neither names a mechanism. They are events, so their
 probabilities can be computed for any learner.
 
 * `gardenPath`: the first knowledge brought in is not the last: an early

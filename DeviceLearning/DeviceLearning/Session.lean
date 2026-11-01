@@ -17,7 +17,8 @@ the colon, then the words; it tests only the countdown. ACT-R's memory
 studies the same two (mismatch penalty 1/2 over all five features, failure
 weight 1/10).
 
-**Learners** (`Process/TheoryRevision`): the episode is TIME COOK 9 0
+**Learners** (`Process/TheoryRevision`, with the view-application reviser
+of `Process/ViewRevision`): the episode is TIME COOK 9 0
 START, which cooks for 90 seconds; the initial theory predicts nothing, so
 the learner is at an impasse at once. A *two-cue* learner consults the
 key's label and the display, each once per failure, in random order. A
@@ -25,10 +26,10 @@ key's label and the display, each once per failure, in random order. A
 -/
 
 import DeviceLearning.Microwave
-import CogLib.Process.TheoryRevision
+import CogLib.Process.ViewRevision
 import CogLib.Memory.Activation
 import CogLib.Process.DiscriminationLearning
-import CogLib.Phenomena.DeviceLearning
+import CogLib.Phenomena.TheoryChange
 
 namespace DeviceLearning
 
@@ -67,10 +68,14 @@ def mem : ActState := Act.study (Act.study ⟨0, []⟩ setTimeItem) timerItem
 /-- The episode: TIME COOK 9 0 START, observed. -/
 def ep : Episode A Obs := (cook90, device cook90)
 
-/-- A learner with memory `retrieve`. -/
+/-- A learner with memory `retrieve`: the view-application reviser, with
+predictions read off the theory (`predicts`, `Process/TheoryExecution`). -/
 def learner {M : Type} (retrieve : M → Item → Dist (Option Item)) (cues : Episode A Obs → List Cue)
-    (once : Bool) : Learning A Lbl Cue M St Obs :=
-  ⟨K, .function, den, s0, (·.2.2), code, retrieve, viewOf, cues, once⟩
+    (once : Bool) : Reviser (KNet A Lbl) M A Obs Cue (Option Item) :=
+  viewReviser K code retrieve viewOf predicts cues once
+
+/-- A learner's state. -/
+abbrev LS (M : Type) := LState (KNet A Lbl) M A Obs Cue (Option Item)
 
 /-- Consult the key's label and the display. -/
 def twoCues (e : Episode A Obs) : List Cue := (e.1.head?.map Cue.label).toList ++ [.display]
@@ -85,14 +90,14 @@ abbrev epam1 := learner (fun (N : Net) => N.retrieve) labelOnly false
 abbrev act1 := learner (Act.retrieve P) labelOnly false
 
 /-- The start of a session. -/
-def start {M : Type} (m : M) : LState A Lbl Cue M Obs := ⟨theory0, m, [ep], [], []⟩
+def start {M : Type} (m : M) : LS M := ⟨theory0, m, [ep], [], []⟩
 
 /-- The session's final theory predicts the episode. -/
-def solved {M : Type} (s : LState A Lbl Cue M Obs) : Bool := predicts s.theory cook90 == some (.cooks 90)
+def solved {M : Type} (s : LS M) : Bool := predicts s.theory cook90 == some (.cooks 90)
 
 /-- The interpretations a session brought in, in order (retrievals that
 called up nothing are not interpretations). -/
-def views {M : Type} (s : LState A Lbl Cue M Obs) : List Item := s.adopted.filterMap id
+def views {M : Type} (s : LS M) : List Item := s.adopted.filterMap id
 
 /-! ### Setting facts -/
 
@@ -154,11 +159,11 @@ determinacy (it retrieves deterministically), so, by
 `revise_same_of_determinate`, every revision by the TIME COOK label adopts
 one and the same retrieval, from any theory and at every attempt. -/
 theorem epam_revisions_same :
-    ∃ r : Option Item, ∀ s : LState A Lbl Cue Net Obs, s.mem = net →
+    ∃ r : Option Item, ∀ s : LS Net, s.mem = net →
       ∀ x ∈ epam1.space.apply (.revise (.label tcKey)) s, x.1.adopted = s.adopted ++ [r] :=
-  revise_same_of_determinate (netRetriever order) (Net.leaf none) [setTimeItem, timerItem]
-    (Laws.determinate_of_deterministic _ _ _ (netRetriever_deterministic order)) epam1 rfl net
-    ⟨[setTimeItem, timerItem], by simp, rfl⟩ (.label tcKey)
+  revise_same_of_determinate K (netRetriever order) (Net.leaf none) [setTimeItem, timerItem]
+    (Laws.determinate_of_deterministic _ _ _ (netRetriever_deterministic order)) code viewOf predicts
+    labelOnly false net ⟨[setTimeItem, timerItem], by simp, rfl⟩ (.label tcKey)
 
 /-- **EPAM, two cues: a garden path half the time, always solved.** If the
 learner consults the label first (probability 1/2), it adopts SET-A-TIME,

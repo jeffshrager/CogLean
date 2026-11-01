@@ -1,18 +1,19 @@
 /-
 Processes: reading predictions off a theory held as a knowledge net.
 
-A learner's theory of a device says what each key does through the value
-of a slot of the key's frame (the *function* slot, as in Shrager 1987: the
-BigTrak's Forward-9 has function "move forward 9"). To predict what a
-sequence of key presses does, read each key's function term and apply its
-denotation to the device state, in order. The denotations are task
-knowledge, supplied as a parameter; nothing here mentions a device.
+One way a theory can predict (`Process/TheoryRevision` leaves this open):
+each action is a frame whose *function* slot says what it does (as in
+Shrager 1987, where the BigTrak's Forward-9 has function "move forward 9"),
+and the denotation of that term, supplied as task knowledge, acts on a
+state. A sequence of actions is predicted by applying the denotations in
+order. This is a model of sequential, deterministic action; others are
+possible.
 
-A key whose function is unknown, or whose function has no denotation,
-makes the prediction `none`: the theory does not say.
+An action whose function is unknown, or has no denotation, makes the
+prediction `none`: the theory does not say.
 
 Main results: a prediction depends on the theory only through the
-function slots of the keys pressed (`predict_congr`); predictions of a
+function slots of the actions taken (`predict_congr`); predictions of a
 sequence compose (`predict_append`).
 -/
 
@@ -22,8 +23,8 @@ namespace Cog
 
 variable {A L S : Type} [DecidableEq A] [DecidableEq L]
 
-/-- **Predict**: fold the denotations of the pressed keys' function terms
-over the device state. `none` if the theory says nothing about some key. -/
+/-- **Predict**: fold the denotations of the actions' function terms over
+the state. `none` if the theory says nothing about some action. -/
 def predict (fnL : L) (den : Term A → S → Option S) (T : KNet A L) : List A → S → Option S
   | [], s => some s
   | k :: ks, s => match T.slot k fnL with
@@ -32,12 +33,12 @@ def predict (fnL : L) (den : Term A → S → Option S) (T : KNet A L) : List A 
       | none => none
       | some s' => predict fnL den T ks s'
 
-/-- **A prediction depends only on the pressed keys' function slots.** Two
+/-- **A prediction depends only on the actions' function slots.** Two
 theories that agree on those slots predict alike, whatever else they say. -/
-theorem predict_congr (fnL : L) (den : Term A → S → Option S) (T T' : KNet A L) (keys : List A)
-    (h : ∀ k ∈ keys, T.slot k fnL = T'.slot k fnL) (s : S) :
-    predict fnL den T keys s = predict fnL den T' keys s := by
-  induction keys generalizing s with
+theorem predict_congr (fnL : L) (den : Term A → S → Option S) (T T' : KNet A L) (acts : List A)
+    (h : ∀ k ∈ acts, T.slot k fnL = T'.slot k fnL) (s : S) :
+    predict fnL den T acts s = predict fnL den T' acts s := by
+  induction acts generalizing s with
   | nil => rfl
   | cons k ks ih =>
     simp only [predict, h k (List.mem_cons_self ..)]

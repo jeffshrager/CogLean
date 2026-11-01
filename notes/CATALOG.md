@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-223 theorems: 218 general, 5 instances; 86 headline; 30 about laws; 26 conditional on laws.
+226 theorems: 221 general, 5 instances; 86 headline; 30 about laws; 26 conditional on laws.
 
 **Laws**
 
@@ -114,14 +114,14 @@ How to read it:
 | `Cog.activation_mono` | general | — | Priming only helps: adding sources never lowers a node's activation. |
 | `Cog.activation_nonneg` | general | — | Activation is never negative, with nonnegative strengths and sources. |
 | `Cog.choose_primed` | general | — | Priming a candidate raises its share: if extra activation reaches candidate `v` by `δ` and no other candidate at all, `v`'s share of the total activation does not fall. |
-| `Cog.predict_congr` | general | — | A prediction depends only on the pressed keys' function slots. Two theories that agree on those slots predict alike, whatever else they say. |
+| `Cog.predict_congr` | general | — | A prediction depends only on the actions' function slots. Two theories that agree on those slots predict alike, whatever else they say. |
 | `Cog.correct_theory_stable` | general | — | A correct theory is never revised. If the theory predicts every episode still to explain, every outcome of the session keeps it. |
 | `Cog.impasse_iff_fails` | general | — | An impasse is a failed prediction. |
-| `Cog.revise_same_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In a state reachable by study, a memory with the law of determinacy makes every revision by a cue adopt one and the same retrieval, at every attempt... |
 | `Cog.merge_view_wins` | general | — | On a matched frame the view wins: where the view says something about a slot of frame `v`, the merged net says exactly what the view says, provided only matched theory frames are renamed to `v`. |
 | `Cog.confusion_gives_neighbours_view` | general | — | A confused cue brings in its neighbour's view. If `x` calls up `y` for certain, and so does `q`, the two cues revise every theory identically. |
 | `Cog.view_confusion_pattern` | general | — | The confusion-error pattern, for view retrieval. Let cue `q` call up `y` for certain, and `x` call up `y` too; let `y`'s view, applied to the theory, answer `q` correctly and `x` wrongly, on ev... |
 | `Cog.view_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In any state reachable by study, a memory with the law of determinacy makes each cue bring in one view: the same at every attempt and for every theory. |
+| `Cog.revise_same_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In a state reachable by study, a memory with the law of determinacy makes every revision by a cue bring in one and the same retrieval, from every th... |
 | `Cog.Dist.bind_assoc` | general | — | Two-stage draws regroup. |
 | `Cog.Dist.mass_bind` | general | — | Proper stages make a proper process. If the first stage and every second stage are proper distributions, so is the two-stage process. |
 | `Cog.Dist.nonneg_bind` | general | — | Nonnegative stages make a nonnegative process. |
@@ -509,7 +509,7 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 223 | 218 | 5 | 30 | 26 | 86 |
+| CogLib: the general library | 226 | 221 | 5 | 30 | 26 | 86 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
 | Multi-digit addition (with the problem solver) | 204 | 164 | 40 | 10 | 5 | 83 |
@@ -519,4 +519,4 @@ How to read it:
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 10 | 1 | 9 | 1 | 0 | 9 |
-| **All** | 641 | 509 | 132 | 92 | 38 | 274 |
+| **All** | 644 | 512 | 132 | 92 | 38 | 274 |

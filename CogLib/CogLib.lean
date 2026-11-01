@@ -15,6 +15,7 @@ import CogLib.Process.RecognizeRetrieve
 import CogLib.Process.TheoryExecution
 import CogLib.Process.ViewRetrieval
 import CogLib.Process.TheoryRevision
+import CogLib.Process.ViewRevision
 import CogLib.Process.Combination
 import CogLib.Process.ViewApplication
 import CogLib.Process.Categorize
@@ -27,6 +28,6 @@ import CogLib.Phenomena.RetrievalLaws
 import CogLib.Phenomena.Responder
 import CogLib.Phenomena.SerialPosition
 import CogLib.Phenomena.ConfusionErrors
-import CogLib.Phenomena.DeviceLearning
+import CogLib.Phenomena.TheoryChange
 import CogLib.Phenomena.Combination
 import CogLib.Phenomena.Verification
