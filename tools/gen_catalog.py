@@ -22,6 +22,7 @@ PACKAGES = [  # directory, import root, module prefixes, title
     ("Concepts", "Concepts", ["Concepts"], "Concepts: selective modification and threshold membership"),
     ("SemanticMemory", "SemanticMemory", ["SemanticMemory"], "Semantic memory: hierarchical networks and feature comparison"),
     ("ViewApplication", "ViewApplication", ["ViewApplication"], "View application and view selection"),
+    ("DeviceLearning", "DeviceLearning", ["DeviceLearning"], "Device learning: retrieved views and theory revision (microwave)"),
 ]
 ENV = dict(os.environ, PATH=os.path.expanduser("~/.elan/bin") + ":" + os.environ["PATH"])
 META = open(os.path.join(ROOT, "tools", "catalog_meta.lean")).read()

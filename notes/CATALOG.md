@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-209 theorems: 204 general, 5 instances; 79 headline; 29 about laws; 24 conditional on laws.
+223 theorems: 218 general, 5 instances; 86 headline; 30 about laws; 26 conditional on laws.
 
 **Laws**
 
@@ -35,6 +35,7 @@ How to read it:
 | `Cog.Phenomena.not_confusionErrorPattern_of_backup_ne` | ConfusionErrorPattern | never | general | derived |
 | `Cog.RR.confident_errors` | ConfusionErrorPattern | has | general | derived |
 | `Cog.RR.confident_errors_of_laws` | ConfusionErrorPattern | has | general | Determinate, Certainty, Stability |
+| `Cog.view_confusion_pattern` | ConfusionErrorPattern | has | general | derived |
 | `Cog.netLearner_nonInterference` | NonInterference | has | general | derived |
 | `Cog.netResponder_oscillation` | Oscillation | has | general | derived |
 | `Cog.Phenomena.criterion_of_nonInterference` | ReachesCriterion | has | general | NonInterference |
@@ -113,7 +114,14 @@ How to read it:
 | `Cog.activation_mono` | general | — | Priming only helps: adding sources never lowers a node's activation. |
 | `Cog.activation_nonneg` | general | — | Activation is never negative, with nonnegative strengths and sources. |
 | `Cog.choose_primed` | general | — | Priming a candidate raises its share: if extra activation reaches candidate `v` by `δ` and no other candidate at all, `v`'s share of the total activation does not fall. |
+| `Cog.predict_congr` | general | — | A prediction depends only on the pressed keys' function slots. Two theories that agree on those slots predict alike, whatever else they say. |
+| `Cog.correct_theory_stable` | general | — | A correct theory is never revised. If the theory predicts every episode still to explain, every outcome of the session keeps it. |
+| `Cog.impasse_iff_fails` | general | — | An impasse is a failed prediction. |
+| `Cog.revise_same_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In a state reachable by study, a memory with the law of determinacy makes every revision by a cue adopt one and the same retrieval, at every attempt... |
 | `Cog.merge_view_wins` | general | — | On a matched frame the view wins: where the view says something about a slot of frame `v`, the merged net says exactly what the view says, provided only matched theory frames are renamed to `v`. |
+| `Cog.confusion_gives_neighbours_view` | general | — | A confused cue brings in its neighbour's view. If `x` calls up `y` for certain, and so does `q`, the two cues revise every theory identically. |
+| `Cog.view_confusion_pattern` | general | — | The confusion-error pattern, for view retrieval. Let cue `q` call up `y` for certain, and `x` call up `y` too; let `y`'s view, applied to the theory, answer `q` correctly and `x` wrongly, on ev... |
+| `Cog.view_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In any state reachable by study, a memory with the law of determinacy makes each cue bring in one view: the same at every attempt and for every theory. |
 | `Cog.Dist.bind_assoc` | general | — | Two-stage draws regroup. |
 | `Cog.Dist.mass_bind` | general | — | Proper stages make a proper process. If the first stage and every second stage are proper distributions, so is the two-stage process. |
 | `Cog.Dist.nonneg_bind` | general | — | Nonnegative stages make a nonnegative process. |
@@ -473,11 +481,35 @@ How to read it:
 | `ViewApplication.Selection.naive` | instance | — | Naive: "+" adds with probability 2/3, appends a step with 1/3. |
 | `ViewApplication.Selection.primed` | instance | — | Primed by a memory: "+" appends a step with probability 3/5. |
 
+## Device learning: retrieved views and theory revision (microwave)
+
+10 theorems: 1 general, 9 instances; 9 headline; 1 about laws; 0 conditional on laws.
+
+**Laws**
+
+| Theorem | Law | Verdict | Scope | Given |
+|---|---|---|---|---|
+| `DeviceLearning.epam_confusion_pattern` | ConfusionErrorPattern | can hold | instance | derived |
+
+**Headline theorems**
+
+| Theorem | Scope | Given | Statement |
+|---|---|---|---|
+| `DeviceLearning.act_graded` | instance | — | ACT-R's retrieval is graded. TIME COOK calls up SET TIME with probability 5/23 and the kitchen timer with 10/23 (equally similar, the timer more recent), and nothing with 8/23. |
+| `DeviceLearning.act_label_only` | instance | — | ACT-R, label only: graded retrieval escapes. Solved within four cycles with probability 251280/279841 (about .90); perseveration about .10. |
+| `DeviceLearning.act_two_cues` | instance | — | ACT-R, two cues: a garden path with probability 125/1219 (about .10), solved with 1050/1219 (about .86), and perseveration with 25/1219 (the display, too, can call up SET TIME). |
+| `DeviceLearning.duration_kept` | general | — | A correct theory is kept. After DURATION, the theory predicts the episode, so no session from it revises it (`correct_theory_stable`; shown for EPAM's two-cue learner, and the general theorem h... |
+| `DeviceLearning.epam_confusion_pattern` | instance | — | Confident misinterpretation. With EPAM's net, the TIME COOK label is taken for SET TIME, as is the CLOCK label. |
+| `DeviceLearning.epam_label_only` | instance | — | EPAM, label only: certain perseveration, never solved. The label calls up SET TIME at every failure (`epam_revisions_same`). |
+| `DeviceLearning.epam_revisions_same` | instance | — | Perseveration follows from determinacy. EPAM's net has the law of determinacy (it retrieves deterministically), so, by `revise_same_of_determinate`, every revision by the TIME COOK label adopts... |
+| `DeviceLearning.epam_two_cues` | instance | — | EPAM, two cues: a garden path half the time, always solved. If the learner consults the label first (probability 1/2), it adopts SET-A-TIME, fails again, consults the display, and adopts DURATI... |
+| `DeviceLearning.net_facts` | instance | — | EPAM's net confuses TIME COOK with a VCR's SET TIME. It tests only the countdown, so both key labels call up SET TIME, and the cooking display calls up the kitchen timer. |
+
 ## Totals
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 209 | 204 | 5 | 29 | 24 | 79 |
+| CogLib: the general library | 223 | 218 | 5 | 30 | 26 | 86 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
 | Multi-digit addition (with the problem solver) | 204 | 164 | 40 | 10 | 5 | 83 |
@@ -486,4 +518,5 @@ How to read it:
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
-| **All** | 617 | 494 | 123 | 90 | 36 | 258 |
+| Device learning: retrieved views and theory revision (microwave) | 10 | 1 | 9 | 1 | 0 | 9 |
+| **All** | 641 | 509 | 132 | 92 | 38 | 274 |

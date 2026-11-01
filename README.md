@@ -107,6 +107,8 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 **View application** (`ViewApplication/`): Shrager's (1987) view application as one generic process on CogLib's knowledge nets (semantic nets over terms). It reproduces the paper's Table 4 exactly, and, given number concepts and an ARITHMETIC view, removes over-extension (membership in *even multiple of 3* becomes exactly divisibility by 6, for every number) while leaving typicality unchanged: typicality and membership dissociate ([`ViewApplication/README.md`](ViewApplication/README.md)).
 
+**Device learning** (`DeviceLearning/`): learning a microwave without instructions. A failed prediction is an impasse on CogLib's decision cycle, and the repair retrieves a view through any memory (`Retriever`) and applies it. EPAM's determinate memory makes a learner who consults only the key's label perseverate, for every determinate memory, while ACT-R's graded retrieval escapes; the confusion-error pattern stated for arithmetic holds here for a different mechanism ([`DeviceLearning/README.md`](DeviceLearning/README.md)).
+
 **Problem solving** (CogLib `Process/ProblemSolving`, `MultiDigit/Solver.lean`): problem spaces under means-ends analysis (GPS) and a decision cycle with impasses and repairs (repair theory; Soar). Multi-digit addition's column backup becomes problem solving, proved to answer exactly as before (`bridge`); deleting the carry rule yields impasses whose repairs are the classic addition bugs, one bug per repair; and GPS works units-first though its goal names no order.
 
 **Simulations** (`Sims/`): the library's definitions run as simulations, with seeded sampling checked against the exact distributions. The first is Siegler & Shrager's learning simulation, compared with the chapter's Fig. 9.8 ([`notes/SC_simulation_RESULTS.md`](notes/SC_simulation_RESULTS.md)). Nothing in the library depends on `Sims/`.
@@ -175,5 +177,6 @@ cd MultiDigit && lake build        # builds CogLib, then the combined multi-digi
 cd Concepts && lake build          # builds CogLib, then conceptual combination
 cd SemanticMemory && lake build    # builds CogLib, then semantic memory
 cd ViewApplication && lake build   # builds CogLib and Concepts, then view application
+cd DeviceLearning && lake build    # builds CogLib, then device learning
 cd Sims && lake build && lake exe sc-learning   # simulations
 ```

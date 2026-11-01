@@ -1,0 +1,9 @@
+name = "devicelearning"
+defaultTargets = ["DeviceLearning"]
+
+[[lean_lib]]
+name = "DeviceLearning"
+
+[[require]]
+name = "coglib"
+path = "../CogLib"

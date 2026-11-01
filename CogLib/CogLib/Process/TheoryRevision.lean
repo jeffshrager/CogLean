@@ -14,7 +14,7 @@ and repairs, so the loop is an instance of it, not a new control structure:
 | a failed prediction                    | an impasse (`impasse_iff_fails`)     |
 | change the theory by a view            | repair operator `revise c`: retrieve a view by cue `c` and apply it (`Process/ViewRetrieval`) |
 | which cues to consult                  | repair heuristics (task data)        |
-| not consulting a cue again for the same failure | a critic                  |
+| not consulting a cue again for the same failure (if `once`) | a critic     |
 
 The task supplies a `Learning` record: how to predict (`Process/TheoryExecution`),
 what an episode offers as cues, how cues are coded, the memory, and the
@@ -54,6 +54,7 @@ structure Learning (A L C M St Obs : Type) where
   retrieve : M → Item → Dist (Option Item)
   viewOf : Item → Option (KNet A L)
   cues : Episode A Obs → List C
+  once : Bool
 
 /-- The learner's state: the theory, the memory, the episodes still to
 explain, the cues tried on the current one, and what each revision called
@@ -95,13 +96,14 @@ def Learning.procedure (_ : Learning A L C M St Obs) : Procedure (LState A L C M
   fun s =>
   if s.todo.isEmpty then none else some .confirm
 
-/-- Repairs: consult the cues the failing episode offers, each once. -/
+/-- Repairs: consult the cues the failing episode offers; if `once`, each
+cue only once per failure. -/
 def Learning.repairer : Repairer (LState A L C M Obs) (LOp C) where
   heuristics _ s := match s.todo with
     | [] => []
     | e :: _ => (G.cues e).map .revise
   critic o s := match o with
-    | .revise c => s.tried.contains c
+    | .revise c => G.once && s.tried.contains c
     | .confirm => false
 
 /-- **A learning session**: at most `k` decision cycles. -/

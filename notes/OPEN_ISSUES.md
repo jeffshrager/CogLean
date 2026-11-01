@@ -92,3 +92,21 @@
     - ACT-R lacking the pattern at every positive setting (a "never" result, like the matrix's), and a graded pattern ACT-R could have (#16);
     - a matrix of phenomena × mechanisms, like the laws matrix, read from such theorems.
 
+26. **Device learning** (`DeviceLearning/`, phase 1 done 2026-10-31). Views are retrieved through any `Retriever` and applied by view application. The instructionless-learning loop is an instance of CogLib's decision cycle (`Process/TheoryRevision`): a failed prediction is an impasse, and a retrieved view is the repair. Results:
+    - `view_confusion_pattern`: `ConfusionErrorPattern` holds for view retrieval;
+    - `revise_same_of_determinate`: perseveration for every determinate memory;
+    - garden paths and escape, compared across EPAM and ACT-R at a setting.
+
+    Decided: view retrieval is *not* bridged to `recognizeRetrieve`. That would need a criterion search over sampled predictions, which view application does not do. The phenomenon carries over instead of the mechanism.
+
+    Open:
+    - **Learning in memory.** Revisions retrieve but do not study, so a cue never comes to retrieve a better view. Associative learning of cue and view, and EPAM's discrimination of a cue after an error, are needed.
+    - **The 1987 mechanisms.** Multiple view sources, spreading-activation selection (`ViewApplication/Selection`) combined with retrieval, and the other IE mechanisms.
+    - **Representation.** Each view re-interprets an operation *type*, so it re-interprets every key of that type (TIME COOK and CLOCK alike). Splitting a type when its keys behave differently is needed for the correct two-key theory.
+    - **Retrieval as use** (#24).
+    - **Solver generalizations** found here, not yet needed by any model:
+      - weighted choice among repairs (`step` chooses uniformly);
+      - critics that test a repair's *result* (critics see only the current state).
+
+      Add each so that the existing `step` is a proved special case.
+
