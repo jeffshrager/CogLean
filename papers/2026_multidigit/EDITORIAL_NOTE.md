@@ -77,6 +77,13 @@ This follows the revision guidance "Reorient the CogLean Paper Toward General Th
 
 The paper is 27 pages.
 
+## Revision of 2026-10-31 (four precision edits)
+
+1. The phenomena are stated over "answer and strategy-route distributions", not "observable outcomes". §5 now says that mechanism-independent is not the same as observable, and that applying the predicate to people requires measuring the route.
+2. The qualitative table's caption now says EPAM's noninterference entry is also general (fixed backup).
+3. In Table B1, the row "whole-problem retrieval" is now "whole-problem retrieval errors".
+4. The expression (1 - R_q)^n is now stated with its condition, certain recognition as q, both in the kinds table and in §6.1.
+
  of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:

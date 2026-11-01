@@ -118,7 +118,7 @@ A cognitive model combines kinds of commitment that conventional implementations
 \begin{enumerate}
   \item \textbf{Mechanisms and their postulates}: definitions, such as how a discrimination net sorts a code, or how retrieval samples an answer in proportion to its associative strength.
   \item \textbf{Representations}: which features encode a stimulus, and what information those features preserve. A representation is a parameter of the mechanisms, and its properties can be stated separately (``every digit has a feature saying whether it is zero'').
-  \item \textbf{Phenomena}: predicates over observable outcomes, stated without reference to any mechanism. A predicate asserts nothing. It is a target, which some mechanism may or may not be proved to satisfy.
+  \item \textbf{Phenomena}: predicates over a task's outcomes (for example, distributions of answers and of the strategy route that produced them), stated without reference to any mechanism. A predicate asserts nothing. It is a target, which some mechanism may or may not be proved to satisfy.
   \item \textbf{Theorems}: proofs that a mechanism, or every mechanism of a class, produces behavior satisfying a predicate.
   \item \textbf{Conditions}: the hypotheses under which a theorem holds. Some are situational (``problem $x$ is confused with problem $q$''), some are empirical premises that remain unexplained (``$q$'s associations are sharp''), and some are well-formedness requirements (``the strengths have positive total'').
 \end{enumerate}
@@ -272,14 +272,14 @@ A parallel chain proves that every weight is nonnegative, given nonnegative stre
 
 In DOA alone, a problem's errors and its use of backup strategies come from the same distribution. A flat distribution of associations produces both more retrieval errors and more backup use, so errors and hesitation go together. Recognition can break this tie: a problem confused with a familiar one is retrieved from the familiar problem's distribution, with that problem's backup use and with its answers, which are wrong for the confused problem.
 
-CogLib states the resulting pattern once, as a predicate over observable outcomes (\code{CogLib/Phenomena/ConfusionErrors.lean}):
+CogLib states the resulting pattern once, as a predicate over answer and strategy-route distributions (\code{CogLib/Phenomena/ConfusionErrors.lean}):
 \begin{Verbatim}[fontsize=\small]
 def ConfusionErrorPattern trial wholeWrong isWhole isBackup x q : Prop :=
   prob (trial q) (wholeWrong q) = 0 ∧                            -- (i)
   prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧       -- (ii)
   prob (trial x) isBackup = prob (trial q) isBackup              -- (iii)
 \end{Verbatim}
-For any problems and outcomes: (i) the familiar $q$ is never answered wrongly by retrieval; (ii) every retrieved answer to $x$ is wrong; (iii) $x$ uses the backup exactly as often as $q$. The definition names no mechanism, and none of the conditions under which mechanisms produce the pattern is part of it. They belong to the theorems.
+For any problems and outcomes: (i) the familiar $q$ is never answered wrongly by retrieval; (ii) every retrieved answer to $x$ is wrong; (iii) $x$ uses the backup exactly as often as $q$. The definition names no mechanism, and none of the conditions under which mechanisms produce the pattern is part of it. They belong to the theorems. Mechanism-independent is not the same as directly observable, however: (ii) and (iii) refer to the route that produced an answer, whole-problem retrieval or the backup, which an answer alone does not reveal. Applying the predicate to people requires identifying or measuring the route, for instance by latency, verbal report or observed overt work, as the DOA studies classified strategies.
 
 Equal backup use is not low backup use. CogLib therefore states a second, stronger phenomenon, \lean{ConfidentErrors r}: the pattern with backup use at most $r$. The bound is an argument, not a fixed threshold, so the predicate does not build in an arbitrary standard of ``confidence''. Two predicates for one informal idea is the point: the informal notion of a confident error turns out to combine a structural relation, which holds whenever recognition hands one problem another's associations, and a quantitative one, which depends on how well those associations are learned.
 
@@ -300,7 +300,7 @@ theorem integrated_confident_errors (E : Encoding) (N : Net) (str ...) (F : Fact
     (hne : x.sum ≠ q.sum) :
     ConfusionErrorPattern (itrial ...) wholeWrong isWhole isColumns x q
 \end{Verbatim}
-The confused problem is answered wrongly with the same fluency as the familiar one. Whether that fluency is high is separate: the rate of backup use is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}), and if $R_q \ge r$ the model has \lean{ConfidentErrors} with bound $(1-r)^n$ (\lean{integrated\_confident\_errors\_le}). With flat associations on $q$ the pattern still holds and the errors are not confident.
+The confused problem is answered wrongly with the same fluency as the familiar one. Whether that fluency is high is separate: since a net sorts $x$ to $q$ for certain, the rate of backup use on $x$ is $(1-R_q)^n$, where $R_q$ is the chance that one search of $q$'s associations clears the criterion (\lean{integrated\_backup\_rate}), and if $R_q \ge r$ the model has \lean{ConfidentErrors} with bound $(1-r)^n$ (\lean{integrated\_confident\_errors\_le}). With flat associations on $q$ the pattern still holds and the errors are not confident.
 
 \paragraph{What is assumed.} The postulates are the mechanisms: the net, DOA retrieval and the solver. The conditions are of three kinds.
 \begin{itemize}
@@ -403,7 +403,7 @@ Column facts from the same memory & no change (pairs recognized as themselves) &
 General status & in the class of the confident-errors theorem & outside it, at every setting \\
 \bottomrule
 \end{tabularx}
-\caption{The two memories in the same application, qualitatively. The last row is general; the others describe one illustrative setting, given exactly in Appendix~\ref{app:setting}. ACT-R appears without retrieval as use.}
+\caption{The two memories in the same application, qualitatively. The last row is general, and so is EPAM's entry on the practiced problem, which holds at every setting when the backup is fixed (\lean{MD.learning\_preserves\_trial}); the other entries describe one illustrative setting, given exactly in Appendix~\ref{app:setting}. ACT-R appears without retrieval as use.}
 \label{tab:qual}
 \end{table}
 
@@ -421,7 +421,7 @@ Kind & Results & What they rest on \\
 \midrule
 \textbf{Library facts}: properties of mechanisms, needed for reuse & the solver equals the column procedure (the bridge); the solver and the integrated trial are probability distributions; merged evaluation is the same distribution & the definitions, and nonnegative strengths with positive totals \\
 \addlinespace
-\textbf{Compositional deductions}: hold for every encoding, net, strength set and DOA setting & whole-problem errors are independent of the solver; the column route factors as exhaustion times the solver; the solver's rate of use is $(1-R_q)^n$ & the composed mechanisms alone \\
+\textbf{Compositional deductions}: hold for every encoding, net, strength set and DOA setting & whole-problem errors are independent of the solver; after certain recognition as $q$ (as with any net), the column route factors as exhaustion times the solver, and backup use is $(1-R_q)^n$ & the composed mechanisms alone \\
 \addlinespace
 \textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; a solver error as a single-digit error in place (other columns exact); exactness of the solver (exact facts: sufficient, not necessary); consequences of representational properties (zeros, magnitude, column facts); noninterference with one memory & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); exact columns; properties of the encoding; learned digit pairs \\
 \addlinespace
@@ -639,7 +639,7 @@ $150+100$ answered correctly (250) overall, all via the solver & $\approx .014$ 
 \midrule
 practiced $100+100$: errors by whole-problem retrieval & $0$ & $225/782 \approx .29$ \\
 practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ \\
-after also studying $100+300$: whole-problem retrieval & $0$ & $3375/5842 \approx .58$ \\
+after also studying $100+300$: whole-problem retrieval errors & $0$ & $3375/5842 \approx .58$ \\
 after also studying $100+300$: overall & $\approx .0073$ (unchanged) & $\approx .616$ \\
 \midrule
 for every setting, with this solver & confident-error theorem applies; & its hypotheses never hold; \\
