@@ -201,9 +201,76 @@ Here's the application. A problem is recognized by an EPAM net, or by any memory
 One detail matters a lot for whether this counts as evidence. An earlier version of the worked case used a backup that simply returned the correct sum. That's enough to instantiate theorems that hold for every backup, but it supplies the answer instead of computing it. In the integrated model nothing is handed the answer. Two hundred fifty for one fifty plus one hundred is assembled by the solver from three single-digit trials and a carry rule, and it's never certain. Correct knowledge enters only as the single-digit associations and the carry rule. So the composition has to work twice: the mechanisms have to run together, and their theorems have to transfer to the whole.
 }
 
+\begin{frame}{What actually happens when retrieval fails}
+  \small
+  \begin{enumerate}
+    \item \textbf{Recognize}: the EPAM net sorts the problem's code to a stored problem, possibly the wrong one.
+    \item \textbf{Retrieve}: DOA searches that problem's associations for an answer above the criterion.
+    \item \textbf{Fail}: if the search is exhausted, the backup is invoked.
+    \item \textbf{Solve}: the backup runs column addition on CogLib's general problem-solving machinery.
+    \item \textbf{Each column}: units, then tens, then hundreds; each digit sum is a separate DOA trial (retrieve, else fingers, else count).
+    \item \textbf{Combine}: each trial's \emph{distribution} of answers feeds the rest of the calculation, with carrying and place value.
+    \item \textbf{Result}: a probability distribution over complete multi-digit answers, errors included.
+  \end{enumerate}
+  \medskip
+  \code{Dist.bind} composes these steps: it carries \emph{every} possible outcome, with its probability, through the steps that follow. Nothing is sampled, and nothing looks up the right answer.
+\end{frame}
+\note{
+So what actually happens when whole-problem retrieval fails? Step by step. The EPAM net sorts the problem's code to a stored problem, possibly the wrong one. DOA searches that problem's associations for an answer above the criterion. If the search is exhausted, the backup is invoked. The backup runs column addition on the library's general problem-solving machinery: units, then tens, then hundreds, and each column's digit sum is a separate single-digit DOA trial, with retrieval, fingers or counting. Each trial produces a distribution of possible answers, and that whole distribution feeds the rest of the calculation, with carrying and place value. The result is a probability distribution over complete multi-digit answers, errors included. The operation that does the composing is bind: it carries every possible outcome, with its probability, through the steps that follow. Nothing is sampled, and nothing looks up the right answer.
+}
+
+\begin{frame}[fragile]{The general machinery, and its arithmetic instance}
+  \footnotesize
+  \begin{columns}[T]
+    \column{0.47\linewidth}
+    \textbf{CogLib} (\code{Process/ProblemSolving}), task-general:
+    \begin{itemize}
+      \item problem spaces: states; operators with preconditions and (probabilistic) effects;
+      \item a \textbf{decision cycle}: a procedure proposes; a violated precondition is an \emph{impasse}, fixed by repairs and critics;
+      \item separately, \textbf{GPS}: goals, subgoals, backtracking.
+    \end{itemize}
+    \column{0.49\linewidth}
+    \textbf{MultiDigit} (\code{Solver.lean}), the instance:
+    \begin{itemize}
+      \item operators: add a column, write, write and carry, finish;
+      \item \code{full}: the procedure that proposes them in turn;
+      \item \code{lenient}: the repair policy (no critics).
+    \end{itemize}
+  \end{columns}
+  \medskip
+\begin{Verbatim}[fontsize=\scriptsize]
+def solverBackup (F : Facts) (p : Problem) : Dist Nat :=
+  Solver.answers F.fact Solver.full Solver.lenient p
+\end{Verbatim}
+  \code{F.fact}: the DOA single-digit trial; \code{Solver.answers}: runs CogLib's decision cycle. The integrated model uses the \textbf{decision cycle}; GPS runs on the same space in \code{SolverGPS.lean} (units first; exact with exact facts) but is not part of it.
+\end{frame}
+\note{
+Here's the machinery underneath. The library's problem-solving module is task-general. It has a problem space, with states and operators that have preconditions and effects, and an effect can be a probability distribution. It has a decision cycle: a procedure proposes an operator; if its precondition is violated, that's an impasse, and repair heuristics and critics fix it. And, separately, it has GPS-style means-ends analysis, with goals, subgoals and backtracking. Multi-digit addition is one instance: operators to add a column, write, write and carry, and finish; a procedure, full, that proposes them in turn; and a repair policy, lenient. The backup is one call: answers, which runs the library's decision cycle, given the single-digit DOA trial, the procedure and the repair policy. One precision: the integrated model uses the decision cycle. GPS runs on the same problem space in a separate file, where it's proved to work units first and to be exact with exact facts, but it isn't part of the integrated model.
+}
+
+\begin{frame}[fragile]{The bridge: two executable descriptions, one distribution}
+  \small
+  \begin{itemize}
+    \item \code{columns}: a simple, direct implementation of probabilistic column arithmetic.
+    \item \code{answers}: the same task on CogLib's state-and-operator decision cycle.
+  \end{itemize}
+\begin{Verbatim}[fontsize=\footnotesize]
+theorem bridge (fact : Nat → Nat → Dist Nat) (p : Problem) :
+    answers fact full lenient p = columns fact p
+\end{Verbatim}
+  \begin{itemize}
+    \item \textbf{Proved}, not tested: identical answer distributions for \emph{every} problem and \emph{every} single-digit process.
+    \item So every theorem about \code{columns} (place value, a column error as a single-digit error in place) holds for the solver.
+    \item It equates \emph{outputs}, not internal processes: the two still differ as accounts of what a child does.
+  \end{itemize}
+\end{frame}
+\note{
+Now the bridge. There are two executable descriptions of column addition. One, columns, is a simple direct implementation of probabilistic column arithmetic. The other, answers, does the same task on the library's general state-and-operator decision cycle. The bridge theorem says they produce identical answer distributions, for every problem and for every single-digit process you plug in. That's proved, not established by testing examples. Its payoff is that every theorem proved about the simple version, like place value, or a column error being a single-digit error moved to its place, holds for the solver too. But be precise about what it equates: outputs, not internal processes. As accounts of what a child does, the two are still different. This is the library idea in miniature: results transfer between independently defined mechanisms.
+}
+
 \begin{frame}{How theorems compose}
   \begin{itemize}
-    \item \textbf{A bridge}: the solver on the decision cycle answers exactly as the fixed column procedure, for every problem and every single-digit process. Every column theorem transfers.
+    \item \textbf{The bridge} (previous slide): every column theorem transfers to the solver.
     \item \textbf{Associativity}: every arrow is a two-stage draw; draws regroup, so a component's theorem holds inside the whole.
     \item \textbf{Well-formedness, inherited}: the composed trial is a probability distribution, proved by chaining lemmas from three packages:
     \begin{itemize}

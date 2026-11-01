@@ -221,11 +221,29 @@ Here \code{F.fact} is the single-digit DOA trial, \code{Solver.full} the full co
 
 An earlier version of the example, still in the repository (\code{MultiDigit/Example.lean}), checked the general theorems with a backup that simply returned the correct sum, \code{Dist.pure p.sum}. That suffices to instantiate theorems that hold for \emph{every} backup. But it supplies the answer instead of computing it, so it is not evidence that the mechanisms compose. In the integrated model, nothing is handed the answer. The answer 250 to $150+100$ is assembled by the solver from three DOA trials and a carry rule, and it is never certain. So the composition must work at the level of mechanisms (the parts fit and run together) and at the level of theorems (the parts' results transfer to the whole).
 
+\subsection{The executable backup: arithmetic as general problem solving}
+
+When whole-problem retrieval fails, the integrated model invokes an executable column-addition solver. It is an instance of CogLib's general problem-solving framework (\code{CogLib/Process/ProblemSolving.lean}), not a separate arithmetic program. The framework is task-general:
+\begin{itemize}
+  \item a \emph{problem space} has states and operators; each operator has a precondition and an effect, and an effect is a distribution over states, so an operator can include a probabilistic process;
+  \item a \emph{decision cycle} runs a procedure that proposes an operator in each state; a proposed operator whose precondition is violated is an \emph{impasse}, which repair heuristics, filtered by critics, resolve \citep{brown1980}.
+\end{itemize}
+The arithmetic instance (\code{MultiDigit/Solver.lean}) defines operators to add a column, write its digit, write and carry, and finish. The procedure \code{full} proposes them as the calculation progresses, units first. \code{Solver.answers} runs CogLib's decision cycle, for a bounded number of cycles (eight, enough for three columns), and reads off the written answer. In \code{solverBackup}, \code{F.fact} supplies the single-digit process and \code{Solver.lenient} the repair policy; with the full procedure, no impasse arises.
+
+Each \emph{add} operator performs a DOA trial on its column's digits and returns a distribution of possible digit sums. The framework composes such steps with \code{Dist.bind}, which carries every possible outcome, with its probability, through the operations that follow. Nothing is sampled, and nothing consults the correct answer. The result is a distribution over complete multi-digit answers, errors included.
+
+CogLib also implements GPS-style means--ends analysis, with goals, subgoals and backtracking. It has been instantiated for the same arithmetic problem space (\code{MultiDigit/SolverGPS.lean}), where it is proved to work units first and to answer every problem exactly when the single-digit facts are exact. The integrated demonstration uses the decision cycle, not means--ends analysis. The GPS results are complementary: they concern goal-directed operator selection.
+
 \subsection{Composition of theorems}
 
 Three kinds of reuse make the composition deductive rather than merely executable.
 
-\paragraph{A bridge.} The solver on CogLib's decision cycle answers exactly as a fixed column procedure does, for every problem and every single-digit process (\lean{Solver.bridge}). Every theorem proved about the fixed procedure therefore holds for the solver. One example is that a column error is a single-digit error moved to its place (\lean{MD.column\_error\_is\_doa\_error}).
+\paragraph{A bridge.} There are two executable descriptions of column addition. \code{columns} (\code{MultiDigit/Columns.lean}) is a direct implementation of probabilistic column arithmetic. \code{answers} performs the same task on the decision cycle just described. The bridge theorem proves that they produce identical answer distributions, for every problem and every single-digit process:
+\begin{Verbatim}[fontsize=\small]
+theorem bridge (fact : Nat → Nat → Dist Nat) (p : Problem) :
+    answers fact full lenient p = columns fact p
+\end{Verbatim}
+The equivalence is proved, not established by testing examples. Every theorem proved about \code{columns} therefore holds for the solver; for instance, that a column error is a single-digit error moved to its place when the other columns are exact (\lean{MD.column\_error\_is\_doa\_error}). The bridge equates output distributions, not internal processes. As accounts of what a child does, the two descriptions still differ.
 
 \paragraph{Associativity.} Each arrow in Figure~\ref{fig:compose} is a two-stage draw of finite distributions. CogLib proves that such draws regroup (\lean{Dist.bind\_assoc}), so a theorem about a component holds where the component sits inside the whole.
 
