@@ -44,3 +44,21 @@ All others were checked against Crossref on 2026-11-01. The reference list is al
 - CogLib `TheoryExecution`: `predict_congr`.
 - CogLib `Phenomena/TheoryChange`: `gardenPath`, `perseverates`.
 - `DeviceLearning/Session`: `net_facts`, `act_graded`, `view_predictions`, `epam_confusion_pattern`, `epam_revisions_same`, `epam_two_cues`, `act_two_cues`, `epam_label_only`, `act_label_only`, `duration_kept`.
+
+## Revision of 2026-11-01 (decomposed views and differentiation)
+
+**New §6, "Composing views, and differentiation."** It covers:
+- views built from parts (SET-A-NUMBER; NUMBER-IS-A-TIME and NUMBER-IS-A-DURATION), with `merge_keeps_unmentioned`, `one_view_not_enough`, `two_views_compose` and `revision_keeps_number`;
+- the impossibility for every theory with a shared type (`same_parent_same_reading`, `never_both_shared`);
+- splitting (`split_conservative`, `split_separates`);
+- conflict-driven splitting (`viewSplitReviser`);
+- the sessions (`no_split_session`, `split_session`): never both, with oscillation, against both, without oscillation.
+
+**Other changes**
+- The abstract, the shared-components table and the index now include this work.
+- The discussion's "views act on types" point is now a result, not a limitation.
+- Limitations now say that splitting is conflict-driven and not weighed against overwriting, and that commutation is proved only in instances.
+- Appendix B has the new session table.
+- The talk has three new slides ("Views from parts", "Why concepts must split", "Differentiation: split, then re-interpret") and updated concept-formation, limitations and take-home slides.
+
+The paper is 13 pages; the talk is 19 slides.

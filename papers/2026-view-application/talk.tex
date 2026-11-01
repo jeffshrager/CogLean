@@ -199,6 +199,62 @@ Now the phenomena. The first paper defined the confusion-error pattern for arith
 There are two new phenomena, both defined over the sequence of interpretations a learner brings in. A garden path: the first interpretation is later replaced. Perseveration: the same interpretation is adopted at two failures in a row. Then a class-level result. For every memory with the law of determinacy, provided revising doesn't change it, revisions by a given cue always bring in the same thing. So a learner who keeps consulting that cue keeps re-applying an interpretation that already failed. That's a formal relative of Einstellung, and the persistence comes from a property of memory, not of the device or the view. ACT-R's memory lacks the law and can escape. As always: the law is sufficient, not shown necessary, and nothing here says people's memories have it.
 }
 
+\begin{frame}{Views from parts}
+  \begin{itemize}
+    \item SET-A-TIME bundles two ideas. Decomposed:
+    \begin{itemize}
+      \item \textbf{SET-A-NUMBER}: the key enters a number;
+      \item \textbf{NUMBER-IS-A-TIME} / \textbf{NUMBER-IS-A-DURATION}: what the number means.
+    \end{itemize}
+    \item Each mentions one slot of the key's type. View application's merge lets a view win only on what it mentions, so a later view \textbf{keeps} what an earlier one said about other slots.
+    \item In the microwave: one part predicts nothing; two compose, in either order.
+    \item A revision can replace the meaning and \textbf{keep} ``enters a number'': tuning, not restructuring.
+  \end{itemize}
+  \medskip
+  \small (Commutation of views on disjoint slots: certified in instances; open in general.)
+\end{frame}
+\note{
+A view like set-a-time actually bundles two ideas: that the key enters a number, and that the number is a time of day. So we split views into parts: set-a-number, and number-is-a-time or number-is-a-duration. Each one mentions one slot of the key's type. View application's merge lets a view win only on the slots it mentions, so a later view keeps what an earlier one said about other slots; that's proved in general. In the microwave, no single part predicts anything, and any two of the right kind do, in either order. And a revision can now replace just the meaning and keep the fact that the key enters a number: tuning, rather than restructuring. That views on separate slots always commute is open in general; the instances are certified.
+}
+
+\begin{frame}{Why concepts must split}
+  \begin{itemize}
+    \item Views act on \textbf{types}: every instance of a type changes together.
+    \item Proved: actions of one type are \textbf{read alike}.
+    \item So, for \emph{every} theory in which TIME COOK and CLOCK share a type and both enter a number:\\
+    9 0 START is predicted alike after either, and \textbf{no such theory predicts both} ``cooks 90 s'' and ``invalid time''.
+  \end{itemize}
+  \bigskip
+  No view, and no amount of revising, fixes this. The concept has to \textbf{differentiate}.
+\end{frame}
+\note{
+Now the important part. Views act on types: every instance of a type changes together. We prove that two actions of one type are read alike. In the microwave that becomes an impossibility theorem for every theory: if TIME COOK and CLOCK share a type and both enter a number, then nine zero START is predicted the same after either, so no such theory can predict both cooking for ninety seconds and an invalid clock time. No choice of view, no amount of revision, fixes that. The concept has to split. Accounts of conceptual change call that differentiation.
+}
+
+\begin{frame}{Differentiation: split, then re-interpret}
+  \begin{itemize}
+    \item \textbf{Split} copies an action's type and moves the action to the copy. Proved:
+    \begin{itemize}
+      \item a split \textbf{changes no prediction} (it's conservative);
+      \item it \textbf{separates} the action from its old type's other instances.
+    \end{itemize}
+    \item \textbf{When}: if re-interpreting the failing key's type would break an explained episode, split first.
+  \end{itemize}
+  \medskip
+  \small Episodes: TIME COOK, CLOCK, TIME COOK (EPAM; 12 cycles).\\[1mm]
+  \begin{tabular}{lccc}
+    \toprule
+    Learner & knows both & finishes & oscillates\\
+    \midrule
+    cannot split & 0 & 5/6 & 5/6\\
+    splits on conflict & 5/6 & 5/6 & 0\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+\note{
+So we add splitting. A split copies an action's type and moves the action to the copy. Two general results: the split by itself changes no prediction, so differentiation is conservative; it changes what the learner can come to believe, not what it believes. And it separates the action from the other instances of its old type. The learner splits when re-interpreting the failing key's type would break an episode it has already explained. With the episodes TIME COOK, CLOCK, TIME COOK again: a learner that can't split never ends up knowing both, as the theorem says, and every one that finishes oscillates, the clock meaning pushing out the cooking meaning and back. A learner that splits on conflict knows both whenever it finishes, and never oscillates. This is about representation, not memory, so these sessions use EPAM only.
+}
+
 \begin{frame}{What was shared, and what was new}
   \small
   \begin{tabular}{>{\raggedright\arraybackslash}p{0.43\linewidth}ccc}
@@ -212,7 +268,7 @@ There are two new phenomena, both defined over the sequence of interpretations a
     Decision cycle, impasses, repairs & solver & revision loop\\
     Knowledge nets; view application & --- & yes\\
     \midrule
-    \emph{New, general:} theory execution, view retrieval, the revision loop, garden paths, perseveration & --- & new\\
+    \emph{New, general:} theory execution, view retrieval, the revision loop, view composition, type splitting; garden paths, perseveration, oscillation & --- & new\\
     \bottomrule
   \end{tabular}
   \medskip
@@ -249,11 +305,11 @@ The worked case is a generic microwave. After TIME COOK, nine zero START cooks f
   \begin{itemize}
     \item \textbf{Which prior concept is recruited is a memory question.} Properties of memory become predictions: determinacy $\Rightarrow$ perseveration; confusion $\Rightarrow$ confident misinterpretation.
     \item \textbf{When to revise is problem solving}: the impasse structure, connecting theory change to repair theory and Soar.
-    \item \textbf{Views act on types.} TIME COOK and CLOCK share a type, so one view changes both; no single view gets both right. Fixing that means \emph{splitting} the type: differentiation, in the conceptual-change sense (Carey; Thagard). Not yet in CogLean.
+    \item \textbf{Concepts must sometimes split.} Views act on types, so shared types can't be told apart (proved). Differentiation is necessary, and conservative: the split changes nothing, later re-interpretation does (Carey; Thagard).
   \end{itemize}
 \end{frame}
 \note{
-What does formalizing this say about concept formation? Three things. First, which prior concept gets recruited is a memory question, so properties of memory turn into predictions about concept formation: determinacy gives perseveration, confusion gives confident misinterpretation. Second, when to revise isn't a separate learning mechanism; it's the impasse structure of problem solving. Third, views act on types. In the microwave, TIME COOK and CLOCK share a type, so any view changes both together, and no single view gets both right. Getting both right means splitting the type, which is a formal version of what accounts of conceptual change call differentiation. CogLean doesn't do that yet, and it's one of the most interesting next steps.
+What does formalizing this say about concept formation? Three things. First, which prior concept gets recruited is a memory question, so properties of memory turn into predictions about concept formation: determinacy gives perseveration, confusion gives confident misinterpretation. Second, when to revise isn't a separate learning mechanism; it's the impasse structure of problem solving. Third, because views act on types, concepts sometimes have to split: no theory with a shared type can tell its instances apart. Differentiation is then necessary, and it's conservative: the split itself changes nothing; it's the later re-interpretation that separates the concepts. And conflict-driven splitting is the difference between oscillating forever and settling on both.
 }
 
 \begin{frame}{Limitations, and next}
@@ -262,7 +318,8 @@ What does formalizing this say about concept formation? Three things. First, whi
     \textbf{Limitations}
     \begin{itemize}
       \item Memory doesn't learn during revision.
-      \item No type splitting (differentiation).
+      \item Splitting is conflict-driven, not weighed against overwriting.
+      \item View commutation proved only in instances.
       \item An illustrative device; no data.
       \item ACT-R without retrieval as use.
       \item Parts of the 1987 learner not formalized.
@@ -271,14 +328,14 @@ What does formalizing this say about concept formation? Three things. First, whi
     \textbf{Next}
     \begin{itemize}
       \item Learning which views succeed for which cues.
-      \item Type splitting as differentiation.
+      \item Choosing between splitting and overwriting.
       \item A second reviser on the same loop.
       \item Contact with data: instructionless-learning protocols (Shrager \& Klahr 1986).
     \end{itemize}
   \end{columns}
 \end{frame}
 \note{
-The limitations are real. Memory doesn't learn while the theory is being revised, so a cue never comes to retrieve a better view. Type splitting isn't formalized. The device and the prior knowledge are illustrative, and there's no data. ACT-R appears without retrieval changing memory, as in the first paper. And several mechanisms of the 1987 learner aren't formalized. Next: learning which views succeed for which cues; type splitting as differentiation; a second, different reviser on the same loop, to see the loop's results transfer between revision processes the way the confusion pattern transferred between domains; and contact with data, starting with the instructionless-learning protocols.
+The limitations are real. Memory doesn't learn while the theory is being revised, so a cue never comes to retrieve a better view. Splitting is driven by conflict and isn't weighed against overwriting, and the commutation of views is certified only in instances. The device and the prior knowledge are illustrative, and there's no data. ACT-R appears without retrieval changing memory, as in the first paper. And several mechanisms of the 1987 learner aren't formalized. Next: learning which views succeed for which cues; a learner that chooses between splitting and overwriting; a second, different reviser on the same loop, to see the loop's results transfer between revision processes the way the confusion pattern transferred between domains; and contact with data, starting with the instructionless-learning protocols.
 }
 
 \begin{frame}{Take-home}
@@ -289,7 +346,8 @@ The limitations are real. Memory doesn't learn while the theory is being revised
       \item a phenomenon first stated for arithmetic;
       \item the decision cycle.
     \end{itemize}
-    \item The new parts went into the library in general form.
+    \item The new parts went into the library in general form: view retrieval, the revision loop, view composition, type splitting.
+    \item Differentiation: necessary when types are shared (proved), conservative, and what ends oscillation.
     \item Results at every level: for every learner; for every memory with a law; at a setting, as witnesses.
   \end{itemize}
   \bigskip

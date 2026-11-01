@@ -43,7 +43,7 @@
 \begin{abstract}
 A companion paper introduced CogLean, a library of cognitive theory in the Lean proof assistant, and argued that formalized theories can accumulate: mechanisms defined once, phenomena stated apart from any mechanism, and theorems reused when theories are composed. Its demonstration was multi-digit arithmetic. A library is cumulative only if it serves domains it was not built for. Here we take CogLean to a different area of cognition: how people form concepts of something new by applying concepts they already have. We formalize view application (Shrager, 1987), in which a learner understands a novel device or domain by merging a prior schema, a \emph{view}, into a current theory, and we add the two things it lacked: an account of which view is brought in, and of when the theory is revised.
 
-Both additions are built from CogLib components developed for the arithmetic work. Which view is brought in is decided by retrieval through the same memory interface, so EPAM-style and ACT-R-style memories can be exchanged, and their proved laws apply. When the theory is revised is decided by the same decision cycle that runs the arithmetic solver: a failed prediction is an impasse, and applying a view is the repair. We prove results at the levels the companion paper distinguished. In general, for any theories, actions and revision processes, a failed prediction is exactly an impasse and a correct theory is never revised. For view retrieval, a cue confused with another brings in the other's view, and the confusion-error pattern first stated for arithmetic holds again, through a different mechanism. For a class of memories, every memory with the law of determinacy makes a learner who keeps consulting one cue keep applying the same failed interpretation, a formal account of perseveration. Earlier view-application results in the library show the same process removing over-extension from number concepts while leaving typicality unchanged. A worked case, learning a microwave oven, gives concrete witnesses; its exact values are in an appendix. The point is not the microwave but the reuse: a different domain, much of the same library, and phenomena that transfer across domains.
+Both additions are built from CogLib components developed for the arithmetic work. Which view is brought in is decided by retrieval through the same memory interface, so EPAM-style and ACT-R-style memories can be exchanged, and their proved laws apply. When the theory is revised is decided by the same decision cycle that runs the arithmetic solver: a failed prediction is an impasse, and applying a view is the repair. We prove results at the levels the companion paper distinguished. In general, for any theories, actions and revision processes, a failed prediction is exactly an impasse and a correct theory is never revised. For view retrieval, a cue confused with another brings in the other's view, and the confusion-error pattern first stated for arithmetic holds again, through a different mechanism. For a class of memories, every memory with the law of determinacy makes a learner who keeps consulting one cue keep applying the same failed interpretation, a formal account of perseveration. Views can also be composed from parts (a key enters a number; the number is a time, or a duration), and a revision can then replace one part and keep the rest. Because views re-interpret types, we prove that no theory in which two keys share a type can tell them apart, which makes \emph{differentiation}, splitting a type, necessary rather than optional; we prove that a split by itself changes no prediction, and show that a learner who splits when a revision would undo an explanation learns both keys, while one who cannot split never does and oscillates between interpretations. Earlier view-application results in the library show the same process removing over-extension from number concepts while leaving typicality unchanged. A worked case, learning a microwave oven, gives concrete witnesses; its exact values are in an appendix. The point is not the microwave but the reuse: a different domain, much of the same library, and phenomena that transfer across domains.
 \end{abstract}
 
 \section{Introduction}
@@ -61,7 +61,7 @@ The 1987 account left two things open. It had no principled account of which vie
   \item \textbf{When to revise: the decision cycle.} The arithmetic model's backup was a problem solver on CogLib's decision cycle, with impasses and repairs in the tradition of repair theory and Soar \citep{brown1980,laird1987}. Revising a theory at a failed prediction has the same shape. The failed prediction is an impasse, and applying a view is the repair.
 \end{enumerate}
 
-Section~\ref{sec:va} summarizes view application as formalized in CogLib, with the concept results it already supports. Section~\ref{sec:select} adds retrieval of views, and Section~\ref{sec:revise} the revision loop. Section~\ref{sec:phen} presents the phenomena, including one that transfers from arithmetic. Section~\ref{sec:shared} states what was shared and what was new. Section~\ref{sec:case} gives a worked case, qualitatively. Section~\ref{sec:discussion} discusses what this does and does not show. As in the companion paper, the general theorems are the result; the numerical values at an illustrative setting (Appendix~\ref{app:setting}) are witnesses that the hypotheses can be met and that memories differ.
+Section~\ref{sec:va} summarizes view application as formalized in CogLib, with the concept results it already supports. Section~\ref{sec:select} adds retrieval of views, and Section~\ref{sec:revise} the revision loop. Section~\ref{sec:phen} presents the phenomena, including one that transfers from arithmetic. Section~\ref{sec:diff} composes views from parts and adds differentiation. Section~\ref{sec:shared} states what was shared and what was new. Section~\ref{sec:case} gives a worked case, qualitatively. Section~\ref{sec:discussion} discusses what this does and does not show. As in the companion paper, the general theorems are the result; the numerical values at an illustrative setting (Appendix~\ref{app:setting}) are witnesses that the hypotheses can be met and that memories differ.
 
 \section{View application in CogLib}
 \label{sec:va}
@@ -169,6 +169,19 @@ Both are mechanism-independent predicates; as with the confusion-error pattern, 
 
 \paragraph{Perseveration, for a class of memories.} Combining the loop with the law of determinacy gives a class-level result (\lean{revise\_same\_of\_determinate}). For every memory with the law, a view-application learner revising by a given cue brings in one and the same retrieval at every attempt and from every theory. Two conditions apply: the memory is in a state reachable by study, and it is not changed by revising. A learner who keeps consulting only that cue keeps re-applying a failed interpretation. This is a formal relative of fixation and \emph{Einstellung} \citep{luchins1942}: the persistence follows from a property of memory, not from anything about the device or the view. A memory without the law, such as ACT-R's, can retrieve different views from the same cue, and escape. The result says the law is sufficient for perseveration in this loop; it does not say the law is necessary, or that people's memories have it.
 
+\section{Composing views, and differentiation}
+\label{sec:diff}
+
+\paragraph{Views from parts.} A view such as SET-A-TIME bundles two ideas: that a key enters a number, and that the number is a time of day. Decomposed, they are separate views: SET-A-NUMBER, and NUMBER-IS-A-TIME or NUMBER-IS-A-DURATION, each mentioning one slot of the key's type. View application composes them because its merge lets a view win only on the slots it mentions; every other slot, including one an earlier view supplied, survives (\lean{merge\_keeps\_unmentioned}, \code{CogLib/Process/ViewComposition.lean}). In the microwave, no single part makes a prediction; any two of the right kind do, in either order; and replacing NUMBER-IS-A-TIME by NUMBER-IS-A-DURATION keeps ``the key enters a number'' (\lean{one\_view\_not\_enough}, \lean{two\_views\_compose}, \lean{revision\_keeps\_number}). A revision can thus change part of an interpretation and keep the rest: tuning rather than restructuring, in Rumelhart and Norman's terms \citep{rumelhart1976}. That views on disjoint slots commute in general is open; the instances are certified.
+
+\paragraph{Why differentiation is needed.} Views re-interpret \emph{types}: every instance of a matched type changes together. When predictions read an action's type only through its slots, two actions of one type are read alike (\lean{same\_parent\_same\_reading}, \code{CogLib/Process/TypeSplit.lean}). In the microwave this becomes an impossibility for \emph{every} theory: if TIME COOK and CLOCK share a type and both enter a number, 9~0~START is predicted alike after either, so no such theory predicts both cooking for 90 seconds and an invalid time (\lean{never\_both\_shared}). No choice of view, and no amount of revision, can fix this. The concept must split.
+
+\paragraph{Splitting a type.} \code{splitType} copies an action's type, with the same kind and slots, and re-parents the action to the copy; \code{retarget} aims a view at a chosen type. Two general results: a split by itself changes no prediction (\lean{split\_conservative}), and it separates the action from the other instances of its old type (\lean{split\_separates}). Differentiation is therefore conservative: it does not change what the learner believes, only what it can come to believe. This matches the accounts of conceptual change in which one undifferentiated concept becomes two \citep{carey1985,thagard1992}.
+
+\paragraph{When to split.} The learner (\code{viewSplitReviser}) splits when re-interpreting the failing action's type would break an episode it has already explained, which is conflict-driven differentiation; otherwise it applies retrieved views to the failing action's type. To support this, the revision loop now records the episodes it has explained, and a learner's cues may depend on them and on the current theory; the loop's theorems are unchanged.
+
+\paragraph{Consequences.} With the microwave's episodes TIME COOK, then CLOCK, then TIME COOK again, a learner that cannot split never ends knowing both keys, as the impossibility theorem requires, and every such learner that finishes \emph{oscillates}: the clock's meaning displaces cooking's, and cooking's comes back. A learner that splits on conflict ends knowing both whenever it finishes, and never oscillates (\lean{no\_split\_session}, \lean{split\_session}). Oscillation is stated, like the garden path, as a mechanism-independent predicate over the interpretations adopted for a type (\code{oscillates}). These results concern representation, not memory, so the sessions use EPAM's net only.
+
 \section{What was shared, and what was new}
 \label{sec:shared}
 
@@ -189,7 +202,7 @@ Decision cycle with impasses and repairs & yes (solver) & yes (revision loop) & 
 Knowledge nets (semantic nets over terms) & --- & yes & theories and views; shared with concepts and semantic memory \\
 View application & --- & yes & the revision itself \\
 \addlinespace
-\emph{New}: theory execution; view retrieval; the revision loop; garden paths and perseveration & --- & new & general, in CogLib; no device terms \\
+\emph{New}: theory execution; view retrieval; the revision loop; view composition; type splitting; garden paths, perseveration, oscillation & --- & new & general, in CogLib; no device terms \\
 \bottomrule
 \end{tabularx}
 \caption{The CogLib components used by the arithmetic model of the companion paper and by concept formation here. The new components are general and live in CogLib; the microwave of Section~\ref{sec:case} is data in its own package.}
@@ -239,20 +252,20 @@ With EPAM's net, TIME COOK and CLOCK are confused with the VCR's SET TIME. So th
 \begin{itemize}
   \item \textbf{Which prior concept is recruited is a memory question.} With retrieval as the selector, properties of memory become predictions about concept formation: determinacy implies perseveration, and confusion implies confident misinterpretation.
   \item \textbf{Revision as problem solving.} When to revise is not a separate learning mechanism but the impasse structure of problem solving, connecting theory change to the repair-theory and Soar traditions.
-  \item \textbf{Views act on types.} Because a view re-interprets an operation \emph{type}, every key of that type changes together. In the microwave, TIME COOK and CLOCK share a type, so no single view makes both right. Getting both right requires splitting the type, which is a formal version of the differentiation of concepts that accounts of conceptual change describe \citep{carey1985,thagard1992}. CogLean does not yet do this.
+  \item \textbf{Views act on types, so concepts must sometimes split.} Because a view re-interprets a \emph{type}, no theory in which two actions share a type can tell them apart. Differentiation is then necessary, and it is conservative: the split itself changes nothing, and only later re-interpretation separates the concepts. Conflict-driven splitting is the difference between oscillating forever between two interpretations and settling on both.
 \end{itemize}
 
 \paragraph{Limitations.}
 \begin{itemize}
   \item Memory does not learn during revision: a cue never comes to retrieve a better view. Associating cues with the views that succeeded, or discriminating a cue after an error, is needed.
-  \item Splitting a type when its instances diverge (differentiation) is not formalized.
+  \item Splitting is conflict-driven and, when offered, the only repair; a learner that weighed splitting against overwriting would need weighted repair choice or critics that test a repair's result, which the problem solver does not yet provide. That views on disjoint slots commute is proved only in instances.
   \item The microwave, its cues and the learners' prior knowledge are illustrative, and the numbers are not predictions about people. No data are fitted.
   \item ACT-R's memory appears without retrieval as use, as in the companion paper; its values would change.
   \item Several mechanisms of the 1987 learner are not formalized, among them multiple view sources and combinations of selection by activation with selection by retrieval.
   \item As in the companion paper, every result is conditional on its premises, and none is an empirical finding.
 \end{itemize}
 
-\paragraph{Future work.} The natural next steps are learning in memory; type splitting as a formal account of differentiation; a second reviser (rule induction or hypothesis testing) on the same loop, to show that the loop's results transfer between revision processes as the confusion-error pattern transferred between domains; and contact with data, of which the instructionless-learning protocols \citep{shrager1986} are the obvious first source.
+\paragraph{Future work.} The natural next steps are learning in memory; the general commutation law for views; a learner that chooses between splitting and overwriting; a second reviser (rule induction or hypothesis testing) on the same loop, to show that the loop's results transfer between revision processes as the confusion-error pattern transferred between domains; and contact with data, of which the instructionless-learning protocols \citep{shrager1986} are the obvious first source.
 
 \paragraph{Conclusion.} CogLean was built around arithmetic. Taken to concept formation, it supplied the memory interface and its laws, a phenomenon stated for arithmetic, and the decision cycle. View application needed only new components that are themselves general. The results were proved at the levels the companion paper set out: for every learner, for every memory with a law, and at a setting as a witness. The library is still small. But this is the behavior a cumulative library should show.
 
@@ -281,7 +294,11 @@ The confusion-error pattern for view retrieval & \lean{view\_confusion\_pattern}
 An impasse is a failed prediction; a correct theory is never revised & \lean{impasse\_iff\_fails}, \lean{correct\_theory\_stable} (\code{CogLib/Process/TheoryRevision}) \\
 The view reviser: its theories; memory fixed; perseveration for determinate memories & \lean{viewReviser\_theory}, \lean{viewReviser\_mem}, \lean{revise\_same\_of\_determinate} (\code{CogLib/Process/ViewRevision}) \\
 Predictions depend only on the actions' function slots & \lean{predict\_congr} (\code{CogLib/Process/TheoryExecution}) \\
-Garden path; perseveration & \lean{gardenPath}, \lean{perseverates} (\code{CogLib/Phenomena/TheoryChange}) \\
+Garden path; perseveration; oscillation & \lean{gardenPath}, \lean{perseverates}, \lean{oscillates} (\code{CogLib/Phenomena/TheoryChange}) \\
+A view keeps what it does not mention & \lean{merge\_keeps\_unmentioned} (\code{CogLib/Process/ViewComposition}) \\
+A split changes no prediction; it separates; one type, one reading & \lean{split\_conservative}, \lean{split\_separates}, \lean{same\_parent\_same\_reading} (\code{CogLib/Process/TypeSplit}) \\
+Microwave: no theory with a shared type predicts both keys & \lean{never\_both\_shared} (\code{DeviceLearning/Microwave}) \\
+Microwave: composing views; sessions with and without splitting & \lean{one\_view\_not\_enough}, \lean{two\_views\_compose}, \lean{revision\_keeps\_number}, \lean{no\_split\_session}, \lean{split\_session} (\code{DeviceLearning/Differentiation}) \\
 Microwave: memory facts; predictions of the views & \lean{net\_facts}, \lean{act\_graded}, \lean{view\_predictions} (\code{DeviceLearning/Session}) \\
 Microwave: the pattern; perseveration; sessions; a correct theory kept & \lean{epam\_confusion\_pattern}, \lean{epam\_revisions\_same}, \lean{epam\_two\_cues}, \lean{act\_two\_cues}, \lean{epam\_label\_only}, \lean{act\_label\_only}, \lean{duration\_kept} \\
 \bottomrule
@@ -315,6 +332,23 @@ ACT-R, label only & $67450/279841 \approx .24$ & $251280/279841 \approx .90$ & $
 \end{tabular}
 \caption{Exact values (\lean{epam\_two\_cues}, \lean{act\_two\_cues}, \lean{epam\_label\_only}, \lean{act\_label\_only}). The garden-path and perseveration columns are computed over the interpretations brought in, ignoring retrievals that called up nothing.}
 \label{tab:values}
+\end{table}
+
+\paragraph{Decomposed views and splitting.} A third prior item, a calculator keypad, is stored with SET-A-NUMBER; the digit keys are a cue for it, and EPAM's net notices digits first. The episodes are TIME COOK 9~0~START, CLOCK 9~0~START, and TIME COOK 9~0~START again; sessions run for at most twelve decision cycles.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Learner & Knows both keys & Finishes & Oscillates \\
+\midrule
+Cannot split & $0$ & $5/6$ & $5/6$ \\
+Splits on conflict & $5/6$ & $5/6$ & $0$ \\
+\bottomrule
+\end{tabular}
+\caption{Exact values (\lean{no\_split\_session}, \lean{split\_session}). In both, the $1/6$ that do not finish brought in a wrong meaning last on the first episode and ran out of cues. Every splitting learner that finishes knows both keys.}
+\label{tab:diff}
 \end{table}
 
 These values are consequences of the chosen setting, not predictions about people.
