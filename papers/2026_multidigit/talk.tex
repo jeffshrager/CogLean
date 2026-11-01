@@ -422,8 +422,9 @@ Two more consequences. First, whole-problem errors don't depend on the solver at
     & EPAM net & ACT-R memory\\
     \midrule
     $150+100$ answered 200 by retrieval & $45/46$ & $225/529 \approx .43$\\
-    $150+100$ reaches the solver & $1/46$ & $383/1058 \approx .36$\\
-    $150+100$ answered correctly & $\approx .014$ & $\approx .238$\\
+    $150+100$: solver invoked & $1/46$ & $383/1058 \approx .36$\\
+    \quad solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$\\
+    \quad correct overall (invoked \emph{and} correct) & $\approx .014$ & $\approx .238$\\
     practiced $100+100$: overall errors & $\approx .0073$ & $\approx .334$\\
     \quad after also studying $100+300$ & unchanged & $\approx .616$\\
     \midrule
@@ -439,28 +440,48 @@ Two more consequences. First, whole-problem errors don't depend on the solver at
   \end{itemize}
 \end{frame}
 \note{
-Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's declarative memory and change nothing else. The confident-error pattern is proved for any memory with three laws: determinacy, certainty and stability. EPAM's net has all three at every setting; ACT-R's memory has none of them, also proved. So the theorem applies to EPAM and never to ACT-R. But be careful about what that means. It doesn't mean ACT-R can't make similar errors; at this setting it answers two hundred about forty-three percent of the time. What fails is the exact pattern: ACT-R's confusion is graded, and its solver use differs from the familiar problem's. It also predicts interference: studying a new problem raises the errors on a practiced one, which EPAM never does. All the numbers are exact, at one illustrative setting.
+Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's declarative memory and change nothing else. The confident-error pattern is proved for any memory with three laws: determinacy, certainty and stability. EPAM's net has all three at every setting; ACT-R's memory has none of them, also proved. So the theorem applies to EPAM and never to ACT-R. But be careful about what that means. It doesn't mean ACT-R can't make similar errors; at this setting it answers two hundred about forty-three percent of the time. What fails is the exact pattern: ACT-R's confusion is graded, and its solver use differs from the familiar problem's. A note on the solver rows: the solver is right about sixty-six percent of the time when it's invoked; the overall figure is that times how often it's invoked. It also predicts interference: studying a new problem raises the errors on a practiced one, which EPAM never does. All the numbers are exact, at one illustrative setting.
 }
 
 \begin{frame}{One memory for both levels}
-  \small
   Column facts from the \emph{same} memory as whole problems: each digit pair $d+e$ is coded as a problem, recognized, and retrieved in the same strength table; fingers and counting if that fails.
   \begin{itemize}
     \item \textbf{The old model is a special case}: a pair recognized as itself gives exactly the DOA fact (\code{memFact\_self}), so every earlier theorem carries over.
     \item \textbf{Confident errors one level down}: a pair taken for another states the other's sum (\code{column\_confident\_errors}), with no new proof.
+    \item \textbf{Noninterference needs a condition}: EPAM's practice stays undisturbed \emph{given} that the problem's digit pairs were learned (\code{shared\_learning\_preserves\_trial}). The old theorem held the solver fixed; here learning could change it.
   \end{itemize}
-  \begin{tabular}{lcc}
-    \toprule
-    memory studies $0+0$, $5+0$, $1+1$, $100+100$, $100+200$ & EPAM & ACT-R\\
-    \midrule
-    $0+0$ answered 5 (retrieves $5+0$) & 0 & $120/2167$\\
-    solver correct on $150+100$ (separate table: $.656$) & $.656$ & $\approx .385$\\
-    errors on practiced $100+100$ (separate table) & $.0073$ ($.0073$) & $\approx .386$ ($.334$)\\
-    \bottomrule
-  \end{tabular}
 \end{frame}
 \note{
-So far the solver's single-digit facts came from their own table, separate from the memory that recognizes whole problems. A child has one memory, so we removed the separation. Each digit pair, say five plus zero, is coded as a problem in the same code space, recognized by the same memory, and retrieved from the same strength table, with fingers and counting if retrieval fails. Two things follow from theorems already in the library. First, if a pair is recognized as itself, its fact is exactly the old DOA fact, so the old model is a special case and every earlier theorem carries over. Second, a pair taken for another pair gives confident errors one level down, by the same general theorem, with no new proof. And the memories diverge further. EPAM recognizes every pair as itself, so nothing changes. ACT-R confuses pairs: zero plus zero sometimes retrieves five plus zero and is answered five, and the solver's accuracy on one fifty plus one hundred drops from about sixty-six percent to under forty. Two caveats: this is ACT-R without retrieval changing memory, and finger counting is an implausible fallback for someone doing three-digit addition.
+So far the solver's single-digit facts came from their own table, separate from the memory that recognizes whole problems. A child has one memory, so we removed the separation. Each digit pair, say five plus zero, is coded as a problem in the same code space, recognized by the same memory, and retrieved from the same strength table, with fingers and counting if retrieval fails. Three things follow. First, if a pair is recognized as itself, its fact is exactly the old DOA fact, so the old model is a special case and every earlier theorem carries over. Second, a pair taken for another pair gives confident errors one level down, by the same general theorem, with no new proof. Third, a caution: the old noninterference theorem held the solver fixed while the net learned. With one memory, learning could change the solver too, so noninterference needs a condition: it holds when the problem's digit pairs were themselves learned, and that we prove.
+}
+
+\begin{frame}{One memory: the numbers}
+  \small
+  Memory studies $0+0$, $5+0$, $1+1$, then $100+100$, $100+200$.
+  \medskip
+
+  \begin{tabular}{lccc}
+    \toprule
+    & EPAM & ACT-R, & ACT-R,\\
+    & & separate table & one memory\\
+    \midrule
+    $0+0$ answered 5 (retrieves $5+0$) & 0 & 0 & $120/2167$\\
+    $150+100$: solver invoked & $1/46$ & $\approx .407$ & $\approx .407$\\
+    \quad solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ & $\approx .385$\\
+    \quad correct overall & $\approx .014$ & $\approx .267$ & $\approx .157$\\
+    errors on practiced $100+100$ & $\approx .0073$ & $\approx .334$ & $\approx .386$\\
+    \bottomrule
+  \end{tabular}
+  \medskip
+
+  \begin{itemize}
+    \item The middle column is a control: same five items in memory, but the solver doesn't use it.
+    \item Extra items alone: \emph{more} correct (.238 $\to$ .267). Sharing the memory: fewer (.157).
+    \item ACT-R without retrieval as use; finger counting is an implausible column fallback.
+  \end{itemize}
+\end{frame}
+\note{
+Here are the numbers, with the memory holding three digit pairs and the two problems. EPAM recognizes every pair as itself, so nothing changes from before. ACT-R confuses pairs: zero plus zero sometimes retrieves five plus zero and is answered five. Two things changed at once for ACT-R, the memory holds more items and the solver uses it, so the middle column is a control: the same five items in memory, but the solver keeps its separate table. The extra items alone actually raise correct answers a little, from about twenty-four to twenty-seven percent, because more problems reach an accurate solver. It's the solver's use of the memory that brings them down to about sixteen: the solver's accuracy when invoked drops from sixty-six percent to under forty. Two caveats: this is ACT-R without retrieval changing memory, and finger counting is an implausible fallback for someone doing three-digit addition.
 }
 
 \begin{frame}{What each result rests on}

@@ -24,8 +24,8 @@ What each result rests on:
 | Kind | Results |
 |---|---|
 | **Consequence of the composition** (every memory, encoding, strength table and DOA parameter set) | `sharedBackup_eq_columns`; `memFact_self` (with each pair recognized as itself, a column fact *is* the DOA fact on the pair's associations); `sharedBackup_reduces`, `strial_reduces`, `strial_net_reduces` (so the shared model is the integrated model of `Integrated.lean`, and inherits its theorems); `mass_colBackup`, `same_memFastFact` |
-| **Conditional**, given the conditions named in its docstring | `column_confident_errors` (a digit pair confused with another, sharp associations: the confusion-error pattern at the column level); `confused_column_gives_neighbours_sum` |
-| **The illustrative setting** (chosen numbers) | `setting_*`: EPAM's net learns the three digit pairs and the two problems, and the shared model gives the integrated model's values; ACT-R's memory, studying the same five, does not: column facts and whole problems compete for retrieval |
+| **Conditional**, given the conditions named in its docstring | `shared_learning_preserves_trial` (given that the problem and its digit pairs were learned); `column_confident_errors` (a digit pair confused with another, sharp associations: the confusion-error pattern at the column level); `confused_column_gives_neighbours_sum` |
+| **The illustrative setting** (chosen numbers) | `setting_*`: EPAM's net learns the three digit pairs and the two problems, and the shared model gives the integrated model's values; ACT-R's memory, studying the same five, does not: column facts and whole problems compete for retrieval; `setting_act_control` (ACT-R with the five items but the separate table) separates the effect of the extra items from that of sharing |
 
 The memory here is stateless during a trial: retrieval does not change it.
 ACT-R's retrieval as use is open (OPEN_ISSUES #24, stage 2).
@@ -153,6 +153,28 @@ theorem mass_colBackup (E : Encoding) (str : Item → Nat → Rat) (as : List Na
   split
   · exact mass_pure _
   · exact mass_bind _ _ (SC.mass_count _ _ _) fun _ => mass_pure _
+
+/-- **Practiced problems stay practiced, with one memory**, given that the
+problem and its three digit pairs were all learned. Learning a new code `z`
+leaves a problem's trial unchanged when the net recognizes the problem's code
+and its columns' digit pairs as themselves. EPAM's learning preserves those
+recognitions (`learn_preserves`), so both sides reduce to the integrated
+model with the same column facts (`strial_net_reduces`), and the fixed-backup
+theorem applies (`learning_preserves_trial`). Without the condition on the
+digit pairs the result is not proved: learning can change how an unlearned
+pair is sorted, and so the solver. -/
+theorem shared_learning_preserves_trial (E : Encoding) (N : Net) (str : Item → Nat → Rat)
+    (as : List Nat) (cc : Rat) (n : Nat) (cas : List Nat) (bk : SC.Backup) (ccc : Rat) (cn : Nat)
+    (order : NoticingOrder) (q : Problem) (z : Item)
+    (hq : Net.Recognizes N (E.code q)) (hz : E.code q ≠ z)
+    (hp : ∀ j, Net.Recognizes N (pairCode E (q.digit .first j, q.digit .second j)))
+    (hpz : ∀ j, pairCode E (q.digit .first j, q.digit .second j) ≠ z) :
+    strial (N.learn order z).retrieve E str as cc n cas bk ccc cn q =
+      strial N.retrieve E str as cc n cas bk ccc cn q := by
+  rw [strial_net_reduces E (N.learn order z) str as cc n cas bk ccc cn q
+      (fun j => Net.learn_preserves order N z _ (hp j) (hpz j)),
+    strial_net_reduces E N str as cc n cas bk ccc cn q hp, Integrated.itrial, Integrated.itrial]
+  exact learning_preserves_trial E N str as cc n _ order q z hq hz
 
 /-! ### Conditional results -/
 
@@ -332,6 +354,58 @@ theorem setting_epam_values :
       prob (sit snet.retrieve q1) (fun o => o.2 == 200) = 868108399577 / 874503125000 := by
   rw [setting_epam_reduces.1, setting_epam_reduces.2]
   simp only [prob_itrial_fast]
+  decide +kernel
+
+/-- **EPAM's solver in the setting, with one memory**: 150 + 100 is answered
+200 by retrieval with probability 45/46; the solver is invoked with 1/46, and correct when invoked with probability about .656
+(the integrated model's values, by `sharedBackup_reduces`). -/
+theorem setting_epam_solver :
+    prob (sit snet.retrieve x) (wholeSuch (· == 200)) = 45 / 46 ∧
+      prob (sit snet.retrieve x) isColumns = 1 / 46 ∧
+      prob (sharedBackup snet.retrieve bcd sstr F0.as F0.bk F0.cc F0.n x) (· == 250) =
+        4991328328911197 / 7604375000000000 := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [setting_epam_reduces.1, prob_itrial_fast]
+    decide +kernel
+  · rw [setting_epam_reduces.1, prob_itrial_fast]
+    decide +kernel
+  · rw [sharedBackup_reduces _ _ _ _ _ _ _ x
+      (fun j => Net.retrieve_of_select _ _ _ (by cases j <;> decide +kernel)),
+      ← (same_fastBackup _ x).prob]
+    decide +kernel
+
+set_option maxRecDepth 100000 in
+/-- **A control for ACT-R: the five items studied, the separate table.** ACT-R's
+memory holds the digit pairs and the problems, but the solver uses DOA's
+separate table, as in `Integrated.lean`. 150 + 100 is answered 200 by
+retrieval with probability 10800/27301 and reaches the solver with
+11101/27301 (as with one memory: whole-problem retrieval never involves the
+solver), is answered correctly overall with about .267, and 100 + 100 is
+answered wrongly with about .334. Against `setting_actr_x` (two items: .238
+correct) and `setting_act_values` (one memory: .157), the extra items alone
+raise correct answers slightly; using the memory inside the solver lowers
+them. -/
+theorem setting_act_control :
+    prob (trialWith sact bcd sstr answers (1 / 2) 1 (solverBackup F0) x) (wholeSuch (· == 200)) =
+        10800 / 27301 ∧
+      prob (trialWith sact bcd sstr answers (1 / 2) 1 (solverBackup F0) x) isColumns = 11101 / 27301 ∧
+      prob (trialWith sact bcd sstr answers (1 / 2) 1 (solverBackup F0) x) (fun o => o.2 == 250) =
+        55408735779243197897 / 207607041875000000000 ∧
+      prob (trialWith sact bcd sstr answers (1 / 2) 1 (solverBackup F0) q1) (fun o => o.2 != 200) =
+        131288248218771 / 393089154687500 := by
+  simp only [prob_trialWith_same _ bcd sstr answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) x
+      (fun h => (same_fastBackup F0 x h).symm),
+    prob_trialWith_same _ bcd sstr answers (1 / 2) 1 (solverBackup F0) (fastBackup F0) q1
+      (fun h => (same_fastBackup F0 q1 h).symm)]
+  decide +kernel
+
+/-- Neither EPAM's net with one memory nor DOA's separate table ever answers
+0 + 0 with 5. -/
+theorem setting_00_not_5 :
+    prob (memFact snet.retrieve bcd sstr F0.as F0.bk F0.cc F0.n 0 0) (· == 5) = 0 ∧
+      prob (F0.fact 0 0) (· == 5) = 0 := by
+  rw [← (same_memFastFact snet.retrieve bcd sstr F0.as F0.bk F0.cc F0.n 0 0).prob,
+    ← (same_fastFact F0 0 0).prob]
   decide +kernel
 
 /-- ACT-R's column fact for 0 + 0 in the setting. -/

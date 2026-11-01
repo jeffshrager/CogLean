@@ -340,33 +340,55 @@ So the general confident-errors theorem applies to EPAM and never to ACT-R: its 
 \small
 \begin{tabularx}{\linewidth}{@{}Xcc@{}}
 \toprule
+\multicolumn{3}{@{}l}{\textbf{A. Separate column-fact table.} Memory holds $100+100$, $100+200$; columns use DOA's own table} \\
+\midrule
 & EPAM net & ACT-R memory \\
 \midrule
 $150+100$ retrieves $100+100$ & certainly & with probability $10/23$ \\
 $150+100$ answered 200 by whole-problem retrieval & $45/46$ & $225/529 \approx .43$ \\
 $150+100$ answered 300 (taken for $100+200$) & $0$ & $225/1058 \approx .21$ \\
-$150+100$ reaches the column solver & $1/46$ & $383/1058 \approx .36$ \\
-$150+100$ answered correctly (250), by the solver & $\approx .014$ & $\approx .238$ \\
+$150+100$: solver invoked & $1/46 \approx .022$ & $383/1058 \approx .36$ \\
+$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ \\
+$150+100$ answered correctly (250) overall, all via the solver & $\approx .014$ & $\approx .238$ \\
 \midrule
 practiced $100+100$: errors by whole-problem retrieval & $0$ & $225/782 \approx .29$ \\
-practiced $100+100$: errors overall, with the solver & $\approx .0073$ & $\approx .334$ \\
+practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ \\
 after also studying $100+300$: whole-problem retrieval & $0$ & $3375/5842 \approx .58$ \\
 after also studying $100+300$: overall & $\approx .0073$ (unchanged) & $\approx .616$ \\
 \midrule
-\multicolumn{3}{@{}l}{\emph{One memory for both levels} (\S\ref{sec:shared}): the memory also studies $0+0$, $5+0$, $1+1$} \\
-$0+0$ answered 5 (retrieves $5+0$) & $0$ & $120/2167$ \\
-solver correct on $150+100$ (separate table: $\approx .656$) & $\approx .656$ & $\approx .385$ \\
-practiced $100+100$: errors overall & $\approx .0073$ & $\approx .386$ \\
-\midrule
-for every setting (general theorems) & confident-error theorem applies; & its hypotheses never hold; \\
+for every setting, with this solver & confident-error theorem applies; & its hypotheses never hold; \\
 & practice never disturbed & interference possible \\
 \bottomrule
 \end{tabularx}
-\caption{The same application with two memories, at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. All values are exact and proved in Lean. Rows about whole-problem retrieval do not depend on the backup (\lean{whole\_independent\_of\_solver}), so they are the same in \code{ExampleACTR.lean}, which uses an exact backup. Rows about answers overall use the integrated model, with its fallible solver (\lean{setting\_actr\_x}, \lean{setting\_practiced\_errors}). EPAM's overall errors on $100+100$ are the solver's own; after studying $100+300$ they are unchanged, by \lean{MD.learning\_preserves\_trial}, which holds for every backup. The last row states what holds at every setting. Except in the block for one memory, the solver's single-digit facts come from DOA's separate association table; in that block they come from the same memory as whole problems.}
+\caption{The integrated model with two memories, at one illustrative setting: the binary-coded encoding, both memories having studied $100+100$ and then $100+200$, the same associations, criterion $1/2$, search length 1, and the same solver, whose single-digit facts come from DOA's separate association table. ACT-R's parameters are a mismatch penalty $\mu = 1/2$ over 24 features and a failure weight $\theta = 1/10$. All values are exact and proved in Lean. ``Correct overall'' is the joint probability that the solver is invoked and is correct: the product of the two rows above it (only the solver ever gives 250). Rows about whole-problem retrieval do not depend on the backup (\lean{whole\_independent\_of\_solver}), so they are the same in \code{ExampleACTR.lean}, which uses an exact backup. Rows about answers overall use the integrated model (\lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_actr\_x}, \lean{setting\_practiced\_errors}). EPAM's overall errors on $100+100$ are the solver's own; after studying $100+300$ they are unchanged, by \lean{MD.learning\_preserves\_trial}, which holds for every backup that learning leaves fixed, as this solver's table is. The last row states what holds at every setting for this configuration.}
 \label{tab:memories}
 \end{table}
 
-With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM predicts no interference, for every net and every backup (\lean{MD.learning\_preserves\_trial}). The difference is between kinds of memory, and the laws say which property of memory produces it.
+\begin{table}[t]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}Xccc@{}}
+\toprule
+\multicolumn{4}{@{}l}{\textbf{B. One memory.} Memory holds $0+0$, $5+0$, $1+1$, then $100+100$, $100+200$} \\
+\midrule
+& EPAM net & ACT-R, & ACT-R, \\
+& one memory & separate table & one memory \\
+\midrule
+$0+0$ answered 5 by the column process & $0$ & $0$ & $120/2167$ \\
+$150+100$ answered 200 by whole-problem retrieval & $45/46$ & $\approx .396$ & $\approx .396$ \\
+$150+100$: solver invoked & $1/46$ & $\approx .407$ & $\approx .407$ \\
+$150+100$: solver correct, \emph{given} invoked & $\approx .656$ & $\approx .656$ & $\approx .385$ \\
+$150+100$ answered correctly overall & $\approx .014$ & $\approx .267$ & $\approx .157$ \\
+practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ & $\approx .386$ \\
+\midrule
+\multicolumn{4}{@{}l}{For every setting, EPAM: practice undisturbed, given that the problem and its digit pairs were learned.} \\
+\bottomrule
+\end{tabularx}
+\caption{The model with one memory for whole problems and column facts (\S\ref{sec:shared}). The memory first studies the three digit pairs that $150+100$ and $100+100$ need, then the two problems. The middle column is a control: ACT-R's memory holds the same five items, but the solver uses DOA's separate table, so the memory's contents are as in the last column and only the solver's use of the memory differs. Rows as in Table~\ref{tab:memories}; ``correct overall'' is again the product of the two rows above it. EPAM's values are those of Table~\ref{tab:memories}, by the reduction theorem (\lean{setting\_epam\_reduces}, \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}); ACT-R's are \lean{setting\_act\_control}, \lean{setting\_act\_pairs} and \lean{setting\_act\_values}. ACT-R appears without retrieval as use. The last row is \lean{shared\_learning\_preserves\_trial}; without its condition on the digit pairs, noninterference is not proved for the shared model.}
+\label{tab:shared}
+\end{table}
+
+With EPAM, the confusion is certain and confident errors dominate. With ACT-R, the confusion is graded. $150+100$ can retrieve either familiar problem, or fail. It therefore reaches the solver far more often and is answered correctly about a quarter of the time. ACT-R also predicts interference: studying $100+300$ roughly doubles the retrieval errors on the practiced $100+100$ (\lean{act\_interference}), and raises its overall errors from about a third to about three fifths. EPAM predicts no interference, for every net and every backup that learning leaves fixed (\lean{MD.learning\_preserves\_trial}); with one memory this needs a condition (\S\ref{sec:shared}). The difference is between kinds of memory, and the laws say which property of memory produces it.
 
 \subsection{One memory for whole problems and column facts}
 \label{sec:shared}
@@ -377,9 +399,11 @@ Three results follow from theorems already in the library:
 \begin{itemize}
   \item \textbf{The separate table is a special case.} If the memory recognizes a digit pair as itself, the column fact \emph{is} the DOA fact on that pair's associations (\lean{memFact\_self}). So when each column's pair is recognized as itself, the shared model is the integrated model (\lean{strial\_reduces}, \lean{strial\_net\_reduces}), and every theorem of \S\ref{sec:results} holds of it.
   \item \textbf{Confident errors one level down.} A digit pair taken for another, whose associations are sharp, shows the confusion-error pattern: every retrieved answer is the other pair's sum, with no more fallback than the other pair (\lean{column\_confident\_errors}). The proof applies \lean{RR.confident\_errors} to digit pairs; it needed no new lemma.
-  \item \textbf{The two memories diverge further.} At the setting (the memory studies $0+0$, $5+0$ and $1+1$, then the two problems), EPAM's net recognizes all five as themselves, and every value is the integrated model's (\lean{setting\_epam\_values}). ACT-R's memory does not: digit pairs and whole problems compete for retrieval, and $0+0$ calls up $5+0$ with probability $15/197$. The consequences are in the last block of Table~\ref{tab:memories} (\lean{setting\_act\_pairs}, \lean{setting\_act\_values}): $0+0$ is sometimes answered 5, the solver's accuracy on $150+100$ falls from about $.656$ to $.385$, and errors on the practiced $100+100$ rise from $.334$ to $.386$.
+  \item \textbf{The two memories diverge further.} At the setting (the memory studies $0+0$, $5+0$ and $1+1$, then the two problems), EPAM's net recognizes all five as themselves, and every value is the integrated model's (\lean{setting\_epam\_values}). ACT-R's memory does not: digit pairs and whole problems compete for retrieval, and $0+0$ calls up $5+0$ with probability $15/197$. The consequences are in Table~\ref{tab:shared}. Two things changed at once: the memory holds three more items, and the solver now consults it. The control column separates them. With the extra items but the separate table, ACT-R's whole-problem retrieval of $150+100$ weakens (200 with probability $.396$, against $.43$), it reaches the solver more often, and since that solver is accurate, it is answered correctly \emph{more} often ($.267$, against $.238$); errors on the practiced $100+100$ are unchanged ($.334$). Using the memory inside the solver is what lowers accuracy: the solver's accuracy when invoked falls from $.656$ to $.385$, because digit pairs are confused with one another ($0+0$ is sometimes answered 5), correct answers fall to $.157$, and errors on $100+100$ rise to $.386$.
 \end{itemize}
 These ACT-R values carry the limitation stated below: retrieval does not change ACT-R's memory here. And part of ACT-R's loss comes from the fallback to finger counting, which a child doing three-digit addition would not use.
+
+\textbf{Noninterference needs a condition here.} In Table~\ref{tab:memories}, EPAM's practiced problems are never disturbed, by a theorem that holds the backup fixed while the net learns. With one memory, learning can change the backup itself: a digit pair the net has not learned may be sorted differently after it learns something new. The result transfers under a condition: if the problem and its three digit pairs were all learned, learning a new item leaves its trial unchanged (\lean{shared\_learning\_preserves\_trial}), because EPAM's learning preserves those recognitions and the model then reduces to the fixed-table one. Without the condition, noninterference for the shared model is not proved.
 
 \section{Three kinds of results}
 \label{sec:kinds}
@@ -399,7 +423,7 @@ Kind & Results & What they rest on \\
 \addlinespace
 \textbf{Conditional}: hold given stated conditions & confident errors; two sources of error; a solver error as a single-digit error in place (other columns exact); exactness of the solver (exact facts: sufficient, not necessary); confident errors for any memory with three laws & recognition conditions (derivable for EPAM nets, verified for the learned net); sharp associations (an unexplained empirical premise); exact columns; for the last, the laws themselves \\
 \addlinespace
-\textbf{At chosen settings}: exact values & $150+100$: 200 by retrieval $45/46$; solver reached $1/46$; solver correct $\approx .656$; correct overall $\approx .0143$; Table~\ref{tab:memories} & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
+\textbf{At chosen settings}: exact values & $150+100$: 200 by retrieval $45/46$; solver invoked $1/46$; solver correct when invoked $\approx .656$; correct overall (joint) $\approx .0143$; Tables~\ref{tab:memories} and~\ref{tab:shared} & an encoding, a learned net, associations, criterion and search length chosen for illustration \\
 \bottomrule
 \end{tabularx}
 \caption{The integrated model's results, by kind. Lean names are in Appendix~\ref{app:index}.}
@@ -488,7 +512,7 @@ Proof and simulation were complementary here, in a way the slogan ``simulation e
   \item The associative strengths in the worked example are chosen, not derived from experience. Siegler and Shrager's priors came from a counting process. Grounding these in learning histories is open.
   \item The strongest results depend on sharp associations and on particular recognition confusions. Confusions are derived for learned nets; sharpness is not.
   \item Single-digit DOA assumes that a representation with the right number of objects is available for elaboration and counting. As the column process of a multi-digit adder, its fallback to fingers and counting is implausible: by then single-digit facts are retrieved. The fallback should be a parameter of the column process; the general theorems do not depend on it.
-  \item ACT-R's memory is represented by its retrieval rule, without retrieval as use: memory changes when an item is studied, not when it is retrieved during a trial. Every ACT-R value here, including Table~\ref{tab:memories}, \S\ref{sec:shared} and the counterexample to the pattern, holds for that version. Full ACT-R, in which each retrieval strengthens what it retrieves, would give different values, and possibly different theorems.
+  \item ACT-R's memory is represented by its retrieval rule, without retrieval as use: memory changes when an item is studied, not when it is retrieved during a trial. Every ACT-R value here, including Tables~\ref{tab:memories} and~\ref{tab:shared} and the counterexample to the pattern, holds for that version. Full ACT-R, in which each retrieval strengthens what it retrieves, would give different values, and possibly different theorems.
   \item Carrying is error-free in the full procedure, and columns are added independently.
   \item The framework does not establish psychological plausibility. That remains a matter of evidence and judgment.
   \item Scalability is a serious question. CogLean uses exact rational distributions over finite outcome spaces. Continuous representations, large state spaces and neural models will need different techniques, and exact evaluation already required a merged evaluator here.
@@ -545,7 +569,8 @@ Integrated: rate of solver use, and its bound & \lean{integrated\_backup\_rate},
 Integrated: whole-problem errors independent of solver & \lean{whole\_independent\_of\_solver} \\
 Integrated: column route factored & \lean{columnsSuch\_prob} \\
 One memory: column fact is DOA under self-recognition; reduction to the integrated model & \lean{memFact\_self}, \lean{strial\_reduces}, \lean{strial\_net\_reduces} (\code{MultiDigit/SharedMemory}) \\
-One memory: confident errors on digit pairs; values at the setting & \lean{column\_confident\_errors}; \lean{setting\_epam\_values}, \lean{setting\_act\_pairs}, \lean{setting\_act\_values} \\
+One memory: confident errors on digit pairs; practice undisturbed given learned pairs & \lean{column\_confident\_errors}, \lean{shared\_learning\_preserves\_trial} \\
+One memory: values at the setting; ACT-R control & \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}, \lean{setting\_act\_pairs}, \lean{setting\_act\_values}; \lean{setting\_act\_control} \\
 Integrated: confident errors; with a bound; two sources & \lean{integrated\_confident\_errors}, \lean{integrated\_confident\_errors\_le}, \lean{errors\_two\_sources} \\
 Integrated: solver error is a DOA error (other columns exact); exact facts sufficient, not necessary & \lean{solver\_error\_is\_doa\_error}, \lean{solver\_exact\_of\_exact}, \lean{compensating\_errors} \\
 Integrated: values at the setting (EPAM; ACT-R) & \lean{setting\_routes}, \lean{setting\_solver\_x}, \lean{setting\_overall\_x}, \lean{setting\_overall\_q1}, \lean{setting\_practiced\_errors}, \lean{setting\_valid}, \lean{setting\_confident\_errors\_bound}; \lean{setting\_actr\_x}, \lean{setting\_actr\_not\_pattern} \\

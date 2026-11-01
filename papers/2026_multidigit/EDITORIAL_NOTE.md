@@ -41,6 +41,18 @@ The confident-errors theorems now conclude one theory-neutral predicate, CogLib'
 - **Removed:** the "Premises still unexplained" paragraph. Its items are covered in Limitations, apart from serial-learning anchors.
 - **Talk:** a new slide, "One memory for both levels", and the limitations slide is updated.
 
+## Revision of 2026-10-31 (Table 1 review)
+
+The table was split into two:
+- **Table 1** has the separate column-fact table.
+- **Table 2** has one memory, with a control column: ACT-R with the five items studied, but the separate table.
+
+Other changes:
+- Solver rows now separate three things: whether the solver is invoked, whether it is correct given that it is invoked, and whether it is correct overall (the joint probability). The caption says the joint is the product of the other two, and this was checked exactly for every column.
+- Noninterference is restricted to the fixed-backup configuration. For one memory it is now proved under a condition: the problem and its digit pairs were learned (`shared_learning_preserves_trial`). Unconditional noninterference is stated as not proved.
+- New Lean theorems: `setting_epam_solver`, `setting_00_not_5`, `setting_act_control`, `shared_learning_preserves_trial`. Every number in Table 2 now cites a theorem.
+- The talk's memory-swap slide uses the same row definitions. The one-memory slide is split into two: theorems, then numbers with the control.
+
  of scientific novelty
 
 1. **Theorem composition across independently developed theories.** The integrated model's predictions are proved by reusing theorems established separately for three things:
