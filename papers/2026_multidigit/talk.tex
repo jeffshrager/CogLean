@@ -2,6 +2,10 @@
 \input{../../presentations/preamble}
 \input{../../presentations/leancode}
 \usepackage{array}
+\tikzset{src/.style={rounded corners=8pt, draw=none, align=center, inner sep=6pt,
+    text width=#1, font=\small\bfseries, execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+  src/.default=3.5cm,
+  to/.style={-{Stealth[length=2.2mm]}, thick, black!80}}
 
 \title{CogLean}
 \subtitle{Towards a Cumulative, Machine-Checked Theory of Cognition}
@@ -9,6 +13,52 @@
 \date{October 2026\\[2mm]\small\textcolor{red!70!black}{\textbf{Draft for Comment}}}
 
 \begin{document}
+
+% Head slides: the word, then where it came from.
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \node at (current page.center) {\fontsize{54}{60}\selectfont\bfseries\itshape Epoofany};
+  \end{tikzpicture}
+\end{frame}
+\note{
+Epoofany.
+}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[draw=orange!80!black, very thick, rounded corners=10pt, fill=orange!8,
+          align=center, inner sep=8pt] (c) at (current page.center)
+      {{\fontsize{40}{46}\selectfont\bfseries CogLean}\\[-2pt]
+       \rule{4.2cm}{0.6pt}\\[2pt]
+       {\itshape Don't just run models,}\\ {\itshape reason about them.}};
+    \begin{scope}[shift={(current page.center)}]
+      \node[src=3.7cm, fill=blue!12] (tl) at (-5.2, 2.85)
+        {Reanimation of Simon \& Newell's early AIs\\ {\mdseries\itshape (esp.\ LT and EPAM)}};
+      \node[src=3.3cm, fill=violet!12] (tc) at (0, 3.1)
+        {Discussion with Pete and Chris on models of scientific reasoning};
+      \node[src=3.6cm, fill=violet!18] (tr) at (5.2, 2.85)
+        {NSS's theory of computer programs as cognitive models};
+      \node[src=3.4cm, fill=green!12, align=left] (ml) at (-5.9, 0)
+        {Training with Simon and Klahr during the {\mdseries\itshape Scientific Cognition} period};
+      \node[src=3.4cm, fill=yellow!18] (mr) at (5.9, 0)
+        {Work with Siegler on the DOA model};
+      \node[src=3.4cm, fill=red!12] (bl) at (-5.2, -2.9)
+        {Work with Anderson on ACT};
+      \node[src=3.4cm, fill=blue!12] (br) at (5.2, -2.9)
+        {The Lean-driven mathpocalypse};
+    \end{scope}
+    \draw[to] (tl.south east) to[bend left=25] (c.north west);
+    \draw[to] (tc.south) -- (c.north);
+    \draw[to] (tr.south west) to[bend right=25] (c.north east);
+    \draw[to] (ml.east) -- (c.west);
+    \draw[to] (mr.west) -- (c.east);
+    \draw[to] (bl.north east) to[bend left=25] (c.south west);
+    \draw[to] (br.north west) to[bend right=25] (c.south east);
+  \end{tikzpicture}
+\end{frame}
+\note{
+Where CogLean came from.
+}
 
 \begin{frame}
   \titlepage
