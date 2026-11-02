@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  2 NOV 2026 10:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  2 NOV 2026 10:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1283,11 +1283,11 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
 
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 161.
+(Font)              <10> on input line 164.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 161.
+(Font)              <7> on input line 164.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 161.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 164.
  [17
 
 ] [18
@@ -1301,44 +1301,45 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
 ] [22
 
 ]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 225.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 225.
-
 [23
 
 ] [24
 
-]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-45.
- (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [25
+] [25
+
+] [26
 
 ]
-[26
-
-] [27
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 254.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 254.
+ [27
 
 ] [28
 
-]
-\openout4 = `talk-notes.vrb'.
-
- (./talk-notes.vrb) [29
+] [29
 
 ] [30
 
 ]
-\openout4 = `talk-notes.vrb'.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+91.
 
- (./talk-notes.vrb) [31
+(/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [31
 
 ] [32
 
 ]
+\openout4 = `talk-notes.vrb'.
+
+
+(./talk-notes.vrb)
+Overfull \vbox (8.96538pt too high) detected at line 319
+ []
+
 [33
 
 ] [34
@@ -1351,14 +1352,7 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 ] [38
 
-]
-\openout4 = `talk-notes.vrb'.
-
- (./talk-notes.vrb)
-Overfull \vbox (8.96538pt too high) detected at line 394
- []
-
-[39
+] [39
 
 ] [40
 
@@ -1376,7 +1370,8 @@ Overfull \vbox (8.96538pt too high) detected at line 394
 
 ] [47
 
-] [48
+]
+[48
 
 ] [49
 
@@ -1388,18 +1383,21 @@ Overfull \vbox (8.96538pt too high) detected at line 394
 
 ] [53
 
-]
-[54
+] [54
 
 ] [55
 
 ] [56
 
-] [57
+]
+\openout4 = `talk-notes.vrb'.
+
+ (./talk-notes.vrb) [57
 
 ] [58
 
-] [59
+]
+[59
 
 ] [60
 
@@ -1415,9 +1413,74 @@ Overfull \vbox (8.96538pt too high) detected at line 394
 
 ] [66
 
-] [67
+]
+\openout4 = `talk-notes.vrb'.
+
+ (./talk-notes.vrb) [67
 
 ] [68
+
+]
+\openout4 = `talk-notes.vrb'.
+
+
+(./talk-notes.vrb) [69
+
+] [70
+
+] [71
+
+] [72
+
+] [73
+
+] [74
+
+] [75
+
+] [76
+
+] [77
+
+] [78
+
+] [79
+
+]
+[80
+
+] [81
+
+] [82
+
+] [83
+
+] [84
+
+] [85
+
+] [86
+
+] [87
+
+] [88
+
+] [89
+
+] [90
+
+] [91
+
+] [92
+
+] [93
+
+] [94
+
+]
+[95
+
+] [96
 
 ]
 \tf@nav=\write7
@@ -1429,23 +1492,22 @@ Overfull \vbox (8.96538pt too high) detected at line 394
 \tf@snm=\write9
 \openout9 = `talk-notes.snm'.
 
-
-(./talk-notes.aux)
+ (./talk-notes.aux)
 Package rerunfilecheck Info: File `talk-notes.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26191 strings out of 478994
- 499640 string characters out of 5858185
- 800139 words of memory out of 5000000
- 42948 multiletter control sequences out of 15000+600000
- 499989 words of font info for 95 fonts, out of 8000000 for 9000
+ 26280 strings out of 478994
+ 500475 string characters out of 5858185
+ 800508 words of memory out of 5000000
+ 42979 multiletter control sequences out of 15000+600000
+ 502757 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  135i,11n,135p,1436b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
-texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2021/t
-exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2021/texmf-dist/
-fonts/enc/dvips/lm/lm-mathit.enc}</usr/local/texlive/2021/texmf-dist/fonts/type
+{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
+cal/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texliv
+e/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2021/texmf-d
+ist/fonts/enc/dvips/lm/lm-rm.enc}</usr/local/texlive/2021/texmf-dist/fonts/type
 1/public/lm/lmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/l
 m/lmss10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss12.p
 fb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/lo
@@ -1462,10 +1524,10 @@ xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
 onts/symbols/msam10.pfb>
-Output written on talk-notes.pdf (68 pages, 438272 bytes).
+Output written on talk-notes.pdf (96 pages, 484049 bytes).
 PDF statistics:
- 521 PDF objects out of 1000 (max. 8388607)
- 422 compressed objects within 5 object streams
- 137 named destinations out of 1000 (max. 500000)
+ 693 PDF objects out of 1000 (max. 8388607)
+ 565 compressed objects within 6 object streams
+ 193 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

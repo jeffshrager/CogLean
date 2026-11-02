@@ -149,6 +149,6 @@ The paper is 27 pages.
 
 Credited the cognitive-architecture tradition (Newell; Soar; ACT-R; the Common Model) as the main prior effort to make theory cumulative. CogLean is positioned as complementary: it accumulates machine-checked results, reusable deductively and stated across architectural commitments (confident errors / perseveration for classes of memories; laws sufficient, not necessary; no general equivalence or divergence claimed). The novelty claim is the combination only. Talk slides updated to match. Added refs laird1987, laird2012 / laird2017.
 
-## Revision (Appendix C: Robin uses CogLean)
+## Revision (Appendix C: Chris uses CogLean)
 
 Added the author's worked-use appendix, with the suggested fixes: the raw-strength monotonicity result and the normalized counterexample are now proved in Lean (CogLib `reach_boost`, `exhausted_boost`; SC `correct_strengthening_never_raises_backup`, `dominant_strengthening_never_raises_backup`, `strengthening_below_criterion_can_raise_backup`, `strengthenNorm`, `normalized_strengthening_can_raise_backup`), so the appendix says "proved". The precise condition (correct answer above the criterion, or none) is stated; dominance implies it. Notes that the chapter renormalizes after elaboration (A4) but not after learning (A6); the .05 is twice an increment of .025; ties to Section 3.4's peaking example; cites Lean names; trimmed. Index row and an intro pointer added.

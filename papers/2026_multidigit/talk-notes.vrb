@@ -1,23 +1,15 @@
-\frametitle{The theorem, in Lean}
-\begin{Verbatim}[fontsize=\scriptsize, breaklines=false]
-theorem confident_errors (correct : P → A) (x q : P) (hT : ∀ y, total as (str y) ≠ 0)
-    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
-    (hq : retrieve (code q) = pure (some (code q)))
-    (hx : retrieve (code x) = pure (some (code q)))
-    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
-    Phenomena.ConfusionErrorPattern (recognizeRetrieve code retrieve str as cc n backup)
-      (wholeWrong correct) isWhole isBackup x q := by
-  refine ⟨confusion_gives_neighbours_answer code retrieve str as cc n backup
-      correct q q (hT _) hq hs,
-    wrong_eq_whole_of_sharp code retrieve str as cc n backup
-      correct x _ _ (hT _) hx hs hne, ?_⟩
-  rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT,
-    backup_prob_certain code retrieve str as cc n backup q _ hq hbq hT]
-
-def ConfusionErrorPattern (trial : P → Dist O) (wholeWrong : P → O → Bool)
-    (isWhole isBackup : O → Bool) (x q : P) : Prop :=
-  prob (trial q) (wholeWrong q) = 0 ∧
-    prob (trial x) (wholeWrong x) = prob (trial x) isWhole ∧
-    prob (trial x) isBackup = prob (trial q) isBackup
+\frametitle{The bridge: two executable descriptions, one distribution}
+\small
+  \begin{itemize}
+    \item \code{columns}: a simple, direct implementation of probabilistic column arithmetic.
+    \item \code{answers}: the same task on CogLib's state-and-operator decision cycle.
+  \end{itemize}
+\begin{Verbatim}[fontsize=\footnotesize]
+theorem bridge (fact : Nat → Nat → Dist Nat) (p : Problem) :
+    answers fact full lenient p = columns fact p
 \end{Verbatim}
-  \footnotesize Verbatim from CogLib (\code{Process/RecognizeRetrieve}, \code{Phenomena/ConfusionErrors}). The multi-digit version is a one-line instance.
+  \begin{itemize}
+    \item \textbf{Proved}, not tested: identical answer distributions for \emph{every} problem and \emph{every} single-digit process.
+    \item So every theorem about \code{columns} (place value, a column error as a single-digit error in place) holds for the solver.
+    \item It equates \emph{outputs}, not internal processes: the two still differ as accounts of what a child does.
+  \end{itemize}
