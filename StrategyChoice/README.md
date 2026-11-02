@@ -46,6 +46,8 @@ The model's phenomena (`StrategyChoice/Phenomena.lean`):
 | A more peaked distribution gives fewer errors (p. 245) | `peaking_lowers_retrieval_errors`, when strength moves to the correct answer |
 | A more peaked distribution gives less overt strategy use (p. 245) | **not in general**: `peaking_can_raise_overt_use` |
 | Learning from a correct answer, by any strategy, never raises retrieval errors (A6) | `correct_strengthening_lowers_errors` |
+| Learning from a correct answer never raises backup use, if that answer is already above the criterion (in particular, the strongest) | `correct_strengthening_never_raises_backup`, `dominant_strengthening_never_raises_backup`; the condition is needed: `strengthening_below_criterion_can_raise_backup` |
+| With renormalization after learning (an alternative to A6, `strengthenNorm`), strengthening the strongest answer can raise backup use | `normalized_strengthening_can_raise_backup` (0 → 62/105) |
 
 The last is a finding. Moving .01 of strength to the correct answer, already the strongest, can raise predicted overt strategy use. In the example, (.38, .31, .31) becomes (.39, .30, .31), and the mean over the chapter's twelve criteria rises from 7/12 to 73/120 with search length 1. The cause is that a wrong answer falls to a criterion and so below it. In a Python check of random distributions, no such case appeared when the criterion was spread uniformly; there, the conjecture is monotonicity in the majorization order (`../notes/OPEN_ISSUES.md`).
 

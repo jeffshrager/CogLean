@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-243 theorems: 238 general, 5 instances; 90 headline; 30 about laws; 26 conditional on laws.
+246 theorems: 241 general, 5 instances; 92 headline; 30 about laws; 26 conditional on laws.
 
 **Laws**
 
@@ -106,8 +106,10 @@ How to read it:
 | `Cog.aboveShare_shift` | general | — | Shifting strength towards an answer never raises the others' share of the strength above any criterion (so of stated answers). |
 | `Cog.exhausted_antitone_length` | general | — | Searching longer, retrieval is exhausted less often. |
 | `Cog.exhausted_antitone_reach` | general | — | Reaching the criterion more often, retrieval is exhausted less often. |
+| `Cog.exhausted_boost` | general | — | Strengthening an answer above the criterion never makes retrieval exhausted more often, at any search length: the backup is never needed more often. |
 | `Cog.prob_exhausted` | general | — | Exhaustion. With search length `n`, retrieval is exhausted with probability `(1 - R)^n`. |
 | `Cog.prob_stated` | general | — | Stating an answer. With search length `n`, an answer with property `P` is stated with probability `Q · geom (1 - R) n`. |
+| `Cog.reach_boost` | general | — | Strengthening an answer above the criterion never lowers the chance that one search reaches the criterion. `s'` adds strength to `c` and changes nothing else. |
 | `Cog.stated_share` | general | — | The share of stated answers with `P` does not depend on the search length. Stated answers have `P` in proportion `Q / R`: the probability of stating one with `P`, times `R`, equals the probabil... |
 | `Cog.stated_share_shift` | general | — | Shifting strength towards an answer never raises the share of the others among stated answers. Suppose strengths `s'` give the answer `c` at least the strength `s` gives it, and every other ans... |
 | `Cog.activation_append` | general | — | Activation from several sources sums (SA4). |
@@ -184,7 +186,7 @@ How to read it:
 
 ## Strategy choice: distributions of associations
 
-23 theorems: 18 general, 5 instances; 12 headline; 0 about laws; 0 conditional on laws.
+28 theorems: 21 general, 7 instances; 16 headline; 0 about laws; 0 conditional on laws.
 
 **Headline theorems**
 
@@ -194,14 +196,18 @@ How to read it:
 | `SC.Data.retrieval_never_errs_2_2` | instance | — | On 2+2, retrieval never errs: at every one of the twelve criteria, no wrong answer's strength exceeds the criterion while the correct one's does (.80; the largest wrong strength is .05, not abo... |
 | `SC.same_trialMerged` | general | — | The merged trial is the trial, as a distribution. |
 | `SC.correct_strengthening_lowers_errors` | general | — | Learning from a correct answer never raises retrieval errors (A6). |
+| `SC.correct_strengthening_never_raises_backup` | general | — | Learning from a correct answer never raises backup use (A6), when the correct answer is already above the confidence criterion, or no answer is. |
 | `SC.counting_error_share` | general | — | The error share on counting trials is the counting process's error rate on the sum: it involves neither the associations, nor the criterion, nor the search length (p. 245). |
+| `SC.dominant_strengthening_never_raises_backup` | general | — | Strengthening the strongest answer never raises backup use. If the correct answer is already the strongest, learning from it never makes a backup strategy more likely, at any criterion and sear... |
 | `SC.mass_trial` | general | — | A trial is a proper distribution when the associations, and the associations elaborated on the fingers, have positive total strength. |
 | `SC.nonneg_trial` | general | — | A trial has nonnegative weights when the strengths, the elaboration and the counting rates are nonnegative. |
+| `SC.normalized_strengthening_can_raise_backup` | instance | — | With renormalization, strengthening the strongest answer can raise backup use. Strengths .38, .31, .31 (summing to one), criterion .30, search length 1. |
 | `SC.peaking_can_raise_overt_use` | instance | — | Peaking can raise overt strategy use. Moving strength to the correct answer, already the peak, raises the overt strategy use predicted with search length 1, averaged over the chapter's twelve c... |
 | `SC.peaking_lowers_retrieval_errors` | general | — | Moving strength to the correct answer never raises the error share on retrieval trials, at any confidence criterion and search length. |
 | `SC.retrieval_error_share` | general | — | The error share on retrieval trials is the wrong answers' share of the strength above the criterion, whatever the search length. |
 | `SC.retrieval_independent_of_backup` | general | — | Retrieval does not depend on the backup strategies: how often it is used, and how often it errs, are the same whatever the elaboration and counting. |
 | `SC.retrieval_prob` | general | — | Retrieval is used with probability `1 - (1 - R)^n` (p. 250: overt strategies with probability `(1 - R)^N`). |
+| `SC.strengthening_below_criterion_can_raise_backup` | instance | — | Strengthening an answer below the criterion can raise backup use. With criterion .30 and search length 1, adding .05 to the correct answer, still below the criterion, makes the acceptable answe... |
 
 ## Multi-digit addition (with the problem solver)
 
@@ -519,9 +525,9 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 243 | 238 | 5 | 30 | 26 | 90 |
+| CogLib: the general library | 246 | 241 | 5 | 30 | 26 | 92 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
-| Strategy choice: distributions of associations | 23 | 18 | 5 | 0 | 0 | 12 |
+| Strategy choice: distributions of associations | 28 | 21 | 7 | 0 | 0 | 16 |
 | Multi-digit addition (with the problem solver) | 204 | 164 | 40 | 10 | 5 | 83 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 2 | 5 | 13 |
@@ -529,4 +535,4 @@ How to read it:
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
-| **All** | 669 | 530 | 139 | 92 | 38 | 284 |
+| **All** | 677 | 536 | 141 | 92 | 38 | 290 |

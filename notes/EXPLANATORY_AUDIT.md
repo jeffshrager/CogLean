@@ -43,6 +43,8 @@ Where the result names its own theory as "derived", the question to ask is the m
 | `SC.counting_error_share` (DOA) | postulates A1–A5 | derived | The chapter's "nonintuitive prediction": the associations don't affect the counting error share. |
 | `SC.retrieval_prob`, `retrieval_error_share` | postulates A2–A3 | close | The algebra of sampling. |
 | `SC.peaking_can_raise_overt_use` | postulates; one setting | derived (counterexample) | Refutes an informal claim of the chapter at one setting. |
+| `Cog.exhausted_boost`, `SC.correct_strengthening_never_raises_backup`, `SC.dominant_strengthening_never_raises_backup` | postulates; condition (correct answer above the criterion, or dominant) | derived, general | Learning under raw strengths never raises backup use; the condition is shown needed by `SC.strengthening_below_criterion_can_raise_backup`. |
+| `SC.normalized_strengthening_can_raise_backup` | an alternative learning rule; one setting | derived (counterexample) | Separates raw from renormalized learning on the same regularity. |
 | `MD.confident_errors` | postulates: EPAM and DOA; conditions: the net confuses x with q, sharp associations | compositional | Confusion is derived for learned nets elsewhere (`near_miss_*_learned`). Sharp associations remain a condition. |
 | `MD.column_error_is_doa_error` | postulates: column backup and DOA facts | compositional | — |
 | `Shared.memFact_self`, `strial_reduces`, `strial_net_reduces` | postulates: the integrated model's, with column facts from the same memory; condition: each digit pair recognized as itself | compositional | The separate DOA table is a special case of one memory, so the integrated model's theorems carry over. |

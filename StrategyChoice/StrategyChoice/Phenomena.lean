@@ -27,6 +27,16 @@ search length, and find its limits.
   *raise* overt strategy use, even averaged over the chapter's twelve
   confidence criteria. "A peaked distribution results in less frequent use
   of overt strategies" (p. 245) needs a condition the chapter doesn't state.
+* `correct_strengthening_never_raises_backup`,
+  `dominant_strengthening_never_raises_backup`: learning (A6), which adds
+  strength to a correct answer without renormalizing, never raises backup
+  use when the correct answer is already above the criterion (in particular,
+  when it is the strongest), at any criterion and search length.
+* `strengthening_below_criterion_can_raise_backup`: without that condition
+  it can.
+* `normalized_strengthening_can_raise_backup`: with renormalization after
+  learning, an alternative the chapter does not adopt, strengthening the
+  strongest answer can raise backup use from 0 to 62/105.
 -/
 
 import StrategyChoice.Postulates
@@ -304,5 +314,85 @@ theorem peaking_can_raise_overt_use :
   have h2 : a ≠ 2 := ha
   simp only [peaked, flatter, h2, ite_false]
   split <;> decide +kernel
+
+/-! ### Learning and backup use -/
+
+theorem strengthIn_eq_zero (as : List Answer) (s : Answer → Rat) (e : Answer → Bool)
+    (h : ∀ a ∈ as, e a = false) : strengthIn as s e = 0 := by
+  induction as with
+  | nil => rfl
+  | cons a as ih =>
+    simp only [strengthIn, h a (List.mem_cons_self ..),
+      ih (fun b hb => h b (List.mem_cons_of_mem _ hb))]
+    grind
+
+/-- **Learning from a correct answer never raises backup use** (A6), when
+the correct answer is already above the confidence criterion, or no answer
+is. At every criterion and search length, retrieval is exhausted, so a
+backup strategy used, no more often after the correct answer is
+strengthened. The condition is needed
+(`strengthening_below_criterion_can_raise_backup`), and so is learning
+without renormalization (`normalized_strengthening_can_raise_backup`). -/
+theorem correct_strengthening_never_raises_backup (as : List Answer) (s : Answer → Rat)
+    (inc cc : Rat) (p : Problem) (hs : ∀ a, 0 ≤ s a) (hinc : 0 ≤ inc) (hT : 0 < total as s)
+    (habove : above s cc p.sum = true ∨ strengthIn as s (above s cc) = 0) (n k : Nat) :
+    prob (search as (strengthen s inc p.sum p.sum) cc k n) Retrieval.isExhausted ≤
+      prob (search as s cc k n) Retrieval.isExhausted :=
+  exhausted_boost as s _ cc p.sum hs (by simp [strengthen]; grind)
+    (fun a ha => by simp [strengthen, ha]) hT habove n k
+
+/-- **Strengthening the strongest answer never raises backup use.** If the
+correct answer is already the strongest, learning from it never makes a
+backup strategy more likely, at any criterion and search length. -/
+theorem dominant_strengthening_never_raises_backup (as : List Answer) (s : Answer → Rat)
+    (inc cc : Rat) (p : Problem) (hs : ∀ a, 0 ≤ s a) (hinc : 0 ≤ inc) (hT : 0 < total as s)
+    (hdom : ∀ a ∈ as, s a ≤ s p.sum) (n k : Nat) :
+    prob (search as (strengthen s inc p.sum p.sum) cc k n) Retrieval.isExhausted ≤
+      prob (search as s cc k n) Retrieval.isExhausted := by
+  apply correct_strengthening_never_raises_backup as s inc cc p hs hinc hT _ n k
+  by_cases h : above s cc p.sum = true
+  · exact Or.inl h
+  · refine Or.inr (strengthIn_eq_zero as s _ fun a ha => ?_)
+    simp only [above, decide_eq_true_eq] at h ⊢
+    have := hdom a ha
+    simp only [decide_eq_false_iff_not]; grind
+
+/-- Strengths .2 on the correct answer 2 and .5 on 3. -/
+def belowS : Answer → Rat := fun a => if a = 2 then 2/10 else 5/10
+
+/-- **Strengthening an answer below the criterion can raise backup use.**
+With criterion .30 and search length 1, adding .05 to the correct answer,
+still below the criterion, makes the acceptable answer less likely to be
+drawn: backup use rises from 2/7 to 1/3. -/
+theorem strengthening_below_criterion_can_raise_backup :
+    prob (search [2, 3] belowS (3/10) 0 1) Retrieval.isExhausted = 2 / 7 ∧
+      prob (search [2, 3] (strengthen belowS (1/40) peakProblem.sum peakProblem.sum) (3/10) 0 1)
+        Retrieval.isExhausted = 1 / 3 := by
+  refine ⟨by decide +kernel, by decide +kernel⟩
+
+/-- **An alternative learning rule: strengthen, then renormalize** so that
+strengths sum to one. The chapter renormalizes after elaboration (A4) but
+not after learning (A6); this is the other reading. -/
+def strengthenNorm (as : List Answer) (s : Answer → Rat) (inc : Rat) (correct stated : Answer) :
+    Answer → Rat :=
+  fun a => strengthen s inc correct stated a / total as (strengthen s inc correct stated)
+
+/-- **With renormalization, strengthening the strongest answer can raise
+backup use.** Strengths .38, .31, .31 (summing to one), criterion .30,
+search length 1. Every answer is above the criterion, so a backup is never
+used. Learning from the correct answer adds .05 to it. Without
+renormalization a backup is still never used (as
+`dominant_strengthening_never_raises_backup` requires); with it the wrong
+answers fall to .31/1.05, below the criterion, and a backup is used with
+probability 62/105, about .59. -/
+theorem normalized_strengthening_can_raise_backup :
+    total peakAnswers flatter = 1 ∧
+      (∀ a ∈ peakAnswers, flatter a ≤ flatter peakProblem.sum) ∧
+      prob (search peakAnswers flatter (3/10) 0 1) Retrieval.isExhausted = 0 ∧
+      prob (search peakAnswers (strengthen flatter (1/40) peakProblem.sum peakProblem.sum) (3/10) 0 1)
+        Retrieval.isExhausted = 0 ∧
+      prob (search peakAnswers (strengthenNorm peakAnswers flatter (1/40) peakProblem.sum peakProblem.sum)
+        (3/10) 0 1) Retrieval.isExhausted = 62 / 105 := by
+  refine ⟨by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel⟩
 
 end SC

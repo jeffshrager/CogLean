@@ -80,7 +80,7 @@ The argument is organized around four capabilities, in increasing order of impor
 
 The numerical predictions of the example are illustrative. They depend on chosen problems, learning histories, encodings, strengths, criteria and backup procedures, and a simulation could produce comparable numbers. Their roles are to show that the composition runs, that the theorems' hypotheses can be met, and that model families can diverge. They are collected in Appendix~\ref{app:setting}.
 
-Lean checks that conclusions follow from premises, not that the premises describe people or that a valid derivation explains anything (Section~\ref{sec:status}).
+Lean checks that conclusions follow from premises, not that the premises describe people or that a valid derivation explains anything (Section~\ref{sec:status}). Appendix~\ref{app:robin} follows a hypothetical modeler through the method, from a phenomenon to a theorem and back from a proposed regularity to the assumptions it requires.
 
 \section{CogLean}
 \label{sec:coglean}
@@ -593,6 +593,7 @@ Learned nets recognize each image as itself & \lean{learnAll\_clean} (\code{CogL
 DOA retrieval use, error share, backup independence & \lean{SC.retrieval\_prob}, \lean{retrieval\_error\_share}, \lean{retrieval\_independent\_of\_backup} \\
 Counting errors independent of associations & \lean{SC.counting\_error\_share} \\
 Peaking never raises retrieval errors; but can raise overt strategy use & \lean{SC.peaking\_lowers\_retrieval\_errors}; \lean{SC.peaking\_can\_raise\_overt\_use} \\
+Learning never raises backup use above the criterion; can below it, or with renormalization (Appendix~\ref{app:robin}) & \lean{reach\_boost}, \lean{exhausted\_boost}; \lean{SC.correct\_strengthening\_never\_raises\_backup}, \lean{SC.dominant\_strengthening\_never\_raises\_backup}; \lean{SC.strengthening\_below\_criterion\_can\_raise\_backup}, \lean{SC.normalized\_strengthening\_can\_raise\_backup} \\
 The phenomena: confusion-error pattern; confident errors with a bound & \lean{ConfusionErrorPattern}, \lean{ConfidentErrors} (\code{CogLib/Phenomena/ConfusionErrors}) \\
 Confident errors, any task; with the rate as bound & \lean{RR.confident\_errors}, \lean{RR.confident\_errors\_rate} (\code{CogLib/Process/RecognizeRetrieve}) \\
 Confident errors from laws of memory & \lean{RR.confident\_errors\_of\_laws} \\
@@ -681,5 +682,63 @@ practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ & $\appro
 \caption{The model with one memory for whole problems and column facts (\S\ref{sec:shared}). The memory first studies the three digit pairs that $150+100$ and $100+100$ need, then the two problems. The middle column is a control: ACT-R's memory holds the same five items, but the solver uses DOA's separate table, so the memory's contents are as in the last column and only the solver's use of the memory differs. Rows as in Table~\ref{tab:memories}; ``correct overall'' is again the product of the two rows above it. EPAM's values are those of Table~\ref{tab:memories}, by the reduction theorem (\lean{setting\_epam\_reduces}, \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}); ACT-R's are \lean{setting\_act\_control}, \lean{setting\_act\_pairs} and \lean{setting\_act\_values}. ACT-R appears without retrieval as use. The last row is \lean{shared\_learning\_preserves\_trial}; without its condition on the digit pairs, noninterference is not proved for the shared model.}
 \label{tab:shared}
 \end{table}
+
+\clearpage
+\section{Robin uses CogLean}
+\label{app:robin}
+
+Consider a hypothetical cognitive scientist, Robin, who studies how children learn arithmetic. Robin has built computational models before, and, like most modelers, is used to writing a program that implements proposed mechanisms, running it to see what it does, and explaining the results in a paper. The program specifies the mechanisms; the reasoning about their consequences lives largely in Robin's head, in comments, or in the prose. CogLean offers another way to work. It supports both \emph{programming} a cognitive mechanism and \emph{reasoning formally} about it, and the reasoning can be checked by a computer, kept as theorems, and reused in other models.
+
+Robin works with a chatbot research colleague, Alex. Alex is useful for brainstorming, proposing mechanisms, finding results in the library and suggesting proofs. But Alex's suggestions are not automatically correct. Lean provides the checks, and Robin remains responsible for the scientific judgments.
+
+\paragraph{From an observation to a theorem.} Robin begins with a familiar phenomenon: children sometimes confidently give a wrong answer to an arithmetic problem, apparently retrieving it rather than calculating. A child who has learned $100+100=200$ may take $150+100$ for the familiar problem and confidently answer 200. Robin wants to know whether this follows from recognizable properties of existing mechanisms.
+
+Alex points out that CogLib has a general mechanism for recognizing a stimulus, retrieving an associated response, and invoking a backup process if retrieval fails; EPAM provides one recognition mechanism and DOA one retrieval mechanism. Together they state the phenomenon without mentioning either theory: a confused problem gets wrong answers by whole-problem retrieval, while it uses its backup exactly as often as the familiar problem it is confused with. This is the confusion-error pattern of Section~\ref{sec:phen}. They then look for conditions under which it follows from the mechanisms:
+\begin{itemize}
+  \item the familiar problem is recognized as itself;
+  \item the unfamiliar problem is recognized as the familiar one;
+  \item the familiar problem's associations are sharp, so that its only answer above the criterion is its correct sum;
+  \item the two problems have different sums;
+  \item the distributions involved are proper.
+\end{itemize}
+Under these conditions the pattern follows. Every whole-problem answer stated for the unfamiliar problem is the familiar problem's answer, which is wrong; and because both problems consult the same associations, they exhaust retrieval and invoke the backup equally often. This is \lean{integrated\_confident\_errors} (Section~\ref{sec:results}). Robin has not merely shown a particular error by running a simulation: the proof covers every setting that meets the conditions.
+
+The conditions matter. Lean has not established that children have such associations, or that a particular EPAM learning history produces the confusion; those are separate theoretical or empirical questions. Nor does the pattern by itself make backup use rare. That needs a further, quantitative condition, under which the errors are \emph{confident} (\lean{integrated\_confident\_errors\_le}). Still, Robin now has what a simulation would not give: a reusable result naming sufficient conditions for the phenomenon, which applies to new models without re-running the old one.
+
+\paragraph{Working backward: what must a theory be like?} Robin next turns to practice and strategy choice. In DOA, practice strengthens associations between problems and answers; as correct associations grow, retrieval should succeed more often and children should rely less on overt strategies such as counting. Robin proposes a stronger regularity:
+\begin{quote}
+\emph{Once the correct answer is the strongest association, strengthening it further never raises the probability of resorting to a backup strategy, all else being equal.}
+\end{quote}
+Robin thinks this plausible, though it remains an empirical question, and one that would be hard to establish directly, since it says what should \emph{never} happen. Alex suggests asking first whether it follows from DOA.
+
+Alex then notices an ambiguity: what does the confidence criterion measure? An answer is drawn with probability proportional to its strength, and stated only if its strength exceeds a criterion $c$. The strength compared with $c$ might be the \emph{raw} strength, or the strength \emph{normalized} by the total over all answers. The question is not idle. The DOA chapter renormalizes strengths after finger elaboration (its postulate A4, which CogLean's \code{elaborate} follows), but its learning postulate (A6) simply adds strength, as CogLean's \code{strengthen} does. So learning followed by renormalization is a natural alternative reading.
+
+Robin and Alex try a small example, the one Section~\ref{sec:peak} used: the correct answer has strength $.38$ and two wrong answers $.31$ each, so the strengths already sum to one. The criterion is $c=.30$, and retrieval makes one attempt before resorting to a backup. All three answers exceed the criterion, under either reading, so the child never uses a backup. Now the child states the correct answer and learns from it, which adds $.05$ to its strength (A6 gives a correct answer twice the increment, here $2 \times .025$).
+\begin{itemize}
+  \item \textbf{Raw strengths:} $(.43, .31, .31)$. All three still exceed $.30$, and backup use stays at zero.
+  \item \textbf{Renormalized:} dividing by the total, $1.05$, gives about $(.410, .295, .295)$. Only the correct answer now exceeds the criterion. The wrong answers can still be drawn, but they are rejected, and with one attempt backup use rises from zero to $62/105 \approx .59$.
+\end{itemize}
+The same learning event has opposite consequences for backup use under the two readings. Robin finds the renormalized result surprising: why should improving an already dominant correct association make a child more likely to abandon retrieval? It is not impossible, and children might behave this way in some circumstances. But Robin now has a concrete theoretical question.
+
+\paragraph{Proof, counterexample, and an exposed assumption.} Robin asks whether the raw reading guarantees the regularity. Alex first suggests that strengthening the correct answer can \emph{never} raise backup use. That is too broad. If the correct answer is below the criterion while another answer is above it, a small increase makes the acceptable answer less likely to be drawn without yet making the correct answer acceptable, and backup use goes up. Lean confirms a case: with strengths $.2$ (correct) and $.5$, criterion $.30$ and one attempt, adding $.05$ to the correct answer raises backup use from $2/7$ to $1/3$ (\lean{SC.strengthening\_below\_criterion\_can\_raise\_backup}).
+
+So the condition in Robin's conjecture does real work, and what the proof actually needs is slightly weaker: the correct answer is already above the criterion, or no answer is. If it is above, strengthening it raises the strength above the criterion and the total strength by the same amount, so their ratio, the chance that one attempt succeeds, cannot fall; and retrieval is exhausted with probability $(1-R)^n$, which then cannot rise. If no answer is above, backup use is already certain. If the correct answer is the strongest and some answer is above the criterion, the correct answer is above it too, so dominance implies the condition. Lean proves this for every finite set of answers, every nonnegative strengths, every criterion and every search length:
+\begin{itemize}
+  \item in CogLib, for any answer and any memory of this kind: adding strength to an answer above the criterion never makes retrieval exhausted more often (\lean{reach\_boost}, \lean{exhausted\_boost});
+  \item for DOA's learning rule: learning from a correct answer never raises backup use when that answer is above the criterion (\lean{SC.correct\_strengthening\_never\_raises\_backup}), and in particular when it is the strongest (\lean{SC.dominant\_strengthening\_never\_raises\_backup}).
+\end{itemize}
+The renormalized reading, defined as an alternative learning rule (\code{SC.strengthenNorm}), admits the counterexample above, and Lean checks it at exactly the values given (\lean{SC.normalized\_strengthening\_can\_raise\_backup}): the strengths sum to one, the correct answer is the strongest, backup use is $0$ before learning and after raw learning, and $62/105$ after renormalized learning.
+
+Robin also notices a difference from Section~\ref{sec:peak}. The peaking counterexample there (\lean{SC.peaking\_can\_raise\_overt\_use}) \emph{moves} strength from a wrong answer to the correct one, while DOA's learning rule \emph{adds} strength to the stated answer. A counterexample built from an arbitrary redistribution does not show that the same change can happen by learning. The new counterexample does arise by learning, but only under the alternative rule.
+
+\paragraph{What has Robin learned?} The proposed regularity has become a way to tell theoretical commitments apart. If backup use really never rises as an already dominant correct association grows, then the renormalized reading of DOA learning, without further restrictions, is inadequate. The raw reading is one way to satisfy the regularity, not the only one: another mechanism might satisfy it too, or the renormalized model might be rescued by restricting its parameters or reachable states. Robin has not shown that children use raw strengths. Robin has found which assumptions produce, or fail to guarantee, a proposed regularity.
+
+This is reasoning \emph{backward}, from a phenomenon toward possible mechanisms. CogLean does not invent the phenomenon or discover the right theory. Robin poses the question; Alex helps generate alternatives; formalization exposes an ambiguity; Lean establishes which conclusions follow from which premises; and evidence must decide which premises describe children. The example also shows why arbitrary states must be kept apart from states reachable by a learning process: a theorem about every strength distribution answers one question, and a theorem about distributions reachable by DOA learning answers another.
+
+Robin's results are now in CogLib and in the DOA theory, as definitions and theorems. A later researcher with a different retrieval model can ask whether its learning rule has the same monotonicity property, or whether another reading of confidence preserves it, without reconstructing the argument from prose or rediscovering it by simulation. Computational modeling has long made theories executable. Theorem proving makes part of our \emph{reasoning about} theories executable and checkable too.
+
+\begin{center}
+\emph{The point is not merely to run cognitive models, but to reason about them, and to make that reasoning available to both scientists and computers.}
+\end{center}
 
 \end{document}

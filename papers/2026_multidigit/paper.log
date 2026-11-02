@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  2 NOV 2026 10:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1031,15 +1031,35 @@ or its head-line re-sults
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[24] [25] [26] [27] [28] (./paper.aux)
+[24] [25] [26] [27] [28] [29
+
+] [30]
+Underfull \hbox (badness 1983) in paragraph at lines 730--731
+\T1/lmr/m/n/10.95 The renor-mal-ized read-ing, de-fined as an al-ter-na-tive le
+arn-ing rule (\T1/lmtt/m/n/10.95 SC.strengthenNorm\T1/lmr/m/n/10.95 ),
+ []
+
+
+Underfull \hbox (badness 4899) in paragraph at lines 730--731
+\T1/lmr/m/n/10.95 ad-mits the coun-terex-am-ple above, and Lean checks it at ex
+-actly the val-ues given
+ []
+
+
+Underfull \hbox (badness 1019) in paragraph at lines 732--733
+[]\T1/lmr/m/n/10.95 Robin also no-tices a dif-fer-ence from Sec-tion []3.3[]. T
+he peak-ing coun-terex-am-ple there
+ []
+
+[31] (./paper.aux)
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: FDB0C9B9D1FF299D0CD08CA8590F643A;7033.
+(rerunfilecheck)             Checksum: DED501959A9971BC2E320FA6809EC556;7174.
  ) 
 Here is how much of TeX's memory you used:
- 23379 strings out of 478994
- 420240 string characters out of 5858185
- 732897 words of memory out of 5000000
- 40260 multiletter control sequences out of 15000+600000
+ 23389 strings out of 478994
+ 420338 string characters out of 5858185
+ 733281 words of memory out of 5000000
+ 40262 multiletter control sequences out of 15000+600000
  487189 words of font info for 90 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  113i,11n,116p,1532b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1062,10 +1082,10 @@ st/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2021/texmf-dist/fonts/t
 ype1/public/lm/lmri9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public
 /lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10
 .pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on paper.pdf (28 pages, 428033 bytes).
+Output written on paper.pdf (31 pages, 439230 bytes).
 PDF statistics:
- 560 PDF objects out of 1000 (max. 8388607)
- 501 compressed objects within 6 object streams
- 154 named destinations out of 1000 (max. 500000)
- 301 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 590 PDF objects out of 1000 (max. 8388607)
+ 526 compressed objects within 6 object streams
+ 162 named destinations out of 1000 (max. 500000)
+ 309 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  1 NOV 2026 08:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  2 NOV 2026 10:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1006,7 +1006,7 @@ Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
 \ar@cellbox=\box84
 )
 LaTeX Font Info:    Trying to load font information for T1+lmss on input line 1
-1.
+5.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -1019,24 +1019,24 @@ File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 (./talk-notes.aux)
 \openout1 = `talk-notes.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1094,7 +1094,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 11.
+Package hyperref Info: Link coloring OFF on input line 15.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -1108,59 +1108,59 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count363
 )
-LaTeX Info: Redefining \ref on input line 11.
-LaTeX Info: Redefining \pageref on input line 11.
-LaTeX Info: Redefining \nameref on input line 11.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
  (./talk-notes.out) (./talk-notes.out)
 \@outlinefile=\write6
 \openout6 = `talk-notes.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/lmr/m/n --> OT1/cmss/m/n on input line 11.
+(Font)                  OT1/lmr/m/n --> OT1/cmss/m/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/lmr/bx/n --> OT1/cmss/b/n on input line 11.
+(Font)                  OT1/lmr/bx/n --> OT1/cmss/b/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 11.
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmss/b/n --> OT1/lmss/b/n on input line 11.
+(Font)                  OT1/cmss/b/n --> OT1/lmss/b/n on input line 15.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmss/m/n --> T1/lmr/m/n on input line 11.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 11.
+(Font)                  OT1/lmss/m/n --> T1/lmr/m/n on input line 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 11.
+(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 11.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 11.
+(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> T1/lmss/m/n on input line 11.
+(Font)                  OT1/lmss/m/n --> T1/lmss/m/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> T1/lmss/m/n on input line 11.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 11.
+(Font)                  OT1/lmss/bx/n --> T1/lmss/m/n on input line 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> T1/lmss/m/it on input line 11.
+(Font)                  OT1/lmr/m/it --> T1/lmss/m/it on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/lmr/bx/it --> T1/lmss/m/it on input line 11.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 11.
+(Font)                  OT1/lmr/bx/it --> T1/lmss/m/it on input line 15.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 11.
+(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 11.
+(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 11.
+(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 15.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 11.
+(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/lmss/b/n --> T1/lmr/b/n on input line 11.
+(Font)                  OT1/lmss/b/n --> T1/lmr/b/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  T1/lmss/b/n --> T1/lmss/b/n on input line 11.
+(Font)                  T1/lmss/b/n --> T1/lmss/b/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 11.
+(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 11.
+(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  T1/lmtt/m/n --> T1/lmtt/b/n on input line 11.
+(Font)                  T1/lmtt/m/n --> T1/lmtt/b/n on input line 15.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1185,81 +1185,87 @@ Dictionary: translator-numbers-dictionary, Language: English
 (/usr/local/texlive/2021/texmf-dist/tex/latex/translator/translator-theorem-dic
 tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
-) (./talk-notes.nav) [1
+) (./talk-notes.nav)
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <54> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 22.
+ [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
 
 ]
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 58.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 58.
+ [3
+
+] [4
+
+] [5
+
+] [6
+
+]
 LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
-29.
+79.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
 9.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-29.
+79.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-29.
+79.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 29.
+(Font)              <10.95> on input line 79.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 29.
+(Font)              <8> on input line 79.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 29.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
+(Font)              <6> on input line 79.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 79.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 79.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 29.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <8> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 29.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 79.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 29.
- [3
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 79.
+ [7
 
 ]
-Overfull \vbox (12.38841pt too high) detected at line 32
+Overfull \vbox (12.38841pt too high) detected at line 82
  []
 
-[4
+[8
 
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 51.
+(Font)              <5> on input line 101.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 51.
- [5
-
-] [6
-
-] [7
-
-] [8
-
-] [9
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 101.
+ [9
 
 ] [10
 
@@ -1267,16 +1273,7 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
 
 ] [12
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 111.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 111.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 111.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 111.
- [13
+] [13
 
 ] [14
 
@@ -1284,69 +1281,69 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
 
 ] [16
 
-] [17
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 161.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 161.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 161.
+ [17
 
 ] [18
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 175.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 175.
- [19
+] [19
 
-]
-[20
+] [20
 
-]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-95.
- (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [21
+] [21
 
 ] [22
 
 ]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 225.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 225.
+
 [23
 
 ] [24
 
 ]
-\openout4 = `talk-notes.vrb'.
-
- (./talk-notes.vrb) [25
-
-] [26
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+45.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [25
 
 ]
-\openout4 = `talk-notes.vrb'.
+[26
 
- (./talk-notes.vrb) [27
+] [27
 
 ] [28
 
-] [29
-
 ]
-[30
+\openout4 = `talk-notes.vrb'.
 
-] [31
+ (./talk-notes.vrb) [29
 
-] [32
-
-] [33
-
-] [34
+] [30
 
 ]
 \openout4 = `talk-notes.vrb'.
 
- (./talk-notes.vrb)
-Overfull \vbox (8.96538pt too high) detected at line 344
- []
+ (./talk-notes.vrb) [31
 
-[35
+] [32
+
+]
+[33
+
+] [34
+
+] [35
 
 ] [36
 
@@ -1354,7 +1351,14 @@ Overfull \vbox (8.96538pt too high) detected at line 344
 
 ] [38
 
-] [39
+]
+\openout4 = `talk-notes.vrb'.
+
+ (./talk-notes.vrb)
+Overfull \vbox (8.96538pt too high) detected at line 394
+ []
+
+[39
 
 ] [40
 
@@ -1376,8 +1380,7 @@ Overfull \vbox (8.96538pt too high) detected at line 344
 
 ] [49
 
-]
-[50
+] [50
 
 ] [51
 
@@ -1385,7 +1388,8 @@ Overfull \vbox (8.96538pt too high) detected at line 344
 
 ] [53
 
-] [54
+]
+[54
 
 ] [55
 
@@ -1407,6 +1411,14 @@ Overfull \vbox (8.96538pt too high) detected at line 344
 
 ] [64
 
+] [65
+
+] [66
+
+] [67
+
+] [68
+
 ]
 \tf@nav=\write7
 \openout7 = `talk-notes.nav'.
@@ -1423,13 +1435,13 @@ Package rerunfilecheck Info: File `talk-notes.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26080 strings out of 478994
- 497991 string characters out of 5858185
- 798248 words of memory out of 5000000
- 42847 multiletter control sequences out of 15000+600000
- 486073 words of font info for 90 fonts, out of 8000000 for 9000
+ 26191 strings out of 478994
+ 499640 string characters out of 5858185
+ 800139 words of memory out of 5000000
+ 42948 multiletter control sequences out of 15000+600000
+ 499989 words of font info for 95 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 135i,11n,135p,1436b,811s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 135i,11n,135p,1436b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2021/t
 exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2021/texmf-dist/
@@ -1438,21 +1450,22 @@ fonts/enc/dvips/lm/lm-mathit.enc}</usr/local/texlive/2021/texmf-dist/fonts/type
 m/lmss10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss12.p
 fb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/lo
 cal/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss9.pfb></usr/local/texlive
-/2021/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2021/te
-xmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2021/texmf-dist/
-fonts/type1/public/lm/lmsso8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type
-1/public/lm/lmsso9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/l
-m/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy8.pf
-b></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/loc
-al/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive
-/2021/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texm
-f-dist/fonts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/font
-s/type1/public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/pub
-lic/amsfonts/symbols/msam10.pfb>
-Output written on talk-notes.pdf (64 pages, 402949 bytes).
+/2021/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2021/te
+xmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2021/texmf-dist
+/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2021/texmf-dist/fonts/ty
+pe1/public/lm/lmsso8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public
+/lm/lmsso9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy10
+.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/
+local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texli
+ve/2021/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2021/te
+xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
+onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
+public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
+onts/symbols/msam10.pfb>
+Output written on talk-notes.pdf (68 pages, 438272 bytes).
 PDF statistics:
- 492 PDF objects out of 1000 (max. 8388607)
- 399 compressed objects within 4 object streams
- 129 named destinations out of 1000 (max. 500000)
+ 521 PDF objects out of 1000 (max. 8388607)
+ 422 compressed objects within 5 object streams
+ 137 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 
