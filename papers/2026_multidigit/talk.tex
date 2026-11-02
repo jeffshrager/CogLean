@@ -47,13 +47,13 @@ Epoofany.
       \node[src=3.4cm, fill=blue!12] (br) at (5.2, -2.9)
         {The Lean-driven mathpocalypse};
     \end{scope}
-    \draw[to] (tl.south east) to[bend left=25] (c.north west);
+    \draw[to] ([yshift=-2mm]tl.east) -- ([xshift=4mm]c.north west);
     \draw[to] (tc.south) -- (c.north);
-    \draw[to] (tr.south west) to[bend right=25] (c.north east);
+    \draw[to] ([yshift=-2mm]tr.west) -- ([xshift=-4mm]c.north east);
     \draw[to] (ml.east) -- (c.west);
     \draw[to] (mr.west) -- (c.east);
-    \draw[to] (bl.north east) to[bend left=25] (c.south west);
-    \draw[to] (br.north west) to[bend right=25] (c.south east);
+    \draw[to] ([yshift=2mm]bl.east) -- ([xshift=4mm]c.south west);
+    \draw[to] ([yshift=2mm]br.west) -- ([xshift=-4mm]c.south east);
   \end{tikzpicture}
 \end{frame}
 \note{
