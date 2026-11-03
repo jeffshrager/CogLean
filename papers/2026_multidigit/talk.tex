@@ -862,6 +862,33 @@ A word on what proofs do and don't show. Lean guarantees validity. It doesn't gu
 So, to be clear about what this is and isn't. CogLean doesn't generate hypotheses or theories; people, or AIs, propose them. It doesn't find phenomena in data or fit parameters. It doesn't show that a theory is true of people, and it can't decide whether a derivation is an explanation; that's a scientific judgment. And it doesn't replace simulation or experiment. What it does is check whether a proposed consequence actually follows, and from exactly which premises. It finds counterexamples to informal claims, like the peaking claim. It exposes assumptions and conditions that theories leave unstated. It says for which class of models a result holds. And it lets proved results be reused across theories and tasks. When I say discovery, that's what I mean: finding out what does, or doesn't, follow from theories that people propose.
 }
 
+\begin{frame}{Chris and Robin: from reasoning to model construction}
+  \small
+  \textcolor{gray}{\textit{A future possibility, not a present accomplishment.}}
+  \medskip
+
+  \textbf{Chris:} Confident errors follow from three laws of memory. Which memories could I build a new model on?
+
+  \smallskip
+  \textbf{Robin:} Here is what CogLib has proved:
+  \begin{itemize}
+    \item \textbf{EPAM's net:} all three, once your encoding makes the stimuli noticeably different.
+    \item \textbf{Global matching:} determinacy only, so far; certainty and stability are open obligations.
+    \item \textbf{ACT-R's memory:} never, so this route is closed (other routes aren't).
+  \end{itemize}
+
+  \smallskip
+  \textbf{Chris:} So I could assemble a model from mechanisms whose proved properties fit together?
+
+  \medskip
+  \begin{center}
+    \textbf{From mechanically reasoning about models\\to mechanically assisted model construction.}
+  \end{center}
+\end{frame}
+\note{
+A last turn of the story, and a possibility, not something built. Once a theorem holds for every memory that satisfies stated laws, you can turn the question around: which mechanisms in the library meet the requirements of a result you want your model to have? Chris asks which memories could support confident errors, and Robin can answer from the theory matrix, where we did this search by hand. EPAM's net has all three laws, but certainty needs noticeably different stimuli, a property of the encoding that the rest of Chris's model must guarantee: an obligation handed to another component. Global matching has determinacy, but certainty and stability are still open. ACT-R's memory provably never has them, so this route is closed for it, though not every route to confident errors. A failed obligation doesn't show that no suitable model exists, and the laws need hold only in states the model can reach. With enough mechanisms, laws and theorems, the library could guide the construction of models, not just analyze them. Lean gives us proof checking, automation and instance search; the organization and search machinery don't exist yet. None of this invents theories or makes a model psychologically plausible: the matrix judges that people lack certainty, so the one memory that fits isn't a good model of people. The direction: from mechanically reasoning about models to mechanically assisted model construction.
+}
+
 \begin{frame}{Limitations, and next}
   \begin{columns}[T]
     \column{0.48\linewidth}

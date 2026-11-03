@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  2 NOV 2026 12:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  3 NOV 2026 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1380,6 +1380,8 @@ Overfull \vbox (8.96538pt too high) detected at line 319
 
 ] [48
 
+] [49
+
 ]
 \tf@nav=\write7
 \openout7 = `talk.nav'.
@@ -1395,10 +1397,10 @@ Package rerunfilecheck Info: File `talk.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26146 strings out of 478994
- 498476 string characters out of 5858185
- 795894 words of memory out of 5000000
- 42942 multiletter control sequences out of 15000+600000
+ 26150 strings out of 478994
+ 498513 string characters out of 5858185
+ 795930 words of memory out of 5000000
+ 42944 multiletter control sequences out of 15000+600000
  502757 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  131i,11n,132p,1446b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1422,10 +1424,10 @@ xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
 onts/symbols/msam10.pfb>
-Output written on talk.pdf (48 pages, 381286 bytes).
+Output written on talk.pdf (49 pages, 382587 bytes).
 PDF statistics:
- 373 PDF objects out of 1000 (max. 8388607)
- 296 compressed objects within 3 object streams
- 97 named destinations out of 1000 (max. 500000)
+ 380 PDF objects out of 1000 (max. 8388607)
+ 301 compressed objects within 4 object streams
+ 99 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 
