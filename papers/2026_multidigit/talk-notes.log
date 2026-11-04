@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  3 NOV 2026 09:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  4 NOV 2026 09:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1260,16 +1260,16 @@ Overfull \vbox (12.38841pt too high) detected at line 82
 
 [8
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 101.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 101.
- [9
+] [9
 
 ] [10
 
-] [11
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 118.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 118.
+ [11
 
 ] [12
 
@@ -1281,18 +1281,18 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
 
 ] [16
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 164.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 164.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 164.
- [17
+] [17
 
 ] [18
 
-] [19
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 183.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 183.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 183.
+ [19
 
 ] [20
 
@@ -1309,12 +1309,7 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
 
 ] [26
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 254.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 254.
- [27
+] [27
 
 ] [28
 
@@ -1323,32 +1318,37 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
 ] [30
 
 ]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-91.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 291.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 291.
+ [31
+
+] [32
+
+] [33
+
+] [34
+
+]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
+28.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [31
+) [35
 
-] [32
+] [36
 
 ]
 \openout4 = `talk-notes.vrb'.
 
 
 (./talk-notes.vrb)
-Overfull \vbox (8.96538pt too high) detected at line 319
+Overfull \vbox (8.96538pt too high) detected at line 356
  []
 
-[33
-
-] [34
-
-] [35
-
-] [36
-
-] [37
+[37
 
 ] [38
 
@@ -1370,11 +1370,7 @@ Overfull \vbox (8.96538pt too high) detected at line 319
 
 ] [47
 
-]
-Overfull \vbox (24.04399pt too high) detected at line 465
- []
-
-[48
+] [48
 
 ] [49
 
@@ -1382,7 +1378,11 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [51
 
-] [52
+]
+Overfull \vbox (24.04399pt too high) detected at line 502
+ []
+
+[52
 
 ] [53
 
@@ -1392,23 +1392,23 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [56
 
-]
-\openout4 = `talk-notes.vrb'.
-
- (./talk-notes.vrb) [57
+] [57
 
 ] [58
 
-]
-[59
+] [59
 
 ] [60
 
-] [61
+]
+\openout4 = `talk-notes.vrb'.
+
+ (./talk-notes.vrb) [61
 
 ] [62
 
-] [63
+]
+[63
 
 ] [64
 
@@ -1416,26 +1416,26 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [66
 
-]
-\openout4 = `talk-notes.vrb'.
-
- (./talk-notes.vrb) [67
+] [67
 
 ] [68
 
+] [69
+
+] [70
+
+]
+\openout4 = `talk-notes.vrb'.
+
+ (./talk-notes.vrb) [71
+
+] [72
+
 ]
 \openout4 = `talk-notes.vrb'.
 
 
-(./talk-notes.vrb) [69
-
-] [70
-
-] [71
-
-] [72
-
-] [73
+(./talk-notes.vrb) [73
 
 ] [74
 
@@ -1449,8 +1449,7 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [79
 
-]
-[80
+] [80
 
 ] [81
 
@@ -1458,7 +1457,8 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [83
 
-] [84
+]
+[84
 
 ] [85
 
@@ -1478,11 +1478,7 @@ Overfull \vbox (24.04399pt too high) detected at line 465
 
 ] [93
 
-]
-Overfull \vbox (12.38841pt too high) detected at line 890
- []
-
-[94
+] [94
 
 ] [95
 
@@ -1490,7 +1486,19 @@ Overfull \vbox (12.38841pt too high) detected at line 890
 
 ] [97
 
-] [98
+]
+Overfull \vbox (12.38841pt too high) detected at line 927
+ []
+
+[98
+
+] [99
+
+] [100
+
+] [101
+
+] [102
 
 ]
 \tf@nav=\write7
@@ -1507,10 +1515,10 @@ Package rerunfilecheck Info: File `talk-notes.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26286 strings out of 478994
- 500531 string characters out of 5858185
- 800506 words of memory out of 5000000
- 42981 multiletter control sequences out of 15000+600000
+ 26298 strings out of 478994
+ 500649 string characters out of 5858185
+ 800682 words of memory out of 5000000
+ 42985 multiletter control sequences out of 15000+600000
  502757 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  135i,11n,135p,1470b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1534,10 +1542,10 @@ xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
 onts/symbols/msam10.pfb>
-Output written on talk-notes.pdf (98 pages, 488824 bytes).
+Output written on talk-notes.pdf (102 pages, 496500 bytes).
 PDF statistics:
- 705 PDF objects out of 1000 (max. 8388607)
- 575 compressed objects within 6 object streams
- 197 named destinations out of 1000 (max. 500000)
+ 729 PDF objects out of 1000 (max. 8388607)
+ 595 compressed objects within 6 object streams
+ 205 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

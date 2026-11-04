@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{36}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -57,6 +57,23 @@ Iris van Rooij and Giosu{\`e} Baggio.
 \newblock \emph{Perspectives on Psychological Science}, 16\penalty0
   (4):\penalty0 682--697, 2021.
 \newblock \doi{10.1177/1745691620970604}.
+
+\bibitem[Hempel and Oppenheim(1948)]{hempel1948}
+Carl~G. Hempel and Paul Oppenheim.
+\newblock Studies in the logic of explanation.
+\newblock \emph{Philosophy of Science}, 15\penalty0 (2):\penalty0 135--175,
+  1948.
+
+\bibitem[Machamer et~al.(2000)Machamer, Darden, and Craver]{machamer2000}
+Peter Machamer, Lindley Darden, and Carl~F. Craver.
+\newblock Thinking about mechanisms.
+\newblock \emph{Philosophy of Science}, 67\penalty0 (1):\penalty0 1--25, 2000.
+
+\bibitem[Steiner(1978)]{steiner1978}
+Mark Steiner.
+\newblock Mathematical explanation.
+\newblock \emph{Philosophical Studies}, 34\penalty0 (2):\penalty0 135--151,
+  1978.
 
 \bibitem[{The mathlib Community}(2020)]{mathlib2020}
 {The mathlib Community}.

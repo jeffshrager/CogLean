@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  3 NOV 2026 09:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  4 NOV 2026 09:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1250,30 +1250,30 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
 (Font)              Font shape `T1/lmss/m/sl' tried instead on input line 79.
  [4
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 101.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 101.
- [5
+] [5
 
 ]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 118.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 118.
+
 [6
 
 ] [7
 
 ] [8
 
+] [9
+
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 164.
+(Font)              <10> on input line 183.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 164.
+(Font)              <7> on input line 183.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 164.
- [9
-
-] [10
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 183.
+ [10
 
 ] [11
 
@@ -1281,35 +1281,35 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
 
 ] [13
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 254.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 254.
- [14
+] [14
 
 ] [15
 
 ]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-91.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 291.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 291.
+ [16
+
+] [17
+
+]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
+28.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [16
+) [18
 
 ]
 \openout4 = `talk.vrb'.
 
  (./talk.vrb)
-Overfull \vbox (8.96538pt too high) detected at line 319
+Overfull \vbox (8.96538pt too high) detected at line 356
  []
 
-[17
-
-] [18
-
-] [19
+[19
 
 ] [20
 
@@ -1329,42 +1329,42 @@ Overfull \vbox (8.96538pt too high) detected at line 319
 
 ] [28
 
+] [29
+
+] [30
+
 ]
 \openout4 = `talk.vrb'.
 
  (./talk.vrb)
-[29
-
-] [30
-
-] [31
+[31
 
 ] [32
 
 ] [33
 
+] [34
+
+] [35
+
 ]
 \openout4 = `talk.vrb'.
 
- (./talk.vrb) [34
+ (./talk.vrb) [36
 
 ]
 \openout4 = `talk.vrb'.
 
- (./talk.vrb) [35
-
-] [36
-
-] [37
+ (./talk.vrb) [37
 
 ] [38
 
-]
-[39
+] [39
 
 ] [40
 
-] [41
+]
+[41
 
 ] [42
 
@@ -1382,6 +1382,10 @@ Overfull \vbox (8.96538pt too high) detected at line 319
 
 ] [49
 
+] [50
+
+] [51
+
 ]
 \tf@nav=\write7
 \openout7 = `talk.nav'.
@@ -1397,10 +1401,10 @@ Package rerunfilecheck Info: File `talk.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26150 strings out of 478994
- 498513 string characters out of 5858185
- 795930 words of memory out of 5000000
- 42944 multiletter control sequences out of 15000+600000
+ 26158 strings out of 478994
+ 498587 string characters out of 5858185
+ 796058 words of memory out of 5000000
+ 42948 multiletter control sequences out of 15000+600000
  502757 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  131i,11n,132p,1446b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1424,10 +1428,10 @@ xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
 onts/symbols/msam10.pfb>
-Output written on talk.pdf (49 pages, 382587 bytes).
+Output written on talk.pdf (51 pages, 385254 bytes).
 PDF statistics:
- 380 PDF objects out of 1000 (max. 8388607)
- 301 compressed objects within 4 object streams
- 99 named destinations out of 1000 (max. 500000)
+ 391 PDF objects out of 1000 (max. 8388607)
+ 310 compressed objects within 4 object streams
+ 103 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

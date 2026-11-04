@@ -64,7 +64,7 @@ Where CogLean came from.
   \titlepage
 \end{frame}
 \note{
-This talk goes with the paper of the same name, which is a draft for comment. It hasn't been carefully checked yet: think of it as an over-starched blog post, and constructive feedback is welcome. The paper introduces CogLean, a library of cognitive theory in the Lean proof assistant, and argues for a way of doing theoretical cognitive science: theories stated once, their consequences proved, and independently developed theories composed so that new results follow from old ones. I'm going to tell it through a hypothetical modeler, Chris, who uses the library to answer two questions about children's arithmetic: one forward, from a phenomenon to a theorem, and one backward, from a proposed regularity to what a theory must be like to produce it. The central example is multi-digit addition, but I want to be clear from the start that it is a demonstration, not a new theory of arithmetic.
+This talk goes with the paper of the same name, which is a draft for comment. It hasn't been carefully checked yet: think of it as an over-starched blog post, and constructive feedback is welcome. The paper introduces CogLean, a library of cognitive theory in the Lean proof assistant, and argues for a way of doing theoretical cognitive science: theories stated once, their consequences proved, and independently developed theories composed so that new results follow from old ones. I'm going to tell it through a hypothetical modeler, Chris, who uses the library to answer two questions about children's arithmetic: one forward, from a phenomenon to a theorem, and one backward, from a proposed regularity to what a theory must be like to produce it. The central example is multi-digit addition, but I want to be clear from the start that it is a demonstration, not a new theory of arithmetic. And one more thing up front: this is less about proof, in the usual sense, than about explanation. The theorems are explanations of phenomena, and Lean keeps them aligned with the programs they explain.
 }
 
 \begin{frame}{The problem: making theory cumulative}
@@ -79,6 +79,23 @@ This talk goes with the paper of the same name, which is a draft for comment. It
 \end{frame}
 \note{
 The problem is an old one, and the people who have done the most about it are the architecture builders. Newell complained in 1973 that we play twenty questions with nature and never assemble the answers, and his answer was unified theories of cognition. Soar and ACT-R, and now the Common Model of Cognition, are decades of work by Newell, Anderson, Laird, Rosenbloom and many others on exactly this: shared mechanisms and constraints, so that a model of a new task reuses the architecture's theory of memory, learning and control, and models of different tasks can be integrated. CogLean is not the first effort in this direction, and it isn't a competitor. What architectures accumulate, though, is mainly models. What a model predicts is established by running it, at one setting at a time, and a result established for one model is rarely available as a result to another. CogLean pursues a complementary goal: accumulating machine-checked theorems about cognitive mechanisms, which can be reused deductively, and stated independently of any one architecture's commitments, so they can cover classes of mechanisms. An architecture could, in principle, carry such results itself. The question for this talk is whether a common formal library can change that: whether theories in such a library can be composed to give meaningful consequences that we would otherwise need a whole new model to find.
+}
+
+\begin{frame}{Formalizing explanations}
+  \begin{itemize}
+    \item \textbf{Phenomena}: regularities of behavior, stated without any mechanism. Observed, they are \textbf{psychological facts}; derived but not yet observed, they are \textbf{predictions}.
+    \item \textbf{Mechanisms and assumptions}: postulates, conditions, laws.
+    \item \textbf{Explanations}: deductions of a phenomenon from mechanisms and assumptions (a theorem and its lemmas).
+    \item \textbf{Deduction}: what Lean checks. Given these mechanisms and assumptions, the phenomenon follows; whether they hold of people is for experiments.
+  \end{itemize}
+  \medskip
+  The explanation is a proof about \textbf{the same program that runs}: change the model, and every explanation it breaks fails to check.
+  \medskip
+
+  \small A phenomenon can have several explanations; a mechanism can help explain several phenomena.
+\end{frame}
+\note{
+Before any Lean, here's what this is for. It's less about proof, in the usual sense, than about explanation. What we explain are phenomena, stated without any mechanism: observed, they're psychological facts; derived but not yet observed, they're predictions. Underneath are mechanisms and their assumptions: postulates, conditions and laws. An explanation is a deduction of a phenomenon from those, in Lean a theorem and its chain of lemmas. That's Hempel and Oppenheim's old deductive picture of explanation, running through how the mechanisms work, made checkable. Lean proves conditional statements; whether the assumptions hold of people is for experiments. And here's what I think matters most. Usually a model is a program and its explanation lives somewhere else, in prose or in math about an idealized program, and the two drift apart. In Lean, the definitions that run are the ones the theorems are about, so when the model changes, every explanation it breaks fails to check, and the rest are confirmed. Not every proof is an explanation; that stays a judgment. But one phenomenon can have several explanations, and one mechanism can help explain several phenomena, and a library of them lets us ask what observations would tell explanations apart.
 }
 
 \begin{frame}{Prior formal approaches to cognitive theory}
@@ -146,6 +163,26 @@ CogLean has four layers. At the bottom is Lean, core only, with exact rational p
 \end{frame}
 \note{
 Four kinds of object have to be kept apart. Mechanisms and their postulates are definitions. Phenomena are predicates, stated without reference to any mechanism; a predicate asserts nothing, it's a target. Theorems say that a mechanism produces behaviour satisfying a predicate. And conditions are the hypotheses under which a theorem holds: some situational, some empirical premises we haven't explained yet, some just well-formedness. One rule follows: a theorem with a phenomenon among its hypotheses is a relation between phenomena, not a prediction of any model. The library's catalog flags those mechanically.
+}
+
+\begin{frame}{Scientific notions, and what they are in Lean}
+  \small
+  \begin{tabular}{@{}p{0.3\linewidth}p{0.64\linewidth}@{}}
+    \textbf{Model (program)} & executable definitions: the same ones that run \\
+    \textbf{Mechanism} & a CogLib process, chosen by a theory \\
+    \textbf{Phenomenon} & a predicate, with no mechanism: a target \\
+    \textbf{Psychological fact} & a phenomenon judged to hold of people: \emph{outside Lean} \\
+    \textbf{Prediction} & a theorem's conclusion, not yet observed \\
+    \textbf{Condition} & a theorem's hypothesis \\
+    \textbf{Law} & a property of a mechanism: proved for a family, or required by a class theorem \\
+    \textbf{Explanation} & a theorem and its lemmas \\
+    \textbf{Deduction} & what Lean's kernel checks \\
+    \textbf{Illustration} & a value computed at one setting: a witness, not an explanation \\
+    \textbf{Lean's axioms} & logic only, never scientific assumptions \\
+  \end{tabular}
+\end{frame}
+\note{
+To be completely explicit about how the words line up. The model, the program, is a set of executable definitions, and they're the same definitions that get run. A mechanism is a CogLib process that a theory chooses. A phenomenon is a predicate stated with no mechanism in it; it's a target. A psychological fact is a phenomenon that holds of people, and that judgment is outside Lean altogether. A prediction is a theorem's conclusion about something nobody has observed yet. Conditions are a theorem's hypotheses. A law is a property of a mechanism, either proved for a whole family or required by a theorem about a class. None of these are Lean axioms; a law of memory is a hypothesis in the same way the group axioms are hypotheses in Mathlib. An explanation is a theorem and its chain of lemmas, and deduction is what Lean's kernel checks. A number computed at one setting is an illustration, a witness that the hypotheses can be met, not an explanation. And Lean's own three axioms are just logic.
 }
 
 \begin{frame}{Meet Chris (and Robin)}
@@ -917,21 +954,23 @@ The limitations are real. The associative strengths are chosen, not learned, and
 }
 
 \begin{frame}{Take-home}
+  \small
   \begin{itemize}
     \item Cognitive theories can be stated once, in a shared formal library, with their consequences proved.
     \item Independently formalized theories compose, and so do their \textbf{theorems}.
     \item Composition derives consequences none of the parts states; formalization exposes what the theories didn't say.
     \item Every result is labelled: library fact, compositional deduction, conditional, or illustrative.
     \item It works both ways: forward from a phenomenon to its sufficient conditions; backward from a regularity to the assumptions it needs.
+    \item Theorems are \textbf{explanations}, proved about the programs that run, so they stay aligned with the models as both change.
   \end{itemize}
   \medskip
-  \centering\emph{Don't just run models; reason about them.}
-  \bigskip
+  \centering\emph{Not formalizing proofs, but formalizing explanations,\\so that we can reason about them.}
+  \medskip
   The goal: a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and traditions.\\[2mm]
   \small\url{https://github.com/jeffshrager/CogLean}
 \end{frame}
 \note{
-To sum up. Cognitive theories can be stated once, in a shared formal library, with their consequences proved rather than simulated. Independently formalized theories compose, and so do their theorems. Composition derives consequences that none of the parts states, and formalization exposes things the theories never said. It works in both directions, as Chris's two questions showed: forward from a phenomenon to conditions sufficient for it, and backward from a proposed regularity to the assumptions it needs. And every result is labelled: a library fact, a compositional deduction, a conditional result, or an illustration. The goal is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, the way mathematical results are reused in Mathlib. One example doesn't establish that. It shows that the approach can produce results of the right kind. The point is not merely to run cognitive models, but to reason about them, and to make that reasoning available to both scientists and computers.
+To sum up. Cognitive theories can be stated once, in a shared formal library, with their consequences proved rather than simulated. Independently formalized theories compose, and so do their theorems. Composition derives consequences that none of the parts states, and formalization exposes things the theories never said. It works in both directions, as Chris's two questions showed: forward from a phenomenon to conditions sufficient for it, and backward from a proposed regularity to the assumptions it needs. And every result is labelled: a library fact, a compositional deduction, a conditional result, or an illustration. The goal is a cumulative theoretical science, in which cognitive constructs and their proved properties are reused across models, tasks and research traditions, the way mathematical results are reused in Mathlib. One example doesn't establish that. It shows that the approach can produce results of the right kind. The point is not merely to run cognitive models, but to reason about them. CogLean isn't primarily about formalizing proofs. It's about formalizing explanations so that we can reason about them, and using Lean to keep those explanations rigorously aligned with the computational models they explain.
 }
 
 \end{document}
