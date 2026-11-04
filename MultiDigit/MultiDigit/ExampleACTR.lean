@@ -26,6 +26,12 @@ compares all 24 features, each mismatch halving a chunk's weight
   which differs from it on the second addend's hundreds digit.
 * Practiced problems do not stay practiced (`act_interference`): studying
   100 + 300 raises the errors on 100 + 100.
+* Priming approaches EPAM's pattern (`act_primable`, `act_primed_values`):
+  in a context that primes 100 + 100, 150 + 100 is answered 200 with
+  probability 225/529 unprimed, 2250/2599 primed tenfold, and 22500/23299
+  primed a hundredfold, and its column use approaches that of 100 + 100.
+  CogLib's `RR.act_priming_confident_errors` says this happens for every
+  choice of the parameters.
 
 The numbers are for illustration. The contrasts are what the memories
 predict for every choice of them: EPAM's by the theorems of
@@ -34,6 +40,7 @@ predict for every choice of them: EPAM's by the theorems of
 
 import MultiDigit.Example
 import MultiDigit.AnyMemory
+import CogLib.Process.PrimedRecognition
 
 namespace MD.ExampleACTR
 
@@ -101,5 +108,36 @@ theorem act_columns :
       (((actRetriever P).retrieve mem (bcd.code x)).map fun rp =>
         rp.2 * AnyMemory.columnsAfter str answers (1 / 2) 1 rp.1).sum :=
   AnyMemory.columns_prob _ bcd str answers (1 / 2) 1 backup x (mass_backup x) total_ne
+
+/-- A trial with ACT-R's memory in a context that primes 100 + 100 by `ρ`. -/
+def primedTrial (ρ : Rat) (p : Problem) : Dist (Route × Nat) :=
+  trialWith (Act.retrieveIn P (Act.primeOnly (bcd.code q1) ρ) mem) bcd str answers (1 / 2) 1 backup p
+
+/-- **The conditions of priming's theorem hold here.** 150 + 100 partially
+matches the stored 100 + 100 (weight 1/8), and 100 + 100 is stored (weight
+1/2), so `RR.act_priming_confident_errors` applies. -/
+theorem act_primable :
+    0 < RR.wOn P mem (bcd.code x) (bcd.code q1) ∧ 0 < RR.wOn P mem (bcd.code q1) (bcd.code q1) := by
+  decide +kernel
+
+/-- Unprimed, the primed trial is the plain one. -/
+theorem primedTrial_one (p : Problem) : primedTrial 1 p = actTrial mem p := by
+  have : Act.primeOnly (bcd.code q1) 1 = fun _ => 1 := by
+    funext z; simp [Act.primeOnly]
+  have h : Act.retrieveIn P (fun _ => 1) mem = Act.retrieve P mem :=
+    funext (Act.retrieveIn_unprimed P mem)
+  simp only [primedTrial, actTrial, this, h]; rfl
+
+/-- **Priming approaches the pattern.** Primed a hundredfold, 150 + 100 is
+answered 200 with probability 22500/23299 (EPAM: 45/46), uses the columns
+with probability 1373/46598 against 1097/46322 for 100 + 100, and 100 + 100
+is answered wrongly with probability 225/46322. -/
+theorem act_primed_values :
+    prob (primedTrial 10 x) (wholeSuch (· == 200)) = 2250 / 2599 ∧
+      prob (primedTrial 100 x) (wholeSuch (· == 200)) = 22500 / 23299 ∧
+      prob (primedTrial 100 x) isColumns = 1373 / 46598 ∧
+      prob (primedTrial 100 q1) isColumns = 1097 / 46322 ∧
+      prob (primedTrial 100 q1) (wholeWrong q1) = 225 / 46322 := by
+  decide +kernel
 
 end MD.ExampleACTR

@@ -29,6 +29,11 @@ With no law of memory:
   - `confident_errors_rate`: the same with the rate as a bound
     (`Phenomena.ConfidentErrors`);
   - `same_correct_confusion_harmless`.
+* For a code that calls up a stored `q` with probability at least `1 - δ`:
+  - `confident_errors_graded`: the pattern to within `2δ`
+    (`Phenomena.GradedConfidentErrors`), for memories whose retrieval is
+    never certain. ACT-R's memory with priming is an instance
+    (`Process/PrimedRecognition`).
 
 From laws of memory (`Phenomena/RetrievalLaws`):
 * `confident_errors_of_laws`: any memory with determinate retrieval,
@@ -280,6 +285,126 @@ theorem confident_errors_rate (correct : P → A) (x q : P) (hT : ∀ y, total a
   (confident_errors code retrieve str as cc n backup correct x q hT hbx hbq hq hx hs hne).confident
     (by rw [backup_prob_certain code retrieve str as cc n backup x _ hx hbx hT]; exact Rat.le_refl)
 
+omit [DecidableEq A] in
+/-- Backup use after any recognition outcome is a probability. -/
+theorem backupAfter_bounds (hs : ∀ y a, 0 ≤ str y a) (hT : ∀ y, total as (str y) ≠ 0) (r : Option Item) :
+    0 ≤ backupAfter str as cc n r ∧ backupAfter str as cc n r ≤ 1 := by
+  cases r with
+  | none => simp [backupAfter]; decide +kernel
+  | some y =>
+    simp only [backupAfter]
+    have h0 := reach_nonneg as (str y) cc (hs y)
+    have h1 := reach_le_one as (str y) cc (hs y) (hT y)
+    refine ⟨Rat.pow_nonneg (by grind), ?_⟩
+    have h1n : ∀ m : Nat, (1 : Rat) ^ m = 1 := by
+      intro m
+      induction m with
+      | zero => rfl
+      | succ k ih => rw [Rat.pow_succ, ih]; decide +kernel
+    have := pow_le_pow_of_le n (show (0:Rat) ≤ 1 - reach as (str y) cc by grind) (show 1 - reach as (str y) cc ≤ 1 by grind)
+    rw [h1n] at this; exact this
+
+omit [DecidableEq A] in
+/-- So is a whole-problem answer with any property. -/
+theorem wholeAfter_bounds (hs : ∀ y a, 0 ≤ str y a) (hT : ∀ y, total as (str y) ≠ 0) (Q : A → Bool)
+    (r : Option Item) : 0 ≤ wholeAfter str as cc n Q r ∧ wholeAfter str as cc n Q r ≤ 1 := by
+  cases r with
+  | none => simp [wholeAfter]; decide +kernel
+  | some y =>
+    simp only [wholeAfter]
+    have hn := nonneg_search as (str y) cc (hs y) n 0
+    refine ⟨prob_nonneg _ _ hn, ?_⟩
+    have := prob_le_mass _ (Retrieval.statedSuch Q) hn
+    rw [mass_search as (str y) cc (hT y)] at this; exact this
+
+omit [DecidableEq A] in
+/-- On a sharp code, no answer lacking the property of the one answer above
+the criterion is stated. -/
+theorem wholeAfter_sharp_zero (y : Item) (c : A) (hT : total as (str y) ≠ 0)
+    (hs : Sharp str cc y c) (Q : A → Bool) (hQ : Q c = false) :
+    wholeAfter str as cc n Q (some y) = 0 := by
+  simp only [wholeAfter]
+  rw [prob_stated _ _ _ _ hT]
+  have : reachSuch as (str y) cc Q = 0 := by
+    simp only [reachSuch]
+    rw [prob_congr _ _ (fun _ => false), prob_false]
+    intro a
+    by_cases ha : above (str y) cc a
+    · simp [hs a ha, hQ]
+    · simp [ha]
+  rw [this]; grind
+
+/-- **Graded confident errors, with any memory.** Let `x` call up the
+familiar `q`, and `q` call up itself, each with probability at least
+`1 - δ`, where `q`'s associations are sharp and `x`'s correct answer differs.
+Then the confusion-error pattern holds to within `2δ`, and backup use on `x`
+is at most `q`'s exhaustion rate plus `δ`. At `δ = 0` this is
+`confident_errors_rate`, without needing retrieval to be certain. The
+postulates are recognition, sharp-criterion retrieval and the backup; the
+conditions are the two recognition bounds, sharpness and well-formedness
+(nonnegative strengths and weights, proper distributions). -/
+theorem confident_errors_graded (correct : P → A) (x q : P) (δ : Rat)
+    (hs0 : ∀ y a, 0 ≤ str y a) (hT : ∀ y, total as (str y) ≠ 0)
+    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hnx : Nonneg (retrieve (code x))) (hmx : mass (retrieve (code x)) = 1)
+    (hnq : Nonneg (retrieve (code q))) (hmq : mass (retrieve (code q)) = 1)
+    (hq : 1 - δ ≤ prob (retrieve (code q)) (· == some (code q)))
+    (hx : 1 - δ ≤ prob (retrieve (code x)) (· == some (code q)))
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    Phenomena.GradedConfidentErrors (recognizeRetrieve code retrieve str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q (2 * δ)
+      (backupAfter str as cc n (some (code q)) + δ) := by
+  let t : Option Item := some (code q)
+  let g : Option Item → Bool := (· == t)
+  have hg : ∀ r, g r = true → r = t := by intro r h; simpa [g] using h
+  have bx := backup_prob code retrieve str as cc n backup x hbx hT
+  have bq := backup_prob code retrieve str as cc n backup q hbq hT
+  have Bx := expect_bounds (retrieve (code x)) (backupAfter str as cc n) g (backupAfter str as cc n t) hnx
+    (fun r => (backupAfter_bounds str as cc n hs0 hT r).1) (fun r => (backupAfter_bounds str as cc n hs0 hT r).2)
+    (fun r h => by rw [hg r h])
+  have Bq := expect_bounds (retrieve (code q)) (backupAfter str as cc n) g (backupAfter str as cc n t) hnq
+    (fun r => (backupAfter_bounds str as cc n hs0 hT r).1) (fun r => (backupAfter_bounds str as cc n hs0 hT r).2)
+    (fun r h => by rw [hg r h])
+  have hb01 := backupAfter_bounds str as cc n hs0 hT t
+  have px1 := prob_le_mass _ g hnx
+  have pq1 := prob_le_mass _ g hnq
+  simp only [expect] at Bx Bq
+  rw [← bx] at Bx; rw [← bq] at Bq
+  have wq := whole_prob code retrieve str as cc n backup q (fun a => a != correct q)
+  have Wq := expect_bounds (retrieve (code q)) (wholeAfter str as cc n (fun a => a != correct q)) g 0 hnq
+    (fun r => (wholeAfter_bounds str as cc n hs0 hT _ r).1) (fun r => (wholeAfter_bounds str as cc n hs0 hT _ r).2)
+    (fun r h => by rw [hg r h]; exact wholeAfter_sharp_zero str as cc n _ _ (hT _) hs _ (by simp))
+  simp only [expect] at Wq; rw [← wq] at Wq
+  have hsplit : prob (recognizeRetrieve code retrieve str as cc n backup x) isWhole =
+      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeWrong correct x) +
+      prob (recognizeRetrieve code retrieve str as cc n backup x) (wholeSuch fun a => a == correct x) := by
+    rw [isWhole_eq, prob_split _ _ (fun o => o.2 != correct x)]
+    congr 1
+    · apply prob_congr; intro o; simp [wholeSuch, wholeWrong]
+    · apply prob_congr; intro o; by_cases h : o.2 = correct x <;> simp [wholeSuch, bne, h]
+  have wx := whole_prob code retrieve str as cc n backup x (fun a => a == correct x)
+  have Wx := expect_bounds (retrieve (code x)) (wholeAfter str as cc n (fun a => a == correct x)) g 0 hnx
+    (fun r => (wholeAfter_bounds str as cc n hs0 hT _ r).1) (fun r => (wholeAfter_bounds str as cc n hs0 hT _ r).2)
+    (fun r h => by rw [hg r h]; exact wholeAfter_sharp_zero str as cc n _ _ (hT _) hs _ (by simp [Ne.symm hne]))
+  simp only [expect] at Wx; rw [← wx] at Wx
+  have hv0 : 0 ≤ backupAfter str as cc n t := hb01.1
+  have hv1 : backupAfter str as cc n t ≤ 1 := hb01.2
+  have k1 : prob (retrieve (code x)) g * backupAfter str as cc n t ≤ backupAfter str as cc n t := by
+    have := Rat.mul_le_mul_of_nonneg_right (show prob (retrieve (code x)) g ≤ 1 by grind) hv0; simpa using this
+  have k2 : prob (retrieve (code q)) g * backupAfter str as cc n t ≤ backupAfter str as cc n t := by
+    have := Rat.mul_le_mul_of_nonneg_right (show prob (retrieve (code q)) g ≤ 1 by grind) hv0; simpa using this
+  have k3 : (1 - δ) * backupAfter str as cc n t ≤ prob (retrieve (code x)) g * backupAfter str as cc n t :=
+    Rat.mul_le_mul_of_nonneg_right hx hv0
+  have k4 : (1 - δ) * backupAfter str as cc n t ≤ prob (retrieve (code q)) g * backupAfter str as cc n t :=
+    Rat.mul_le_mul_of_nonneg_right hq hv0
+  have hδ : 0 ≤ δ := by grind
+  have k5 : δ * backupAfter str as cc n t ≤ δ := by
+    have := Rat.mul_le_mul_of_nonneg_left hv1 hδ; simpa using this
+  rw [hmx] at Bx Wx; rw [hmq] at Bq Wq
+  simp only [Rat.mul_zero] at Wx Wq
+  unfold Phenomena.GradedConfidentErrors Phenomena.GradedConfusionPattern
+  simp only [wholeWrong] at hsplit ⊢
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩ <;> grind
 /-- **Confusion with a problem of the same correct answer is harmless.** -/
 theorem same_correct_confusion_harmless (correct : P → A) (x q : P)
     (hq : retrieve (code q) = pure (some (code q)))

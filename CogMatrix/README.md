@@ -47,7 +47,7 @@ Order-free memories never have recency for a general reason. Studying two items 
 
 `Cog.RR.confident_errors_of_laws` (`CogLib/Process/RecognizeRetrieve.lean`) derives confident errors in the recognize-retrieve composition from three laws: determinacy, certainty and stability. Any memory with all three gives every stranger who can be taken for a studied item a confidently wrong answer, with no extra backup use. In the matrix, only discrimination has all three. Face naming derives its confident misnaming this way, from EPAM's cells (`Experiments/FaceNaming.lean`, `epam_confident_misnaming_of_laws`).
 
-The evidence row judges that people lack certainty. So the law-level route to confident errors, as stated, does not apply to people. If people make confident errors, a graded version (certainty and determinacy with high probability, not probability 1) is what would explain them. That theorem is still to be proved.
+The evidence row judges that people lack certainty. So the law-level route to confident errors, as stated, does not apply to people. If people make confident errors, a graded version is what would explain them. At the level of recognition it is proved: `RR.confident_errors_graded` gives the pattern within `2δ` whenever recognition succeeds with probability at least `1 - δ`, and ACT-R's memory, in a context that primes the familiar item, meets that condition for every `δ > 0` (`RR.act_priming_confident_errors`). Restating it as laws (certainty and determinacy with high probability) is still to be done.
 
 ## Against the evidence
 

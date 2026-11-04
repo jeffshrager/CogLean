@@ -12,6 +12,7 @@ import CogLib.Process.DiscriminationLearning
 import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
 import CogLib.Process.RecognizeRetrieve
+import CogLib.Process.PrimedRecognition
 import CogLib.Process.TheoryExecution
 import CogLib.Process.ViewRetrieval
 import CogLib.Process.TheoryRevision

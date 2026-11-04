@@ -12,6 +12,10 @@ wrong for a given problem (`wholeWrong`), and use of a backup procedure
   exactly as often as `q`. Equal backup use is not low backup use.
 * `ConfidentErrors r`: the pattern, with backup use on `x` at most `r`. The
   bound is an argument, not a fixed threshold.
+* `GradedConfusionPattern ε`, `GradedConfidentErrors ε r`: the same, each
+  equality holding to within `ε`. A memory whose retrieval is never certain
+  can approach the pattern without reaching it. At `ε = 0` the pattern gives
+  the graded one (`ConfusionErrorPattern.graded`).
 
 Mechanisms exhibit these by theorem (`Process/RecognizeRetrieve`,
 `RR.confident_errors` and `RR.confident_errors_of_laws`); the assumptions
@@ -41,6 +45,22 @@ def ConfidentErrors (trial : P → Dist O) (wholeWrong : P → O → Bool)
     (isWhole isBackup : O → Bool) (x q : P) (r : Rat) : Prop :=
   ConfusionErrorPattern trial wholeWrong isWhole isBackup x q ∧ prob (trial x) isBackup ≤ r
 
+/-- **The confusion-error pattern, to within `ε`.** `q` is answered wrongly
+by retrieval with probability at most `ε`; `x` is answered rightly by
+retrieval with probability at most `ε`; and backup use on the two differs by
+at most `ε`. -/
+def GradedConfusionPattern (trial : P → Dist O) (wholeWrong : P → O → Bool)
+    (isWhole isBackup : O → Bool) (x q : P) (ε : Rat) : Prop :=
+  prob (trial q) (wholeWrong q) ≤ ε ∧
+    prob (trial x) isWhole - prob (trial x) (wholeWrong x) ≤ ε ∧
+    prob (trial x) isBackup - prob (trial q) isBackup ≤ ε ∧
+    prob (trial q) isBackup - prob (trial x) isBackup ≤ ε
+
+/-- **Confident errors, to within `ε`, with backup use at most `r`.** -/
+def GradedConfidentErrors (trial : P → Dist O) (wholeWrong : P → O → Bool)
+    (isWhole isBackup : O → Bool) (x q : P) (ε r : Rat) : Prop :=
+  GradedConfusionPattern trial wholeWrong isWhole isBackup x q ε ∧ prob (trial x) isBackup ≤ r
+
 /-- The pattern is the conjunction of its three probability statements. -/
 theorem confusionErrorPattern_iff (trial : P → Dist O) (wholeWrong : P → O → Bool)
     (isWhole isBackup : O → Bool) (x q : P) :
@@ -67,6 +87,12 @@ theorem same_backup (h : ConfusionErrorPattern trial wholeWrong isWhole isBackup
 theorem confident {r : Rat} (h : ConfusionErrorPattern trial wholeWrong isWhole isBackup x q)
     (hr : prob (trial x) isBackup ≤ r) : ConfidentErrors trial wholeWrong isWhole isBackup x q r :=
   ⟨h, hr⟩
+
+/-- The exact pattern is the graded pattern within 0. -/
+theorem graded (h : ConfusionErrorPattern trial wholeWrong isWhole isBackup x q) :
+    GradedConfusionPattern trial wholeWrong isWhole isBackup x q 0 := by
+  obtain ⟨h1, h2, h3⟩ := h
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> grind
 
 end ConfusionErrorPattern
 

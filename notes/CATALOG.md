@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-246 theorems: 241 general, 5 instances; 92 headline; 30 about laws; 26 conditional on laws.
+265 theorems: 260 general, 5 instances; 97 headline; 33 about laws; 27 conditional on laws.
 
 **Laws**
 
@@ -36,6 +36,9 @@ How to read it:
 | `Cog.RR.confident_errors` | ConfusionErrorPattern | has | general | derived |
 | `Cog.RR.confident_errors_of_laws` | ConfusionErrorPattern | has | general | Determinate, Certainty, Stability |
 | `Cog.view_confusion_pattern` | ConfusionErrorPattern | has | general | derived |
+| `Cog.RR.act_primed_confident_errors` | GradedConfidentErrors | has | general | derived |
+| `Cog.RR.confident_errors_graded` | GradedConfidentErrors | has | general | derived |
+| `Cog.Phenomena.ConfusionErrorPattern.graded` | GradedConfusionPattern | has | general | ConfusionErrorPattern |
 | `Cog.netLearner_nonInterference` | NonInterference | has | general | derived |
 | `Cog.netResponder_oscillation` | Oscillation | has | general | derived |
 | `Cog.Phenomena.criterion_of_nonInterference` | ReachesCriterion | has | general | NonInterference |
@@ -57,6 +60,7 @@ How to read it:
 | `Cog.isolation_effect` | general | — | The isolation effect (von Restorff), from the same rule: an item made distinctive, so an anchor too, is learned on the second trial, after the first item, where without it it is learned no earl... |
 | `Cog.rank_lt_of_before` | general | — | The rule orders learning by nearness, for any anchors: an item taken before another is learned on an earlier trial. |
 | `Cog.trials_at_least_items` | general | — | Serial mechanism, unit processing time. If after `t` trials at most `t` items are learned, then learning `n` items takes at least `n` trials. |
+| `Cog.Act.prob_primed` | general | — | The chance of retrieving a primed code: `ρ W_y / (ρ W_y + W_rest)`, where `W_y` is the unprimed weight on `y` and `W_rest` that on every other outcome, failure included. |
 | `Cog.Act.retrieve_not_certain` | general | — | Retrieval is never certain. Failure is always among the outcomes. |
 | `Cog.Net.cue_from_path_selects` | general | — | A path cue is sufficient. The cue made of exactly the features on the response's path selects the response's image, and nothing else. |
 | `Cog.Net.restoration` | general | — | Restoration. After the net has grown, rebuilding the cue from the response's new path re-establishes the link: the cue selects the response, and nothing else. |
@@ -88,6 +92,8 @@ How to read it:
 | `Cog.netRetriever_deterministic` | general | — | A discrimination net retrieves deterministically. |
 | `Cog.netRetriever_stableRetrieval` | general | — | Discrimination learning has stable retrieval. |
 | `Cog.net_agreesOn` | general | — | A net agrees on the features a path tests. If each image is stored once, and `x` is recognized as the stored image `y`, which the net itself recognizes, then whatever `x` calls up agrees with i... |
+| `Cog.RR.act_primed_confident_errors` | general | — | Primed ACT-R memory makes graded confident errors. In a context that primes the familiar `q` by `ρ`, let the rest of the weight, for the probes `x` and `q`, be at most `δ` times `q`'s primed we... |
+| `Cog.RR.act_priming_confident_errors` | general | — | Priming brings ACT-R's memory as close to the confusion-error pattern as one likes. For every `δ > 0` there is a priming factor beyond which the trial makes graded confident errors within `2δ`. |
 | `Cog.achieve_chain_fail_pre` | general | — | A broken link. If, once its preconditions are achieved, the single relevant operator still does not apply, the goal fails. |
 | `Cog.achieve_chain_fail_sub` | general | — | A broken link. If the single relevant operator's preconditions cannot be achieved, the goal fails. |
 | `Cog.achieve_chain_step` | general | — | A link of a chain. If the first unmet condition has a single relevant operator, its preconditions are achieved (state `s1`), and it then applies deterministically (state `s2`), achieving the go... |
@@ -98,6 +104,7 @@ How to read it:
 | `Cog.RR.backup_prob` | general | — | Backup use, with any memory: the average, over what the code calls up, of `1` (nothing) and `(1 - R_y)^n` (a stored `y`). |
 | `Cog.RR.backup_prob_certain` | general | — | Strategy nesting, for a code that calls up `r` for certain. |
 | `Cog.RR.confident_errors` | general | — | Confident errors, with any memory. Let the familiar `q` call up itself for certain, with sharp associations, and let `x`, whose correct answer differs, call up `q` for certain. |
+| `Cog.RR.confident_errors_graded` | general | — | Graded confident errors, with any memory. Let `x` call up the familiar `q`, and `q` call up itself, each with probability at least `1 - δ`, where `q`'s associations are sharp and `x`'s correct ... |
 | `Cog.RR.confident_errors_of_laws` | general | Determinate, Certainty, Stability | Confident errors, from laws of memory. For any memory with determinate retrieval, certainty and stability: after a study list without repeats, if a stranger `x` can be taken for a studied `q` (... |
 | `Cog.RR.confusion_gives_neighbours_answer` | general | — | A confused problem gets its neighbour's answer. |
 | `Cog.RR.same_correct_confusion_harmless` | general | — | Confusion with a problem of the same correct answer is harmless. |
@@ -129,6 +136,7 @@ How to read it:
 | `Cog.view_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In any state reachable by study, a memory with the law of determinacy makes each cue bring in one view: the same at every attempt and for every theory. |
 | `Cog.revise_same_of_determinate` | general | Determinate, Reachable | Perseveration, for every determinate memory. In a state reachable by study, a memory with the law of determinacy makes every revision by a cue bring in one and the same retrieval, from every th... |
 | `Cog.Dist.bind_assoc` | general | — | Two-stage draws regroup. |
+| `Cog.Dist.expect_bounds` | general | — | Bounding an average. For a quantity between 0 and 1 that equals `v` on the event `g`, the average lies between `g`'s share times `v` and that plus the rest of the mass. |
 | `Cog.Dist.mass_bind` | general | — | Proper stages make a proper process. If the first stage and every second stage are proper distributions, so is the two-stage process. |
 | `Cog.Dist.nonneg_bind` | general | — | Nonnegative stages make a nonnegative process. |
 | `Cog.Dist.prob_bind_cons` | general | — | Two stages. |
@@ -211,7 +219,7 @@ How to read it:
 
 ## Multi-digit addition (with the problem solver)
 
-204 theorems: 164 general, 40 instances; 83 headline; 10 about laws; 5 conditional on laws.
+207 theorems: 165 general, 42 instances; 85 headline; 10 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -253,6 +261,8 @@ How to read it:
 | `MD.ExampleACTR.act_interference` | instance | — | Interference. Studying 100 + 300 raises the errors on the practiced 100 + 100 from 225/782 to 3375/5842. |
 | `MD.ExampleACTR.act_not_agreesOn` | instance | — | `AgreesOn` fails. 150 + 100 can retrieve 100 + 200, which differs from it on the second addend's hundreds digit. |
 | `MD.ExampleACTR.act_practiced_not_certain` | instance | — | Not even a practiced problem is retrieved for certain: 100 + 100 retrieves itself with probability 10/17, and is answered wrongly with probability 225/782. |
+| `MD.ExampleACTR.act_primable` | instance | — | The conditions of priming's theorem hold here. 150 + 100 partially matches the stored 100 + 100 (weight 1/8), and 100 + 100 is stored (weight 1/2), so `RR.act_priming_confident_errors` applies. |
+| `MD.ExampleACTR.act_primed_values` | instance | — | Priming approaches the pattern. Primed a hundredfold, 150 + 100 is answered 200 with probability 22500/23299 (EPAM: 45/46), uses the columns with probability 1373/46598 against 1097/46322 for 1... |
 | `MD.ExampleACTR.act_values` | instance | — | Graded confusion. 150 + 100 retrieves 100 + 100 with probability 10/23 and 100 + 200 with probability 5/23, and fails with probability 8/23. |
 | `MD.AnyMemory.confused_colSum` | general | AgreesOn | Confusions keep a column's sum, with any memory that agrees on its fact features. |
 | `MD.AnyMemory.confusion_keeps_zeros` | general | AgreesOn | Confusions keep zeros, with any memory that agrees on the digit's zero feature. |
@@ -525,14 +535,14 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 246 | 241 | 5 | 30 | 26 | 92 |
+| CogLib: the general library | 265 | 260 | 5 | 33 | 27 | 97 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 28 | 21 | 7 | 0 | 0 | 16 |
-| Multi-digit addition (with the problem solver) | 204 | 164 | 40 | 10 | 5 | 83 |
+| Multi-digit addition (with the problem solver) | 207 | 165 | 42 | 10 | 5 | 85 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
 | Experiments written against the memory interface | 45 | 25 | 20 | 2 | 5 | 13 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
-| **All** | 677 | 536 | 141 | 92 | 38 | 290 |
+| **All** | 699 | 556 | 143 | 95 | 39 | 297 |

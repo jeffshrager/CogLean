@@ -446,5 +446,52 @@ theorem nonneg_sample (as : List α) (s : α → Rat) (hs : ∀ a, 0 ≤ s a) : 
   obtain ⟨a, _, rfl⟩ := h
   exact div_nonneg' (hs a) (strengthIn_nonneg as s _ hs)
 
+/-! ### Bounds for nonnegative distributions -/
+
+theorem prob_nonneg (d : Dist α) (e : α → Bool) (hd : Nonneg d) : 0 ≤ prob d e := by
+  induction d with
+  | nil => simp [prob]
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    have hp : 0 ≤ p := hd _ List.mem_cons_self
+    have := ih (fun y hy => hd y (List.mem_cons_of_mem _ hy))
+    simp only [prob]; split <;> grind
+
+theorem prob_le_mass (d : Dist α) (e : α → Bool) (hd : Nonneg d) : prob d e ≤ mass d := by
+  have h := prob_add_not d e
+  have := prob_nonneg d (fun a => !e a) hd
+  grind
+
+/-- An event split by a second test. -/
+theorem prob_split (d : Dist α) (e g : α → Bool) :
+    prob d e = prob d (fun a => e a && g a) + prob d (fun a => e a && !g a) := by
+  induction d with
+  | nil => simp [prob]; grind
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    simp only [prob, ih]
+    by_cases he : e a <;> by_cases hg : g a <;> simp [he, hg] <;> grind
+
+/-- **Bounding an average.** For a quantity between 0 and 1 that equals `v`
+on the event `g`, the average lies between `g`'s share times `v` and that
+plus the rest of the mass. -/
+theorem expect_bounds (d : Dist α) (h : α → Rat) (g : α → Bool) (v : Rat) (hd : Nonneg d)
+    (h0 : ∀ a, 0 ≤ h a) (h1 : ∀ a, h a ≤ 1) (hv : ∀ a, g a = true → h a = v) :
+    prob d g * v ≤ expect d h ∧ expect d h ≤ prob d g * v + (mass d - prob d g) := by
+  induction d with
+  | nil => simp [prob, expect, mass]; grind
+  | cons x d ih =>
+    obtain ⟨a, p⟩ := x
+    have hp : 0 ≤ p := hd _ List.mem_cons_self
+    obtain ⟨ih1, ih2⟩ := ih (fun y hy => hd y (List.mem_cons_of_mem _ hy))
+    have hpa : 0 ≤ p * h a := Rat.mul_nonneg hp (h0 a)
+    have hpa1 : p * h a ≤ p := by
+      have := Rat.mul_le_mul_of_nonneg_left (h1 a) hp; simpa using this
+    simp only [prob, mass, expect, List.map_cons, List.sum_cons] at ih1 ih2 ⊢
+    by_cases hg : g a
+    · have := hv a hg
+      simp only [hg, ite_true]; subst this; constructor <;> grind
+    · simp only [hg]; constructor <;> grind
+
 end Dist
 end Cog
