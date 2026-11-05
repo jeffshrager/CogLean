@@ -1,4 +1,4 @@
-\begin{thebibliography}{26}
+\begin{thebibliography}{27}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -8,13 +8,19 @@
 \bibitem[Shrager(2026{\natexlab{a}})]{shrager2026coglean}
 Jeff Shrager.
 \newblock {CogLean}: Towards a cumulative, machine-checked theory of cognition.
-\newblock Draft for comment, \texttt{papers/2026\_multidigit/} in the CogLean
+\newblock Draft for comment, \texttt{papers/2026-coglean-intro/} in the CogLean
   repository, 2026{\natexlab{a}}.
 
 \bibitem[Shrager(2026{\natexlab{b}})]{coglean}
 Jeff Shrager.
 \newblock {CogLean}: A library of cognitive theory in {Lean} 4.
 \newblock \url{https://github.com/jeffshrager/CogLean}, 2026{\natexlab{b}}.
+
+\bibitem[Shrager(2026{\natexlab{c}})]{shrager2026multidigit}
+Jeff Shrager.
+\newblock Composing cognitive theories in {CogLean}: Multi-digit addition.
+\newblock Draft for comment, \texttt{papers/2026\_multidigit/} in the CogLean
+  repository, 2026{\natexlab{c}}.
 
 \bibitem[Feigenbaum and Simon(1962)]{feigenbaum1962}
 Edward~A. Feigenbaum and Herbert~A. Simon.

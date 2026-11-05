@@ -24,9 +24,9 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\lean}[1]{\texttt{#1}}
 
-\title{CogLean: Towards a Cumulative, Machine-Checked Theory of Cognition}
+\title{Composing Cognitive Theories in CogLean:\\Multi-Digit Addition}
 \author{Jeff Shrager}
-\date{Draft, October 2026}
+\date{Draft, November 2026}
 
 \begin{document}
 \sloppy
@@ -39,73 +39,27 @@
 \medskip
 
 \begin{abstract}
-Cognitive architectures such as ACT-R and Soar have long sought to make cognitive theory cumulative, by providing shared computational mechanisms within which models of different tasks can be built and integrated. What such models predict, however, is usually established by running them at chosen parameter settings, and a result established for one model is rarely available, as a result, to another. CogLean pursues a complementary objective: accumulating formally proved theoretical results about cognitive mechanisms. We describe CogLean, a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics. CogLean is not a new theory of cognition. Its shared library, CogLib, holds representations, mechanisms, theory-neutral statements of phenomena, and machine-checked theorems relating them. Existing theories are expressed as choices of those mechanisms. CogLean is less about proof, in the usual sense, than about explanation. Its theorems are explanations: deductions of a phenomenon from mechanisms and stated assumptions. They are proved about the same definitions that run as the model, so that when a model changes, any explanation the change invalidates fails to check.
-
-We demonstrate a way of doing cumulative theoretical cognitive science. Two independently formalized theories, EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager), are composed with a general problem solver into an executable model of three-digit addition, and their established theorems are reused to derive consequences of the composition. The results form a hierarchy. At the most general level, a theorem relates recognition, associative retrieval and backup use for any problems and answers: a problem confused with a familiar one exhibits a theory-neutral \emph{confusion-error pattern}, stated separately from any mechanism. The same pattern is then proved for \emph{every} memory that satisfies three stated laws (determinacy, certainty and stability), so that a class of mechanisms inherits it; EPAM's memory has all three laws and ACT-R's declarative memory, proved for every parameter setting, has none. Other results separate what follows from a mechanism regardless of representation from what requires particular representational properties. Concrete settings, with exact values relegated to an appendix, serve as witnesses that the hypotheses can be met and that model families diverge. Formalization alone also exposed an ambiguity in one of the original theories. The original chapter claims that a more peaked distribution of associations lowers overt strategy use. An arbitrary redistribution of strength toward the correct answer can instead \emph{increase} it. Whether learning can do the same depends on an assumption the chapter leaves open: under DOA's additive learning rule, strengthening a correct answer that already exceeds the criterion never raises backup use, while under a rule that renormalizes strengths after learning it can.
-
-The multi-digit model is a demonstration of method, not a theory of arithmetic. We distinguish what has been proved from what remains an aspiration: identifying the weakest assumptions sufficient for a phenomenon, and the conditions under which whole classes of theories agree or diverge.
+CogLean is a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib: mechanisms are defined once, phenomena are stated independently of any mechanism, and theorems relating them are machine-checked and reusable. A companion paper introduces the library and its account of theorems as explanations. This paper asks whether independently formalized theories, composed in such a library, yield meaningful consequences that would otherwise require building and investigating a new integrated model. Two independently formalized theories, EPAM's discrimination-net recognition (Feigenbaum and Simon) and the distributions-of-associations model of strategy choice (Siegler and Shrager), are composed with a general problem solver into an executable model of three-digit addition, and their established theorems are reused to derive consequences of the composition. The results form a hierarchy. At the most general level, a theorem relates recognition, associative retrieval and backup use for any problems and answers: a problem confused with a familiar one exhibits a theory-neutral \emph{confusion-error pattern}. In the integrated model, that theorem is a deduction about the same executable trial that produces the model's answers. The pattern is also proved for \emph{every} memory that satisfies three stated laws; EPAM's memory has all three, and ACT-R's declarative memory, proved for every parameter setting, has none. Further results are compositional: whole-problem errors do not depend on the problem solver, wrong answers have two sources with different signatures, and one memory can serve both whole problems and column facts. Other results separate what follows from a mechanism regardless of representation from what requires particular representational properties. Concrete settings, with exact values relegated to an appendix, serve as witnesses that the hypotheses can be met and that model families diverge, and an independent blind simulation checks the formal model against its prose specification. The multi-digit model is a demonstration of method, not a theory of arithmetic.
 \end{abstract}
 
 \section{Introduction}
 
-Making cognitive theory cumulative is an old problem, and much of the work on it has been done by cognitive architectures. Newell's complaint that the field asks nature twenty questions without assembling the answers \citep{newell1973} led to his call for unified theories of cognition \citep{newell1990}. Soar \citep{laird1987,laird2012} and ACT-R \citep{anderson2007} answered it with shared computational mechanisms and constraints: a model of a new task built in the architecture reuses the architecture's theory of memory, learning and control, and models of different tasks can be integrated because they share those commitments. Decades of work by Newell, Anderson, Laird, Rosenbloom and many others have made this the principal means by which cognitive theory accumulates, and the Common Model of Cognition \citep{laird2017} extends it to what several architectures share. CogLean is not the first effort in this direction, and it is not a competitor to, or a replacement for, cognitive architectures.
-
-What architectures accumulate, though, is mainly computational models and the commitments they share. What a model predicts is usually established by running it at chosen parameter settings, and a result established for one model, or one task, is rarely available as a \emph{result} to another: it has to be re-established by running the new model. CogLean pursues a complementary objective. It aims to accumulate formally proved theoretical results about cognitive mechanisms: machine-checked theorems that, once established in one context, can be reused deductively in another, and that can be generalized beyond the commitments of any particular architecture. Nothing prevents an architecture from incorporating such a capability, and its longer-term ambition is to provide a mathematical foundation for reasoning about cognitive architectures themselves. Related arguments that computational modeling forces theories to be made explicit \citep{guest2021}, and that psychology needs explanatory theories, not only tests \citep{vanrooij2021}, motivate the same aim.
-
-The difference has two parts.
-\begin{itemize}
-  \item \textbf{Accumulating models versus accumulating proved results.} An architecture lets models of different tasks reuse theoretical commitments. CogLean adds the ambition of reusing \emph{theorems} about the mechanisms: a property proved of a memory, say, is available to every model that uses that memory, without re-running anything.
-  \item \textbf{Reasoning across architectural commitments.} ACT-R and Soar each embody particular theories of memory, learning and control. CogLean states phenomena and properties of mechanisms independently of any architecture, so that results can be proved for whole classes of mechanisms that satisfy stated laws. The confident-errors result of Section~\ref{sec:classes} is an example: it holds for every memory that satisfies three laws, and so covers EPAM's discrimination nets but not ACT-R's declarative memory. It also shows the present limits. The laws are proved sufficient, not necessary, and nothing here establishes general equivalence or divergence among architectures.
-\end{itemize}
-
-\paragraph{Formalizing explanations.} CogLean's targets are \emph{phenomena}: regularities of behavior, stated without reference to any mechanism. A phenomenon that has been observed is a psychological fact; one that has been derived but not observed is a prediction. CogLean's \emph{explanations} are deductions of a phenomenon from mechanisms and stated assumptions: in Lean, a theorem and the chain of lemmas behind it. This is the deductive-nomological account of explanation \citep{hempel1948}, in which a phenomenon is explained by deducing it from laws and conditions, with the deduction carried through the operation of mechanisms \citep{machamer2000}, and made mechanically checkable. Lean proves conditional propositions: given these mechanisms and assumptions, the phenomenon follows. It does not establish that the assumptions are true of people, or that the phenomenon occurs; that is the business of empirical psychology. What CogLean establishes is the deductive relation between the two. Not every proof explains \citep{steiner1978}, and validity does not rule out the familiar failures of deductive explanation, such as irrelevant premises; which theorems are explanations is a judgment, which CogLean records in the open (Section~\ref{sec:status}). Table~\ref{tab:map} maps these scientific notions onto what they are in Lean. A phenomenon can have several explanations, and a mechanism can take part in explaining several phenomena. A library that accumulates phenomena, mechanisms and explanations can compose them, compare the explanations of one phenomenon, and ask which observations would tell them apart.
-
-\paragraph{Keeping explanations aligned with models.} Cognitive theories are often expressed as programs, and explanations of what the programs do are expressed separately: in prose, in mathematics about an idealization of the program, or in informal reasoning. As models grow and change, the explanations can drift away from what the programs actually do, without anyone noticing. In Lean a definition is both a program and a mathematical object, so the definitions that run as the model are the ones the theorems are about. The integrated model of Section~\ref{sec:compose} is executed, and its confident-errors theorem is a deduction about that same executable trial, carried through its recognition, retrieval and problem solving. When a mechanism changes, every explanation that depends on it is checked again: those the change invalidates fail and must be repaired, and the rest are confirmed. This is perhaps the most important thing Lean contributes. It has limits. Lean keeps explanations aligned with the \emph{formal} model. Whether the formalization is faithful to the original theory (Section~\ref{sec:sim} describes one independent check), whether sampled simulations match the exact distributions (checked statistically), and whether prose such as this paper describes the Lean correctly, remain for people to check.
-
-Mathematics faced a version of the same problem and has made progress on it. Mathlib \citep{mathlib2020}, the community library of formalized mathematics for the Lean proof assistant \citep{demoura2021}, does not propose new mathematics. It provides one shared formal environment, in which definitions are made once, every result is machine-checked, and later work builds on earlier results by citing them. A theorem about groups, once proved, is available to everyone who uses groups.
-
-This paper asks whether the same organization can work for cognitive theory:
+CogLean \citep{coglean} is a library of cognitive theory in the Lean proof assistant, organized on the model of Mathlib, the community library of formalized mathematics \citep{mathlib2020,demoura2021}. The companion paper \citep{shrager2026coglean} introduces it: its organization, its vocabulary of mechanisms, phenomena, theorems and conditions, and its central claim, that CogLean's theorems are explanations, deductions of phenomena from mechanisms and stated assumptions, proved about the same definitions that run as the model. It illustrates the approach with small examples. This paper is the first extended test. It asks a question cognitive architectures have long addressed by building integrated models \citep{newell1990,anderson2007,laird2012}:
 
 \begin{quote}
 \emph{If independently developed cognitive theories are represented in a common formal library, can we derive scientifically meaningful consequences from their composition, consequences that would otherwise require building and investigating a new integrated model from scratch?}
 \end{quote}
 
-We describe CogLean \citep{coglean}, an initial library built to test this, and give a concrete, checked answer in one case. The case is three-digit addition, composed from EPAM's discrimination nets \citep{feigenbaum1959,feigenbaum1962}, Siegler and Shrager's distributions-of-associations (DOA) model of strategy choice \citep{siegler1984}, and a problem solver in the tradition of GPS and repair theory \citep{newell1972,brown1980}. Arithmetic is the demonstration, not the objective. We are not proposing a new theory of children's arithmetic. Multi-digit addition is a familiar task, complex enough to need several mechanisms, and two of the needed theories already exist.
+We give a concrete, checked answer in one case. The case is three-digit addition, composed from EPAM's discrimination nets \citep{feigenbaum1959,feigenbaum1962}, Siegler and Shrager's distributions-of-associations (DOA) model of strategy choice \citep{siegler1984}, and a problem solver in the tradition of GPS and repair theory \citep{newell1972,brown1980}. Arithmetic is the demonstration, not the objective. We are not proposing a new theory of children's arithmetic. Multi-digit addition is a familiar task, complex enough to need several mechanisms, and two of the needed theories already exist.
 
-The argument is organized around four capabilities, in increasing order of importance.
-\begin{enumerate}
-  \item \textbf{Formalization.} Existing theories are stated as definitions, postulates and theorems. Each theorem's assumptions are explicit.
-  \item \textbf{Composition.} Formalized mechanisms are reused in new contexts, and so are the \emph{theorems} about them. A library of reusable cognitive algorithms would be useful software. A library of reusable \emph{results} is a contribution to theory.
-  \item \textbf{Generalization over classes.} Phenomena are stated independently of mechanisms, and theorems are proved for every mechanism that satisfies stated laws, and for every representation with stated properties. A new theory that satisfies the laws inherits the results.
-  \item \textbf{Discovery}, in a limited sense. Formalization exposes unstated assumptions, results that hold only under conditions, and conditions under which theories diverge. It can also expose an ambiguity in a theory: in Section~\ref{sec:peak}, an informal claim of the DOA chapter turns out to follow from the model's postulates under one assumption about learning and not under another, and not to follow at all for arbitrary changes to a distribution.
-\end{enumerate}
+The composition tests three things. That the mechanisms compose: the integrated model runs, with no answer supplied to it. That the \emph{theorems} compose: results proved for each component transfer to the whole, so that the integrated model's consequences are derived largely by reusing them. And that the derived explanations stay aligned with the program: the trial that is executed to produce the model's answers is the same trial the theorems reason about, through recognition, retrieval and problem solving, so a change to any mechanism re-checks every explanation that depends on it.
 
-\paragraph{The aspiration.} The longer-term objective of CogLean is not merely to provide executable implementations of cognitive theories, or even machine-checked proofs about particular implementations. It is to develop a cumulative mathematical theory of cognition, in which the assumptions responsible for psychological phenomena can be isolated, compared and generalized. Rather than asking only what a particular model predicts at a particular parameter setting, we seek to establish which properties of cognitive mechanisms and representations are sufficient (or, where possible, necessary) for classes of behavioral phenomena. Such results would characterize relationships among theories, identify their common commitments, reveal the conditions under which they diverge, and let new theories inherit established results by satisfying previously formalized laws. This paper does not achieve that. It shows that some of the constituent capabilities already work, and Section~\ref{sec:program} separates what is proved from what is aspiration.
+The numerical predictions of the example are illustrative. They depend on chosen problems, learning histories, encodings, strengths, criteria and backup procedures, and a simulation could produce comparable numbers. Their roles are to show that the composition runs, that the theorems' hypotheses can be met, and that model families can diverge \citep{shrager2026coglean}. They are collected in Appendix~\ref{app:setting}.
 
-The numerical predictions of the example are illustrative. They depend on chosen problems, learning histories, encodings, strengths, criteria and backup procedures, and a simulation could produce comparable numbers. Their roles are to show that the composition runs, that the theorems' hypotheses can be met, and that model families can diverge. They are collected in Appendix~\ref{app:setting}.
-
-Lean checks that conclusions follow from premises, not that the premises describe people or that a valid derivation explains anything (Section~\ref{sec:status}). Appendix~\ref{app:chris} follows a hypothetical modeler through the method, from a phenomenon to a theorem and back from a proposed regularity to the assumptions it requires.
-
-\section{CogLean}
+\section{Background: CogLean}
 \label{sec:coglean}
 
-\subsection{Organization}
-
-CogLean has four layers (Figure~\ref{fig:arch}).
-\begin{itemize}
-  \item \textbf{Lean}, the formal language and proof checker. CogLean uses only Lean's core, not Mathlib, and every probability is an exact rational number.
-  \item \textbf{CogLib}, the general library. It holds:
-  \begin{itemize}
-    \item representations: feature codes, finite probability distributions, semantic networks;
-    \item memory structures: discrimination nets, an ACT-R-style activation memory;
-    \item processes: discrimination learning, sampled retrieval with a confidence criterion, ``recognize, then retrieve, else back up'', and a decision cycle with impasses and repairs;
-    \item an interface any memory can implement (a \emph{retriever}: study an item, retrieve a distribution over stored items);
-    \item theory-neutral statements of phenomena and laws, such as the serial-position effect, or the law that retrieval of a studied item is certain.
-  \end{itemize}
-  CogLib imports no theory.
-  \item \textbf{Theories}, each a package that states its postulates as choices of CogLib constructs, cited to their sources, and proves its phenomena.
-  \item \textbf{Applications}, models of particular tasks assembled from theories and library mechanisms, with the task's own knowledge.
-\end{itemize}
+CogLean has four layers (Figure~\ref{fig:arch}): Lean's core, with every probability an exact rational number; CogLib, the general library of representations, memories, processes, an interface any memory can implement, and theory-neutral phenomena and laws, which imports no theory; theories, each stating its postulates as choices of CogLib constructs, cited to their sources; and applications, models of particular tasks assembled from theories and library mechanisms.
 
 \begin{figure}[t]
 \centering
@@ -122,45 +76,7 @@ CogLean has four layers (Figure~\ref{fig:arch}).
 \label{fig:arch}
 \end{figure}
 
-The contribution is not a programming language or a new syntax for cognitive models. Any model could be written in Lean as a program. What CogLean contributes is an \emph{organization} of theoretical knowledge: mechanisms defined once, phenomena stated independently of any mechanism, and theorems relating them, all in one place where later work can cite them. CogLean is far from Mathlib's scale or maturity. It is a demonstration that the approach can work, not a finished library.
-
-\subsection{Mechanisms, representations, phenomena, theorems and conditions}
-
-A cognitive model combines kinds of commitment that conventional implementations tend to intertwine. CogLean keeps them apart.
-\begin{enumerate}
-  \item \textbf{Mechanisms and their postulates}: definitions, such as how a discrimination net sorts a code, or how retrieval samples an answer in proportion to its associative strength.
-  \item \textbf{Representations}: which features encode a stimulus, and what information those features preserve. A representation is a parameter of the mechanisms, and its properties can be stated separately (``every digit has a feature saying whether it is zero'').
-  \item \textbf{Phenomena}: predicates over a task's outcomes (for example, distributions of answers and of the strategy route that produced them), stated without reference to any mechanism. A predicate asserts nothing. It is a target, which some mechanism may or may not be proved to satisfy.
-  \item \textbf{Theorems}: proofs that a mechanism, or every mechanism of a class, produces behavior satisfying a predicate.
-  \item \textbf{Conditions}: the hypotheses under which a theorem holds. Some are situational (``problem $x$ is confused with problem $q$''), some are empirical premises that remain unexplained (``$q$'s associations are sharp''), and some are well-formedness requirements (``the strengths have positive total'').
-\end{enumerate}
-A theorem that has a phenomenon among its hypotheses is a relation between phenomena, not a prediction of a model. It becomes a prediction only when some mechanism discharges the hypothesis by proving it. CogLean's catalog of theorems, generated from Lean, marks such conditional results mechanically \citep{coglean}.
-
-Table~\ref{tab:map} maps these kinds onto the scientific notions of the introduction. The assumptions of an explanation are postulates, conditions and laws. None is a Lean \code{axiom}: a law of memory is a hypothesis in the way the group axioms are hypotheses in Mathlib, fields that anything claiming to be a group must supply.
-
-\begin{table}[t]
-\centering\small
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}X@{}}
-\toprule
-Scientific notion & In CogLean and Lean \\
-\midrule
-Model (the program) & executable definitions: the same ones that are run, exactly or by sampling \\
-Mechanism (postulate) & a CogLib process, chosen by a theory and cited to its source \\
-Representation & a parameter (an encoding), with its properties stated as propositions \\
-Phenomenon & a predicate over a task's outcomes, stated without any mechanism: a target \\
-Psychological fact & a phenomenon judged to hold of people: outside Lean \\
-Prediction & a theorem's conclusion about a phenomenon not yet observed \\
-Assumption: condition & a hypothesis of a theorem \\
-Assumption: law & a proposition about a mechanism, proved for a family or required by a class theorem \\
-Explanation & a theorem and its chain of lemmas: mechanisms and assumptions entail the phenomenon \\
-Deduction & what Lean's kernel checks \\
-Illustration, witness & a computed value at one setting (\code{decide}, \code{\#eval}): not an explanation \\
-Lean's own axioms & \code{propext}, \code{Quot.sound}, \code{Classical.choice}: logic, not scientific assumptions \\
-\bottomrule
-\end{tabularx}
-\caption{Scientific notions and what they are in CogLean.}
-\label{tab:map}
-\end{table}
+The vocabulary is that of the companion paper, whose Table~1 maps it onto scientific notions. \emph{Mechanisms} are definitions, chosen by a theory. \emph{Representations} are parameters of the mechanisms, with their properties stated separately. \emph{Phenomena} are predicates over a task's outcomes, stated without any mechanism: targets, which assert nothing until a mechanism is proved to satisfy them; observed, they are facts, and derived but unobserved, predictions. \emph{Theorems}, with their chains of lemmas, are explanations: a mechanism, or every mechanism of a class, produces behavior satisfying a predicate. \emph{Conditions} are their hypotheses: situational (``problem $x$ is confused with problem $q$''), empirical premises that remain unexplained (``$q$'s associations are sharp''), or well-formedness requirements (``the strengths have positive total''). \emph{Laws} are properties of mechanisms, proved for a family or required by a theorem about a class; none is a Lean \code{axiom}. A theorem that has a phenomenon among its hypotheses is a relation between phenomena, not a prediction of a model. A value computed at one setting is a witness, not an explanation.
 
 Shared definitions make theories comparable at the level of proofs. For example, CogLib proves once that any learner whose learning never disturbs what it already knows reaches a learning criterion (\lean{criterion\_of\_nonInterference}). It separately proves that discrimination-net learning never disturbs prior learning (\lean{netLearner\_nonInterference}). EPAM's learning to criterion then follows in a line, and so will that of any later theory whose learning is non-interfering.
 
@@ -203,7 +119,7 @@ The DOA chapter's central idea is that the peakedness of a problem's distributio
 \begin{itemize}
   \item \textbf{What follows.} Moving strength to the correct answer never raises the error rate on retrieval trials, at any criterion or search length (\lean{SC.peaking\_lowers\_retrieval\_errors}), and neither does learning from a correct answer (\lean{SC.correct\_strengthening\_lowers\_errors}). These are general theorems.
   \item \textbf{What does not, for arbitrary redistributions.} Peaking can \emph{raise} overt strategy use. Take $1+1$ with answers 2, 3 and 1, and strengths $.38, .31, .31$. Move one hundredth of strength from the wrong answer 3 to the correct answer 2, which is already the strongest: $.39, .30, .31$. With search length 1, averaged over the chapter's own twelve confidence criteria, predicted overt strategy use rises from $7/12$ to $73/120$ (\lean{SC.peaking\_can\_raise\_overt\_use}). The reason is that the weakened wrong answer falls to the criterion $.30$, so it no longer clears it. Searches that used to state it now fail, and the child turns to fingers. Note that this change \emph{moves} strength from a wrong answer to the correct one. It is a change to the distribution, not one produced by DOA's learning rule, which \emph{adds} strength to the stated answer without taking any from its competitors.
-  \item \textbf{What follows for learning.} Under DOA's additive rule, learning from a correct answer never raises backup use when that answer exceeds the criterion (\lean{SC.correct\_strengthening\_never\_raises\_backup}), and in particular when it is already the strongest (\lean{SC.dominant\_strengthening\_never\_raises\_backup}). Under an alternative rule that renormalizes strengths after learning, the same learning event can raise backup use (\lean{SC.normalized\_strengthening\_can\_raise\_backup}; Appendix~\ref{app:chris}).
+  \item \textbf{What follows for learning.} Under DOA's additive rule, learning from a correct answer never raises backup use when that answer exceeds the criterion (\lean{SC.correct\_strengthening\_never\_raises\_backup}), and in particular when it is already the strongest (\lean{SC.dominant\_strengthening\_never\_raises\_backup}). Under an alternative rule that renormalizes strengths after learning, the same learning event can raise backup use (\lean{SC.normalized\_strengthening\_can\_raise\_backup}; worked through in the companion paper, Appendix~A).
 \end{itemize}
 
 The counterexample therefore disproves an unrestricted claim about peaking, but it does not show that the original DOA learning mechanism produces increased backup use. Read as a claim about arbitrary changes to a distribution, the chapter's statement needs a condition it does not state, roughly that no competitor sits near a criterion. Read as a claim about learning, it holds under the additive rule and fails under renormalization, an assumption the chapter does not settle. Nothing about this required composition or new mechanisms. It came from stating the postulates precisely and asking whether the informal claim followed. Formalization did not so much correct the theory as expose an ambiguity in it and establish which conclusions follow from which assumptions.
@@ -426,7 +342,7 @@ The simulation of Section~\ref{sec:sim} adds a caution about the middle category
 \section{Concrete realizations}
 \label{sec:concrete}
 
-The general results are illustrated at one chosen setting: an encoding, a learned net, associations, criterion and search length (Appendix~\ref{app:setting}). The concrete cases do five things. They show that independently formalized mechanisms compose into a model that runs; that the formalizations have nontrivial realizations, since a learned net does meet the conditions of the confident-errors theorem; that different memory families make different predictions, as constructive witnesses; that the abstract results can be understood through cases; and that the formal model can be checked against an independent implementation (Section~\ref{sec:sim}). Table~\ref{tab:qual} summarizes the comparison qualitatively; exact values are in Tables~\ref{tab:memories} and~\ref{tab:shared}.
+The general results are illustrated at one chosen setting: an encoding, a learned net, associations, criterion and search length (Appendix~\ref{app:setting}). The concrete cases do five things. They show that independently formalized mechanisms compose into a model that runs; that the formalizations have nontrivial realizations, since a learned net does meet the conditions of the confident-errors theorem; that different memory families make different predictions, as constructive witnesses; that the abstract results can be understood through cases; and that the formal model can be checked against an independent implementation (Section~\ref{sec:sim}). Why such values are witnesses rather than explanations is discussed in the companion paper \citep{shrager2026coglean}. Table~\ref{tab:qual} summarizes the comparison qualitatively; exact values are in Tables~\ref{tab:memories} and~\ref{tab:shared}.
 
 \begin{table}[t]
 \centering
@@ -473,22 +389,6 @@ Kind & Results & What they rest on \\
 \label{tab:kinds}
 \end{table}
 
-\section{The scientific status of proofs}
-\label{sec:status}
-
-\paragraph{Validity is not empirical adequacy.} A proof establishes that a conclusion follows from its premises. It does not establish that the premises are true of people. Confident errors follow from CogLean's formalization of EPAM and DOA. Whether children make them, and whether they make them for this reason, are empirical questions.
-
-\paragraph{Validity is not explanation either.} For a theorem to be an explanation, its premises must characterize mechanisms independently, and not restate the phenomenon. An earlier version of CogLib's serial-position result illustrates the difference. Its mechanism was a schedule on which item $i$ was learned on trial twice its distance from the nearer end. Proving that this produces a bowed error curve was valid, but the bow was in the definition. The current version derives the order of learning from a rule over any set of anchors: items nearer an anchor are attended first. The same rule then has a second consequence, the isolation (von Restorff) effect, when a distinctive item serves as an anchor (\code{CogLib/Control/Serial.lean}). The result is still close to its premises. But one mechanism now answers to two phenomena, which is a real test.
-
-The repository records an explicit audit of this kind for its headline results (\code{notes/EXPLANATORY\_AUDIT.md}). It sorts each result by how far it lies from its premises:
-\begin{itemize}
-  \item \emph{definitional}: a restatement of the definitions;
-  \item \emph{close}: the pattern is largely in the mechanism;
-  \item \emph{derived}: it follows from premises that do not mention it;
-  \item \emph{compositional}: it needs two or more mechanisms working together.
-\end{itemize}
-Not every CogLean theorem is a psychological explanation. Some are properties of algorithms, needed library facts that explain nothing on their own; some are relations between laws; some, such as confident errors and solver independence, are compositional. Making these distinctions visible is part of the method: Lean shows every premise, and the judgment of what the premises contain is written down, in the open.
-
 \section{Checking the formalization}
 \label{sec:sim}
 
@@ -510,60 +410,10 @@ The simulation does not prove the formalization faithful to the intended theory.
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Relation to previous formal work}
-
-CogLean is not the first formalization or mechanical verification of a cognitive theory. Formal specification of cognitive architectures goes back at least to a specification of Soar in Z \citep{milnes1992}. It covered the architecture completely but at a low level, and it could not be executed. Cooper, Fox, Farringdon and Shallice argued that better theories would come from languages designed for specifying cognitive models, and gave one, Sceptic, an executable specification language in which they implemented several models, including Soar \citep{cooper1996}. Stewart and West rebuilt ACT-R in order to separate its core commitments from implementation detail and to explore alternative components \citep{stewart2007}. That anticipates CogLean's interest in interchangeable mechanisms, in an executable setting. Ragni and colleagues proposed a formal framework into which architectures such as ACT-R and Soar can be embedded for comparison \citep{ragni2018}.
-
-For ACT-R in particular, Gall and Frühwirth gave an abstract operational semantics, a translation to Constraint Handling Rules proved sound and complete with respect to it, and a decidable confluence test \citep{gall2018,gall2017confluence}. Langenfeld, Westphal and Podelski translated ACT-R models to timed automata for exhaustive defect analysis \citep{langenfeld2019}, and proved their timed-automaton semantics correct at the level of architectural components \citep{langenfeld2021}. Macklem and Mili proposed specification languages and algorithms for checking cognitive models against requirements \citep{macklem2006}. In the context of the Common Model of Cognition \citep{laird2017}, Ganeriwala and colleagues have proposed enabling formal verification of cognitive models \citep{ganeriwala2025}. They have also compiled Soar models to discrete-time Markov chains for probabilistic model checking in PRISM \citep{ganeriwala2026,kwiatkowska2011}, which addresses stochastic behavior, as CogLean's exact distributions do. Outside architectures, verbal theories have been formalized as logic programs \citep{rohner2021} and as communicating automata \citep{finkel2025}. Fisher and colleagues derived critical tests of ACT-R from its core architectural assumptions, as theorems over a space of model classes \citep{fisher2025}, an aim close to CogLean's separation of what follows from a theory's core.
-
-\paragraph{Model verification and theoretical deduction.} Three approaches to establishing what a cognitive model does should be kept apart.
-\begin{itemize}
-  \item \textbf{Simulation} samples executions to estimate behavioral outcomes.
-  \item \textbf{Probabilistic model checking}, as in PRISM, analyzes a specified state-transition model exhaustively, often by numerical methods, to establish properties or compute probabilities over its whole state space. This is formal verification, not simulation. It can also treat parameters symbolically, giving a property or probability as a function of them \citep{hahn2011}.
-  \item \textbf{Deductive theorem proving}, as in CogLean, establishes results for whole classes of models that satisfy stated theoretical assumptions. They are independent of particular parameter settings and of any finite enumeration of states.
-\end{itemize}
-The important distinction is therefore not between simulation and formal verification, but between \emph{model verification} and \emph{theoretical deduction}. Model checking primarily verifies properties of a particular formalized system, or of a parameterized family of them. CogLean's principal objects are the theories themselves: reusable representations, mechanisms, assumptions and theorems. Its aim is to establish general consequences of those theories, and to derive further results by composing independently formalized mechanisms. The approaches are complementary, not competitors. A model checker can verify a large, detailed model that would be laborious to reason about deductively. A theorem can state what every such model must do, and why.
-
-CogLean does not introduce formal methods to cognitive science. What is distinctive, relative to this work, is a combination of emphases, few of them entirely new on their own:
-\begin{itemize}
-  \item \textbf{Theorems over classes of models}, not properties of one model or one parameterized family. CogLean's theorems quantify over every encoding, net, strength set and backup, and, through laws, over every memory.
-  \item \textbf{Phenomena and laws stated theory-neutrally}, so that rival mechanisms can be tested against the same statement.
-  \item \textbf{Reusable proofs across independently developed theories.} The previous work formalizes one architecture or model at a time. CogLean's central example composes theorems proved separately for EPAM, DOA and a problem solver into results about their combination.
-  \item \textbf{Behavioral consequences derived from composition}, with their premises sorted into postulates, conditions and settings.
-\end{itemize}
-Whether any single one of these is novel is a matter for a more complete review, and we do not present any of them as unprecedented on its own. What we claim to be new is their combination: a shared theoretical library, reusable machine-checked proofs, composition across independently formalized theories, and deductions over classes of mechanisms.
-
-\subsection{Relationship to cognitive architectures}
-
-CogLean is complementary to cognitive architectures such as Soar and ACT-R, and to efforts such as the Common Model of Cognition \citep{laird2017}; it is not an alternative to them. Architectures accumulate theory as shared mechanisms in which models are built; CogLean tries to accumulate proved results about such mechanisms, including results over classes of them. It offers a possible formal foundation for expressing, composing and reasoning about their constituent mechanisms and architectural commitments, and an architecture could itself carry such machine-checked results. The present example composes mechanisms at a relatively local level, for one task, without committing to a general cognitive architecture. A longer-term objective is to formalize architectural constraints themselves, so that their implications can be proved and alternative architectures compared within a shared framework.
-
-\subsection{The scientific program}
+\subsection{What this example shows}
 \label{sec:program}
 
-The central message is methodological. Independently formalized mechanisms can be composed, their established properties reused, and new consequences derived without reconstructing every theory from scratch. More fundamentally, results can be expressed over classes of mechanisms and representations, which helps identify which commitments are responsible for a phenomenon.
-
-\paragraph{Already demonstrated, in this paper and library:}
-\begin{itemize}
-  \item mechanisms formalized independently in a common environment;
-  \item general theorems quantified over arbitrary representations and parameter settings;
-  \item results transferred through instantiation and proved bridges;
-  \item compositional deductions from independently established results;
-  \item theory-neutral phenomenon predicates;
-  \item results for classes of memory mechanisms satisfying common laws, and proofs of which families satisfy them;
-  \item concrete settings at which model families provably differ.
-\end{itemize}
-
-\paragraph{Still largely aspirational:}
-\begin{itemize}
-  \item systematic derivation of the weakest sufficient assumptions for a phenomenon, which would say which theoretical commitments are actually responsible for it;
-  \item necessary-and-sufficient characterizations: the laws of Section~\ref{sec:classes} are shown sufficient, not necessary;
-  \item classifications of behaviorally equivalent representations;
-  \item general theorems saying precisely when different architectures diverge, rather than counterexamples at settings;
-  \item a large, cumulative library connecting many independently developed theories.
-\end{itemize}
-A target of the program would be a theorem of the form: every recognition-and-retrieval mechanism satisfying properties A, B and C exhibits phenomenon P under conditions D and E, for every representation; better, one that also shows A, B and C cannot be weakened. The confident-errors results have the first form for one phenomenon and three laws. They do not yet have the second.
-
-Universal results remain conditional. A theorem about every memory satisfying particular laws does not establish that human memory satisfies those laws. It moves the empirical question to the laws, where it can be asked once for all the theories that share them.
+The companion paper places CogLean among earlier formal work on cognitive theory and relative to cognitive architectures \citep{shrager2026coglean}; we do not repeat that here. What this example adds is a demonstration that the combination it describes works on a task of some size: mechanisms formalized independently in a common environment; general theorems quantified over arbitrary representations and parameter settings; results transferred through instantiation and proved bridges; compositional deductions from independently established results; theory-neutral phenomenon predicates; results for classes of memory mechanisms satisfying common laws, with proofs of which families satisfy them; and concrete settings at which model families provably differ. It does not show the weakest assumptions sufficient for confident errors: the laws of Section~\ref{sec:classes} are shown sufficient, not necessary. Nor does it establish general equivalence or divergence among architectures, rather than counterexamples at settings.
 
 \subsection{What the approach bought}
 
@@ -579,7 +429,6 @@ Proof and simulation were complementary here, in a way the slogan ``simulation e
   \item Single-digit DOA assumes that a representation with the right number of objects is available for elaboration and counting. As the column process of a multi-digit adder, its fallback to fingers and counting is implausible: by then single-digit facts are retrieved. The fallback should be a parameter of the column process; the general theorems do not depend on it.
   \item ACT-R's memory is represented by its retrieval rule, without retrieval as use: memory changes when an item is studied, not when it is retrieved during a trial. Every ACT-R value here, including Tables~\ref{tab:memories} and~\ref{tab:shared} and the counterexample to the pattern, holds for that version. Full ACT-R, in which each retrieval strengthens what it retrieves, would give different values, and possibly different theorems.
   \item Carrying is error-free in the full procedure, and columns are added independently.
-  \item The framework does not establish psychological plausibility. That remains a matter of evidence and judgment.
   \item Scalability is a serious question. CogLean uses exact rational distributions over finite outcome spaces. Continuous representations, large state spaces and neural models will need different techniques, and exact evaluation already required a merged evaluator here.
   \item Three findings of the simulation remain open: hypotheses unrealized in the tested learning histories, the zero-strength gap, and the initial associations of a newly discriminated problem.
   \item CogLib's distributions are rational-weighted lists; the type does not enforce nonnegative weights. Most library theorems are algebraic identities that hold regardless, but reading them as probabilities needs nonnegativity. It is proved here for the integrated model, given nonnegative strengths and rates, but not yet across the whole library.
@@ -597,19 +446,13 @@ Natural next steps:
 \end{itemize}
 The library already contains early work on the last of these: conceptual combination, semantic memory and view application, on a shared semantic-network representation.
 
-\paragraph{From reasoning about models to constructing them.} A further direction, not implemented, reverses the usual question. A theorem over a class of mechanisms, such as \lean{RR.confident\_errors\_of\_laws}, states its requirements as explicit laws: hypotheses and proved properties, not Lean \code{axiom} declarations. Instead of asking what follows from a given model, one can then ask which available mechanisms meet the requirements of a result one wants a model to have. Section~\ref{sec:classes} and the theory matrix answer that question by hand, for confident errors and the matrix's memory families, and the answers already fall into three cases:
-\begin{itemize}
-  \item \emph{Proved to satisfy the requirements.} EPAM's discrimination net has determinacy and stability with no further conditions.
-  \item \emph{Satisfies them under conditions another component must establish.} The net's certainty holds when the stimuli are pairwise noticeably different (\code{PairwiseNoticeable}), a property of the encoding, which the enclosing model has to guarantee for the stimuli it actually uses.
-  \item \emph{Compatibility not established.} The matrix's global-matching memory (after MINERVA~2) has determinacy but lacks certainty and stability at one setting, so for another setting these remain open proof obligations. ACT-R's memory never has the three laws, so this route to the result is closed for it.
-\end{itemize}
-In no case does failing these sufficient conditions show that a mechanism cannot produce confident errors by another route, and a failed proof obligation does not show that no suitable model exists. The requirements need hold only over the states in which the theorem is applied, which is why the laws are stated over states reachable by study. A library that organizes mechanisms, the laws each is proved to have, and the theorems that consume those laws could make such searches routine, and eventually help assemble models that meet several theoretical constraints at once: proof-guided model construction. Lean supplies the proof checking, automation tactics and type-class instance search such a system would use. The organization and search machinery, over a defined set of candidate mechanisms and explicitly stated requirements, does not yet exist. Nor would the result invent theories, or establish that a compatible model is psychologically plausible: the matrix also records a judgment of the evidence, that people lack certainty, so the one memory in it that meets these requirements is not, on that judgment, a good model of people.
+The companion paper describes directions for the library as a whole, including proof-guided model construction \citep{shrager2026coglean}.
 
 \subsection{Conclusion}
 
 The question was whether theories represented in a common formal library can be composed to yield meaningful consequences that would otherwise require building a new model from scratch. In one case the answer is yes. EPAM's recognition, DOA's retrieval and strategy choice, and a decision-cycle problem solver, each formalized on its own, compose into a model of three-digit addition with no answer supplied, and its consequences are proved largely by reusing the components' theorems. The more important results are not the model's numbers but the statements above them: a phenomenon defined apart from any mechanism, a theorem relating it to recognition and retrieval for any task and representation, and a theorem establishing it for every memory that satisfies three laws. The multi-digit model is a preliminary demonstration of method, not a proposed theory of arithmetic. The aspiration is a cumulative, machine-checked mathematical science of cognitive theories; one example does not establish that, but it shows that the approach can produce results of the right kind.
 
-What accumulates is explanation. Phenomena are stated once; mechanisms are defined once; and each theorem is a checked explanation of a phenomenon from mechanisms and stated assumptions, reusable wherever its assumptions can be discharged. Already, in this one example, a phenomenon has more than one explanation (whole-route and column-route errors; confident errors by composition and by laws), a mechanism takes part in explaining several phenomena, and the explanations differ in observations that could tell them apart, such as error signatures and backup use on confused problems. A larger library would let one reason backward from a phenomenon to sets of mechanisms that suffice for it, proposed by people and checked by Lean, and forward from mechanisms to phenomena not yet observed. Because the explanations are proofs about the programs that run, they stay aligned with the models as both change. CogLean is not primarily about formalizing proofs. It is about formalizing explanations so that we can reason about them, and using Lean to keep those explanations rigorously aligned with the computational models they explain.
+What accumulates is explanation. In this one example, a phenomenon has more than one explanation (whole-route and column-route errors; confident errors by composition and by laws), a mechanism takes part in explaining several phenomena, and the explanations differ in observations that could tell them apart, such as error signatures and backup use on confused problems. Because the explanations are proofs about the program that runs, they stay aligned with the model as both change.
 
 \paragraph{Code.} All definitions and theorems are in the CogLean repository \citep{coglean}, \url{https://github.com/jeffshrager/CogLean}. Every theorem is fully proved, with no \code{sorry}, and depends only on Lean's standard axioms.
 
@@ -634,7 +477,7 @@ Learned nets recognize each image as itself & \lean{learnAll\_clean} (\code{CogL
 DOA retrieval use, error share, backup independence & \lean{SC.retrieval\_prob}, \lean{retrieval\_error\_share}, \lean{retrieval\_independent\_of\_backup} \\
 Counting errors independent of associations & \lean{SC.counting\_error\_share} \\
 Peaking never raises retrieval errors; but can raise overt strategy use & \lean{SC.peaking\_lowers\_retrieval\_errors}; \lean{SC.peaking\_can\_raise\_overt\_use} \\
-Learning never raises backup use above the criterion; can below it, or with renormalization (Appendix~\ref{app:chris}) & \lean{reach\_boost}, \lean{exhausted\_boost}; \lean{SC.correct\_strengthening\_never\_raises\_backup}, \lean{SC.dominant\_strengthening\_never\_raises\_backup}; \lean{SC.strengthening\_below\_criterion\_can\_raise\_backup}, \lean{SC.normalized\_strengthening\_can\_raise\_backup} \\
+Learning never raises backup use above the criterion; can below it, or with renormalization & \lean{reach\_boost}, \lean{exhausted\_boost}; \lean{SC.correct\_strengthening\_never\_raises\_backup}, \lean{SC.dominant\_strengthening\_never\_raises\_backup}; \lean{SC.strengthening\_below\_criterion\_can\_raise\_backup}, \lean{SC.normalized\_strengthening\_can\_raise\_backup} \\
 The phenomena: confusion-error pattern; confident errors with a bound & \lean{ConfusionErrorPattern}, \lean{ConfidentErrors} (\code{CogLib/Phenomena/ConfusionErrors}) \\
 Confident errors, any task; with the rate as bound & \lean{RR.confident\_errors}, \lean{RR.confident\_errors\_rate} (\code{CogLib/Process/RecognizeRetrieve}) \\
 Confident errors from laws of memory & \lean{RR.confident\_errors\_of\_laws} \\
@@ -723,63 +566,5 @@ practiced $100+100$: errors overall & $\approx .0073$ & $\approx .334$ & $\appro
 \caption{The model with one memory for whole problems and column facts (\S\ref{sec:shared}). The memory first studies the three digit pairs that $150+100$ and $100+100$ need, then the two problems. The middle column is a control: ACT-R's memory holds the same five items, but the solver uses DOA's separate table, so the memory's contents are as in the last column and only the solver's use of the memory differs. Rows as in Table~\ref{tab:memories}; ``correct overall'' is again the product of the two rows above it. EPAM's values are those of Table~\ref{tab:memories}, by the reduction theorem (\lean{setting\_epam\_reduces}, \lean{setting\_epam\_values}, \lean{setting\_epam\_solver}, \lean{setting\_00\_not\_5}); ACT-R's are \lean{setting\_act\_control}, \lean{setting\_act\_pairs} and \lean{setting\_act\_values}. ACT-R appears without retrieval as use. The last row is \lean{shared\_learning\_preserves\_trial}; without its condition on the digit pairs, noninterference is not proved for the shared model.}
 \label{tab:shared}
 \end{table}
-
-\clearpage
-\section{Chris uses CogLean}
-\label{app:chris}
-
-Consider a hypothetical cognitive scientist, Chris, who studies how children learn arithmetic. Chris has built computational models before, and, like most modelers, is used to writing a program that implements proposed mechanisms, running it to see what it does, and explaining the results in a paper. The program specifies the mechanisms; the reasoning about their consequences lives largely in Chris's head, in comments, or in the prose. CogLean offers another way to work. It supports both \emph{programming} a cognitive mechanism and \emph{reasoning formally} about it, and the reasoning can be checked by a computer, kept as theorems, and reused in other models.
-
-Chris works with a chatbot research colleague, Robin. Robin is useful for brainstorming, proposing mechanisms, finding results in the library and suggesting proofs. But Robin's suggestions are not automatically correct. Lean provides the checks, and Chris remains responsible for the scientific judgments.
-
-\paragraph{From an observation to a theorem.} Chris begins with a familiar phenomenon: children sometimes confidently give a wrong answer to an arithmetic problem, apparently retrieving it rather than calculating. A child who has learned $100+100=200$ may take $150+100$ for the familiar problem and confidently answer 200. Chris wants to know whether this follows from recognizable properties of existing mechanisms.
-
-Robin points out that CogLib has a general mechanism for recognizing a stimulus, retrieving an associated response, and invoking a backup process if retrieval fails; EPAM provides one recognition mechanism and DOA one retrieval mechanism. Together they state the phenomenon without mentioning either theory: a confused problem gets wrong answers by whole-problem retrieval, while it uses its backup exactly as often as the familiar problem it is confused with. This is the confusion-error pattern of Section~\ref{sec:phen}. They then look for conditions under which it follows from the mechanisms:
-\begin{itemize}
-  \item the familiar problem is recognized as itself;
-  \item the unfamiliar problem is recognized as the familiar one;
-  \item the familiar problem's associations are sharp, so that its only answer above the criterion is its correct sum;
-  \item the two problems have different sums;
-  \item the distributions involved are proper.
-\end{itemize}
-Under these conditions the pattern follows. Every whole-problem answer stated for the unfamiliar problem is the familiar problem's answer, which is wrong; and because both problems consult the same associations, they exhaust retrieval and invoke the backup equally often. This is \lean{integrated\_confident\_errors} (Section~\ref{sec:results}). Chris has not merely shown a particular error by running a simulation: the proof covers every setting that meets the conditions.
-
-The conditions matter. Lean has not established that children have such associations, or that a particular EPAM learning history produces the confusion; those are separate theoretical or empirical questions. Nor does the pattern by itself make backup use rare. That needs a further, quantitative condition, under which the errors are \emph{confident} (\lean{integrated\_confident\_errors\_le}). Still, Chris now has what a simulation would not give: a reusable result naming sufficient conditions for the phenomenon, which applies to new models without re-running the old one.
-
-\paragraph{Working backward: what must a theory be like?} Chris next turns to practice and strategy choice. In DOA, practice strengthens associations between problems and answers; as correct associations grow, retrieval should succeed more often and children should rely less on overt strategies such as counting. Chris proposes a stronger regularity:
-\begin{quote}
-\emph{Once the correct answer is the strongest association, strengthening it further never raises the probability of resorting to a backup strategy, all else being equal.}
-\end{quote}
-Chris thinks this plausible, though it remains an empirical question, and one that would be hard to establish directly, since it says what should \emph{never} happen. Robin suggests asking first whether it follows from DOA.
-
-Robin then notices an ambiguity: what does the confidence criterion measure? An answer is drawn with probability proportional to its strength, and stated only if its strength exceeds a criterion $c$. The strength compared with $c$ might be the \emph{raw} strength, or the strength \emph{normalized} by the total over all answers. The question is not idle. The DOA chapter renormalizes strengths after finger elaboration (its postulate A4, which CogLean's \code{elaborate} follows), but its learning postulate (A6) simply adds strength, as CogLean's \code{strengthen} does. So learning followed by renormalization is a natural alternative reading.
-
-Chris and Robin try a small example, the one Section~\ref{sec:peak} used: the correct answer has strength $.38$ and two wrong answers $.31$ each, so the strengths already sum to one. The criterion is $c=.30$, and retrieval makes one attempt before resorting to a backup. All three answers exceed the criterion, under either reading, so the child never uses a backup. Now the child states the correct answer and learns from it, which adds $.05$ to its strength (A6 gives a correct answer twice the increment, here $2 \times .025$).
-\begin{itemize}
-  \item \textbf{Raw strengths:} $(.43, .31, .31)$. All three still exceed $.30$, and backup use stays at zero.
-  \item \textbf{Renormalized:} dividing by the total, $1.05$, gives about $(.410, .295, .295)$. Only the correct answer now exceeds the criterion. The wrong answers can still be drawn, but they are rejected, and with one attempt backup use rises from zero to $62/105 \approx .59$.
-\end{itemize}
-The same learning event has opposite consequences for backup use under the two readings. Chris finds the renormalized result surprising: why should improving an already dominant correct association make a child more likely to abandon retrieval? It is not impossible, and children might behave this way in some circumstances. But Chris now has a concrete theoretical question.
-
-\paragraph{Proof, counterexample, and an exposed assumption.} Chris asks whether the raw reading guarantees the regularity. Robin first suggests that strengthening the correct answer can \emph{never} raise backup use. That is too broad. If the correct answer is below the criterion while another answer is above it, a small increase makes the acceptable answer less likely to be drawn without yet making the correct answer acceptable, and backup use goes up. Lean confirms a case: with strengths $.2$ (correct) and $.5$, criterion $.30$ and one attempt, adding $.05$ to the correct answer raises backup use from $2/7$ to $1/3$ (\lean{SC.strengthening\_below\_criterion\_can\_raise\_backup}).
-
-So the condition in Chris's conjecture does real work, and what the proof actually needs is slightly weaker: the correct answer is already above the criterion, or no answer is. If it is above, strengthening it raises the strength above the criterion and the total strength by the same amount, so their ratio, the chance that one attempt succeeds, cannot fall; and retrieval is exhausted with probability $(1-R)^n$, which then cannot rise. If no answer is above, backup use is already certain. If the correct answer is the strongest and some answer is above the criterion, the correct answer is above it too, so dominance implies the condition. Lean proves this for every finite set of answers, every nonnegative strengths, every criterion and every search length:
-\begin{itemize}
-  \item in CogLib, for any answer and any memory of this kind: adding strength to an answer above the criterion never makes retrieval exhausted more often (\lean{reach\_boost}, \lean{exhausted\_boost});
-  \item for DOA's learning rule: learning from a correct answer never raises backup use when that answer is above the criterion (\lean{SC.correct\_strengthening\_never\_raises\_backup}), and in particular when it is the strongest (\lean{SC.dominant\_strengthening\_never\_raises\_backup}).
-\end{itemize}
-The renormalized reading, defined as an alternative learning rule (\code{SC.strengthenNorm}), admits the counterexample above, and Lean checks it at exactly the values given (\lean{SC.normalized\_strengthening\_can\_raise\_backup}): the strengths sum to one, the correct answer is the strongest, backup use is $0$ before learning and after raw learning, and $62/105$ after renormalized learning.
-
-Chris also notices a difference from Section~\ref{sec:peak}. The peaking counterexample there (\lean{SC.peaking\_can\_raise\_overt\_use}) \emph{moves} strength from a wrong answer to the correct one, while DOA's learning rule \emph{adds} strength to the stated answer. A counterexample built from an arbitrary redistribution does not show that the same change can happen by learning. The new counterexample does arise by learning, but only under the alternative rule.
-
-\paragraph{What has Chris learned?} The proposed regularity has become a way to tell theoretical commitments apart. If backup use really never rises as an already dominant correct association grows, then the renormalized reading of DOA learning, without further restrictions, is inadequate. The raw reading is one way to satisfy the regularity, not the only one: another mechanism might satisfy it too, or the renormalized model might be rescued by restricting its parameters or reachable states. Chris has not shown that children use raw strengths. Chris has found which assumptions produce, or fail to guarantee, a proposed regularity.
-
-This is reasoning \emph{backward}, from a phenomenon toward possible mechanisms. CogLean does not invent the phenomenon or discover the right theory. Chris poses the question; Robin helps generate alternatives; formalization exposes an ambiguity; Lean establishes which conclusions follow from which premises; and evidence must decide which premises describe children. The example also shows why arbitrary states must be kept apart from states reachable by a learning process: a theorem about every strength distribution answers one question, and a theorem about distributions reachable by DOA learning answers another.
-
-Chris's results are now in CogLib and in the DOA theory, as definitions and theorems. A later researcher with a different retrieval model can ask whether its learning rule has the same monotonicity property, or whether another reading of confidence preserves it, without reconstructing the argument from prose or rediscovering it by simulation. Computational modeling has long made theories executable. Theorem proving makes part of our \emph{reasoning about} theories executable and checkable too.
-
-\begin{center}
-\emph{The point is not merely to run cognitive models, but to reason about them, and to make that reasoning available to both scientists and computers.}
-\end{center}
 
 \end{document}

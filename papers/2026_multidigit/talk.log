@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  4 NOV 2026 09:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 13:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1203,81 +1203,97 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
 
 ]
 LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
-79.
+78.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
-9.
+8.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-79.
+78.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-79.
+78.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 79.
+(Font)              <10.95> on input line 78.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 79.
+(Font)              <8> on input line 78.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 79.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 79.
+(Font)              <6> on input line 78.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 78.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 79.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <8> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 79.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 78.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 79.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 78.
  [4
 
 ] [5
 
 ]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 118.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 118.
-
 [6
 
 ] [7
 
 ] [8
 
-] [9
-
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 183.
+(Font)              <9> on input line 165.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 183.
+(Font)              <5> on input line 165.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 165.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 165.
+ [9
+
+] [10
+
+]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+02.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 202.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 202.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 183.
- [10
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 202.
+ [11
 
-] [11
+]
+\openout4 = `talk.vrb'.
 
-] [12
+ (./talk.vrb)
+Overfull \vbox (8.96538pt too high) detected at line 230
+ []
+
+[12
 
 ] [13
 
@@ -1285,37 +1301,26 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
 
 ] [15
 
-]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 291.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 291.
- [16
+] [16
 
 ] [17
 
-]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-28.
-
-(/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [18
+] [18
 
 ]
 \openout4 = `talk.vrb'.
 
- (./talk.vrb)
-Overfull \vbox (8.96538pt too high) detected at line 356
- []
+ (./talk.vrb) [19
 
-[19
+]
+\openout4 = `talk.vrb'.
 
-] [20
+ (./talk.vrb) [20
 
 ] [21
 
-] [22
+]
+[22
 
 ] [23
 
@@ -1330,61 +1335,6 @@ Overfull \vbox (8.96538pt too high) detected at line 356
 ] [28
 
 ] [29
-
-] [30
-
-]
-\openout4 = `talk.vrb'.
-
- (./talk.vrb)
-[31
-
-] [32
-
-] [33
-
-] [34
-
-] [35
-
-]
-\openout4 = `talk.vrb'.
-
- (./talk.vrb) [36
-
-]
-\openout4 = `talk.vrb'.
-
- (./talk.vrb) [37
-
-] [38
-
-] [39
-
-] [40
-
-]
-[41
-
-] [42
-
-] [43
-
-] [44
-
-] [45
-
-] [46
-
-] [47
-
-] [48
-
-] [49
-
-] [50
-
-] [51
 
 ]
 \tf@nav=\write7
@@ -1401,13 +1351,13 @@ Package rerunfilecheck Info: File `talk.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26158 strings out of 478994
- 498587 string characters out of 5858185
- 796058 words of memory out of 5000000
- 42948 multiletter control sequences out of 15000+600000
+ 26030 strings out of 478994
+ 497255 string characters out of 5858185
+ 792479 words of memory out of 5000000
+ 42866 multiletter control sequences out of 15000+600000
  502757 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 131i,11n,132p,1446b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 131i,11n,132p,1153b,855s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
 cal/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texliv
 e/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2021/texmf-d
@@ -1428,10 +1378,10 @@ xmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2021/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
 onts/symbols/msam10.pfb>
-Output written on talk.pdf (51 pages, 385254 bytes).
+Output written on talk.pdf (29 pages, 349297 bytes).
 PDF statistics:
- 391 PDF objects out of 1000 (max. 8388607)
- 310 compressed objects within 4 object streams
- 103 named destinations out of 1000 (max. 500000)
+ 265 PDF objects out of 1000 (max. 8388607)
+ 207 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 
