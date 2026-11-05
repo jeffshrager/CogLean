@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1005,13 +1005,13 @@ or its head-line re-sults
 [11] [12] [13] [14] [15] (./paper.bbl [16] [17] [18]) [19] [20
 
 ]
-Underfull \hbox (badness 1983) in paragraph at lines 412--413
+Underfull \hbox (badness 1983) in paragraph at lines 414--415
 \T1/lmr/m/n/10.95 The renor-mal-ized read-ing, de-fined as an al-ter-na-tive le
 arn-ing rule (\T1/lmtt/m/n/10.95 SC.strengthenNorm\T1/lmr/m/n/10.95 ),
  []
 
 
-Underfull \hbox (badness 4899) in paragraph at lines 412--413
+Underfull \hbox (badness 4899) in paragraph at lines 414--415
 \T1/lmr/m/n/10.95 ad-mits the coun-terex-am-ple above, and Lean checks it at ex
 -actly the val-ues given
  []
@@ -1021,10 +1021,10 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: 7E0D591A74A70D0D3B7DE15240680E4A;2891.
  ) 
 Here is how much of TeX's memory you used:
- 23224 strings out of 478994
- 418118 string characters out of 5858185
- 709655 words of memory out of 5000000
- 40140 multiletter control sequences out of 15000+600000
+ 23229 strings out of 478994
+ 418218 string characters out of 5858185
+ 709684 words of memory out of 5000000
+ 40143 multiletter control sequences out of 15000+600000
  482621 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  113i,11n,116p,2098b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1047,10 +1047,10 @@ ist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/
 type1/public/lm/lmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/publi
 c/lm/lmtt10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt9
 .pfb>
-Output written on paper.pdf (22 pages, 385289 bytes).
+Output written on paper.pdf (22 pages, 385942 bytes).
 PDF statistics:
- 437 PDF objects out of 1000 (max. 8388607)
- 393 compressed objects within 4 object streams
- 123 named destinations out of 1000 (max. 500000)
+ 440 PDF objects out of 1000 (max. 8388607)
+ 396 compressed objects within 4 object streams
+ 125 named destinations out of 1000 (max. 500000)
  149 words of extra memory for PDF output out of 10000 (max. 10000000)
 

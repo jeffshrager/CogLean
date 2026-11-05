@@ -1,0 +1,94 @@
+\begin{thebibliography}{14}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anderson and Lebiere(1998)]{anderson1998}
+John~R. Anderson and Christian Lebiere.
+\newblock \emph{The Atomic Components of Thought}.
+\newblock Erlbaum, Mahwah, NJ, 1998.
+
+\bibitem[Anderson(2007)]{anderson2007}
+John~R. Anderson.
+\newblock \emph{How Can the Human Mind Occur in the Physical Universe?}
+\newblock Oxford University Press, New York, 2007.
+
+\bibitem[Shrager(2026{\natexlab{a}})]{coglean}
+Jeff Shrager.
+\newblock {CogLean}: A library of cognitive theory in {Lean} 4.
+\newblock \url{https://github.com/jeffshrager/CogLean}, 2026{\natexlab{a}}.
+
+\bibitem[Shrager(2026{\natexlab{b}})]{shrager2026coglean}
+Jeff Shrager.
+\newblock {CogLean}: Towards a cumulative, machine-checked theory of cognition.
+\newblock Draft for comment, \texttt{papers/2026-coglean-intro/} in the CogLean
+  repository, 2026{\natexlab{b}}.
+
+\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
+Leonardo de~Moura and Sebastian Ullrich.
+\newblock The {Lean} 4 theorem prover and programming language.
+\newblock In \emph{Automated Deduction -- CADE 28}, volume 12699 of
+  \emph{Lecture Notes in Computer Science}, pages 625--635. Springer, 2021.
+\newblock \doi{10.1007/978-3-030-79876-5_37}.
+
+\bibitem[{The mathlib Community}(2020)]{mathlib2020}
+{The mathlib Community}.
+\newblock The {Lean} mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International Conference
+  on Certified Programs and Proofs (CPP 2020)}, pages 367--381. ACM, 2020.
+\newblock \doi{10.1145/3372885.3373824}.
+
+\bibitem[Shrager(2026{\natexlab{c}})]{shrager2026multidigit}
+Jeff Shrager.
+\newblock Composing cognitive theories in {CogLean}: Multi-digit addition.
+\newblock Draft for comment, \texttt{papers/2026\_multidigit/} in the CogLean
+  repository, 2026{\natexlab{c}}.
+
+\bibitem[Shrager(2026{\natexlab{d}})]{shrager2026view}
+Jeff Shrager.
+\newblock Concept formation by view application: A second domain on shared
+  foundations in {CogLean}.
+\newblock Draft for comment, \texttt{papers/2026-view-application/} in the
+  CogLean repository, 2026{\natexlab{d}}.
+
+\bibitem[Feigenbaum and Simon(1962)]{feigenbaum1962}
+Edward~A. Feigenbaum and Herbert~A. Simon.
+\newblock A theory of the serial position effect.
+\newblock \emph{British Journal of Psychology}, 53\penalty0 (3):\penalty0
+  307--320, 1962.
+\newblock \doi{10.1111/j.2044-8295.1962.tb00836.x}.
+
+\bibitem[Newell and Rosenbloom(1981)]{newell1981}
+Allen Newell and Paul~S. Rosenbloom.
+\newblock Mechanisms of skill acquisition and the law of practice.
+\newblock In John~R. Anderson, editor, \emph{Cognitive Skills and Their
+  Acquisition}, pages 1--55. Erlbaum, Hillsdale, NJ, 1981.
+
+\bibitem[Estes(1956)]{estes1956}
+William~K. Estes.
+\newblock The problem of inference from curves based on group data.
+\newblock \emph{Psychological Bulletin}, 53\penalty0 (2):\penalty0 134--140,
+  1956.
+
+\bibitem[Heathcote et~al.(2000)Heathcote, Brown, and Mewhort]{heathcote2000}
+Andrew Heathcote, Scott Brown, and D.~J.~K. Mewhort.
+\newblock The power law repealed: The case for an exponential law of practice.
+\newblock \emph{Psychonomic Bulletin \& Review}, 7\penalty0 (2):\penalty0
+  185--207, 2000.
+
+\bibitem[Anderson and Schooler(1991)]{anderson1991}
+John~R. Anderson and Lael~J. Schooler.
+\newblock Reflections of the environment in memory.
+\newblock \emph{Psychological Science}, 2\penalty0 (6):\penalty0 396--408,
+  1991.
+
+\bibitem[Siegler and Shrager(1984)]{siegler1984}
+Robert~S. Siegler and Jeff Shrager.
+\newblock Strategy choices in addition and subtraction: How do children know
+  what to do?
+\newblock In Catherine Sophian, editor, \emph{Origins of Cognitive Skills},
+  pages 229--293. Erlbaum, Hillsdale, NJ, 1984.
+
+\end{thebibliography}

@@ -1,4 +1,4 @@
-\begin{thebibliography}{39}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -274,5 +274,12 @@ Jeff Shrager.
   foundations in {CogLean}.
 \newblock Draft for comment, \texttt{papers/2026-view-application/} in the
   CogLean repository, 2026{\natexlab{c}}.
+
+\bibitem[Shrager(2026{\natexlab{d}})]{shrager2026actr}
+Jeff Shrager.
+\newblock {ACT-R}'s declarative memory in {CogLean}: Laws, two explanations of
+  confident errors, and the power law of practice.
+\newblock Draft for comment, \texttt{papers/2026-actr/} in the CogLean
+  repository, 2026{\natexlab{d}}.
 
 \end{thebibliography}

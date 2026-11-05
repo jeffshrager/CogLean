@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fvextra}
+\usepackage{newunicodechar}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{ρ}{\ensuremath{\rho}}
+\newunicodechar{₀}{\ensuremath{_0}}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\title{ACT-R's Declarative Memory in CogLean:\\Laws, Two Explanations of Confident Errors,\\and the Power Law of Practice}
+\author{Jeff Shrager}
+\date{Draft, November 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\begin{center}
+\fbox{\parbox{0.9\linewidth}{\centering\large\textbf{Draft for Comment}\footnotemark}}
+\end{center}
+\footnotetext{This draft has \emph{not} been carefully checked by the author. It is likely to contain erroneous citations and details. Think of this as an over-starched blog post. I'm happy to receive constructive feedback at: \texttt{jshrager@gmail.com}}
+\medskip
+
+\begin{abstract}
+CogLean is a library of cognitive theory in the Lean proof assistant, in which mechanisms are defined once, phenomena are stated independently of any mechanism, and theorems relating them are machine-checked; its theorems are explanations, proved about the same definitions that run as models. This paper collects what the library proves about one mechanism, the declarative memory of ACT-R: base-level activation, partial matching, softmax retrieval with a failure threshold, the latency rule, and priming. Three groups of results follow. First, laws: for every parameter setting in the rational regime used here, ACT-R's memory lacks determinacy, certainty, stability and order-freedom, and has recency and stored-only retrieval; consequences include graded confusion, interference with practiced items, and an order effect. Second, confident errors, a theory-neutral phenomenon that EPAM's discrimination nets produce exactly and that a theorem gives for every memory with three laws ACT-R lacks. ACT-R nonetheless approaches it: a graded version of the pattern needs no certainty, priming brings ACT-R's memory within any tolerance of it, and having just seen the familiar item is such priming, by the base level alone. The two explanations differ in an observation: after a familiar item is primed, ACT-R takes \emph{other familiar} items for it too, which EPAM never does, and for the same reason primed ACT-R cannot satisfy a graded law of certainty. Third, the power law of practice, stated as a graded family of predicates. With decay 1, massed practice tested after a delay gives an exact power law, while spaced practice has every qualitative signature of a power law and is not one: it is logarithmic. With decay $d<1$, using real analysis in a separate package, spaced practice is proved approximately a power law with exponent $1-d$, which is Anderson's account, now checked. Whether ACT-R's memory produces a power law, and with what exponent, thus depends on the schedule and the decay, and the signature alone does not identify the mechanism.
+\end{abstract}
+
+\section{Introduction}
+
+ACT-R \citep{anderson1998,anderson2007} is the most widely used cognitive architecture, and its declarative memory is one of its most thoroughly studied parts. Its equations are compact, its parameters are few, and its predictions are usually derived by running models. This paper does something complementary. It formalizes the memory's equations in CogLean \citep{coglean,shrager2026coglean}, a library of cognitive theory in the Lean proof assistant \citep{demoura2021} organized on the model of Mathlib \citep{mathlib2020}, and proves what follows from them: for every parameter setting in a stated regime, for whole classes of memories of which ACT-R's is or is not a member, and, at chosen settings, as exact values that serve as witnesses.
+
+The companion papers introduce CogLean and its view that theorems are explanations: deductions of a phenomenon from mechanisms and stated assumptions \citep{shrager2026coglean}; compose theories into a model of multi-digit addition \citep{shrager2026multidigit}; and take the library to concept formation \citep{shrager2026view}. ACT-R's memory appears in all of them, usually as a rival to EPAM's discrimination nets \citep{feigenbaum1962}. This paper gathers those results and adds two lines of work: a second explanation of confident errors, by priming, and the power law of practice.
+
+Nothing here is a criticism of ACT-R or a new theory of memory. The point is that once a mechanism is stated precisely in a shared library, one can ask exactly which phenomena follow from it, under which conditions, and which observations would distinguish it from rivals. Several answers are not what informal reasoning suggests.
+
+\section{ACT-R's declarative memory, formalized}
+\label{sec:formal}
+
+A chunk is a stored code, a vector of binary features, together with the times it was used (\code{CogLib/Memory/Activation.lean}). Memory is the current time and a list of chunks. Studying an item adds a use to its chunk, or creates one, and advances the clock.
+
+\paragraph{Retrieval.} A chunk $i$'s activation for a probe $x$ is its base level plus a partial-matching penalty for each feature on which chunk and probe differ, and retrieval chooses a chunk with probability proportional to $e^{A_i/s}$, or fails, with weight $e^{\tau/s}$ \citep{anderson1998}. CogLean uses the regime in which every quantity is rational: decay $d = 1$ and temperature $s = 1$. Then
+\[
+  e^{A_i} \;=\; \Big(\sum_k \frac{1}{t - t_k}\Big)\,\mu^{m_i}, \qquad \mu = e^{-P}, \qquad \theta = e^{\tau},
+\]
+where $t_k$ are the chunk's uses, $m_i$ the number of mismatching features and $P$ the mismatch penalty. A retrieval event's probability is its share of the total weight (\lean{Act.prob\_retrieve}), and failure always has positive weight, so no retrieval is ever certain (\lean{Act.retrieve\_not\_certain}).
+
+\paragraph{Latency.} ACT-R's retrieval time is $F e^{-A}$. For a chunk retrieved by an exact match, at decay 1, that is $F$ divided by the base-level sum (\lean{Act.latency}).
+
+\paragraph{Priming.} Spreading activation from the context adds $S_i$ to chunk $i$'s activation, which multiplies its weight by $e^{S_i}$. CogLean represents this as a factor on a code's weight (\lean{Act.retrieveIn}, with \lean{Act.primeOnly~y~$\rho$} priming code $y$ by $\rho$); with no priming, it is plain retrieval (\lean{Act.retrieveIn\_unprimed}), and a primed code's chance of retrieval is $\rho W_y/(\rho W_y + W_{\text{rest}})$ (\lean{Act.prob\_primed}).
+
+\paragraph{What is left out.} Other decays and temperatures need real exponentials; Section~\ref{sec:decay} uses real analysis, in a separate package, for learning curves only. Retrieval does not strengthen what it retrieves (ACT-R's retrieval as use), so memory changes only by study. There is no production system, no buffer, and no noise beyond the softmax choice.
+
+\section{Which laws ACT-R's memory has}
+\label{sec:laws}
+
+CogLib states laws of retrieval theory-neutrally, against an interface any memory implements: study an item, and retrieve a distribution over stored items (\code{CogLib/Phenomena/RetrievalLaws.lean}). CogLean's theory matrix proves, for each memory family and law, whether the family has the law at every setting, never has it, or lacks it at some setting (\code{CogMatrix/}). For ACT-R's memory, with any positive failure weight and nonnegative mismatch factor, from an empty memory:
+\begin{itemize}
+  \item it \textbf{never} has \emph{certainty} (a just-studied item retrieves itself for certain), \emph{stability} (studying one item leaves another's self-retrieval unchanged), \emph{order-freedom} (swapping the last two study events leaves retrieval unchanged), or \emph{determinacy} (every retrieval has a single outcome) (\lean{Matrix.Activation.never\_certainty}, \lean{never\_stability}, \lean{never\_orderFree}, \lean{never\_determinate});
+  \item it always has \emph{recency}, with the later of two equally similar items retrieved twice as often, and \emph{stored-only} retrieval (\lean{Activation.recency}, \lean{storedOnly}).
+\end{itemize}
+Each verdict is for every parameter setting in the regime, not one setting; a single-setting counterexample is the weaker kind of result, and the matrix keeps the two apart.
+
+The laws have consequences across the library's tasks:
+\begin{itemize}
+  \item \textbf{Graded confusion.} A probe can retrieve any stored item that partially matches it, weighted by similarity and recency. In learning a microwave, the label TIME COOK calls up SET TIME with probability $5/23$, a kitchen timer with $10/23$, and nothing with $8/23$ (\lean{DeviceLearning.act\_graded}).
+  \item \textbf{Interference.} Practiced items do not stay practiced. In the multi-digit model, studying $100+300$ raises the retrieval errors on the practiced $100+100$ from $225/782$ to $3375/5842$ (\lean{MD.ExampleACTR.act\_interference}); EPAM's net, by a theorem for every setting, is never disturbed.
+  \item \textbf{An order effect.} In a counterbalanced study-test design written once against the memory interface, ACT-R's recency gives an order effect of $10/17$, for every guessing bias, where order-free memories give 0 (\lean{Exp.OrderEffect.act\_report\_any\_bias}).
+\end{itemize}
+
+\section{Confident errors: two explanations}
+\label{sec:ce}
+
+\subsection{The phenomenon, and the class ACT-R is not in}
+
+A stranger is confidently taken for someone familiar; a child who knows $100+100=200$ confidently answers $150+100$ with 200. CogLib states the pattern once, with no mechanism in it (\code{CogLib/Phenomena/ConfusionErrors.lean}). For a trial that recognizes a stimulus, retrieves an answer from the recognized item's associations, and otherwise backs up: (i) the familiar $q$ is never answered wrongly from memory; (ii) every answer to the stranger $x$ from memory is wrong; (iii) $x$ backs up exactly as often as $q$. The general theorem \lean{RR.confident\_errors} gives the pattern when $q$ calls up itself and $x$ calls up $q$, \emph{for certain}, and $q$'s associations are sharp. \lean{RR.confident\_errors\_of\_laws} gives it for every memory with determinacy, certainty and stability \citep{shrager2026coglean}. EPAM's net has all three. ACT-R's memory has none, at any setting, so neither theorem applies.
+
+Not covered is not the same as cannot. In naming familiar people (\code{Experiments/FaceNaming.lean}), with EPAM's net a stranger, Carl, is called Bob with probability $45/46$ and says ``don't know'' as often as Bob does. With ACT-R's memory he is called Bob $225/391$ of the time, but can also be called Ann ($225/782$), and says ``don't know'' more often than Bob ($107/782$ against $229/2254$), so part (iii) fails (\lean{act\_values}, \lean{act\_more\_dont\_know}). In multi-digit addition, $150+100$ is answered 200 with probability $225/529$, against EPAM's $45/46$, and the exact pattern provably fails at that setting (\lean{MD.Integrated.setting\_actr\_not\_pattern}).
+
+\subsection{A graded pattern}
+
+Exactness is too strong a target for a memory whose retrieval is never certain. CogLib states a graded version: the pattern with each equality holding to within $\varepsilon$, and backup use on $x$ at most $r$ (\lean{Phenomena.GradedConfidentErrors}); the exact pattern is the case $\varepsilon = 0$ (\lean{ConfusionErrorPattern.graded}). The general theorem needs no certainty:
+
+\begin{quote}
+\lean{RR.confident\_errors\_graded}: if $x$ calls up $q$, and $q$ calls up itself, each with probability at least $1-\delta$, and $q$'s associations are sharp, the trial makes graded confident errors within $2\delta$, with backup use on $x$ at most $q$'s own exhaustion rate plus $\delta$.
+\end{quote}
+
+The proof bounds each part of the pattern by the probability mass that does not go to $q$, using two library facts about distributions: an expectation of a $[0,1]$-valued quantity lies within the mass off an event of its value on the event (\lean{Dist.expect\_bounds}), and retrieval and backup factor through what is recognized.
+
+\subsection{Priming}
+
+ACT-R's memory meets the graded condition when the familiar item is primed. With $q$ primed by $\rho$, the rest of the weight, for the probes $x$ and $q$, shrinks relative to $q$'s:
+
+\begin{quote}
+\lean{RR.act\_priming\_confident\_errors}: for every $\delta > 0$ there is a priming factor $\rho_0$ such that, for every $\rho \ge \rho_0$, the primed trial makes graded confident errors within $2\delta$. Conditions: $x$ partially matches $q$, $q$ is stored, sharpness, well-formedness.
+\end{quote}
+
+The explicit version gives the bound in terms of the weights (\lean{RR.act\_primed\_confident\_errors}). Since ACT-R's retrieval is never certain, the exact pattern is a limit approached, not a value reached. At the multi-digit setting, priming $100+100$ makes $150+100$ answered 200 by retrieval with probability $2250/2599 \approx .87$ tenfold and $22500/23299 \approx .97$ a hundredfold, against EPAM's $45/46 \approx .98$, and the two problems' backup use converges (\lean{MD.ExampleACTR.act\_primed\_values}; Table~\ref{tab:primed}).
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lcc}
+\toprule
+& $150+100$ answered 200 by retrieval & errors on practiced $100+100$ \\
+\midrule
+EPAM & $45/46 \approx .978$ & 0 \\
+ACT-R, unprimed & $225/529 \approx .425$ & $225/782 \approx .288$ \\
+ACT-R, $100+100$ primed $\times 10$ & $2250/2599 \approx .866$ & \\
+ACT-R, primed $\times 100$ & $22500/23299 \approx .966$ & \\
+\bottomrule
+\end{tabular}
+\caption{The multi-digit setting \citep{shrager2026multidigit}: EPAM's net, and ACT-R's memory unprimed and primed. Exact values by \code{decide}; witnesses, not fits.}
+\label{tab:primed}
+\end{table}
+
+\subsection{What primes: having just seen the item}
+
+The priming factor need not be a free parameter. In ACT-R, a recent use raises a chunk's base level. Let \lean{Act.rehearse~s~y~j} add $j$ uses of $y$ one step before the test, without advancing the clock: $y$ seen $j$ times just before. Each such use adds 1 to the base-level sum of each of $y$'s chunks, and the mismatch factor depends only on the code, so the effect on $y$'s weight is the same factor for every probe:
+
+\begin{quote}
+\lean{Act.retrieve\_rehearse}: retrieval after rehearsing $y$ is retrieval with $y$ primed by $\rho = 1 + kj/B$, where $B$ is $y$'s base level and $k$ the number of its chunks; every other weight is unchanged.
+\end{quote}
+
+So recency is priming, by a factor derived from the base level, and the priming theorem applies with nothing assumed about the context:
+
+\begin{quote}
+\lean{RR.act\_recency\_confident\_errors}: for every $\delta > 0$ there is a number of uses of $q$ just before the test beyond which the trial makes graded confident errors within $2\delta$.
+\end{quote}
+
+In face naming, after Bob is seen ten times just before, Carl is called Bob with probability $275/299 \approx .92$, and his ``don't know'' ($1/26$) comes close to Bob's ($629/20654$) (\lean{Exp.FaceNaming.recency\_values}). Spreading activation from a context, the other source of priming, is not yet connected to this factor.
+
+\subsection{Telling the explanations apart}
+
+Confident errors now have two explanations in the library, from different mechanisms: discrimination, in which a net that has not yet tested the distinguishing feature sorts the stranger to the familiar item; and partial matching with priming, in which the familiar item's raised weight draws retrieval to it. They predict different things. EPAM's confusions follow the features a stranger shares with a stored item, and a familiar item is always recognized as itself. Primed ACT-R's follow the context, and priming draws retrieval away from \emph{every} other item, familiar ones included. After Bob is seen ten times, Ann, a familiar face, is called Bob with probability $2475/3082 \approx .80$ (\lean{recency\_values}); EPAM's net never calls her Bob (\lean{epam\_ann\_never\_bob}). The priming explanation therefore predicts that a priming context raises misnaming of familiar people, as well as of strangers; the discrimination explanation does not.
+
+The same fact says something about laws. CogLib states graded versions of the three laws: \emph{determinacy within $\delta$} (every probe puts at least $1-\delta$ on one outcome), \emph{certainty within $\delta$}, and \emph{stability within $\eta$} (studying another item lowers self-retrieval by at most $\eta$), together with proper retrieval. The exact laws are the case with tolerance 0 (\lean{Laws.determinateWithin\_zero} and the others), and the class theorem generalizes:
+
+\begin{quote}
+\lean{RR.confident\_errors\_of\_graded\_laws}: for any memory with the graded laws, after a study list $xs$ without repeats, if $x$ can be taken for a studied $q$ with probability above the determinacy tolerance $\delta_d$, the trial makes graded confident errors within $2(\delta_d + \delta_c + |xs|\,\eta)$.
+\end{quote}
+
+Primed ACT-R cannot satisfy graded certainty for small tolerances, since priming $q$ makes other studied items call up $q$. So its explanation of confident errors is not a law of the memory but a fact about the context, local to the primed item. The library makes that difference precise: one explanation follows from properties a memory has everywhere, the other from a condition that holds here and now.
+
+\section{The power law of practice}
+\label{sec:power}
+
+\subsection{The phenomenon, unbundled}
+
+The power law of practice says that the time $T(n)$ to perform a task after $n$ trials falls as $a n^{-b}$ \citep{newell1981}. As usually reported, it bundles claims of different strength. CogLib states them separately, as predicates on a curve $T : \mathbb{N} \to \mathbb{Q}$ over a range of trials (\code{CogLib/Phenomena/LearningCurve.lean}):
+\begin{itemize}
+  \item \lean{Improves}: $T(n+1) \le T(n)$;
+  \item \lean{DiminishingReturns}: each trial's gain is at most the last;
+  \item \lean{DiminishingRelativeReturns}: each trial's proportional gain is smaller than the last, $T(n+1)^2 < T(n)\,T(n+2)$;
+  \item \lean{ApproxScaleRatio~k~r~$\varepsilon$}: within relative error $\varepsilon$ of $T(kn) = r\,T(n)$;
+  \item \lean{ScaleRatio~k~r}: $T(kn) = r\,T(n)$, scale invariance, which is how an exact power law is stated with rationals ($r = k^{-b}$);
+  \item \lean{ShiftRatio~s}: $T(n+1) = s\,T(n)$, an exponential curve.
+\end{itemize}
+The power curve $a/n^m$ is scale-invariant with strictly diminishing relative returns (\lean{power\_scaleRatio}, \lean{power\_diminishingRelative}). An exponential curve has constant relative returns (\lean{shiftRatio\_not\_diminishingRelative}), and no positive curve is both exponential and scale-invariant over a range (\lean{shiftRatio\_not\_scaleRatio}): they are different phenomena. And an average of two exponential learners with different rates has strictly diminishing relative returns, and so is not exponential, though each learner is (\lean{mix\_diminishingRelative}, \lean{mix\_not\_shiftRatio}). That is Estes's warning about group curves \citep{estes1956}, central to the debate over whether individual learning is power or exponential \citep{heathcote2000}, here as a theorem relating phenomena, with no mechanism at all.
+
+The predicates are mathematical. Whether noisy data look like a power law, which might mean a power function fits well, fits better than an exponential, or merely that gains diminish, is a statistical proposition, which none of these settles.
+
+\subsection{Decay 1: one mechanism, two schedules}
+\label{sec:decay1}
+
+With decay 1, the base-level sum after $n$ uses, tested at time $t$, is $\sum_k 1/(t - t_k)$, and latency is $F$ divided by it (\code{CogLib/Process/Practice.lean}). Two schedules give curves of different shape:
+\begin{itemize}
+  \item \textbf{Massed practice, tested after a delay $L$}: all $n$ uses at once, so the sum is $n/L$ and latency is $FL/n$, an exact power law with exponent 1 at every scale (\lean{Act.massed\_eq\_power}, \lean{Act.massed\_scaleRatio}).
+  \item \textbf{Spaced practice, tested after each trial}: one use per trial, so the sum is the harmonic number $H_n$ and latency is $F/H_n$ (\lean{Act.spaced\_eq}). It improves, with diminishing returns and diminishing relative returns (\lean{spaced\_improves}, \lean{spaced\_diminishing}, \lean{spaced\_diminishingRelative}): every qualitative signature of a power law.
+\end{itemize}
+But spaced practice is not a power law. Doubling practice adds at most 1 to $H_n$ (\lean{harmonic\_double\_le}), while $H_n$ grows without bound ($H_{2^j} \ge j/2$, \lean{harmonic\_pow\_two}), so the doubling ratio $T(2n)/T(n) = H_n/H_{2n}$ tends to 1. For any ratio $c < 1$, beyond any trial there is an $n$ with $T(2n) > c\,T(n)$ (\lean{spaced\_doubling}), so for any exponent above zero and any tolerance, the curve is not approximately scale-invariant over a long enough range (\lean{spaced\_not\_powerLaw}). The curve is logarithmic. Over an experimentally typical range it is nonetheless close to one: over trials 1 to 8 it is within 7.5\% of scale invariance with ratio $18/25$ at doubling, a power law with exponent about $0.47$ (\lean{spaced\_looks\_like\_powerLaw}, a witness). The doubling ratios at $n = 1, 2, 4, \dots, 32$ are about $.67, .72, .77, .80, .83, .86$.
+
+\subsection{Decay below 1: Anderson's account, checked}
+\label{sec:decay}
+
+ACT-R's usual decay is $0.5$, and Anderson's account of the power law of practice rests on it \citep{anderson1991,anderson1998}: with decay $d$, the base-level sum after spaced practice is $\sum_{k \le n} k^{-d}$, which grows like $n^{1-d}/(1-d)$, so latency falls approximately as $n^{-(1-d)}$. That needs real powers, which CogLib, with exact rationals, does not have. A separate package, \code{ACTR/}, the only one in CogLean that uses Mathlib's real analysis, supplies them, and first connects them to CogLib's statements (\code{ACTR/PowerLaw.lean}):
+\begin{itemize}
+  \item a rational curve is scale-invariant exactly when its real-valued copy is (\lean{ACTR.scaleRatio\_iff\_cast});
+  \item the power law $a n^{-b}$ is scale-invariant with ratio $k^{-b}$ for any real $a$ and $b$ (\lean{rpow\_scaleRatio});
+  \item conversely, scale invariance at doubling with ratio $r > 0$ is a power law on the doubling grid, $T(2^j) = T(1)\,(2^j)^{-b}$ with exponent $b = -\log_2 r$ (\lean{powerLaw\_of\_scaleRatio});
+  \item CogLib's rational power curve is the real one, and its decay-1 spaced curve is the real curve at $d = 1$ (\lean{power\_cast}, \lean{spaced\_cast}).
+\end{itemize}
+Then, for every decay $0 \le d < 1$ (\code{ACTR/Decay.lean}):
+\begin{itemize}
+  \item the sum lies between integrals of $x^{-d}$, $\frac{(1+n)^{1-d} - 1}{1-d} \le \sum_{k \le n} k^{-d} \le 1 + \frac{(1+n)^{1-d} - 1}{1-d}$ (\lean{baseSpaced\_bounds}), so divided by $(1+n)^{1-d}$ it tends to $1/(1-d)$ (\lean{baseSpaced\_div\_tendsto});
+  \item the doubling ratio of latency tends to $2^{-(1-d)}$ (\lean{spacedR\_doubling\_tendsto});
+  \item so spaced practice is approximately a power law with exponent $1-d$: for every tolerance $\varepsilon > 0$, beyond some trial, doubling practice multiplies latency by $2^{-(1-d)}$ to within relative error $\varepsilon$ (\lean{spacedR\_approx\_powerLaw}).
+\end{itemize}
+The result is asymptotic. It says nothing about how many trials ``beyond some trial'' is for a given $\varepsilon$, which the integral bounds could make explicit.
+
+\subsection{What the practice results say}
+
+Three points follow. Whether ACT-R's memory produces a power law, and with what exponent, depends on the schedule and on the decay, not on the mechanism alone: massed practice gives exponent 1 at every decay considered here; spaced practice gives exponent $1-d$ for $d < 1$ and no power law at $d = 1$. A curve can have every qualitative signature of a power law over a typical range without being one. And the signatures do not identify a mechanism: spaced base-level learning at $d = 1$ and an average of exponential learners share them. A claim that some mechanism ``explains the power law of practice'' should say which member of the family it means, under which schedule and parameters.
+
+\section{Discussion}
+
+\paragraph{What formalizing ACT-R's memory bought.} Some results are verdicts for every parameter setting, where simulation gives one setting at a time: the four laws ACT-R never has, the two it always has. Some are explanations with their conditions explicit: graded confident errors, given priming; priming, given recent sightings; spaced practice as a power law, given $d<1$. Some separate explanations: the Ann prediction, which tells primed partial matching from discrimination, and the failure of graded certainty, which says one explanation is a law of the memory and the other is not. And some correct informal impressions: a logarithmic curve with every signature of a power law, and a power law that depends on the schedule.
+
+\paragraph{Limitations.}
+\begin{itemize}
+  \item Retrieval is at decay 1 and temperature 1, so that probabilities stay rational; real-valued decay is used only for learning curves, and real-valued temperature not at all.
+  \item Retrieval does not strengthen what it retrieves. Full ACT-R, with retrieval as use, would give different values and possibly different theorems.
+  \item Priming is a factor on a weight. Recency is derived as one source; spreading activation from a context is not yet connected to it.
+  \item Learning curves concern latency of an exact-match retrieval; they do not include retrieval failure, production compilation, or the competition among chunks that partial matching brings.
+  \item The decay result is asymptotic, without explicit bounds on when it takes hold.
+  \item Nothing here is fitted to data. The values are witnesses.
+\end{itemize}
+
+\paragraph{Next.}
+\begin{itemize}
+  \item ACT-R's own model of the Siegler and Shrager addition data \citep{siegler1984}, which fits the answer distributions by partial matching with no backup strategy, criterion or learning, as a rival account of the same data, now that real exponentials are available.
+  \item Retrieval as use, carried through the composed models.
+  \item Spreading activation from a context as a second, derived source of priming.
+  \item Which of the matrix's memory families have the graded laws, and at what tolerances.
+  \item Other theories' learning curves on the same predicates, and statistical versions of the predicates for noisy data.
+\end{itemize}
+
+\paragraph{Conclusion.} ACT-R's declarative memory, stated once in a shared library, yields verdicts for every parameter setting, explanations with their conditions explicit, and observations that tell its explanations from a rival's. Confident errors have two explanations, and the library says what would distinguish them and why only one is a law of the memory. The power law of practice turns out to be several phenomena, of which ACT-R's base level produces different ones under different schedules and decays. CogLean is not primarily about formalizing proofs. It is about formalizing explanations so that we can reason about them, and using Lean to keep those explanations rigorously aligned with the computational models they explain.
+
+\paragraph{Code.} All definitions and theorems are in the CogLean repository \citep{coglean}, \url{https://github.com/jeffshrager/CogLean}. Every theorem is fully proved, with no \code{sorry}, and depends only on Lean's standard axioms.
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\appendix
+\section{Index of results}
+\label{app:index}
+
+\begin{table}[h]
+\centering\footnotesize
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Claim & Lean name (file) \\
+\midrule
+Retrieval probability; never certain & \lean{Act.prob\_retrieve}, \lean{Act.retrieve\_not\_certain} (\code{CogLib/Memory/Activation}) \\
+Priming as a factor; primed share & \lean{Act.retrieveIn}, \lean{Act.retrieveIn\_unprimed}, \lean{Act.prob\_primed} \\
+Recency is priming & \lean{Act.rehearse}, \lean{Act.retrieve\_rehearse} \\
+Laws never had; laws always had & \lean{Matrix.Activation.never\_certainty}, \lean{never\_stability}, \lean{never\_orderFree}, \lean{never\_determinate}; \lean{recency}, \lean{storedOnly} (\code{CogMatrix}) \\
+Graded retrieval; interference; order effect & \lean{DeviceLearning.act\_graded}; \lean{MD.ExampleACTR.act\_interference}; \lean{Exp.OrderEffect.act\_report\_any\_bias} \\
+The pattern; graded pattern & \lean{Phenomena.ConfusionErrorPattern}, \lean{GradedConfidentErrors} (\code{CogLib/Phenomena/ConfusionErrors}) \\
+Exact pattern fails for ACT-R (at a setting) & \lean{MD.Integrated.setting\_actr\_not\_pattern}, \lean{Exp.FaceNaming.act\_more\_dont\_know} \\
+Graded confident errors, any memory & \lean{RR.confident\_errors\_graded} (\code{CogLib/Process/RecognizeRetrieve}) \\
+Priming gives graded confident errors & \lean{RR.act\_primed\_confident\_errors}, \lean{RR.act\_priming\_confident\_errors} (\code{CogLib/Process/PrimedRecognition}) \\
+Recent sightings give them & \lean{RR.act\_recency\_confident\_errors} \\
+Primed values & \lean{MD.ExampleACTR.act\_primed\_values}, \lean{Exp.FaceNaming.recency\_values} \\
+EPAM never misnames Ann & \lean{Exp.FaceNaming.epam\_ann\_never\_bob} \\
+Graded laws; class theorem & \lean{Laws.ProperRetrieval}, \lean{DeterminateWithin}, \lean{CertaintyWithin}, \lean{StabilityWithin}; \lean{RR.confident\_errors\_of\_graded\_laws} \\
+Learning-curve predicates and relations & \lean{Phenomena.Improves} \dots\ \lean{ShiftRatio}; \lean{shiftRatio\_not\_scaleRatio}, \lean{mix\_not\_shiftRatio} (\code{CogLib/Phenomena/LearningCurve}) \\
+Latency; massed and spaced practice, decay 1 & \lean{Act.latency}; \lean{Act.massed\_scaleRatio}; \lean{Act.spaced\_improves}, \lean{spaced\_diminishing}, \lean{spaced\_diminishingRelative}, \lean{spaced\_not\_powerLaw}, \lean{spaced\_looks\_like\_powerLaw} (\code{CogLib/Process/Practice}) \\
+Bridge to the reals & \lean{ACTR.scaleRatio\_iff\_cast}, \lean{rpow\_scaleRatio}, \lean{powerLaw\_of\_scaleRatio}, \lean{power\_cast}, \lean{spaced\_cast} (\code{ACTR/PowerLaw}) \\
+Decay $d<1$: approximately a power law, exponent $1-d$ & \lean{ACTR.baseSpaced\_bounds}, \lean{spacedR\_doubling\_tendsto}, \lean{spacedR\_approx\_powerLaw} (\code{ACTR/Decay}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}
