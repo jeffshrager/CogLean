@@ -12,7 +12,9 @@ close to 1 as the priming makes it, and the trial approaches the pattern:
 
 * `act_primed_confident_errors`: with explicit bounds on the priming;
 * `act_priming_confident_errors`: for every `δ > 0`, priming beyond some
-  factor gives the pattern within `2δ`.
+  factor gives the pattern within `2δ`;
+* `act_recency_confident_errors`: what primes, derived: enough uses of `q`
+  just before the test (ACT-R's base level) give the pattern within `2δ`.
 
 This is a second explanation of confident errors, from other mechanisms:
 partial matching and priming, not discrimination. The two differ in what
@@ -141,5 +143,69 @@ theorem act_priming_confident_errors (Pa : ActParams) (s : ActState) (correct : 
     grind
   · have : ρ * (δ * wOn Pa s (code q) (code q)) = δ * (ρ * wOn Pa s (code q) (code q)) := by grind
     grind
+
+/-- A code with positive base level has a chunk. -/
+theorem countOf_pos (s : ActState) (y : Item) (h : 0 < Act.baseOf s y) : 1 ≤ Act.countOf s y := by
+  unfold Act.countOf
+  unfold Act.baseOf at h
+  cases hl : s.chunks.filter (fun c => c.code == y) with
+  | nil => rw [hl] at h; simp at h
+  | cons c l => simp
+
+/-- **What primes: seeing the familiar item just before.** In ACT-R, recent
+uses of `q` raise its base level, which is priming `q` with a derived factor
+(`Act.retrieve_rehearse`). So for every `δ > 0` there is a number of uses of
+`q` just before the test beyond which the trial makes graded confident errors
+within `2δ`. Postulates: ACT-R's base level and activation retrieval,
+sharp-criterion retrieval, the backup. Conditions: the clock has started,
+`q` is stored (positive base level), `x` partially matches `q`, sharpness,
+and well-formedness. Nothing about the context is assumed: the priming is
+the recency. -/
+theorem act_recency_confident_errors (Pa : ActParams) (s : ActState) (correct : P → A) (x q : P)
+    (δ : Rat) (hμ : 0 ≤ Pa.mu) (hθ : 0 ≤ Pa.theta) (hδ : 0 < δ) (hnow : 1 ≤ s.now)
+    (hB : 0 < Act.baseOf s (code q))
+    (hx : 0 < wOn Pa s (code x) (code q)) (hq : 0 < wOn Pa s (code q) (code q))
+    (hs0 : ∀ y a, 0 ≤ str y a) (hT : ∀ y, total as (str y) ≠ 0)
+    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    ∃ j₀, ∀ j, j₀ ≤ j → Phenomena.GradedConfidentErrors
+      (recognizeRetrieve code (Act.retrieve Pa (Act.rehearse s (code q) j)) str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q (2 * δ) (backupAfter str as cc n (some (code q)) + δ) := by
+  obtain ⟨ρ₀, hρ₀⟩ := act_priming_confident_errors code str as cc n backup Pa s correct x q δ hμ hθ hδ
+    hx hq hs0 hT hbx hbq hs hne
+  let B := Act.baseOf s (code q)
+  let k := Act.countOf s (code q)
+  have hk := countOf_pos s (code q) hB
+  refine ⟨(ρ₀ * B).ceil.toNat, fun j hj => ?_⟩
+  have hfun : Act.retrieve Pa (Act.rehearse s (code q) j) =
+      Act.retrieveIn Pa (Act.primeOnly (code q) (1 + (k : Rat) * j / B)) s := by
+    funext y
+    exact Act.retrieve_rehearse Pa s (code q) j hnow (by grind) y
+  rw [hfun]
+  apply hρ₀
+  -- ρ₀ ≤ 1 + k j / B
+  have c1 : ρ₀ * B ≤ ((j : Nat) : Rat) := by
+    have h1 := Rat.le_ceil (x := ρ₀ * B)
+    have h2 : (ρ₀ * B).ceil ≤ (((ρ₀ * B).ceil.toNat : Nat) : Int) := Int.self_le_toNat _
+    have h3 : (((ρ₀ * B).ceil : Int) : Rat) ≤ ((((ρ₀ * B).ceil.toNat : Nat) : Int) : Rat) :=
+      Rat.intCast_le_intCast.mpr h2
+    rw [Rat.intCast_natCast] at h3
+    have h4 : (((ρ₀ * B).ceil.toNat : Nat) : Rat) ≤ (j : Rat) := Rat.natCast_le_natCast.mpr hj
+    grind
+  have c2 : (j : Rat) ≤ (k : Rat) * j := by
+    have : (1 : Rat) ≤ (k : Rat) := by
+      have : ((1 : Nat) : Rat) ≤ (k : Rat) := Rat.natCast_le_natCast.mpr hk
+      simpa using this
+    have hj0 : (0 : Rat) ≤ (j : Rat) := Rat.natCast_nonneg
+    have := Rat.mul_le_mul_of_nonneg_right this hj0
+    grind
+  have c3 : ρ₀ ≤ (k : Rat) * j / B := by
+    have e : ρ₀ = ρ₀ * B / B := by
+      have : B ≠ 0 := by grind
+      grind
+    rw [e]
+    exact div_le_div_cross hB hB (Rat.mul_le_mul_of_nonneg_right (by grind) (Rat.le_of_lt hB))
+  grind
+
 end RR
 end Cog

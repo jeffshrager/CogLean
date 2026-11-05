@@ -41,6 +41,12 @@ strength .90, and other names .01; criterion .50. The stranger Carl (face
   know" more often than Bob does, and even Bob is sometimes misnamed. The
   general theorem's hypothesis (Carl's face calls up Bob's for certain) does
   not hold for ACT-R, and its conclusion fails (`act_more_dont_know`).
+* **Having just seen Bob** (`recency_values`, `epam_ann_never_bob`). Recent
+  uses of Bob's face prime it, by ACT-R's base level, and Carl is then called
+  Bob `275/299` of the time, near the pattern (the general result is
+  `Cog.RR.act_recency_confident_errors`). But Ann, a familiar face, is then
+  called Bob `2475/3082` of the time, while EPAM never calls her Bob. That is
+  the observation that separates the two explanations of confident errors.
 -/
 
 import CogMatrix
@@ -157,6 +163,37 @@ theorem act_values :
 /-- **Under ACT-R, the stranger says "don't know" more often than the familiar
 person**, so the third part of confident errors fails. -/
 theorem act_more_dont_know : prob (actTrial bob) RR.isBackup < prob (actTrial carl) RR.isBackup := by
+  decide +kernel
+
+/-! ### Having just seen Bob: the priming explanation, and how to tell it apart -/
+
+/-- The ACT-R trial after Bob's face was seen `j` times just before the test
+(`Act.rehearse`, which is priming Bob by a derived factor,
+`Act.retrieve_rehearse`). -/
+def recTrial (j : Nat) (p : Person) : Dist (Route × Name) :=
+  recognizeRetrieve Person.face (Act.retrieve Activation.P (Act.rehearse mem bob.face j)) str names
+    (1 / 2) 1 backup p
+
+/-- **Having just seen Bob ten times**, ACT-R calls Carl "Bob" with
+probability `275/299` (unprimed: `225/391`), and Carl's "don't know" comes
+close to Bob's (`1/26` and `629/20654`): near the confusion-error pattern, as
+`RR.act_recency_confident_errors` says it must be with enough recent uses.
+But the same recency makes **Ann**, a familiar face, called "Bob" with
+probability `2475/3082`. -/
+theorem recency_values :
+    prob (recTrial 10 carl) (RR.wholeSuch (· == Name.bob)) = 275 / 299 ∧
+      prob (recTrial 10 carl) RR.isBackup = 1 / 26 ∧
+      prob (recTrial 10 bob) RR.isBackup = 629 / 20654 ∧
+      prob (recTrial 10 ann) (RR.wholeSuch (· == Name.bob)) = 2475 / 3082 := by
+  decide +kernel
+
+/-- **The observation that separates the explanations.** EPAM's net never
+calls Ann "Bob": its confusions follow shared features, and Ann's face is
+recognized as her own. Primed ACT-R's follow the context, so recently seeing
+Bob makes familiar faces, not only strangers, called "Bob" (`recency_values`).
+So the priming explanation predicts misnaming of familiar people after a
+priming context, and the discrimination explanation does not. -/
+theorem epam_ann_never_bob : prob (epamTrial ann) (RR.wholeSuch (· == Name.bob)) = 0 := by
   decide +kernel
 
 end Cog.Exp.FaceNaming

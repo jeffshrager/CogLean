@@ -377,7 +377,7 @@ Does any of this need EPAM? No. The library proves the same pattern for any memo
 \begin{frame}{A second explanation of the same phenomenon}
   \begin{itemize}
     \item A \textbf{graded} version needs no certainty: if $x$ calls up $q$, and $q$ itself, each with probability $\ge 1-\delta$, the pattern holds to within $2\delta$.
-    \item ACT-R meets it when the context \textbf{primes} $q$ (spreading activation multiplies its weight): for every $\delta > 0$, enough priming suffices.
+    \item ACT-R meets it when $q$ is \textbf{primed}: for every $\delta > 0$, enough priming suffices. Having \emph{just seen} $q$ is priming, by ACT-R's base level.
   \end{itemize}
   \medskip
   \begin{center}
@@ -391,10 +391,11 @@ Does any of this need EPAM? No. The library proves the same pattern for any memo
   \end{tabular}
   \end{center}
   \medskip
-  One phenomenon, two explanations, each with its assumptions explicit, and an observation that tells them apart.
+  \small Just after seeing Bob 10 times: Carl called Bob $.92$; and \textbf{Ann} called Bob $.80$. EPAM: Ann never.\\[1mm]
+  \normalsize One phenomenon, two explanations, and an observation that tells them apart.
 \end{frame}
 \note{
-And there's more. The library also proves a graded version of the theorem that doesn't need certainty: if the stranger calls up the familiar item, and the familiar item calls up itself, each with probability at least one minus delta, the pattern holds to within two delta. ACT-R's memory meets that condition when the context primes the familiar item, because spreading activation multiplies its weight, and for every delta, enough priming suffices. So confident misnaming now has two explanations in the library, from different mechanisms: discrimination, and partial matching with priming. And they make different predictions. EPAM's errors follow the features a stranger shares with someone you know; primed ACT-R's follow the context, like who you just saw. One phenomenon, two explanations, each with its assumptions explicit, and an observation that would tell them apart. That's the kind of result a cumulative library should produce. One honest caveat: the priming factor is a parameter; what does the priming isn't derived yet.
+And there's more. The library also proves a graded version of the theorem that doesn't need certainty: if the stranger calls up the familiar item, and the familiar item calls up itself, each with probability at least one minus delta, the pattern holds to within two delta. ACT-R's memory meets that condition when the context primes the familiar item, because spreading activation multiplies its weight, and for every delta, enough priming suffices. So confident misnaming now has two explanations in the library, from different mechanisms: discrimination, and partial matching with priming. And they make different predictions. EPAM's errors follow the features a stranger shares with someone you know; primed ACT-R's follow the context, like who you just saw. And what primes isn't just assumed: having just seen Bob is priming, through ACT-R's own base level. After seeing Bob ten times, Carl is called Bob ninety-two percent of the time. But so is Ann, a familiar face, eighty percent of the time; EPAM never calls her Bob. That's the observation that separates the explanations.
 }
 
 \begin{frame}{What Chris has now}

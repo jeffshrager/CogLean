@@ -25,6 +25,8 @@ Results:
 * `Act.retrieveIn`: retrieval in a context that primes chunks (spreading
   activation, as a factor on a chunk's weight); `Act.retrieveIn_unprimed`,
   `Act.prob_primed`.
+* `Act.retrieve_rehearse`: seeing `y` just before the test is priming `y`, by
+  `1 + k j / B`, derived from the base level.
 -/
 
 import CogLib.Rep.Distribution
@@ -200,6 +202,131 @@ theorem prob_primed (P : ActParams) (s : ActState) (x y : Item) (ρ : Rat) :
   rw [retrieveIn, prob_sample, total, strengthIn_split _ _ (fun _ => true) (· == some y), hw]
   simp only [Bool.true_and] at *
   rw [h1, h2]
+/-! ### What primes: seeing an item just before the test
+
+In ACT-R, a recent use of a chunk raises its base level. Seeing `y` `j`
+times just before the test, without advancing the clock, adds `j` to each of
+`y`'s chunks' `e^B`, which multiplies `y`'s weight, for every probe, by one
+factor: so recency is priming, with the factor derived (`retrieve_rehearse`). -/
+
+/-- **Rehearsal**: `j` more uses of `y`, one step before now, without
+advancing the clock: `y` seen `j` times just before the test. -/
+def rehearse (s : ActState) (y : Item) (j : Nat) : ActState :=
+  ⟨s.now, s.chunks.map fun c => if c.code = y then ⟨c.code, List.replicate j (s.now - 1) ++ c.uses⟩ else c⟩
+
+/-- The total base level of the chunks with code `y`. -/
+def baseOf (s : ActState) (y : Item) : Rat :=
+  ((s.chunks.filter fun c => c.code == y).map fun c => baseWeight s.now c.uses).sum
+
+/-- The number of chunks with code `y`. -/
+def countOf (s : ActState) (y : Item) : Nat := (s.chunks.filter fun c => c.code == y).length
+
+theorem sum_replicate_rat (j : Nat) (a : Rat) : (List.replicate j a).sum = (j : Rat) * a := by
+  induction j with
+  | zero => simp
+  | succ j ih => simp [List.replicate_succ, ih]; grind
+
+theorem baseWeight_rehearsed (now j : Nat) (uses : List Nat) (h : 1 ≤ now) :
+    baseWeight now (List.replicate j (now - 1) ++ uses) = (j : Rat) + baseWeight now uses := by
+  simp only [baseWeight, List.map_append, List.sum_append, List.map_replicate, sum_replicate_rat]
+  have : now - (now - 1) = 1 := by omega
+  rw [this]
+  grind
+
+theorem outcomes_rehearse (s : ActState) (y : Item) (j : Nat) :
+    outcomes (rehearse s y j) = outcomes s := by
+  simp only [outcomes, rehearse, List.map_map]
+  congr 1
+  apply List.map_congr_left
+  intro c _
+  simp only [Function.comp]
+  split <;> rfl
+
+/-- The weight on `y`, by chunk: base level times the mismatch factor, which
+depends only on the code. -/
+theorem weight_some_eq (P : ActParams) (s : ActState) (x y : Item) :
+    weight P s x (some y) = baseOf s y * P.mu ^ mismatches P.fs x y := by
+  simp only [weight, baseOf]
+  generalize s.chunks = cs
+  induction cs with
+  | nil => simp
+  | cons c cs ih =>
+    by_cases h : c.code = y
+    · simp [h, chunkWeight, ih]
+      grind
+    · have : (c.code == y) = false := by simp [h]
+      simp [this, ih]
+
+/-- Rehearsal of `y`, chunk by chunk. -/
+abbrev reh (now : Nat) (y : Item) (j : Nat) (c : Chunk) : Chunk :=
+  if c.code = y then ⟨c.code, List.replicate j (now - 1) ++ c.uses⟩ else c
+
+theorem reh_code (now : Nat) (y : Item) (j : Nat) (c : Chunk) : (reh now y j c).code = c.code := by
+  unfold reh; split <;> rfl
+
+theorem filter_map_reh (now : Nat) (y z : Item) (j : Nat) (cs : List Chunk) :
+    (cs.map (reh now y j)).filter (fun c => c.code == z) =
+      (cs.filter (fun c => c.code == z)).map (reh now y j) := by
+  rw [List.filter_map]
+  congr 1
+  apply List.filter_congr
+  intro c _
+  simp [reh_code]
+
+theorem baseOf_rehearse_other (s : ActState) (y z : Item) (j : Nat) (hz : z ≠ y) :
+    baseOf (rehearse s y j) z = baseOf s z := by
+  simp only [baseOf, rehearse]
+  rw [show (fun c => if c.code = y then (⟨c.code, List.replicate j (s.now - 1) ++ c.uses⟩ : Chunk) else c)
+    = reh s.now y j from rfl, filter_map_reh, List.map_map]
+  congr 1
+  apply List.map_congr_left
+  intro c hc
+  have : c.code = z := by simpa using (List.mem_filter.mp hc).2
+  have : ¬ c.code = y := fun e => hz (this ▸ e)
+  simp [reh, this]
+
+theorem baseOf_rehearse_self (s : ActState) (y : Item) (j : Nat) (h : 1 ≤ s.now) :
+    baseOf (rehearse s y j) y = baseOf s y + (countOf s y : Rat) * j := by
+  simp only [baseOf, countOf, rehearse]
+  rw [show (fun c => if c.code = y then (⟨c.code, List.replicate j (s.now - 1) ++ c.uses⟩ : Chunk) else c)
+    = reh s.now y j from rfl, filter_map_reh, List.map_map]
+  have hall : ∀ c ∈ s.chunks.filter (fun c => c.code == y), c.code = y := fun c hc => by
+    simpa using (List.mem_filter.mp hc).2
+  generalize s.chunks.filter (fun c => c.code == y) = L at hall ⊢
+  induction L with
+  | nil => simp; grind
+  | cons c L ih =>
+    have hc := hall c (List.mem_cons_self ..)
+    have := ih (fun d hd => hall d (List.mem_cons_of_mem c hd))
+    simp only [List.map_cons, List.sum_cons, List.length_cons, Function.comp, reh, hc, ite_true] at this ⊢
+    rw [baseWeight_rehearsed _ _ _ h, this]
+    push_cast
+    grind
+
+/-- **Seeing `y` just before the test is priming `y`.** With the clock at 1
+or later, `j` uses of `y` one step before now multiply `y`'s weight, for
+every probe, by `ρ = 1 + k j / B`, where `B` is `y`'s base level and `k` the
+number of its chunks, and leave every other weight alone. -/
+theorem retrieve_rehearse (P : ActParams) (s : ActState) (y : Item) (j : Nat) (h : 1 ≤ s.now)
+    (hB : baseOf s y ≠ 0) (x : Item) :
+    retrieve P (rehearse s y j) x =
+      retrieveIn P (primeOnly y (1 + (countOf s y : Rat) * j / baseOf s y)) s x := by
+  simp only [retrieve, retrieveIn, outcomes_rehearse]
+  congr 1
+  funext o
+  cases o with
+  | none => rfl
+  | some z =>
+    simp only [weightIn, primeOnly]
+    rw [weight_some_eq, weight_some_eq]
+    by_cases hz : z = y
+    · subst hz
+      rw [baseOf_rehearse_self s z j h]
+      simp only [ite_true]
+      grind
+    · rw [baseOf_rehearse_other s y z j hz]
+      simp [hz]
+
 end Act
 
 /-- Declarative memory with activation, as a retriever. -/

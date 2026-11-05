@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1023,11 +1023,11 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 Here is how much of TeX's memory you used:
  23224 strings out of 478994
  418118 string characters out of 5858185
- 708655 words of memory out of 5000000
+ 709655 words of memory out of 5000000
  40140 multiletter control sequences out of 15000+600000
  482621 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 113i,11n,116p,1669b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 113i,11n,116p,2098b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/
 texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
 21/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2021/texmf-d
@@ -1047,7 +1047,7 @@ ist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/
 type1/public/lm/lmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/publi
 c/lm/lmtt10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt9
 .pfb>
-Output written on paper.pdf (22 pages, 384518 bytes).
+Output written on paper.pdf (22 pages, 385289 bytes).
 PDF statistics:
  437 PDF objects out of 1000 (max. 8388607)
  393 compressed objects within 4 object streams

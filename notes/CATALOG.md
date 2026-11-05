@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-304 theorems: 298 general, 6 instances; 111 headline; 46 about laws; 30 conditional on laws.
+322 theorems: 316 general, 6 instances; 115 headline; 50 about laws; 37 conditional on laws.
 
 **Laws**
 
@@ -21,10 +21,13 @@ How to read it:
 | `Cog.not_distanceEffect_of_reversal` | DistanceEffect | never | general | Reversal |
 | `Cog.Phenomena.studyAll_preserves` | Recognizes | has | general | NonInterference, Recognizes |
 | `Cog.Phenomena.studyAll_recognizes` | Recognizes | has | general | NonInterference |
+| `Cog.Laws.certaintyWithin_zero` | CertaintyWithin | has | general | Certainty |
 | `Cog.Laws.determinate_of_deterministic` | Determinate | has | general | Deterministic |
 | `Cog.Laws.not_determinate_of_two` | Determinate | never | general | Reachable |
+| `Cog.Laws.determinateWithin_zero` | DeterminateWithin | has | general | Determinate |
 | `Cog.netRetriever_deterministic` | Deterministic | has | general | derived |
 | `Cog.Laws.not_recency_of_orderFree` | Recency | never | general | OrderFree |
+| `Cog.Laws.stabilityWithin_zero` | StabilityWithin | has | general | Stability |
 | `Cog.Laws.stableRetrievalOn_of_stability` | StableRetrievalOn | has | general | Deterministic, Stability |
 | `Cog.Laws.stableRetrievalOn_of_stableRetrieval` | StableRetrievalOn | has | general | StableRetrieval |
 | `Cog.overExtends_of_conjunctionEffect` | OverExtends | has | general | ConjunctionEffect |
@@ -45,6 +48,7 @@ How to read it:
 | `Cog.Act.spaced_diminishing` | DiminishingReturns | has | general | derived |
 | `Cog.RR.act_primed_confident_errors` | GradedConfidentErrors | has | general | derived |
 | `Cog.RR.confident_errors_graded` | GradedConfidentErrors | has | general | derived |
+| `Cog.RR.confident_errors_of_graded_laws` | GradedConfidentErrors | has | general | ProperRetrieval, DeterminateWithin, CertaintyWithin, StabilityWithin |
 | `Cog.Phenomena.ConfusionErrorPattern.graded` | GradedConfusionPattern | has | general | ConfusionErrorPattern |
 | `Cog.Act.spaced_improves` | Improves | has | general | derived |
 | `Cog.netLearner_nonInterference` | NonInterference | has | general | derived |
@@ -75,6 +79,7 @@ How to read it:
 | `Cog.trials_at_least_items` | general | — | Serial mechanism, unit processing time. If after `t` trials at most `t` items are learned, then learning `n` items takes at least `n` trials. |
 | `Cog.Act.prob_primed` | general | — | The chance of retrieving a primed code: `ρ W_y / (ρ W_y + W_rest)`, where `W_y` is the unprimed weight on `y` and `W_rest` that on every other outcome, failure included. |
 | `Cog.Act.retrieve_not_certain` | general | — | Retrieval is never certain. Failure is always among the outcomes. |
+| `Cog.Act.retrieve_rehearse` | general | — | Seeing `y` just before the test is priming `y`. With the clock at 1 or later, `j` uses of `y` one step before now multiply `y`'s weight, for every probe, by `ρ = 1 + k j / B`, where `B` is `y`'... |
 | `Cog.Net.cue_from_path_selects` | general | — | A path cue is sufficient. The cue made of exactly the features on the response's path selects the response's image, and nothing else. |
 | `Cog.Net.restoration` | general | — | Restoration. After the net has grown, rebuilding the cue from the response's new path re-establishes the link: the cue selects the response, and nothing else. |
 | `Cog.Net.confusion_agrees_on_path` | general | — | A confusion is with a code that looks the same to the net. If each image is stored once, and `x` is recognized as the stored image `y` (which the net itself recognizes), then `x` agrees with `y... |
@@ -93,6 +98,7 @@ How to read it:
 | `Cog.Laws.stableRetrievalOn_of_stability` | general | Deterministic, Stability | For a deterministic retriever, stability gives stable retrieval. |
 | `Cog.Laws.stableRetrieval_of_neverCertain` | general | — | Vacuous stable retrieval. If nothing is ever retrieved for certain, `StableRetrieval` holds trivially: its hypothesis is never met. |
 | `Cog.Laws.studied_selfRetrieval` | general | Certainty, Stability | Studied items retrieve themselves. With certainty and stability, after studying a list without repeats, every item on it retrieves itself with probability 1. |
+| `Cog.Laws.studied_selfRetrieval_within` | general | CertaintyWithin, StabilityWithin | Studied items retrieve themselves, within a tolerance. With certainty within `δ` and stability within `η ≥ 0`, after studying a list without repeats, every item on it retrieves itself with prob... |
 | `Cog.Phenomena.confusion_preserves_of` | general | AgreesOn | A confusion preserves what the agreed features determine. If whatever `code x` can call up agrees with it on `fs`, and `fs` determines `P`, then a stored `code q` that `code x` can call up has ... |
 | `Cog.Net.cue_can_fail_after_growth` | general | — | A cue can fail after the net grows. Suppose `y` is the only image stored (net = one terminal), so the link to `y` needs no information at all: the empty cue selects `y`. |
 | `Cog.Net.learning_can_capture_old_cue` | general | — | Learning new material can capture an old cue. A cue that selected `y` can select a newly learned `w` instead, because learning `w` grows the net under the old cue. |
@@ -121,6 +127,7 @@ How to read it:
 | `Cog.Act.spaced_not_powerLaw` | general | — | So no power law fits spaced practice over long ranges: for any ratio `r` and tolerance `ε` with `(1 + ε) r < 1`, i.e. any exponent above 0 fitted to within `ε`, the curve is not approximately s... |
 | `Cog.RR.act_primed_confident_errors` | general | — | Primed ACT-R memory makes graded confident errors. In a context that primes the familiar `q` by `ρ`, let the rest of the weight, for the probes `x` and `q`, be at most `δ` times `q`'s primed we... |
 | `Cog.RR.act_priming_confident_errors` | general | — | Priming brings ACT-R's memory as close to the confusion-error pattern as one likes. For every `δ > 0` there is a priming factor beyond which the trial makes graded confident errors within `2δ`. |
+| `Cog.RR.act_recency_confident_errors` | general | — | What primes: seeing the familiar item just before. In ACT-R, recent uses of `q` raise its base level, which is priming `q` with a derived factor (`Act.retrieve_rehearse`). |
 | `Cog.achieve_chain_fail_pre` | general | — | A broken link. If, once its preconditions are achieved, the single relevant operator still does not apply, the goal fails. |
 | `Cog.achieve_chain_fail_sub` | general | — | A broken link. If the single relevant operator's preconditions cannot be achieved, the goal fails. |
 | `Cog.achieve_chain_step` | general | — | A link of a chain. If the first unmet condition has a single relevant operator, its preconditions are achieved (state `s1`), and it then applies deterministically (state `s2`), achieving the go... |
@@ -132,6 +139,7 @@ How to read it:
 | `Cog.RR.backup_prob_certain` | general | — | Strategy nesting, for a code that calls up `r` for certain. |
 | `Cog.RR.confident_errors` | general | — | Confident errors, with any memory. Let the familiar `q` call up itself for certain, with sharp associations, and let `x`, whose correct answer differs, call up `q` for certain. |
 | `Cog.RR.confident_errors_graded` | general | — | Graded confident errors, with any memory. Let `x` call up the familiar `q`, and `q` call up itself, each with probability at least `1 - δ`, where `q`'s associations are sharp and `x`'s correct ... |
+| `Cog.RR.confident_errors_of_graded_laws` | general | ProperRetrieval, DeterminateWithin, CertaintyWithin, StabilityWithin | Graded confident errors, from graded laws of memory. For any memory whose retrieval is proper, determinate within `δd`, certain within `δc` and stable within `η`: after a study list `xs` withou... |
 | `Cog.RR.confident_errors_of_laws` | general | Determinate, Certainty, Stability | Confident errors, from laws of memory. For any memory with determinate retrieval, certainty and stability: after a study list without repeats, if a stranger `x` can be taken for a studied `q` (... |
 | `Cog.RR.confusion_gives_neighbours_answer` | general | — | A confused problem gets its neighbour's answer. |
 | `Cog.RR.same_correct_confusion_harmless` | general | — | Confusion with a problem of the same correct answer is harmless. |
@@ -430,7 +438,7 @@ How to read it:
 
 ## Experiments written against the memory interface
 
-45 theorems: 25 general, 20 instances; 13 headline; 2 about laws; 5 conditional on laws.
+47 theorems: 25 general, 22 instances; 15 headline; 2 about laws; 5 conditional on laws.
 
 **Laws**
 
@@ -450,8 +458,10 @@ How to read it:
 | `Cog.Exp.orderFree_recency_inconsistent` | general | — | Recency and order-freedom are inconsistent wherever a valid design exists. |
 | `Cog.Exp.recency_delta_pos` | general | Recency | Recency gives a positive order effect. |
 | `Cog.Exp.FaceNaming.act_more_dont_know` | instance | — | Under ACT-R, the stranger says "don't know" more often than the familiar person, so the third part of confident errors fails. |
+| `Cog.Exp.FaceNaming.epam_ann_never_bob` | instance | — | The observation that separates the explanations. EPAM's net never calls Ann "Bob": its confusions follow shared features, and Ann's face is recognized as her own. |
 | `Cog.Exp.FaceNaming.epam_confident_misnaming` | general | — | Confident misnaming, inherited from `Cog.RR.confident_errors`, for every search length. |
 | `Cog.Exp.FaceNaming.epam_confident_misnaming_of_laws` | general | — | Confident misnaming, from EPAM's laws. The same conclusion, derived from matrix cells: discrimination is determinate, certain (on the 3-bit codes, which it can tell apart) and stable. |
+| `Cog.Exp.FaceNaming.recency_values` | instance | — | Having just seen Bob ten times, ACT-R calls Carl "Bob" with probability `275/299` (unprimed: `225/391`), and Carl's "don't know" comes close to Bob's (`1/26` and `629/20654`): near the confusio... |
 | `Cog.Exp.PrototypeDemo.act_curve` | instance | — | ACT-R's curve rises with serial position. |
 | `Cog.Exp.PrototypeDemo.epam_curve_flat` | general | — | EPAM's flat curve, from laws alone. |
 | `Cog.Exp.PrototypeDemo.minerva_lures` | instance | — | MINERVA returns the prototype, never studied, and rejects the dissimilar lure. |
@@ -580,15 +590,15 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 304 | 298 | 6 | 46 | 30 | 111 |
+| CogLib: the general library | 322 | 316 | 6 | 50 | 37 | 115 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 28 | 21 | 7 | 0 | 0 | 16 |
 | Multi-digit addition (with the problem solver) | 207 | 165 | 42 | 10 | 5 | 85 |
 | The theory matrix: memory families against retrieval laws | 61 | 46 | 15 | 31 | 1 | 30 |
-| Experiments written against the memory interface | 45 | 25 | 20 | 2 | 5 | 13 |
+| Experiments written against the memory interface | 47 | 25 | 22 | 2 | 5 | 15 |
 | Concepts: selective modification and threshold membership | 17 | 12 | 5 | 5 | 1 | 8 |
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
 | ACT-R over the reals (Mathlib): the power-law bridge and base-level decay | 14 | 14 | 0 | 0 | 0 | 9 |
-| **All** | 752 | 608 | 144 | 108 | 42 | 320 |
+| **All** | 772 | 626 | 146 | 112 | 49 | 326 |

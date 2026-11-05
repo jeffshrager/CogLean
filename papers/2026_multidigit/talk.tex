@@ -308,6 +308,31 @@ One precision matters here. The theorem says the confused problem reaches the so
 Chris's next question is whether any of this needs EPAM in particular. Because recognition is stated for any memory, we can swap EPAM's net for ACT-R's declarative memory and change nothing else. The confident-error pattern is proved for any memory with three laws: determinacy, certainty and stability. EPAM's net has all three at every setting; ACT-R's memory has none of them, also proved. So the theorem applies to EPAM and never to ACT-R. But be careful about what that means. It doesn't mean ACT-R can't make similar errors; at this setting it answers two hundred about forty-three percent of the time. What fails is the exact pattern: ACT-R's confusion is graded, and its solver use differs from the familiar problem's. A note on the solver rows: the solver is right about sixty-six percent of the time when it's invoked; the overall figure is that times how often it's invoked. It also predicts interference: studying a new problem raises the errors on a practiced one, which EPAM never does. All the numbers are exact, at one illustrative setting.
 }
 
+\begin{frame}{ACT-R, primed: a second explanation}
+  \begin{itemize}
+    \item A \textbf{graded} pattern needs no certainty: if $x$ calls up $q$, and $q$ itself, each with probability $\ge 1-\delta$, the pattern holds within $2\delta$; graded laws give it for a class.
+    \item ACT-R reaches it when $q$ is \textbf{primed}; for every $\delta>0$, enough priming suffices. Having \emph{just seen} $q$ is such priming, through ACT-R's base level.
+  \end{itemize}
+  \medskip
+  \begin{center}\small
+  \begin{tabular}{lc}
+    \toprule
+    & $150+100$ answered 200 by retrieval \\
+    \midrule
+    ACT-R, unprimed & $225/529 \approx .43$ \\
+    ACT-R, $100+100$ primed $\times 10$ & $2250/2599 \approx .87$ \\
+    ACT-R, primed $\times 100$ & $22500/23299 \approx .97$ \\
+    EPAM & $45/46 \approx .98$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \smallskip
+  \small Two explanations: discrimination, and primed partial matching. Priming also makes \emph{other familiar} items taken for $q$; EPAM never does that.
+\end{frame}
+\note{
+So does ACT-R simply fail here? No. The library also proves a graded version of the pattern that needs no certainty: if the stranger calls up the familiar problem, and the familiar problem calls up itself, each with probability at least one minus delta, the pattern holds to within two delta. And graded versions of the three laws give it for a whole class of memories. ACT-R's memory gets there when the familiar problem is primed: for every delta, enough priming suffices, and having just seen one hundred plus one hundred several times is exactly such priming, through ACT-R's own base level. At our setting, unprimed, one fifty plus one hundred gets two hundred forty-three percent of the time; primed tenfold, eighty-seven percent; a hundredfold, ninety-seven, close to EPAM's ninety-eight. So there are two explanations of confident errors here, discrimination and primed partial matching, and they differ in an observation: priming makes ACT-R take other familiar items for the primed one too, which EPAM's net never does.
+}
+
 \begin{frame}{What Chris has now}
   \begin{itemize}
     \item Not a simulation of one error, but a \textbf{reusable result}: sufficient conditions for the phenomenon, for every setting that meets them.

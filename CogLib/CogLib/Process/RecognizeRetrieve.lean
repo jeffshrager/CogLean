@@ -436,5 +436,40 @@ theorem confident_errors_of_laws {S : Type} (R : Retriever S Item) (s0 : S) (U :
   have hx' := Laws.retrieve_of_pRet_pos R s0 U hdet _ hr (code x) (code q) hconf
   exact confident_errors code _ str as cc n backup correct x q hT hbx hbq hq' hx' hs hne
 
+
+/-- **Graded confident errors, from graded laws of memory.** For any memory
+whose retrieval is proper, determinate within `δd`, certain within `δc` and
+stable within `η`: after a study list `xs` without repeats, if a stranger `x`
+can be taken for a studied `q` with probability above `δd`, and `q`'s
+associations are sharp, the trial makes graded confident errors within `2δ`,
+for `δ = δd + δc + |xs| η`. With all tolerances 0 these are the exact laws
+(`Laws.determinateWithin_zero` and the rest), so the theorem covers every
+memory `confident_errors_of_laws` covers. Assumed laws: the graded ones;
+conditions: confusability above `δd`, sharpness, well-formedness. -/
+theorem confident_errors_of_graded_laws {S : Type} (R : Retriever S Item) (s0 : S) (U : List Item)
+    (δd δc η : Rat) (hδd : 0 ≤ δd) (hδc : 0 ≤ δc) (hη : 0 ≤ η)
+    (hprop : Laws.ProperRetrieval R s0 U) (hdet : Laws.DeterminateWithin δd R s0 U)
+    (hcert : Laws.CertaintyWithin δc R s0 U) (hstab : Laws.StabilityWithin η R s0 U)
+    (xs : List Item) (hxs : ∀ y ∈ xs, y ∈ U) (hnd : xs.Nodup)
+    (correct : P → A) (x q : P) (hq : code q ∈ xs)
+    (hconf : δd < Laws.pRet R (R.studyAll s0 xs) (code x) (code q))
+    (hs0 : ∀ y a, 0 ≤ str y a) (hT : ∀ y, total as (str y) ≠ 0)
+    (hbx : mass (backup x) = 1) (hbq : mass (backup q) = 1)
+    (hs : Sharp str cc (code q) (correct q)) (hne : correct x ≠ correct q) :
+    Phenomena.GradedConfidentErrors
+      (recognizeRetrieve code (R.retrieve (R.studyAll s0 xs)) str as cc n backup)
+      (wholeWrong correct) isWhole isBackup x q (2 * (δd + δc + (xs.length : Rat) * η))
+      (backupAfter str as cc n (some (code q)) + (δd + δc + (xs.length : Rat) * η)) := by
+  have hr : Laws.Reachable R s0 U (R.studyAll s0 xs) := ⟨xs, hxs, rfl⟩
+  obtain ⟨nx, mx⟩ := hprop _ hr (code x)
+  obtain ⟨nq, mq⟩ := hprop _ hr (code q)
+  have hqq := Laws.studied_selfRetrieval_within δc η hη R s0 U hcert hstab xs hxs hnd (code q) hq
+  have hxq := Laws.pRet_ge_of_within δd R s0 U hdet hprop _ hr (code x) (code q) hconf
+  have hl : (0 : Rat) ≤ (xs.length : Rat) * η := Rat.mul_nonneg Rat.natCast_nonneg hη
+  apply confident_errors_graded code _ str as cc n backup correct x q _ hs0 hT hbx hbq nx mx nq mq
+    _ _ hs hne
+  · unfold Laws.pRet at hqq; grind
+  · unfold Laws.pRet at hxq; grind
+
 end RR
 end Cog

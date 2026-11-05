@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 13:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -998,7 +998,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 318--319
 y and sta-bil-ity
  []
 
-[11]
+
+Underfull \hbox (badness 1314) in paragraph at lines 323--324
+\T1/lmr/m/n/10.95 ev-ery $\OML/lmm/m/it/10.95 ^^N > \OT1/lmr/m/n/10.95 0$\T1/lm
+r/m/n/10.95 , enough prim-ing suf-fices (\T1/lmtt/m/n/10.95 RR.act_priming_conf
+ident_errors\T1/lmr/m/n/10.95 ), and hav-ing
+ []
+
+[11] [12]
 Underfull \hbox (badness 4279) in paragraph at lines 387--387
 []|\T1/lmr/m/n/10 the com-posed mech-a-nisms
  []
@@ -1033,18 +1040,18 @@ Underfull \hbox (badness 4156) in paragraph at lines 387--387
 \T1/lmr/m/n/10 as-so-ci-a-tions, cri-te-rion and
  []
 
-[12] [13] [14] [15] [16] (./paper.bbl [17])
+[13] [14] [15] [16] (./paper.bbl [17])
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[18] [19] [20] [21] (./paper.aux)
+[18] [19] [20] [21] [22] (./paper.aux)
 Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: 0A08C06B7E5D7B34BB3D4F4DF85E5194;5890.
  ) 
 Here is how much of TeX's memory you used:
- 23266 strings out of 478994
- 418456 string characters out of 5858185
- 738820 words of memory out of 5000000
+ 23267 strings out of 478994
+ 418463 string characters out of 5858185
+ 731874 words of memory out of 5000000
  40194 multiletter control sequences out of 15000+600000
  487189 words of font info for 90 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1068,10 +1075,10 @@ st/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2021/texmf-dist/fonts/t
 ype1/public/lm/lmri9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public
 /lm/lmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10
 .pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on paper.pdf (21 pages, 401700 bytes).
+Output written on paper.pdf (22 pages, 403322 bytes).
 PDF statistics:
- 439 PDF objects out of 1000 (max. 8388607)
- 389 compressed objects within 4 object streams
- 107 named destinations out of 1000 (max. 500000)
+ 444 PDF objects out of 1000 (max. 8388607)
+ 393 compressed objects within 4 object streams
+ 108 named destinations out of 1000 (max. 500000)
  261 words of extra memory for PDF output out of 10000 (max. 10000000)
 

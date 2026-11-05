@@ -246,5 +246,140 @@ theorem not_recency_of_orderFree (fs : List Feature) (R : Retriever S Item) (s0 
   simp only [List.nil_append, Retriever.studyAll, List.foldl_cons, List.foldl_nil, pRet, e] at h1 h2
   grind
 
+
+/-! ### Graded laws
+
+The all-or-none laws admit no memory whose retrieval is never certain. Their
+graded versions hold to within a tolerance; each exact law is the case with
+tolerance 0 (`determinateWithin_zero`, `certaintyWithin_zero`,
+`stabilityWithin_zero`). -/
+
+/-- **Proper retrieval.** In every reachable state, every probe's retrieval is
+a probability distribution. -/
+def ProperRetrieval (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ s, Reachable R s0 U s → ∀ x, Nonneg (R.retrieve s x) ∧ mass (R.retrieve s x) = 1
+
+/-- **Determinacy within `δ`.** In every reachable state, every probe puts at
+least `1 - δ` on a single outcome. -/
+def DeterminateWithin (δ : Rat) (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ s, Reachable R s0 U s → ∀ x, ∃ r, 1 - δ ≤ prob (R.retrieve s x) (· == r)
+
+/-- **Certainty within `δ`.** A stimulus just studied retrieves itself with
+probability at least `1 - δ`. -/
+def CertaintyWithin (δ : Rat) (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ s, Reachable R s0 U s → ∀ y ∈ U, 1 - δ ≤ pRet R (R.study s y) y y
+
+/-- **Stability within `η`.** Studying another stimulus lowers a stimulus's
+chance of retrieving itself by at most `η`. -/
+def StabilityWithin (η : Rat) (R : Retriever S Item) (s0 : S) (U : List Item) : Prop :=
+  ∀ s, Reachable R s0 U s → ∀ y ∈ U, ∀ z ∈ U, z ≠ y → pRet R s y y - η ≤ pRet R (R.study s z) y y
+
+theorem determinateWithin_zero (R : Retriever S Item) (s0 : S) (U : List Item)
+    (h : Determinate R s0 U) : DeterminateWithin 0 R s0 U := by
+  intro s hs x
+  obtain ⟨r, hr⟩ := h s hs x
+  refine ⟨r, ?_⟩
+  rw [hr, Dist.prob_pure]
+  simp
+  grind
+
+theorem certaintyWithin_zero (R : Retriever S Item) (s0 : S) (U : List Item)
+    (h : Certainty R s0 U) : CertaintyWithin 0 R s0 U := by
+  intro s hs y hy
+  rw [h s hs y hy]
+  grind
+
+theorem stabilityWithin_zero (R : Retriever S Item) (s0 : S) (U : List Item)
+    (h : Stability R s0 U) : StabilityWithin 0 R s0 U := by
+  intro s hs y hy z hz hne
+  rw [h s hs y hy z hz hne]
+  grind
+
+/-- Under determinacy within `δ`, a chance above `δ` of retrieving `y` is a
+chance of at least `1 - δ`. -/
+theorem pRet_ge_of_within (δ : Rat) (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hd : DeterminateWithin δ R s0 U) (hp : ProperRetrieval R s0 U) (s : S)
+    (hs : Reachable R s0 U s) (x y : Item) (h : δ < pRet R s x y) : 1 - δ ≤ pRet R s x y := by
+  obtain ⟨r, hr⟩ := hd s hs x
+  obtain ⟨hn, hm⟩ := hp s hs x
+  by_cases e : r = some y
+  · subst e; exact hr
+  · -- the mode is another outcome, so `y` gets at most `δ`
+    exfalso
+    have hsum := prob_add_not (R.retrieve s x) (· == some y)
+    have hsplit := prob_split (R.retrieve s x) (fun o => !(o == some y)) (· == r)
+    have hsub : prob (R.retrieve s x) (fun o => (!(o == some y)) && (o == r)) =
+        prob (R.retrieve s x) (· == r) := by
+      apply prob_congr
+      intro o
+      by_cases ho : o = r
+      · subst ho; simp [e]
+      · simp [ho]
+    have hn2 := prob_nonneg (R.retrieve s x) (fun o => (!(o == some y)) && !(o == r)) hn
+    unfold pRet at h
+    grind
+
+/-- Under stability within `η`, studying `m` other items lowers an item's
+self-retrieval by at most `m η`. -/
+theorem stable_after_within (η : Rat) (R : Retriever S Item) (s0 : S) (U : List Item)
+    (hs : StabilityWithin η R s0 U) (y : Item) (hy : y ∈ U) :
+    ∀ (post pre : List Item), (∀ x ∈ pre, x ∈ U) → (∀ z ∈ post, z ∈ U ∧ z ≠ y) →
+      pRet R (R.studyAll s0 pre) y y - (post.length : Rat) * η ≤
+        pRet R (R.studyAll s0 (pre ++ post)) y y := by
+  intro post
+  induction post with
+  | nil => intro pre _ _; simp only [List.append_nil, List.length_nil]; grind
+  | cons z post ih =>
+    intro pre hpre hpost
+    have hz := hpost z (List.mem_cons_self ..)
+    have e : pre ++ z :: post = (pre ++ [z]) ++ post := by simp
+    have step := hs _ ⟨pre, hpre, rfl⟩ y hy z hz.1 hz.2
+    have rest := ih (pre ++ [z]) (by
+        intro x hx
+        rcases List.mem_append.mp hx with h | h
+        · exact hpre x h
+        · simp at h; exact h ▸ hz.1)
+      (fun w hw => hpost w (List.mem_cons_of_mem z hw))
+    rw [studyAll_append] at rest
+    rw [e]
+    simp only [List.length_cons, Rat.natCast_add] at *
+    have : R.studyAll (R.studyAll s0 pre) [z] = R.study (R.studyAll s0 pre) z := rfl
+    rw [this] at rest
+    grind
+
+/-- **Studied items retrieve themselves, within a tolerance.** With certainty
+within `δ` and stability within `η ≥ 0`, after studying a list without
+repeats, every item on it retrieves itself with probability at least
+`1 - δ - (length) η`. -/
+theorem studied_selfRetrieval_within (δ η : Rat) (hη : 0 ≤ η) (R : Retriever S Item) (s0 : S)
+    (U : List Item) (hc : CertaintyWithin δ R s0 U) (hs : StabilityWithin η R s0 U)
+    (xs : List Item) (hU : ∀ x ∈ xs, x ∈ U) (hnd : xs.Nodup) (y : Item) (hy : y ∈ xs) :
+    1 - δ - (xs.length : Rat) * η ≤ pRet R (R.studyAll s0 xs) y y := by
+  obtain ⟨pre, post, hsplit⟩ := List.append_of_mem hy
+  have hyU := hU y hy
+  have hpre : ∀ x ∈ pre, x ∈ U := fun x hx => hU x (by rw [hsplit]; simp [hx])
+  have hnd' := hnd
+  rw [hsplit] at hnd'
+  have hyp : y ∉ post := by
+    rw [List.nodup_append] at hnd'
+    exact (List.nodup_cons.mp hnd'.2.1).1
+  have hpost : ∀ z ∈ post, z ∈ U ∧ z ≠ y := fun z hz =>
+    ⟨hU z (by rw [hsplit]; simp [hz]), fun e => hyp (e ▸ hz)⟩
+  have hlen : (post.length : Rat) ≤ (xs.length : Rat) := by
+    rw [hsplit]; exact Rat.natCast_le_natCast.mpr (by simp; omega)
+  have hpre' : ∀ x ∈ pre ++ [y], x ∈ U := by
+    intro x hx
+    rcases List.mem_append.mp hx with h | h
+    · exact hpre x h
+    · simp at h; exact h ▸ hyU
+  have a := stable_after_within η R s0 U hs y hyU post (pre ++ [y]) hpre' hpost
+  have b := hc _ ⟨pre, hpre, rfl⟩ y hyU
+  have e1 : R.studyAll s0 (pre ++ [y]) = R.study (R.studyAll s0 pre) y := by
+    rw [studyAll_append]; rfl
+  rw [e1] at a
+  rw [hsplit, show pre ++ y :: post = (pre ++ [y]) ++ post by simp]
+  have := Rat.mul_le_mul_of_nonneg_right hlen hη
+  grind
+
 end Laws
 end Cog
