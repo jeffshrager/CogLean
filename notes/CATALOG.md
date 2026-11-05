@@ -558,6 +558,24 @@ How to read it:
 | `DeviceLearning.epam_two_cues` | instance | — | EPAM, two cues: a garden path half the time, always solved. If the learner consults the label first (probability 1/2), it adopts SET-A-TIME, fails again, consults the display, and adopts DURATI... |
 | `DeviceLearning.net_facts` | instance | — | EPAM's net confuses TIME COOK with a VCR's SET TIME. It tests only the countdown, so both key labels call up SET TIME, and the cooking display calls up the kitchen timer. |
 
+## ACT-R over the reals (Mathlib): the power-law bridge and base-level decay
+
+14 theorems: 14 general, 0 instances; 9 headline; 0 about laws; 0 conditional on laws.
+
+**Headline theorems**
+
+| Theorem | Scope | Given | Statement |
+|---|---|---|---|
+| `Cog.ACTR.baseSpaced_bounds` | general | — | The sum lies between integrals. |
+| `Cog.ACTR.baseSpaced_div_tendsto` | general | — | The sum grows like `(n+1)^(1-d) / (1-d)`. |
+| `Cog.ACTR.spacedR_approx_powerLaw` | general | — | Approximately a power law with exponent `1 - d`. For every tolerance `ε > 0`, beyond some trial, doubling practice multiplies latency by `2^(-(1-d))` to within relative error `ε`. |
+| `Cog.ACTR.spacedR_doubling_tendsto` | general | — | The doubling ratio of latency tends to `2^(-(1-d))`. |
+| `Cog.ACTR.powerLaw_of_scaleRatio` | general | — | Scale invariance at doubling is a power law on the doubling grid, with exponent `b = -log₂ r`. |
+| `Cog.ACTR.power_cast` | general | — | CogLib's rational power curve is the real power law with exponent `m`. |
+| `Cog.ACTR.rpow_scaleRatio` | general | — | A power law is scale-invariant: `a · n^(-b)` has ratio `k^(-b)` at every scale `k`. |
+| `Cog.ACTR.scaleRatio_iff_cast` | general | — | The rational and real forms of scale invariance agree. |
+| `Cog.ACTR.spaced_cast` | general | — | At decay 1, the real curve is CogLib's: `spacedR F 1` is the cast of `Act.spaced F`. |
+
 ## Totals
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
@@ -572,4 +590,5 @@ How to read it:
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
-| **All** | 738 | 594 | 144 | 108 | 42 | 311 |
+| ACT-R over the reals (Mathlib): the power-law bridge and base-level decay | 14 | 14 | 0 | 0 | 0 | 9 |
+| **All** | 752 | 608 | 144 | 108 | 42 | 320 |

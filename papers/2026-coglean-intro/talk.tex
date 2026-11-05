@@ -645,10 +645,11 @@ Now squishiness at the top, in the phenomenon. Saying that practice follows a po
     \end{itemize}
   \end{itemize}
   \medskip
-  So the power law depends on the \textbf{schedule}, a condition; and the signature doesn't identify the mechanism.
+  With decay $d<1$ (over the reals): approximately a power law, exponent $1-d$.\\[1mm]
+  So the power law depends on the \textbf{schedule} and the \textbf{decay}; and the signature doesn't identify the mechanism.
 \end{frame}
 \note{
-Now a mechanism. In ACT-R's base-level learning, each use of a chunk leaves a trace that decays, and retrieval time falls as activation rises. With decay one, which keeps everything rational, the library proves two different curves from the same mechanism. Practice all at once and test after a delay, and latency is exactly F L over n: an exact power law. Practice spaced out, one use per trial, tested after each, and the curve improves, with diminishing returns and diminishing relative returns: every qualitative signature of a power law. But it isn't one. The ratio from doubling practice creeps up toward one, point six seven, point seven two, point seven seven, and on, so no fixed power law fits it over a long range; it's logarithmic. And yet over the first eight trials it's within seven and a half percent of a power law with exponent about a half. So whether this mechanism produces the power law depends on the schedule, which is a condition, not the mechanism; and the signature alone doesn't identify the mechanism, since averaged exponentials have it too. ACT-R's usual decay, a half, needs real numbers; that's next. The general point: CogLean doesn't need theories or phenomena to be exact. It needs the relations we assert between them to be explicit.
+Now a mechanism. In ACT-R's base-level learning, each use of a chunk leaves a trace that decays, and retrieval time falls as activation rises. With decay one, which keeps everything rational, the same mechanism gives two different curves. Practice all at once and test after a delay, and latency is exactly F L over n: an exact power law. Practice spaced out, one use per trial, tested after each, and the curve improves, with diminishing returns and diminishing relative returns: every qualitative signature of a power law. But it isn't one. The ratio from doubling practice creeps up toward one, point six seven, point seven two, point seven seven, and on, so no fixed power law fits it over a long range; it's logarithmic. Yet over the first eight trials it's within seven and a half percent of one. So the power law depends on the schedule, a condition, and the signature doesn't identify the mechanism: averaged exponentials have it too. With ACT-R's usual decay of a half, over the reals, spaced practice is approximately a power law with exponent one minus the decay: Anderson's account, checked. The general point: CogLean doesn't need theories or phenomena to be exact. It needs the relations we assert between them to be explicit.
 }
 
 \begin{frame}[plain]
@@ -760,12 +761,12 @@ So, to be clear about what this is and isn't. CogLean doesn't generate hypothese
     \item \textbf{Composing theories} (companion talk): EPAM + strategy choice + a problem solver $\to$ an executable model of three-digit addition, with consequences proved largely from the parts' theorems.
     \item \textbf{A second domain} (companion): concept formation by view application, on the same memory interface and laws.
     \item \textbf{Classes of mechanisms}: more families and laws; graded laws for graded phenomena.
-    \item \textbf{Quantitative phenomena}: a bridge to real analysis, for ACT-R's usual decay and other theories' learning curves, on the same predicates.
+    \item \textbf{Quantitative phenomena}: other theories' learning curves on the same predicates; statistical versions, for noisy data.
     \item \textbf{Several explanations}: what primes; when the explanations diverge.
   \end{itemize}
 \end{frame}
 \note{
-Where this goes next. The companion talk composes EPAM, strategy choice and a problem solver into an executable model of three-digit addition, with its consequences proved largely by reusing the parts' theorems. Another companion takes the library to concept formation, by view application, on the same memory interface and laws. The theory matrix should grow, in families and laws, including graded laws for graded phenomena. The learning-curve predicates need a bridge to real analysis, so we can do ACT-R's usual decay and compare other theories' learning curves on the same predicates. And for confident errors, we need an account of what does the priming, and of exactly when the two explanations come apart.
+Where this goes next. The companion talk composes EPAM, strategy choice and a problem solver into an executable model of three-digit addition, with its consequences proved largely by reusing the parts' theorems. Another companion takes the library to concept formation, by view application, on the same memory interface and laws. The theory matrix should grow, in families and laws, including graded laws for graded phenomena. Other theories' learning curves should be stated on the same predicates, so rival mechanisms can be compared quantitatively, and we need statistical versions for noisy data. And for confident errors, we need an account of what does the priming, and of exactly when the two explanations come apart.
 }
 
 \begin{frame}{Chris and Robin: from reasoning to model construction}
@@ -799,14 +800,14 @@ A last turn of the story, and a possibility, not something built. Once a theorem
   \begin{itemize}
     \item No contact with data yet; plausibility is for evidence and judgment.
     \item Key conditions are assumed, not derived (sharp associations); strengths are chosen, not learned.
-    \item Exact rationals: ACT-R only at decay 1 and temperature 1, and without retrieval as use.
+    \item Exact rationals: ACT-R mostly at decay 1 and temperature 1 (reals only for learning curves), and without retrieval as use.
     \item Scalability: exact finite distributions; continuous and neural models need other techniques.
     \item Nonnegative weights not enforced by the type, nor proved library-wide.
     \item A small library, of theories chosen partly because they could be formalized.
   \end{itemize}
 \end{frame}
 \note{
-The limitations are real. There's no contact with data yet, and psychological plausibility is a matter for evidence and judgment, not proof. Key conditions, like sharp associations, are assumed rather than derived, and the strengths in the examples are chosen, not learned. Exact rationals restrict some theories to special cases: ACT-R appears only with decay one and temperature one, and without retrieval strengthening what it retrieves. Exact finite distributions raise real questions of scale; continuous and neural models will need other techniques. The distribution type doesn't enforce nonnegative weights, and that's not yet proved across the library. And the library is small, built from theories chosen partly because they could be formalized.
+The limitations are real. There's no contact with data yet, and psychological plausibility is a matter for evidence and judgment, not proof. Key conditions, like sharp associations, are assumed rather than derived, and the strengths in the examples are chosen, not learned. Exact rationals restrict some theories to special cases: ACT-R appears mostly with decay one and temperature one, with real numbers so far only for learning curves, and without retrieval strengthening what it retrieves. Exact finite distributions raise real questions of scale; continuous and neural models will need other techniques. The distribution type doesn't enforce nonnegative weights, and that's not yet proved across the library. And the library is small, built from theories chosen partly because they could be formalized.
 }
 
 \begin{frame}{Take-home}

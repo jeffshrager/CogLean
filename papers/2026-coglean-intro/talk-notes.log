@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 13:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.3)  5 NOV 2026 14:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1460,7 +1460,7 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <9> not available
 ] [87
 
 ]
-Overfull \vbox (12.38841pt too high) detected at line 796
+Overfull \vbox (12.38841pt too high) detected at line 797
  []
 
 [88
@@ -1513,7 +1513,7 @@ ocal/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texli
 ve/2021/texmf-dist/fonts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2021/tex
 mf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2021/texmf-dist/fon
 ts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on talk-notes.pdf (92 pages, 431590 bytes).
+Output written on talk-notes.pdf (92 pages, 432106 bytes).
 PDF statistics:
  659 PDF objects out of 1000 (max. 8388607)
  537 compressed objects within 6 object streams
