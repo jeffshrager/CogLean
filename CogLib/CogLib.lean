@@ -13,6 +13,7 @@ import CogLib.Process.Association
 import CogLib.Process.SampledRetrieval
 import CogLib.Process.RecognizeRetrieve
 import CogLib.Process.PrimedRecognition
+import CogLib.Process.Practice
 import CogLib.Process.TheoryExecution
 import CogLib.Process.ViewRetrieval
 import CogLib.Process.TheoryRevision
@@ -26,6 +27,7 @@ import CogLib.Process.SpreadingActivation
 import CogLib.Process.ProblemSolving
 import CogLib.Phenomena.Learner
 import CogLib.Phenomena.Learning
+import CogLib.Phenomena.LearningCurve
 import CogLib.Phenomena.Retriever
 import CogLib.Phenomena.RetrievalLaws
 import CogLib.Phenomena.Responder

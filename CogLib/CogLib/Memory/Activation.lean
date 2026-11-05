@@ -20,6 +20,8 @@ Results:
 * `Act.retrieve_not_certain`: no probe retrieves a stored chunk for certain.
 * `actRetriever_stableRetrieval`: so stable retrieval holds, but only
   vacuously: its hypothesis is never met.
+* `Act.latency`: retrieval time `F · e^{-A}` from the base level; its
+  practice curves are in `Process/Practice`.
 * `Act.retrieveIn`: retrieval in a context that primes chunks (spreading
   activation, as a factor on a chunk's weight); `Act.retrieveIn_unprimed`,
   `Act.prob_primed`.
@@ -58,6 +60,11 @@ open Dist
 /-- `e^B` for base-level activation `B = ln Σ_k (now - t_k)^{-1}`. -/
 def baseWeight (now : Nat) (uses : List Nat) : Rat :=
   (uses.map fun t => 1 / ((now - t : Nat) : Rat)).sum
+
+/-- **Latency**, ACT-R's retrieval-time rule `F · e^{-A}`, for a chunk
+retrieved by an exact match, so that its activation is its base level: with
+decay 1, `F / e^B`. -/
+def latency (F : Rat) (now : Nat) (uses : List Nat) : Rat := F / baseWeight now uses
 
 /-- `e^A` for a chunk's activation `A` given the probe `x`. -/
 def chunkWeight (P : ActParams) (now : Nat) (x : Item) (c : Chunk) : Rat :=

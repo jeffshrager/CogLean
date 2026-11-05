@@ -11,7 +11,7 @@ How to read it:
 
 ## CogLib: the general library
 
-265 theorems: 260 general, 5 instances; 97 headline; 33 about laws; 27 conditional on laws.
+304 theorems: 298 general, 6 instances; 111 headline; 46 about laws; 30 conditional on laws.
 
 **Laws**
 
@@ -30,21 +30,34 @@ How to read it:
 | `Cog.overExtends_of_conjunctionEffect` | OverExtends | has | general | ConjunctionEffect |
 | `Cog.overExtends_binary_of_conjunctionEffect` | OverExtendsBinary | has | general | ConjunctionEffect |
 | `Cog.net_agreesOn` | AgreesOn | has | general | derived |
+| `Cog.Act.spaced_looks_like_powerLaw` | ApproxScaleRatio | can hold | instance | derived |
+| `Cog.Act.spaced_not_powerLaw` | ApproxScaleRatio | never | general | derived |
 | `Cog.Phenomena.ConfusionErrorPattern.confident` | ConfidentErrors | has | general | ConfusionErrorPattern |
 | `Cog.RR.confident_errors_rate` | ConfidentErrors | has | general | derived |
 | `Cog.Phenomena.not_confusionErrorPattern_of_backup_ne` | ConfusionErrorPattern | never | general | derived |
 | `Cog.RR.confident_errors` | ConfusionErrorPattern | has | general | derived |
 | `Cog.RR.confident_errors_of_laws` | ConfusionErrorPattern | has | general | Determinate, Certainty, Stability |
 | `Cog.view_confusion_pattern` | ConfusionErrorPattern | has | general | derived |
+| `Cog.Act.spaced_diminishingRelative` | DiminishingRelativeReturns | has | general | derived |
+| `Cog.Phenomena.mix_diminishingRelative` | DiminishingRelativeReturns | has | general | derived |
+| `Cog.Phenomena.power_diminishingRelative` | DiminishingRelativeReturns | has | general | derived |
+| `Cog.Phenomena.shiftRatio_not_diminishingRelative` | DiminishingRelativeReturns | never | general | ShiftRatio |
+| `Cog.Act.spaced_diminishing` | DiminishingReturns | has | general | derived |
 | `Cog.RR.act_primed_confident_errors` | GradedConfidentErrors | has | general | derived |
 | `Cog.RR.confident_errors_graded` | GradedConfidentErrors | has | general | derived |
 | `Cog.Phenomena.ConfusionErrorPattern.graded` | GradedConfusionPattern | has | general | ConfusionErrorPattern |
+| `Cog.Act.spaced_improves` | Improves | has | general | derived |
 | `Cog.netLearner_nonInterference` | NonInterference | has | general | derived |
 | `Cog.netResponder_oscillation` | Oscillation | has | general | derived |
 | `Cog.Phenomena.criterion_of_nonInterference` | ReachesCriterion | has | general | NonInterference |
 | `Cog.netLearner_reachesCriterion` | ReachesCriterion | has | general | derived |
 | `Cog.netResponder_retroactiveInterference` | RetroactiveInterference | has | general | derived |
+| `Cog.Act.massed_scaleRatio` | ScaleRatio | has | general | derived |
+| `Cog.Phenomena.power_scaleRatio` | ScaleRatio | has | general | derived |
+| `Cog.Phenomena.shiftRatio_not_scaleRatio` | ScaleRatio | never | general | ShiftRatio |
 | `Cog.anchorAttention_serialPosition` | SerialPositionEffect | has | general | derived |
+| `Cog.Phenomena.exp_shiftRatio` | ShiftRatio | has | general | derived |
+| `Cog.Phenomena.mix_not_shiftRatio` | ShiftRatio | never | general | derived |
 | `Cog.Laws.stableRetrieval_of_neverCertain` | StableRetrieval | has | general | derived |
 | `Cog.Phenomena.stableRetrieval_of_nonInterference` | StableRetrieval | has | general | NonInterference |
 | `Cog.actRetriever_stableRetrieval` | StableRetrieval | has | general | derived |
@@ -70,6 +83,12 @@ How to read it:
 | `Cog.not_dissociates` | general | Nondecreasing | No dissociation when membership is a nondecreasing function of typicality (the threshold model, with one function for every concept). |
 | `Cog.Phenomena.criterion_of_nonInterference` | general | NonInterference | Criterion from non-interference, as a phenomenon: if every list satisfying `Learnable` has an invariant, holding at `s0`, under which study of its items succeeds and which study keeps, then the... |
 | `Cog.Phenomena.studyAll_recognizes` | general | NonInterference | Non-interference plus successful study gives criterion. Suppose an invariant `Inv` of the learner's state is kept by studying any item of `xs`, and, while it holds, studying an item of `xs` mak... |
+| `Cog.Phenomena.mix_diminishingRelative` | general | — | An average of exponential learners has diminishing relative returns. For positive weights and distinct positive rates, the average of two exponential curves has strictly diminishing relative re... |
+| `Cog.Phenomena.mix_not_shiftRatio` | general | — | So an average of exponential learners is not exponential. |
+| `Cog.Phenomena.power_diminishingRelative` | general | — | The power curve has strictly diminishing relative returns, for `a > 0` and `m ≥ 1`. |
+| `Cog.Phenomena.power_scaleRatio` | general | — | The power curve is scale-invariant, for every scale `k ≥ 1`, with ratio `1 / k^m`. |
+| `Cog.Phenomena.shiftRatio_not_diminishingRelative` | general | ShiftRatio | An exponential curve lacks diminishing relative returns: its proportional gain is the same on every trial. |
+| `Cog.Phenomena.shiftRatio_not_scaleRatio` | general | ShiftRatio | Power and exponential are different phenomena. No curve that is positive over `[lo, hi]` is both exponential, with a ratio other than 1, and scale-invariant at doubling over a range containing ... |
 | `Cog.Laws.not_recency_of_orderFree` | general | OrderFree | An order-free memory lacks recency, wherever recency can be tested: two distinct stimuli of `U` and a probe equally similar to both. |
 | `Cog.Laws.stableRetrievalOn_of_stability` | general | Deterministic, Stability | For a deterministic retriever, stability gives stable retrieval. |
 | `Cog.Laws.stableRetrieval_of_neverCertain` | general | — | Vacuous stable retrieval. If nothing is ever retrieved for certain, `StableRetrieval` holds trivially: its hypothesis is never met. |
@@ -92,6 +111,14 @@ How to read it:
 | `Cog.netRetriever_deterministic` | general | — | A discrimination net retrieves deterministically. |
 | `Cog.netRetriever_stableRetrieval` | general | — | Discrimination learning has stable retrieval. |
 | `Cog.net_agreesOn` | general | — | A net agrees on the features a path tests. If each image is stored once, and `x` is recognized as the stored image `y`, which the net itself recognizes, then whatever `x` calls up agrees with i... |
+| `Cog.Act.harmonic_pow_two` | general | — | The harmonic numbers are unbounded: `H (2^j) ≥ j/2`. |
+| `Cog.Act.massed_scaleRatio` | general | — | Massed practice, tested after a delay, gives an exact power law, with exponent 1: multiplying practice by `k` divides latency by `k`. |
+| `Cog.Act.spaced_diminishing` | general | — | Spaced practice has diminishing returns. |
+| `Cog.Act.spaced_diminishingRelative` | general | — | Spaced practice has diminishing relative returns: `H` is strictly log-concave, so the step ratio `H n / H (n+1)` rises. |
+| `Cog.Act.spaced_doubling` | general | — | Spaced practice is not a power law. For any ratio `c < 1`, beyond any trial there is an `n` with `T (2n) > c · T n`: doubling practice eventually shrinks latency by less than any fixed factor. |
+| `Cog.Act.spaced_improves` | general | — | Spaced practice improves, at every trial. |
+| `Cog.Act.spaced_looks_like_powerLaw` | instance | — | Over a short range it looks like a power law. A witness at one setting (`F = 1`): over trials 1 to 8, the spaced curve is within 7.5% of scale invariance with ratio `18/25` at doubling, a power... |
+| `Cog.Act.spaced_not_powerLaw` | general | — | So no power law fits spaced practice over long ranges: for any ratio `r` and tolerance `ε` with `(1 + ε) r < 1`, i.e. any exponent above 0 fitted to within `ε`, the curve is not approximately s... |
 | `Cog.RR.act_primed_confident_errors` | general | — | Primed ACT-R memory makes graded confident errors. In a context that primes the familiar `q` by `ρ`, let the rest of the weight, for the probes `x` and `q`, be at most `δ` times `q`'s primed we... |
 | `Cog.RR.act_priming_confident_errors` | general | — | Priming brings ACT-R's memory as close to the confusion-error pattern as one likes. For every `δ > 0` there is a priming factor beyond which the trial makes graded confident errors within `2δ`. |
 | `Cog.achieve_chain_fail_pre` | general | — | A broken link. If, once its preconditions are achieved, the single relevant operator still does not apply, the goal fails. |
@@ -535,7 +562,7 @@ How to read it:
 
 | Package | Theorems | General | Instances | About laws | Conditional on laws | Headline |
 |---|---|---|---|---|---|---|
-| CogLib: the general library | 265 | 260 | 5 | 33 | 27 | 97 |
+| CogLib: the general library | 304 | 298 | 6 | 46 | 30 | 111 |
 | EPAM: discrimination nets | 31 | 14 | 17 | 7 | 0 | 18 |
 | Strategy choice: distributions of associations | 28 | 21 | 7 | 0 | 0 | 16 |
 | Multi-digit addition (with the problem solver) | 207 | 165 | 42 | 10 | 5 | 85 |
@@ -545,4 +572,4 @@ How to read it:
 | Semantic memory: hierarchical networks and feature comparison | 13 | 6 | 7 | 6 | 0 | 7 |
 | View application and view selection | 14 | 5 | 9 | 0 | 0 | 8 |
 | Device learning: retrieved views and theory revision (microwave) | 18 | 2 | 16 | 1 | 0 | 15 |
-| **All** | 699 | 556 | 143 | 95 | 39 | 297 |
+| **All** | 738 | 594 | 144 | 108 | 42 | 311 |
