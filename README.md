@@ -1,5 +1,7 @@
 # CogLean: a library of cognitive theory in Lean
 
+> **New to CogLean?** Start with **CogLean-Zero** (`../coglean-zero`), a small, cleanly layered introductory edition: just enough CogLib for one worked example, a model of three-digit addition, with its own paper and talk. This repository is the lab, with more domains and work in progress.
+
 ## The goal
 
 Mathlib is a single, shared, machine-checked library of mathematics. Definitions are made once and reused everywhere, and every theorem is proved from them. CogLean aims at the same thing for **cognitive theory**: one library in which the constructs of cognitive science are defined once, the theories built from them are stated precisely, and the phenomena those theories claim to explain are proved from their assumptions.
