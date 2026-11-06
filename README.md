@@ -1,6 +1,6 @@
 # CogLean: a library of cognitive theory in Lean
 
-> **New to CogLean?** Start with **CogLean-Zero** (`../coglean-zero`), a small, cleanly layered introductory edition: just enough CogLib for one worked example, a model of three-digit addition, with its own paper and talk. This repository is the lab, with more domains and work in progress.
+> **New to CogLean?** Start with **[CogLean-20261106-Intro](https://github.com/jeffshrager/CogLean-20261106-Intro)**, a small, cleanly layered introductory edition: just enough CogLib for one worked example, a model of three-digit addition, with its own paper and talk. This repository is the lab, with more domains and work in progress.
 
 ## The goal
 
