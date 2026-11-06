@@ -1,0 +1,17 @@
+# Vocabulary for the CogLib leakage scan (tools/audit_layers.py).
+# Words are matched case-insensitively, as whole words in comments and docstrings, and as
+# components of declaration names (split at dots, underscores and camelCase).
+# Generic words that CogLib uses legitimately (sum, name, problem, answer, trial, item) are
+# deliberately absent. Edit with care: a word added here is flagged in every audit.
+
+[task]
+digit digits carry carries carrying column columns addend addends arithmetic addition
+multidigit microwave bigtrak timer kitchen cook countdown fingers finger counting
+child children
+
+[person]
+ann bob carl chris robin
+
+[theory]
+epam doa siegler shrager feigenbaum simon anderson lebiere actr soar laird minerva hintzman
+quillian collins loftus hampton osherson rips smith gps newell
