@@ -255,11 +255,11 @@ theorem recency (U : List Item) (hμ : 0 < Q.mu) (hθ : 0 < Q.theta) :
     (Rat.le_of_lt hμ) hθ
   have hpow := pow_pos' Q.mu hμ (mismatches Q.fs x a)
   have hwa : Act.chunkWeight Q (s1.now + 2) x ⟨a, [s1.now]⟩ = 1 / 2 * Q.mu ^ mismatches Q.fs x a := by
-    have h2 : s1.now + 2 - s1.now = 2 := by omega
+    have h2 : s1.now + 2 - s1.now = 2 := by unfold Time; omega
     simp [Act.chunkWeight, Act.baseWeight, h2]
     grind
   have hwb : Act.chunkWeight Q (s1.now + 2) x ⟨b, [s1.now + 1]⟩ = Q.mu ^ mismatches Q.fs x a := by
-    have h1 : s1.now + 2 - (s1.now + 1) = 1 := by omega
+    have h1 : s1.now + 2 - (s1.now + 1) = 1 := by unfold Time; omega
     simp [Act.chunkWeight, Act.baseWeight, hm, h1]
     grind
   rw [hwa, hwb]

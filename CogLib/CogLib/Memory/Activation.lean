@@ -35,15 +35,18 @@ import CogLib.Phenomena.RetrievalLaws
 
 namespace Cog
 
+/-- A moment on the memory clock, in steps. -/
+abbrev Time := Nat
+
 /-- A chunk: a stored code, and the times it was used. -/
 structure Chunk where
   code : Item
-  uses : List Nat
+  uses : List Time
   deriving Repr, DecidableEq
 
 /-- Declarative memory: the current time, and the chunks. -/
 structure ActState where
-  now : Nat
+  now : Time
   chunks : List Chunk
   deriving Repr
 
@@ -60,16 +63,16 @@ namespace Act
 open Dist
 
 /-- `e^B` for base-level activation `B = ln Σ_k (now - t_k)^{-1}`. -/
-def baseWeight (now : Nat) (uses : List Nat) : Rat :=
+def baseWeight (now : Time) (uses : List Time) : Rat :=
   (uses.map fun t => 1 / ((now - t : Nat) : Rat)).sum
 
 /-- **Latency**, ACT-R's retrieval-time rule `F · e^{-A}`, for a chunk
 retrieved by an exact match, so that its activation is its base level: with
 decay 1, `F / e^B`. -/
-def latency (F : Rat) (now : Nat) (uses : List Nat) : Rat := F / baseWeight now uses
+def latency (F : Rat) (now : Time) (uses : List Time) : Rat := F / baseWeight now uses
 
 /-- `e^A` for a chunk's activation `A` given the probe `x`. -/
-def chunkWeight (P : ActParams) (now : Nat) (x : Item) (c : Chunk) : Rat :=
+def chunkWeight (P : ActParams) (now : Time) (x : Item) (c : Chunk) : Rat :=
   baseWeight now c.uses * P.mu ^ mismatches P.fs x c.code
 
 /-- What retrieval can produce: failure, or a stored code. -/
@@ -85,7 +88,7 @@ def retrieve (P : ActParams) (s : ActState) (x : Item) : Dist (Option Item) :=
   Dist.sample (outcomes s) (weight P s x)
 
 /-- Record a use of `x` at time `t`: on its chunk, or on a new one. -/
-def addUse (t : Nat) (x : Item) : List Chunk → List Chunk
+def addUse (t : Time) (x : Item) : List Chunk → List Chunk
   | [] => [⟨x, [t]⟩]
   | c :: cs => if c.code = x then ⟨c.code, t :: c.uses⟩ :: cs else c :: addUse t x cs
 
@@ -132,7 +135,7 @@ theorem retrieveIn_unprimed (P : ActParams) (s : ActState) (x : Item) :
     funext o; cases o <;> simp [weightIn, weight]
   simp only [retrieveIn, retrieve, this]
 
-theorem baseWeight_nonneg (now : Nat) (uses : List Nat) : 0 ≤ baseWeight now uses := by
+theorem baseWeight_nonneg (now : Time) (uses : List Time) : 0 ≤ baseWeight now uses := by
   unfold baseWeight
   induction uses with
   | nil => simp
@@ -226,10 +229,10 @@ theorem sum_replicate_rat (j : Nat) (a : Rat) : (List.replicate j a).sum = (j : 
   | zero => simp
   | succ j ih => simp [List.replicate_succ, ih]; grind
 
-theorem baseWeight_rehearsed (now j : Nat) (uses : List Nat) (h : 1 ≤ now) :
+theorem baseWeight_rehearsed (now : Time) (j : Nat) (uses : List Time) (h : 1 ≤ now) :
     baseWeight now (List.replicate j (now - 1) ++ uses) = (j : Rat) + baseWeight now uses := by
   simp only [baseWeight, List.map_append, List.sum_append, List.map_replicate, sum_replicate_rat]
-  have : now - (now - 1) = 1 := by omega
+  have : now - (now - 1) = 1 := by unfold Time at *; omega
   rw [this]
   grind
 
@@ -258,13 +261,13 @@ theorem weight_some_eq (P : ActParams) (s : ActState) (x y : Item) :
       simp [this, ih]
 
 /-- Rehearsal of `y`, chunk by chunk. -/
-abbrev reh (now : Nat) (y : Item) (j : Nat) (c : Chunk) : Chunk :=
+abbrev reh (now : Time) (y : Item) (j : Nat) (c : Chunk) : Chunk :=
   if c.code = y then ⟨c.code, List.replicate j (now - 1) ++ c.uses⟩ else c
 
-theorem reh_code (now : Nat) (y : Item) (j : Nat) (c : Chunk) : (reh now y j c).code = c.code := by
+theorem reh_code (now : Time) (y : Item) (j : Nat) (c : Chunk) : (reh now y j c).code = c.code := by
   unfold reh; split <;> rfl
 
-theorem filter_map_reh (now : Nat) (y z : Item) (j : Nat) (cs : List Chunk) :
+theorem filter_map_reh (now : Time) (y z : Item) (j : Nat) (cs : List Chunk) :
     (cs.map (reh now y j)).filter (fun c => c.code == z) =
       (cs.filter (fun c => c.code == z)).map (reh now y j) := by
   rw [List.filter_map]
