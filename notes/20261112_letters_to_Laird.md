@@ -52,64 +52,26 @@ Jeff
 
 ---
 
-## Letter 2: the joint vision
+## Letter 2: a thought for tomorrow
 
 John,
 
-Beyond getting the package to build, I want to put a larger idea to you, because the ACT-R
-conversion changed how I see what we're each doing.
+One thing to put on the table for tomorrow, tentatively.
 
-On October 30 I sent you a note proposing that the CMC sits *above* CogLean: your `Arch`
-structure defines what a conforming architecture is, and CogLean's mechanisms could be candidate
-fillers for its slots, each fit a theorem. I still think that's right, but it was half the
-picture. Your ACT-R replica supplies the other half: CogLean's mechanisms also need something
-*below* them, a reference implementation they can be proved faithful to in a stated regime. Our
-ACT-R memory is exact and provable and small (decay 1, no noise, one softmax), and every paper we
-write carries a footnote about how simplified it is. Your ACT-R is the real thing, trace for
-trace, and, as your analysis says, almost nothing about its behavior can be proved, because it's
-floats and tables. Neither of us can do what the other does. Together the two are a library.
+Reading the ACT-R conversion alongside what we've been doing, I keep seeing the same method at two
+grains. Your Table 2 is a theory matrix: architectures against the CMC's commitments, each cell a
+theorem. Ours is memories against behavioral laws. And the two efforts are complementary in a way
+I hadn't appreciated: your replicas are exactly faithful and hard to prove things about; ours are
+provable and admittedly simplified. The thing that would connect them is a refinement theorem, of
+the form "our idealized memory computes what your declarative module does, at decay 1 and without
+noise."
 
-What struck me most is that we've been running the same method at different grains. Your Table 2
-is a theory matrix: rows are architectures, columns are the CMC's commitments, and each cell is
-kept or departs, read from a theorem where one exists. Our memory matrix has the same form with
-memories for rows and behavioral laws (a studied item retrieves itself; studying one item doesn't
-disturb another) for columns. The CMC's obligations are laws over architectures; ours are laws
-over mechanisms. Your Section 4, the commitments ACT-R and Soar share that the CMC doesn't state,
-is the matrix finding new columns.
+That suggests a picture where the CMC is the top of one hierarchy of specifications and your
+replicas are its bottom, with provable mechanisms in the middle and phenomena stated above. I'm not
+sure it's right, and I don't want to design it on paper. If it interests you, a small first test
+would be memory alone: one specification, our instance and yours, the refinement between them, and
+the real ACT-R's row of the matrix, which I suspect differs from ours.
 
-So here is the library I think we should be building, in Mathlib's terms. A hierarchy of
-*specifications* of cognitive components, from a memory or a selector up to a whole architecture,
-with the CMC as the top of that hierarchy rather than an external standard. *Laws* as predicates
-over instances (not axioms, because theories differ by which laws they satisfy, and the matrices
-need "never" to be expressible). *Instances at declared fidelity*: idealized and provable,
-realistic over the reals, and replica, trace-validated against the running software, with your
-`SIMPLIFIED` / `NOT MODELED` / `OPEN` markers as the library-wide discipline. And *refinement
-theorems* connecting the tiers: this idealized memory computes what that realistic one does at
-decay 1; your `retrieve` is argmax-plus-threshold of your activation function. Once those exist,
-a phenomenon proved on the provable tier is a theorem about ACT-R in a stated regime, not about a
-"formalized family," and the departures your Conform file records become properties of instances
-rather than obstacles to them. Above all that, tasks with their data (your tutorial tasks already
-carry ACT-R's data for the fan effect, paired associates, Zbrodoff and Siegler), phenomena stated
-against the specifications, and the evidence about people attached through explicit bridges.
-
-I'd like to start small and concrete. One vertical slice, memory, where we both already have
-everything: the specification with its six laws; three instances (our exact memory, a realistic
-one over the reals with ACT-R's actual retrieval shape, and your declarative module imported
-untouched); the two refinements; the matrix row for the real ACT-R, which I expect to differ from
-ours (without noise your retrieve is determinate and certain above threshold; ours never is,
-because of the softmax); and one phenomenon, probably the fan effect from spreading activation,
-proved once and inherited by your replica. Your files wouldn't change; everything would live in a
-bridge that imports both. If the slice works, the rest migrates a component at a time, and the
-CMC instance for ACT-R falls out of it once the retrieval-result question is settled with
-Christian.
-
-Two questions for you. First, does this match your sense of where the CMC work should go, and
-would you want the architecture specification to be a shared top of one hierarchy, or kept as
-your artifact that the rest imports? Either works; the first reaches further. Second, the
-realistic tier needs real numbers, which means Mathlib in the core rather than confined to a side
-package as I've had it; do you have a view, given that your replicas are core-only by design?
-
-I'm not proposing you change anything you've built. I'm proposing that what you've built is the
-bottom and the top of the thing I've been trying to build the middle of.
+Something to talk about, nothing more yet.
 
 Jeff
