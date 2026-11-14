@@ -123,6 +123,13 @@ A *phenomenon* is stated once, independently of any theory, as a property a lear
 
 No `sorry` anywhere; only Lean's standard axioms.
 
+## Self-Contained Explorations
+
+Single papers formalized in their own repositories, in the library's style but depending on nothing in it: the paper's mechanisms stated as postulates with page references, and each of its claims proved, sharpened, reinterpreted or refuted, with a short paper reporting the result. Each has its own build and its own `notes/CLAIMS.md`.
+
+- **[SHH88Revisited](https://github.com/jeffshrager/SHH88Revisited)**: Shrager, Hogg & Huberman (1988), the graph-dynamic model of the power law of practice and the problem-solving fan effect (Lean + Mathlib). The walk's expected-steps formula is correct as printed, but with a perfect decision procedure the "power-law decay" is logarithmic, and the theory started where the bit game starts does not explain the game's fan effect. Paper: *The Power Law and Fan Effect Revisited*.
+- **[Chapman85Revisited](https://github.com/jeffshrager/Chapman85Revisited)**: Chapman (1985), *Planning for Conjunctive Goals*: TWEAK and the modal truth criterion (core Lean). For plans without variables, the criterion is proved necessary and sufficient, along with the correctness of TWEAK's termination test and the intractability reduction (which gives coNP-hardness). The possible-truth criterion "with the modalities switched" is necessary but not sufficient, white knights are needed even without variables, and the report's example of TWEAK looping is one where it fails. Paper: *TWEAK Revisited: Chapman's Famous Proof Rendered in Lean*.
+
 ## Roadmap
 
 The direction for making the library general, as a hierarchy of laws, model families as instances, and a theory-by-law matrix, is set out in [`notes/PROSPECTUS.md`](notes/PROSPECTUS.md). Its first matrix (5 laws × 4 memory families, every cell a theorem) is in [`CogMatrix/`](CogMatrix/README.md).
