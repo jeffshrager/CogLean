@@ -10,6 +10,6 @@ Manuscripts about CogLean, one directory each.
 
 - `2026-view-application/`: *Concept Formation by View Application: A Second Domain on Shared Foundations in CogLean*. It does not introduce CogLean (see `2026-coglean-intro/`); it takes the library to concept and theory formation (view application, Shrager 1987, on a microwave), reusing CogLib's memory interface and laws, the confusion-error phenomenon and the decision cycle. Same build and files as above.
 
-- `2026-perspective/`: *Closing the Loop: A Shared, Machine-Checked Library of Cognitive Theory*. A ~1,000-word perspective (in the style of *Science*) by Lebiere, Laird, Rosenbloom, Stocco, Shrager, Wray, Kirk, Jones, Lindes, Anderson, Pirolli and Bates: Logic Theorist and the loop it opened, CogLean and CogLib, the results so far, and two analogies (Mathlib; the Linux kernel versus its applications) with their limits. One figure. `make` builds `paper.pdf`.
+- `2026-perspective/`: *Closing the Loop: A Shared, Machine-Checked Library of Cognitive Theory*. A ~1,000-word perspective (in the style of *Science*) by Shrager, Laird, Anderson, Bates, Lebiere, Lindes, Pirolli, Rosenbloom and Stocco: Logic Theorist and the loop it opened, CogLean and CogLib, the results so far, and two analogies (Mathlib; the Linux kernel versus its applications) with their limits. One figure. `make` builds `paper.pdf`.
 
 The earlier multi-digit paper, which predates the integrated model, is in `MultiDigit/paper/`.
