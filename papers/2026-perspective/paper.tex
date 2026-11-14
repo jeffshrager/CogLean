@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,matrix}
+\usepackage[numbers,sort&compress,super]{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\title{Closing the Loop: A Shared, Machine-Checked Library\\ of Cognitive Theory}
+
+\author{\parbox{0.95\linewidth}{\centering
+Christian Lebiere$^{1}$, John E.\ Laird$^{2}$, Paul S.\ Rosenbloom$^{3}$,
+Andrea Stocco$^{4}$, Jeff Shrager$^{5,*}$, Robert E.\ Wray$^{6}$,
+James R.\ Kirk$^{6}$, Steven J.\ Jones$^{6}$, Peter Lindes$^{6}$,
+John R.\ Anderson$^{1}$, Peter Pirolli$^{7}$, Chris Bates$^{7}$
+\\[1ex]
+\small
+$^{1}$Carnegie Mellon University, Pittsburgh, PA, USA.
+$^{2}$University of Michigan, Ann Arbor, MI, USA.
+$^{3}$University of Southern California, Los Angeles, CA, USA.
+$^{4}$University of Washington, Seattle, WA, USA.
+$^{5}$[affiliation].
+$^{6}$Center for Integrated Cognition, IQMRI, Ann Arbor, MI, USA.
+$^{7}$Florida Institute for Human and Machine Cognition, Pensacola, FL, USA.
+$^{*}$Corresponding author.}}
+\date{Perspective draft, November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{quote}
+\itshape The first program offered as a theory of human thought was a
+theorem prover. Seventy years on, theorem provers can begin to check
+what our theories of thought actually say.
+\end{quote}
+
+\noindent In the summer of 1956, Allen Newell, Cliff Shaw and Herbert
+Simon's Logic Theorist proved theorems from Whitehead and Russell's
+\emph{Principia Mathematica}\cite{newell1956}. It is often called the
+first artificial intelligence program, but its authors meant it as
+something more: a theory of how people prove theorems. Two years later
+they argued that a program which produces a behavior, step by step, is
+a theory of that behavior\cite{newell1958}. Cognitive psychology and
+artificial intelligence grew up together from that idea, and the
+cognitive architectures that followed, Soar\cite{laird1987} and
+ACT-R\cite{anderson2007} among them, are its most ambitious
+descendants.
+
+There is an irony in this history. The first cognitive model was a
+machine for formal proof, yet for seventy years we have used programs
+almost entirely to \emph{run} our theories, never to \emph{reason}
+about them. We establish what a theory predicts by simulating it at
+chosen parameter settings and comparing the output with data. That
+tells us what one implementation did on one occasion. It does not tell
+us which assumptions produced the result, whether it survives a change
+of parameters, or whether a rival theory would produce it just as well.
+Newell warned half a century ago that a field which answers questions
+one experiment at a time, without assembling the answers, will not
+converge\cite{newell1973}. The architectures were one response, and the
+Common Model of Cognition\cite{laird2017} extends it across
+architectures. We propose to complete the loop that Logic Theorist
+opened, by applying formal proof to cognitive theories themselves.
+
+\paragraph{CogLean and CogLib.}
+Two developments make this practical now. Proof assistants such as
+Lean\cite{demoura2021} are also programming languages, so the same
+definition of, say, a discrimination net or an activation-based memory
+can be run on an experiment's stimuli and proved about for
+\emph{every} set of stimuli. The simulation and the theory can no
+longer drift apart. And AI coding agents now write most of the formal
+code under a scientist's supervision, so a psychologist need not become
+a logician to contribute; the proof checker, not the agent, is what is
+trusted.
+
+CogLean\cite{coglean,cogleanintro} is a library of cognitive theory
+built this way. Its shared core, CogLib, holds representations,
+memories, learning and control processes, and phenomena stated
+independently of any theory (Fig.~\ref{fig:arch}). A theory is a choice
+among these constructs, with each postulate cited to its source. Its
+theorems are explanations: deductions of a phenomenon from stated
+mechanisms and conditions, checked by Lean's kernel. A proof that will
+not go through is informative too. It says the theory needs an
+assumption it never stated.
+
+\paragraph{What has been done.}
+The early results are small, but they have already surprised their own
+authors. Siegler and Shrager's 1984 model of children's
+addition\cite{siegler1984} claimed that more peaked associations lead to
+less frequent use of overt strategies; formalization found that this is
+false without a condition the chapter does not state. Collins and
+Quillian's hierarchical network\cite{collins1969} is proved unable to
+produce a typicality effect for \emph{any} network, while a
+feature-comparison model can. EPAM's serial position
+effect\cite{feigenbaum1962} is proved for every discrimination net, not
+only the one simulated in 1962. Independently formalized theories
+compose: EPAM, the strategy-choice model and a problem solver combine
+into a model of multi-digit addition whose confident errors are proved
+for every memory satisfying three laws. A simplified ACT-R memory
+reaches the same errors by another route, and the two explanations
+disagree about an experiment nobody has yet run. A theory matrix
+classifies four families of memory against six laws of retrieval, each
+cell a theorem. The power law of practice reported in this journal in
+1988\cite{shrager1988} turns out, for an ideal problem solver, to be
+logarithmic\cite{shh88revisited}. And on the architecture side, one of
+us (J.E.L.) has built a Lean replica of ACT-R~7 that matches the Lisp
+implementation trace for trace on 72 tasks.
+
+\paragraph{Two analogies, and their limits.}
+The first analogy is obvious. Mathlib\cite{mathlib2020}, the Lean
+community's library of mathematics, shows that a scattered community
+can build one consistent body of definitions and theorems in which
+each result is proved once and imported thereafter. Its contributors
+need not trust one another, because the kernel checks every proof.
+CogLib aims to do the same for cognitive science: define a construct
+once, prove a property once, and let every theory that uses the
+construct inherit the property without re-running anything.
+
+The second analogy concerns how such a library is governed. The Linux
+kernel is maintained by a small group under strict review, with one
+inviolable rule: do not break the programs that run on it. The
+applications themselves are written and owned by others, in their own
+repositories and on their own schedules. CogLib should be a kernel in
+this sense: specifications, laws, theory-neutral phenomena and the
+tools that check them, with no particular theory inside it, including
+its founders'. ACT-R, Soar, EPAM and every other theory live as
+packages owned by their communities, built and checked against the
+core, so that a lab can participate without surrendering its theory.
+
+Both analogies break in instructive places. Mathematics agrees on what
+is true; cognitive science does not, and a library that fixed
+\emph{the} definition of memory would be rejected by every community
+but one. CogLean therefore states laws as predicates a theory may
+satisfy or fail, never as axioms, and records disagreement as content:
+a cell in which one theory provably has a phenomenon that another
+provably lacks is a discriminating experiment waiting to be run. Nor is
+this software engineering. A theory is not correct because it compiles,
+or even because its theorems check. Lean establishes only that a
+phenomenon follows from the stated assumptions; whether the assumptions
+capture the theory is a judgment for the theory's authors, and whether
+they are true of people is a question for the laboratory. Proof
+settles which conjectures follow from which assumptions; simulation
+suggests the conjectures; experiments decide.
+
+\paragraph{An invitation.}
+Cognitive psychology bears a special relation to computing. The two
+fields share a founding idea, that thought is a kind of information
+processing, and they have lent each other methods ever since.
+Formalizing cognitive theories in a proof assistant returns
+psychology's oldest computational instinct to its starting point. The
+communities best placed to convene the effort already exist: the
+architecture groups that agreed on the Common Model, mathematical
+psychologists who already state laws, and experimentalists who own the
+phenomena. What is required of them is not a new theory, but the
+willingness to say precisely what their present theories entail, and
+to let a machine check it.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners, align=center, inner sep=4pt},
+  core/.style={box, fill=blue!8, minimum width=10.4cm},
+  pkg/.style={box, fill=orange!12, minimum width=2.3cm, minimum height=0.9cm},
+  arr/.style={-{Stealth[length=2mm]}, thick}
+]
+% Kernel
+\node[core, minimum height=2.1cm] (core) {};
+\node[anchor=north, font=\bfseries] at (core.north) {CogLib (the ``kernel'')};
+\node[box, fill=white, minimum width=2.9cm] (con) at ($(core.center)+(-3.5,-0.25)$) {Constructs\\{\footnotesize memories, nets,}\\{\footnotesize processes, control}};
+\node[box, fill=white, minimum width=2.9cm] (law) at ($(core.center)+(0,-0.25)$) {Laws\\{\footnotesize predicates a theory}\\{\footnotesize may have or lack}};
+\node[box, fill=white, minimum width=2.9cm] (phe) at ($(core.center)+(3.5,-0.25)$) {Phenomena\\{\footnotesize stated with no}\\{\footnotesize theory in mind}};
+% Packages
+\node[pkg, above=1.1cm of core.north west, anchor=south west] (epam) {EPAM};
+\node[pkg, right=0.4cm of epam] (sc) {Strategy\\choice};
+\node[pkg, right=0.4cm of sc] (actr) {ACT-R};
+\node[pkg, right=0.4cm of actr] (soar) {Soar, \ldots};
+\node[anchor=south, font=\bfseries] at ($(sc.north)!0.5!(actr.north)+(0,0.15)$) {Theory packages (``applications''), owned by their communities};
+\foreach \p in {epam,sc,actr,soar} \draw[arr] (\p.south) -- (\p.south |- core.north);
+\node[font=\footnotesize, align=left, anchor=west] at ($(soar.east)+(0.2,-0.95)$) {import constructs;\\prove phenomena};
+% Matrix
+\node[below=0.5cm of core, font=\bfseries] (mt) {Theory matrix: each cell a theorem};
+\matrix (m) [below=0.1cm of mt, matrix of nodes, nodes={minimum width=1.5cm, minimum height=0.5cm, text height=1.5ex, text depth=.25ex, font=\footnotesize, draw=gray!50}, column sep=-\pgflinewidth, row sep=-\pgflinewidth] {
+  & law 1 & law 2 & law 3 \\
+  family A & has & never & has \\
+  family B & lacks & has & never \\
+};
+\end{tikzpicture}
+\caption{CogLean's organization. CogLib, like an operating-system
+kernel, is a small, strictly reviewed core of shared constructs, laws
+and theory-neutral phenomena. Theories are packages owned by their
+communities; each imports the core and proves which phenomena its
+mechanisms produce. Reading the verdicts together gives a matrix in
+which a theory has a law at every parameter setting, never has it, or
+lacks it at some setting, so disagreement between theories becomes a
+cell rather than an argument.}
+\label{fig:arch}
+\end{figure}
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\end{document}
