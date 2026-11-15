@@ -18,7 +18,7 @@ Peter Pirolli$^{4}$, Paul S.\ Rosenbloom$^{5}$, Andrea Stocco$^{6}$
 \\[1ex]
 \small
 $^{1}$Palo Alto, CA, USA.
-$^{2}$University of Michigan, Ann Arbor, MI, USA.
+$^{2}$Center for Integrated Cognition, Ann Arbor, MI, USA.
 $^{3}$Carnegie Mellon University, Pittsburgh, PA, USA.
 $^{4}$Florida Institute for Human and Machine Cognition, Pensacola, FL, USA.
 $^{5}$University of Southern California, Los Angeles, CA, USA.
@@ -31,56 +31,68 @@ $^{*}$Corresponding author.}}
 
 \begin{quote}
 \itshape The first program offered as a theory of human thought was a
-theorem prover. Seventy years on, theorem provers can begin to check
-what our theories of thought actually say.
+theorem prover. Seventy years later, a theorem prover can check
+what our theories of human thought entail.
 \end{quote}
 
-\noindent In the summer of 1956, Allen Newell, Cliff Shaw and Herbert
+\noindent In 1956, Allen Newell, Cliff Shaw and Herbert
 Simon's Logic Theorist proved theorems from Whitehead and Russell's
-\emph{Principia Mathematica}\cite{newell1956}. It is often called the
-first artificial intelligence program, but its authors meant it as
-something more: a theory of how people prove theorems. Two years later
-they argued that a program which produces a behavior, step by step, is
-a theory of that behavior\cite{newell1958}. Cognitive psychology and
-artificial intelligence grew up together from that idea, and the
-cognitive architectures that followed, Soar\cite{laird1987} and
-ACT-R\cite{anderson2007} among them, are its most ambitious
-descendants.
+\emph{Principia Mathematica}\cite{newell1956}. This is often called the
+first artificial intelligence program, but its authors intended it as
+a theory of human thought---of how people prove theorems. Two years
+later they argued that a ``cognitive model''---a computer program that
+reproduces a human behavior, demonstrably using the same steps as
+people---is a theory of that behavior\cite{newell1958}. Cognitive
+psychology, and a large part of early artificial intelligence, grew
+from this idea. Almost two decades later, however, Newell observed that
+the field was studying separate behaviors without assembling the models
+into unified theories, and warned that the field would not
+converge\cite{newell1973}. Cognitive architectures such as
+Soar\cite{laird1987} and ACT-R\cite{anderson2007} were the field's
+response to this challenge, and the Common Model of
+Cognition\cite{laird2017} extends this unification across
+architectures, bringing us closer to a complete model of human thought.
 
-There is an irony in this history. The first cognitive model was a
-machine for formal proof, yet for seventy years we have used programs
-almost entirely to \emph{run} our theories, and only rarely to
-\emph{reason} about them. Running a model is powerful. Simulated many
-times over, across its parameters and stimuli, a model's behavior can
-be mapped in detail, and a well-mapped model tells us a great deal
-about where it agrees with people and where it does not. But a map,
-however thorough, shows what the model does in the region explored.
-It does not say why: which of the theory's assumptions produce a
-result, whether the result holds beyond the settings tried, or whether
-every theory sharing those assumptions would produce it too.
-Mathematical psychologists have answered such questions by hand since
-Estes\cite{estes1950}, and Soar itself was once written out in a formal
-notation\cite{milnes1992,cooper1996}. But hand proof stops about where
-models become programs, and a specification that no machine checks
-cannot be held against the system it describes.
+Yet, productive as cognitive modeling has been, we have used computers
+almost entirely to \emph{simulate} our models. Simulation is a powerful
+tool: run across a model's parameter and stimulus space, it can map the
+model's predicted behavior in detail, telling us where the model agrees
+with observed behavior and where it does not. But a map, however
+thorough, shows only what the model does in the region explored. It
+doesn't tell us which of the theory's assertions produce the observed
+result, whether the result holds beyond the explored parameters, or
+whether every theory sharing those assertions would produce similar
+behavior. Simulation is not explanation, and as models grow more
+complex, simulation becomes harder and the comparison with human
+behavior harder to map. Eventually, unified models will be useful only
+if we can say exactly what they claim and what follows from it. To
+reach conclusions of that kind one has to \emph{reason} about the
+models, and, ironically, the most important kind of reasoning for the
+purpose is theorem proving, exactly what Newell, Shaw and Simon founded
+the field upon. But we have left this reasoning, stating formally what
+our models assert, proving what they predict, and checking their
+internal consistency, to people working by hand. Hand proof cannot keep
+up with a specification that describes a large program, and a
+specification that is never checked against the program it describes
+cannot be trusted to speak for it.
 
-Newell warned half a century ago that a field which answers questions
-one experiment at a time, without assembling the answers, will not
-converge\cite{newell1973}. The architectures were one response, and the
-Common Model of Cognition\cite{laird2017} extends it across
-architectures. The warning has a new edge. Large models trained on the
-records of many experiments now predict what people will do in them,
-often better than the theories written for those
-experiments\cite{binz2025}. That is a real achievement, and also a
-temptation: to treat a person as a collection of response functions,
-and psychology as the business of approximating them. Prediction
-without mechanism is not explanation, and theories will hold their
-place beside such models only if we can say exactly what they claim
-and what follows from it. We propose to complete the loop
-that Logic Theorist opened, by applying formal proof to cognitive
-theories themselves.
+CogLean is a step toward closing this gap, by applying
+computer-assisted, computer-checked formal proof to cognitive theories
+themselves. The idea is not new. Mathematical psychologists have proved
+theorems about their models by hand since Estes\cite{estes1950}, and
+Soar itself was once written out in a formal
+notation\cite{milnes1992,cooper1996}. What is new is the means. Proof
+assistants such as Lean\cite{demoura2021} are also programming
+languages, so the same definition of, say, a discrimination net or an
+activation-based memory can be run on an experiment's stimuli and
+proved about for \emph{every} set of stimuli; the simulation and the
+theory can no longer drift apart. And AI agents, of the kind that have
+lately begun to produce machine-checked proofs in mathematics, now
+write most of the formal code under a scientist's supervision, so a
+psychologist need not become a logician to contribute; the proof
+checker, not the agent, is what is trusted.
 
-The proposal came, fittingly, out of that loop. One of us (J.S.), with
+The proposal has a fitting origin. One of us (J.S.), with
 David Moews, has been reanimating the original programs of Newell,
 Simon and their students: Logic Theorist's IPL-V code now runs again,
 unmodified, and reproduces its 1963 proofs, and the work had moved on
@@ -90,17 +102,6 @@ theorem prover and a theory of mind, it was a short step to turning a
 modern theorem prover on the theory itself.
 
 \paragraph{CogLean and CogLib.}
-Two developments make this practical now. Proof assistants such as
-Lean\cite{demoura2021} are also programming languages, so the same
-definition of, say, a discrimination net or an activation-based memory
-can be run on an experiment's stimuli and proved about for
-\emph{every} set of stimuli. The simulation and the theory can no
-longer drift apart. And AI agents, of the kind that have lately begun
-to produce machine-checked proofs in mathematics, now write most of the
-formal code under a scientist's supervision, so a psychologist need not
-become a logician to contribute; the proof checker, not the agent, is
-what is trusted.
-
 CogLean\cite{coglean,cogleanintro} is a project to build cognitive
 theory this way, and it already works at two levels
 (Fig.~\ref{fig:arch}). At the level of phenomena, a shared library,
