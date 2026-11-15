@@ -32,17 +32,17 @@ $^{*}$Corresponding author.}}
 \begin{quote}
 \itshape The first program offered as a theory of human thought was a
 theorem prover. Seventy years later, a theorem prover can check
-what our theories of human thought entail.
+our theories of human thought.
 \end{quote}
 
 \noindent In 1956, Allen Newell, Cliff Shaw and Herbert
 Simon's Logic Theorist proved theorems from Whitehead and Russell's
 \emph{Principia Mathematica}\cite{newell1956}. This is often called the
 first artificial intelligence program, but its authors intended it as
-a theory of human thought---of how people prove theorems. Two years
-later they argued that a ``cognitive model''---a computer program that
+a theory of human thought -- of how people prove theorems. Two years
+later they argued that a ``cognitive model'' -- a computer program that
 reproduces a human behavior, demonstrably using the same steps as
-people---is a theory of that behavior\cite{newell1958}. Cognitive
+people -- is a theory of that behavior\cite{newell1958}. Cognitive
 psychology, and a large part of early artificial intelligence, grew
 from this idea. Almost two decades later, however, Newell observed that
 the field was studying separate behaviors without assembling the models
@@ -205,32 +205,38 @@ are idealized but easy to prove things about. Refinement theorems,
 showing for example that an idealized memory computes what ACT-R's
 declarative module computes, are the natural next step.
 
-\paragraph{Analogies, and their limits.}
-The obvious analogy is Mathlib\cite{mathlib2020}, the Lean community's
+\paragraph{CogLib: Who keeps the core?}
+CogLib seems obviously analogous to Mathlib\cite{mathlib2020}, the Lean community's
 library of mathematics, which shows that a scattered community can
 build one consistent body of theorems, each proved once and imported
 thereafter, without contributors needing to trust one another, because
-the kernel checks every proof. A
-library shared by rival theoretical communities faces a problem Mathlib
-does not, which is who keeps the core. The Linux kernel suggests an
-answer: a small, strictly reviewed core (here specifications, laws and
-phenomena, with no one's theory inside it, including its founders'),
-and theories kept by their own communities as packages checked against
-it.
+the kernel checks every proof. Mathlib is a single library with a
+strictly reviewed core. Independent projects grow up around it, and
+whatever in them is general enough is in time absorbed. That works
+because mathematics agrees on what is true: there is one definition of
+a group for everything else to be built on.
 
-Both analogies break in instructive places. Mathematics agrees on what
-is true; cognitive science does not, and a library that fixed
+Cognitive science does not agree, and a library that fixed
 \emph{the} definition of memory would be rejected by every community
-but one. CogLean therefore states laws as predicates a theory may
-satisfy or fail, never as axioms, and records disagreement as content:
-a cell in which one theory provably has a phenomenon that another
-provably lacks is a discriminating experiment waiting to be run. Nor is
-this software engineering. A theory is not correct because it compiles,
-or even because its theorems check. Lean establishes only that a
-conclusion follows from the stated assumptions; whether the assumptions
-capture the theory is a judgment for the theory's authors, all the
-more so when an agent drafted them, and whether
-they are true of people is a question for the laboratory. Proof
+but one. So a library shared by rival theoretical communities faces a
+problem Mathlib does not have, which is the question of what is in the
+core and who decides this. CogLean's answer is that theories are never
+absorbed. The core is small and strictly reviewed, and holds only what
+is theory-neutral: specifications, laws and phenomena, with no one's
+theory inside it, including its founders'. Theories are kept by their
+own communities as packages checked against it, much as each subsystem
+of the Linux kernel is kept by its own maintainers. Laws are stated as
+predicates a theory may satisfy or fail, never as axioms, and
+disagreement is recorded as content: a cell in which one theory
+provably has a phenomenon that another provably lacks is a
+discriminating experiment waiting to be run.
+
+Nor does any of this make a theory correct. A theory is not correct
+because it compiles, or even because its theorems check. Lean
+establishes only that a conclusion follows from the stated assumptions;
+whether the assumptions capture the theory is a judgment for the
+theory's authors, all the more so when an agent drafted them, and
+whether they are true of people is a question for the laboratory. Proof
 settles which conjectures follow from which assumptions; simulation
 maps what a model does and suggests the conjectures; experiments decide.
 
