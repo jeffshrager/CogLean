@@ -104,7 +104,7 @@ addition; the textbook account of Collins and Quillian was proved unable ever to
 memory theories were laid out in a matrix of laws, each cell a theorem. John Laird, working
 independently, built a Lean replica of ACT-R 7 that matches the Lisp implementation trace for
 trace. The circle of people became the authors of the perspective in `papers/2026-perspective/`:
-John Laird, John Anderson, Christian Lebiere, Paul Rosenbloom, Andrea Stocco, Peter Lindes, and
+John Laird, John Anderson, Christian Lebiere, Paul Rosenbloom, Andrea Stocco, and
 Pete and Chris, who were there for the epoophany.
 
 The question that brought me to CMU, how scientists reason about cognitive models, turned out to
