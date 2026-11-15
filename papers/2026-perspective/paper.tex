@@ -83,17 +83,21 @@ code under a scientist's supervision, so a psychologist need not become
 a logician to contribute; the proof checker, not the agent, is what is
 trusted.
 
-CogLean\cite{coglean,cogleanintro} is a library of cognitive theory
-built this way. Its shared core, CogLib, holds representations,
-memories, learning and control processes, and phenomena stated
-independently of any theory (Fig.~\ref{fig:arch}). A theory is a choice
-among these constructs, with each postulate cited to its source. Its
-theorems are explanations: deductions of a phenomenon from stated
-mechanisms and conditions, checked by Lean's kernel. A proof that will
-not go through is informative too. It says the theory needs an
-assumption it never stated.
+CogLean\cite{coglean,cogleanintro} is a project to build cognitive
+theory this way, and it already works at two levels
+(Fig.~\ref{fig:arch}). At the level of phenomena, a shared library,
+CogLib, holds representations, memories, learning and control
+processes, and phenomena stated independently of any theory. A theory
+is a choice among these constructs, with each postulate cited to its
+source, and its theorems are explanations: deductions of a phenomenon
+from stated mechanisms and conditions, checked by Lean's kernel. At the
+level of architectures, the Common Model and the architectures that
+conform to it are written as formal specifications that are also
+executable, and are checked against the running systems. In both, a
+proof that will not go through is as informative as one that does. It
+says the theory needs an assumption it never stated.
 
-\paragraph{What has been done.}
+\paragraph{Theories of phenomena.}
 The early results are small, but they have already surprised their own
 authors. Siegler and Shrager's 1984 model of children's
 addition\cite{siegler1984} claimed that more peaked associations lead to
@@ -110,32 +114,82 @@ for every memory satisfying three laws. A simplified ACT-R memory
 reaches the same errors by another route, and the two explanations
 disagree about an experiment nobody has yet run. A theory matrix
 classifies four families of memory against six laws of retrieval, each
-cell a theorem. The power law of practice reported in this journal in
-1988\cite{shrager1988} turns out, for an ideal problem solver, to be
-logarithmic\cite{shh88revisited}. And on the architecture side, one of
-us (J.E.L.) has built a Lean replica of ACT-R~7 that matches the Lisp
-implementation trace for trace on 72 tasks.
+cell a theorem. And the power law of practice reported in this journal
+in 1988\cite{shrager1988} turns out, for an ideal problem solver, to be
+logarithmic\cite{shh88revisited}.
 
-\paragraph{Two analogies, and their limits.}
-The first analogy is obvious. Mathlib\cite{mathlib2020}, the Lean
-community's library of mathematics, shows that a scattered community
-can build one consistent body of definitions and theorems in which
-each result is proved once and imported thereafter. Its contributors
-need not trust one another, because the kernel checks every proof.
-CogLib aims to do the same for cognitive science: define a construct
-once, prove a property once, and let every theory that uses the
-construct inherit the property without re-running anything.
+\paragraph{Architectures as formal objects.}
+A cognitive architecture has traditionally been stated in prose and
+diagrams, with an implementation whose behavior is the final authority.
+One of us (J.E.L.) has written the Common Model of Cognition in Lean,
+together with Soar, ACT-R and Sigma\cite{rosenbloom2016} as
+architectures stated against it (Sigma less completely so far). Writing
+the Common Model down exposed commitments its authors had never had to
+make, such as whether retrieving an item from declarative memory may
+change the metadata that later retrievals read, and those are now
+questions with answers to be chosen. The Common Model's extensions for
+metacognition and emotion are proved to contain the 2017 model,
+provided retrieval leaves metadata unchanged. Because the
+specifications run, theory and behavior can be compared directly: the
+Lean Soar runs the same programs as the Soar 9.6.6 release and agrees
+with it on 5,859 of 5,865 comparisons, and the Lean ACT-R matches
+ACT-R~7 trace for trace on 72 tasks. The disagreements found along the
+way exposed 33 defects in the Soar kernel, two departures from its
+manual, and 43 places where the manual is wrong, silent or ambiguous.
+Some 700 theorems are now checked; the correctness of Soar's learning
+mechanism, chunking, is not yet among them.
 
-The second analogy concerns how such a library is governed. The Linux
-kernel is maintained by a small group under strict review, with one
-inviolable rule: do not break the programs that run on it. The
-applications themselves are written and owned by others, in their own
-repositories and on their own schedules. CogLib should be a kernel in
-this sense: specifications, laws, theory-neutral phenomena and the
-tools that check them, with no particular theory inside it, including
-its founders'. ACT-R, Soar, EPAM and every other theory live as
-packages owned by their communities, built and checked against the
-core, so that a lab can participate without surrendering its theory.
+Two of those theorems show that this is cognitive theory and not only
+software verification. The first is a limit on introspection. Take two
+minds that conform to the Common Model and are symbolically identical,
+but differ in any numeric metadata on their memories: activation,
+recency, frequency or utility. If at every step they agree on what the
+cognitive cycle did, what each retrieval returned along with its
+process data, what working-memory appraisal reported and what
+forgetting removed, then they stay symbolically identical and act
+identically throughout. No rule can tell them apart, and so no
+self-report can either. A mind of this kind knows the strength of its
+own memories only through outcomes and what the architecture chooses
+to report. That gives an architectural basis for the old finding that
+people's accounts of why they judged or chose as they did follow
+plausible theories rather than the actual causes\cite{nisbett1977}, and
+it fixes the only channels from which feelings of familiarity or
+confidence can be built. It is a prediction of the Common Model,
+inherited by every architecture that conforms to it.
+
+The second settles an old question about hybrid architectures: can
+graded, learned quantities override symbolic knowledge? In Soar they
+cannot. For any set of preferences, any two selection policies, whether
+random or driven by values learned by reinforcement, either make the
+same decision or both choose among options that the agent's own
+preferences mark as indifferent. Whether an impasse arises, and of what
+kind, never depends on the policy, and rescaling every learned value
+changes no choice and no impasse. Every Soar decision is made by
+knowledge, by declared indifference, or not at all. This makes Newell's
+knowledge level\cite{newell1982} exact for Soar, and makes an impasse
+purely a fact about missing or contradictory knowledge, which is what
+impasse-driven theories of learning\cite{brown1980} require. ACT-R and
+Sigma can now be put to the same question.
+
+The two levels are complementary. The architecture specifications are
+faithful to the running systems but large; the library's mechanisms
+are idealized but easy to prove things about. Refinement theorems,
+showing for example that an idealized memory computes what ACT-R's
+declarative module computes at stated parameters, would let results
+flow from one level to the other, and they are the natural next step.
+
+\paragraph{Analogies, and their limits.}
+The obvious analogy is Mathlib\cite{mathlib2020}, the Lean community's
+library of mathematics, which shows that a scattered community can
+build one consistent body of definitions and theorems in which each
+result is proved once and imported thereafter, without contributors
+needing to trust one another, because the kernel checks every proof. A
+library shared by rival theoretical communities faces a problem Mathlib
+does not, which is who keeps the core. The Linux kernel suggests an
+answer: a small, strictly reviewed core (here specifications, laws and
+phenomena, with no one's theory inside it, including its founders'),
+and theories kept by their own communities as packages checked against
+it.
 
 Both analogies break in instructive places. Mathematics agrees on what
 is true; cognitive science does not, and a library that fixed
@@ -146,7 +200,7 @@ a cell in which one theory provably has a phenomenon that another
 provably lacks is a discriminating experiment waiting to be run. Nor is
 this software engineering. A theory is not correct because it compiles,
 or even because its theorems check. Lean establishes only that a
-phenomenon follows from the stated assumptions; whether the assumptions
+conclusion follows from the stated assumptions; whether the assumptions
 capture the theory is a judgment for the theory's authors, and whether
 they are true of people is a question for the laboratory. Proof
 settles which conjectures follow from which assumptions; simulation
@@ -158,7 +212,7 @@ fields share a founding idea, that thought is a kind of information
 processing, and they have lent each other methods ever since.
 Formalizing cognitive theories in a proof assistant returns
 psychology's oldest computational instinct to its starting point. The
-communities best placed to convene the effort already exist: the
+communities best placed to carry the effort forward already exist: the
 architecture groups that agreed on the Common Model, mathematical
 psychologists who already state laws, and experimentalists who own the
 phenomena. What is required of them is not a new theory, but the
@@ -170,40 +224,40 @@ to let a machine check it.
 \begin{tikzpicture}[
   font=\small,
   box/.style={draw, rounded corners, align=center, inner sep=4pt},
-  core/.style={box, fill=blue!8, minimum width=10.4cm},
-  pkg/.style={box, fill=orange!12, minimum width=2.3cm, minimum height=0.9cm},
-  arr/.style={-{Stealth[length=2mm]}, thick}
+  wide/.style={box, minimum width=11cm, minimum height=0.9cm},
+  pkg/.style={box, fill=orange!12, minimum width=2.4cm, minimum height=0.85cm},
+  arch/.style={box, fill=green!12, minimum width=2.4cm, minimum height=0.85cm},
+  %impl/.style={box, fill=gray!12, minimum width=2.4cm, minimum height=0.7cm, font=\footnotesize},
+  arr/.style={-{Stealth[length=2mm]}, thick},
+  lbl/.style={font=\footnotesize\itshape, align=center}
 ]
-% Kernel
-\node[core, minimum height=2.1cm] (core) {};
-\node[anchor=north, font=\bfseries] at (core.north) {CogLib (the ``kernel'')};
-\node[box, fill=white, minimum width=2.9cm] (con) at ($(core.center)+(-3.5,-0.25)$) {Constructs\\{\footnotesize memories, nets,}\\{\footnotesize processes, control}};
-\node[box, fill=white, minimum width=2.9cm] (law) at ($(core.center)+(0,-0.25)$) {Laws\\{\footnotesize predicates a theory}\\{\footnotesize may have or lack}};
-\node[box, fill=white, minimum width=2.9cm] (phe) at ($(core.center)+(3.5,-0.25)$) {Phenomena\\{\footnotesize stated with no}\\{\footnotesize theory in mind}};
-% Packages
-\node[pkg, above=1.1cm of core.north west, anchor=south west] (epam) {EPAM};
-\node[pkg, right=0.4cm of epam] (sc) {Strategy\\choice};
-\node[pkg, right=0.4cm of sc] (actr) {ACT-R};
-\node[pkg, right=0.4cm of actr] (soar) {Soar, \ldots};
-\node[anchor=south, font=\bfseries] at ($(sc.north)!0.5!(actr.north)+(0,0.15)$) {Theory packages (``applications''), owned by their communities};
-\foreach \p in {epam,sc,actr,soar} \draw[arr] (\p.south) -- (\p.south |- core.north);
-\node[font=\footnotesize, align=left, anchor=west] at ($(soar.east)+(0.2,-0.95)$) {import constructs;\\prove phenomena};
-% Matrix
-\node[below=0.5cm of core, font=\bfseries] (mt) {Theory matrix: each cell a theorem};
-\matrix (m) [below=0.1cm of mt, matrix of nodes, nodes={minimum width=1.5cm, minimum height=0.5cm, text height=1.5ex, text depth=.25ex, font=\footnotesize, draw=gray!50}, column sep=-\pgflinewidth, row sep=-\pgflinewidth] {
-  & law 1 & law 2 & law 3 \\
-  family A & has & never & has \\
-  family B & lacks & has & never \\
-};
+% Phenomena level
+\node[wide, fill=blue!8] (coglib) {\textbf{CogLib}: shared constructs \textperiodcentered{} laws \textperiodcentered{} theory-neutral phenomena};
+\node[pkg, below=1.0cm of coglib.south west, anchor=north west, xshift=0.0cm] (epam) {EPAM};
+\node[pkg, right=0.47cm of epam] (sc) {Strategy\\choice};
+\node[pkg, right=0.47cm of sc] (md) {Multi-digit\\addition};
+\node[pkg, right=0.47cm of md] (fam) {Memory\\families};
+\foreach \p in {epam,sc,md,fam} \draw[arr] (\p.north) -- (\p.north |- coglib.south);
+% Refinement
+\draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, dashed] ($(fam.south)+(0,0)$) -- ++(0,-1.0) coordinate (rb);
+% Architecture level
+\node[arch, below=1.0cm of fam] (actr) {ACT-R\\{\footnotesize tested vs.\ ACT-R 7}};
+\node[arch, left=0.47cm of actr] (soar) {Soar\\{\footnotesize tested vs.\ 9.6.6}};
+\node[arch, left=0.47cm of soar] (sigma) {Sigma\\{\footnotesize (partial)}};
+\node[lbl, anchor=east] at ($(fam.south)+(-0.1,-0.5)$) {refinement theorems (next step)};
+\node[wide, fill=green!6] (cmc) at (coglib |- {$(sigma.south)+(0,-1.45)$}) {\textbf{Common Model of Cognition}, as a Lean specification};
+\foreach \p in {sigma,soar,actr} \draw[arr] (\p.south) -- (\p.south |- cmc.north);
+\node[lbl, anchor=west, fill=white, inner sep=1pt] at ($(sigma.south)+(-2.75,-0.5)$) {conform, extend, depart};
 \end{tikzpicture}
-\caption{CogLean's organization. CogLib, like an operating-system
-kernel, is a small, strictly reviewed core of shared constructs, laws
-and theory-neutral phenomena. Theories are packages owned by their
-communities; each imports the core and proves which phenomena its
-mechanisms produce. Reading the verdicts together gives a matrix in
-which a theory has a law at every parameter setting, never has it, or
-lacks it at some setting, so disagreement between theories becomes a
-cell rather than an argument.}
+\caption{CogLean at two levels. Above, theories of particular phenomena
+(orange) import CogLib's shared constructs and prove which theory-neutral
+phenomena their mechanisms produce; read together, the verdicts form a
+matrix in which each theory has a law at every parameter setting, never
+has it, or lacks it at some setting. Below, cognitive architectures
+(green) are specified in Lean against a formal Common Model, proved to
+conform to it, extend it or depart from it, and tested against their
+running implementations. Refinement theorems between idealized
+mechanisms and the architectures' modules would connect the two levels.}
 \label{fig:arch}
 \end{figure}
 
