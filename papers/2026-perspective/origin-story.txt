@@ -1,0 +1,262 @@
+The intellectual history of the CogLean project.
+by Jeff Shrager
+Nov 14, 2026
+
+For the past few years my pastime has been to reanimate early AIs,
+that is, to make the original code run -- usually on emultor stacks,
+but using the original code as closely as possible. I call this
+"Executable Archaeology". We recently reanimated the original
+ELIZA. (You can well imagine, given the recent chatbot frenzy, that I
+got my "15 minutes of fame" from that!  Our work actually made it into
+the NY Review of Book in a review by, of all people, James Gleick!)
+
+So I was pushing this effort back to even earlier AIs, in particular,
+of course, the obvious ones are those of Simon and Newell,
+esp. because I was a Simon student, and attended the research group
+meetings of Anderson and Newell and Bob Siegler as well. (These will
+all end up being relevant.)
+
+Although I was interested in everything, my primary research interest,
+adopted, of course, from Simon who was interested in this when I was
+his student, was scientific reasoning. In fact, one of the reasons
+that I attended Anderson's and Newell's research group meetings was
+less that I was so interested in their particular theories of
+cognition (although that too), but I was actually more interested in
+how these groups thought -- how did they reason about cogntive models?
+And (having been a computer scienitst as an undergrad), the specific
+way that the CMU crowd thought about cognitive models went
+hand-in-hand with the computational theory of the main (which I won't
+critique here, but will turn out not to matter one way or the other in
+what followed), and even more so, the idea of using computer programs
+to model and validate cognitive theories.
+
+As an undergrad computer scientist in the mid 1970s I was very
+interested in AI -- did AI-related projects for my senior thesis and
+masters at Penn, but was also very interested in psychology --
+thinking the is we can understand cognition we can build better
+AIs. This soft line between AI and cognitive science was nowhere more
+central than CMU where Simon and Newell had built their fame (and
+eventuall their Turing awards and Nobels!) on building computer models
+of thought, and Newell in particular also made AIs. (Simon generally
+stuck more strictly to the psychological modelsing spin, but Newell
+was the consumate scientist engineer -- although interestingly he
+calls himself a psychologist in the McCorduck interviews. In anycase,
+that was the millieux at CMU, and it was the one I wanted to be
+immersed in, and was.
+
+Fast forward to 2021 when I became involved with a mottly band of
+literary critics who work on code as if it was a form of literature. I
+fell in with these folks largley because of my ELIZAGen work, and the
+story of my finding the origianl ELIZA in Weizenbaum's archives our
+"Team ELIZA" eventually publishing a both with MIT Press ("Inventing
+ELIZA") is a completely separate history. The most interesting part of
+this was actually spearhead by Dave Berry who found Rupert Lane, who
+is an engineer and afficionado of early operating systems. Lane (along
+with Anthony Hay, an expert on the detailed ELIZA algorithm, and Art
+Schwarz, and expert on SLIP, the underlying list processing package
+that made ELIZA work), brought up the actual origianl ELIZA, from
+almost entirely the actual original code that I had found, on an
+emulator stack of an IBM 7094 with MIT's actual CTSS OS runnin on
+it. For an old computer scientist and hacker, this was just the
+coolest thing ever -- not just "an" ELIZA, but "THE" ELIZA running
+again! We called this process "reanimation", and the larger project
+"Executable Archaeology".
+
+When the ELIZA project ended I set of to dig up and reanimate the
+original code of my mentors, Simon and Newell. This wasn't just
+because I had stidied with them; these were the very earliest AIs
+and(or) cognitive models, the first of these being The Logic Theorist
+(LT). There's a long and interesting, but mostly tengential, story
+behind the reanimation of LT, but for the moment it suffices that I
+got there in 2025.
+
+Then I start working forward through Simon and Newell's and their
+students' IPL-V cognitive models. This was becoming easier and easier
+because LLM-based coders were getting more and more performant, and my
+code based up IPL-V machinery and AI skills was pretty well
+developed. Eventually, by about early 2026, I was able to just feed
+found code to Claude, and it would make it run! My goal was GPS, and I
+was working through Simon and Newell's archives at CMU trying to find
+a complete working copy of GPS -- again, this is a long separate story.
+
+Now, enter Peter Pirolli and Chris bates of the Inst. for Human and
+Machine Cognition. Pete was actually my office mate for my whole
+graduate time at CMU, and he (and Matthew Lewis, my other office mate)
+were members of John Anderson's ACT research group, which I tagged
+along with them to, as mentioned above. Pete new, of course, that my
+core thing was scientific reasoning, so when he and another IMHC
+scienist, Chris Bates we thinking about modeling some aspect of
+science or another (it's not important specifically which), Pete
+thought of me, and I met with them, or sometimes just Chris,
+occassioanlly, talking about how to model the cognitvie sciecnec of
+science (a research problem ongoing since I was at CMU with Simon in
+the 1980s!)
+
+Now, at this exact time what I all the "mathpocalypse" took place:
+OpenAI, using their LLMs and Lean (elegant if obscure functional
+programming langauge that has the additional feature of having a
+built-in theorem prover) revolutionized -- some day destroyed! -- the
+whole matheamtical community by announcing putative proofs of hundreds
+of there-to-fore unsolved mathematical conjectures.
+
+Note that OpenAI accounced the "proofs" or "mathocalypse" release) on
+October 6, 2026.
+
+So, -- and here comes the moment of invention, which you may already
+be able to see, becuase it's sort of obvious when I build it up like
+this -- So, at some point in Sept. of 2026 I suggest to Chris and Pete
+that what we do is to find some sort of way of reprenting the
+hypotheses they're working on, and then they (or we, or someone) would
+have something to work with. ... or something like that -- I'd have to
+go through the email chain in detail in order to work out who
+suggested what, but someplace just around the mathpocalypse (I like my
+term better!) -- Oct. 18th to be precise -- I wrote an email to Chris
+and Pete with the subject like: "Epoophany".
+
+An aside: An epoophany (sometimes epoofany) is a work I invented is a
+"brilliant" idea that comes to me in a flash, and which I then share
+widely - among respected colleagues, or worse on social media -- and
+as soon as I do, I realize that it's incredibly stupid!  So, it's an
+epiphany that goes "poof!" :-)
+
+Here's the complete email:
+
+===============================
+
+from:	Jeff Shrager <jshrager@gmail.com>
+to:	Chris Bates <cbates@ihmc.org>, Peter Pirolli <ppirolli@ihmc.org>
+date:	Oct 18, 2026, 9:08 AM
+subject:	Epoophany
+
+Well, I've had an epoophany that will revolutionize cognitive science,
+and is exactly what both you and I are after -- or, more precisely,
+melds our research projects.
+
+I'll give you the short form, and you can decide whether we should
+bother talking in more depth, or whether this is ... as above ...
+incredibly stupid! :-)
+
+The idea connects my work in executable archaeology with a more
+forward-looking effort to formalize theories of cognition. Newell,
+Simon, and their colleagues developed IPL (Information Processing
+Language) not merely as a programming language, but as a means of
+expressing computational theories of human thought. One particularly
+inteesting example is Feigenbaum and Simon's EPAM (Elemetary Perceiver
+and Memorizer), an early computational theory of human learning and
+memory, implemented in IPL. I have the code for EPAM, I just haven't
+reanimated it yet.
+
+So here's the core idea: What would it mean to create a Lean-like
+formal language specifically for expressing scientific theories
+cognitinon, more specifically, of human memory? (By Lean-like I mean
+something like the language mathemeticians use to represent
+assertions, which enables automatic theorem proving.)
+
+The idea would be to develop a language in which cognitive scientists
+could specify memory mechanisms, learning processes, representations,
+retrieval operations, and other theoretical constructs with sufficient
+precision to make their consequences formally analyzable. Lean, the
+modern proof-assistant language, provides an intriguing model, but
+with an important distinction between formal proofs and empirical
+predictions. On the formal side, we could prove mathematical
+properties of a theory and establish which conclusions necessarily
+follow from its assumptions. On the empirical side, we could derive
+predictions about observable human behavior, which would then need to
+be tested experimentally. And may have already been tested -- we could
+take histroical papers and formalize them and then use their own
+results to test them!
+
+This is a little diffierent than proof, of course. A formal proof
+establishes what follows from a theory, not whether the theory
+accurately describes human cognition. Our language would ideally
+support both activities, including explicit connections between
+theoretical constructs and experimental measurements, allowing
+competing theories to be compared both logically and empirically. EPAM
+would be a natural starting point, both as a historically significant
+executable theory and as a concrete test case for the new formalism.
+The larger ambition is to develop a framework in which cognitive
+theories become precise, executable, formally analyzable, and
+empirically testable scientific objects. I think this could be an
+interesting intersection of the history of AI, formal methods, and
+contemporary cognitive science, and potentially a substantial
+collaborative research program.
+
+Okay, tell me I'm insane.
+
+Cheers,
+'Jeff
+
+=========================================
+
+To which Pete replies on Oct. 18th (in part):
+
+I don’t think this is insane. It would give some coherent direction to
+the field as it pursues AI acceleration of the field. There’s a set of
+pushes that are essentially turning cognitive psychology into a black
+box: humans are collections of response functions and transformers are
+function approximators so let’s just predict every response in every
+experiment past present and future. What you propose might get us back
+to theory and explanations.
+
+...
+
+=========================================
+
+And on Oct. 19th, Chris adds:
+
+...  I'd be really curious if you have any ideas for specific
+operators that could implement your idea....
+
+
+=========================================
+
+To which I reply later on Oct. 19th: (all these messages have
+"Epoophany" as their subject line!)
+
+Yeah:
+
+https://github.com/jeffshrager/ExecutableArchaeology/tree/main/EPAM
+
+=========================================
+
+That URL still works, and opens the first pass that I know of of
+rendering a cognitvie model in Lean!
+
+Notice that model I chose: EPAM -- the one I was just working on in
+my Executable Achaeology effort!
+
+Recall that Simon and Newell weren't trying to build AIs, they wanted
+ot use computer programs to test models of cognition.
+
+So what happened was that my left brain said to my right ... (or is it
+the other way around...? I'm a non-inverting lefty .... regardless)
+... one side of my brain said to the other: Maybe I should try to
+apply the thing that just destroyed math, or to put it more
+positively, brought math into the AI age, to Simon and Newell's goal
+of testing cognitive theories. So I did.... Or, more precisely, I did
+sort of what OpenAI did, I gave the problem to the AI to use the same
+language that the math community was using,-- this fairly simple
+programming language, called LEAN, and try to actually test models of
+cognition.
+
+I happened to be working on reanimating the original EPAM, so I
+started there, and it worked spectacularly well. (You can see that in
+the sibling directory to the DoA one, if you care.) So, okay, so
+what's another well-specified computational model that I'm familiar
+with and I can use to extend the range of this thing that I now call
+CogLean.
+
+It's important to notice the brilliant (if entirely coincidental!)
+meta-circulatory of this: Simon and Newell were writing programs to
+formalize and validate cognitive models (and incidentally building AIs
+as a sode effect!) ... and the model they were building did
+proofs. Indeed, it specifically did proofs from Principia Mathematica
+-- THE VERY FOUNDATION OF MATHEMATICS! But Simon and Newell didn't put
+2-and-2 together the way I did: Why model when you can reason!
+Reasoning is stronger than modeling!
+
+Of course, there was no such thing as comupational reason at that time
+THEY WERE INVENTING IT AT THAT VERY MOMENT IN THE VERY CODE (LT) THAT
+I HAD JUST REANIMATED!
+
+
