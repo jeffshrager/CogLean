@@ -2,6 +2,8 @@
 
 > **New to CogLean?** Start with **[CogLean-Intro](https://github.com/jeffshrager/CogLean-Intro)**, a short invitation written for cognitive scientists who do not know Lean: four questions, each answered by one machine-checked demonstration, with its own paper. This repository is the lab, with more domains and work in progress.
 
+> **How it started:** [ORIGIN-STORY.md](ORIGIN-STORY.md), from reanimating the Logic Theorist and EPAM to proving what cognitive theories entail.
+
 ## The goal
 
 Mathlib is a single, shared, machine-checked library of mathematics. Definitions are made once and reused everywhere, and every theorem is proved from them. CogLean aims at the same thing for **cognitive theory**: one library in which the constructs of cognitive science are defined once, the theories built from them are stated precisely, and the phenomena those theories claim to explain are proved from their assumptions.
