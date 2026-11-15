@@ -58,21 +58,36 @@ however thorough, shows what the model does in the region explored.
 It does not say why: which of the theory's assumptions produce a
 result, whether the result holds beyond the settings tried, or whether
 every theory sharing those assumptions would produce it too.
+Mathematical psychologists have answered such questions by hand since
+Estes\cite{estes1950}, and Soar itself was once written out in a formal
+notation\cite{milnes1992,cooper1996}. But hand proof stops about where
+models become programs, and a specification that no machine checks
+cannot be held against the system it describes.
+
 Newell warned half a century ago that a field which answers questions
 one experiment at a time, without assembling the answers, will not
 converge\cite{newell1973}. The architectures were one response, and the
 Common Model of Cognition\cite{laird2017} extends it across
-architectures. We propose to complete the loop that Logic Theorist
-opened, by applying formal proof to cognitive theories themselves.
+architectures. The warning has a new edge. Large models trained on the
+records of many experiments now predict what people will do in them,
+often better than the theories written for those
+experiments\cite{binz2025}. That is a real achievement, and also a
+temptation: to treat a person as a collection of response functions,
+and psychology as the business of approximating them. Prediction
+without mechanism is not explanation, and theories will hold their
+place beside such models only if we can say exactly what they claim
+and what follows from it. We propose to complete the loop
+that Logic Theorist opened, by applying formal proof to cognitive
+theories themselves.
 
 The proposal came, fittingly, out of that loop. One of us (J.S.), with
 David Moews, has been reanimating the original programs of Newell,
 Simon and their students: Logic Theorist's IPL-V code now runs again,
 unmodified, and reproduces its 1963 proofs, and the work had moved on
 to EPAM, Feigenbaum and Simon's theory of verbal
-learning\cite{feigenbaum1962}. Having brought back a program that was
-at once a theorem prover and a theory of mind, it was a short step to
-turn a modern theorem prover on the theory itself.
+learning\cite{feigenbaum1962}. From a program that was at once a
+theorem prover and a theory of mind, it was a short step to turning a
+modern theorem prover on the theory itself.
 
 \paragraph{CogLean and CogLib.}
 Two developments make this practical now. Proof assistants such as
@@ -80,10 +95,11 @@ Lean\cite{demoura2021} are also programming languages, so the same
 definition of, say, a discrimination net or an activation-based memory
 can be run on an experiment's stimuli and proved about for
 \emph{every} set of stimuli. The simulation and the theory can no
-longer drift apart. And AI coding agents now write most of the formal
-code under a scientist's supervision, so a psychologist need not become
-a logician to contribute; the proof checker, not the agent, is what is
-trusted.
+longer drift apart. And AI agents, of the kind that have lately begun
+to produce machine-checked proofs in mathematics, now write most of the
+formal code under a scientist's supervision, so a psychologist need not
+become a logician to contribute; the proof checker, not the agent, is
+what is trusted.
 
 CogLean\cite{coglean,cogleanintro} is a project to build cognitive
 theory this way, and it already works at two levels
@@ -102,23 +118,32 @@ says the theory needs an assumption it never stated.
 \paragraph{Theories of phenomena.}
 The early results are small, but they have already surprised their own
 authors. Siegler and Shrager's 1984 model of children's
-addition\cite{siegler1984} claimed that more peaked associations lead to
-less frequent use of overt strategies; formalization found that this is
-false without a condition the chapter does not state. Collins and
-Quillian's hierarchical network\cite{collins1969} is proved unable to
-produce a typicality effect for \emph{any} network, while a
-feature-comparison model can. EPAM's serial position
-effect\cite{feigenbaum1962} is proved for every discrimination net, not
-only the one simulated in 1962. Independently formalized theories
-compose: EPAM, the strategy-choice model and a problem solver combine
+addition\cite{siegler1984} claimed that the more peaked a child's
+associations between a problem and its answers, the less often the
+child falls back on an overt strategy such as counting on fingers. One
+of us (J.S.) helped write that claim and believed it for forty years.
+Formalization found that it is false without a condition the chapter
+never states. The same author's graph-dynamic account of the power law
+of practice\cite{newell1981}, published in this journal in
+1988\cite{shrager1988}, turns out in its cleanest case to yield a
+logarithmic curve, which resembles a power law over the range plotted
+and provably is not one\cite{shh88revisited}.
+
+Proof also reaches past the particular model that was run. Collins and
+Quillian's hierarchical network\cite{collins1969}, a fixture of
+textbooks, is proved unable to produce a typicality effect, not for
+the network they drew but for \emph{any} network, while a
+feature-comparison model can; EPAM's serial position
+effect\cite{feigenbaum1962} is likewise proved for every discrimination
+net. And independently formalized theories
+compose. EPAM, the strategy-choice model and a problem solver combine
 into a model of multi-digit addition whose confident errors are proved
-for every memory satisfying three laws. A simplified ACT-R memory
-reaches the same errors by another route, and the two explanations
-disagree about an experiment nobody has yet run. A theory matrix
-classifies four families of memory against six laws of retrieval, each
-cell a theorem. And the power law of practice reported in this journal
-in 1988\cite{shrager1988} turns out, for an ideal problem solver, to be
-logarithmic\cite{shh88revisited}.
+for every memory satisfying three stated laws. A simplified ACT-R
+memory reaches the same errors by another route, and the two
+explanations disagree about an experiment nobody has yet run. Here
+proof has done what we most want from theory, and told us which
+experiment to do next. In a matrix of theories against laws, with a
+theorem in every cell, such disagreements can be read off at a glance.
 
 \paragraph{Architectures as formal objects.}
 A cognitive architecture has traditionally been stated in prose and
@@ -134,58 +159,57 @@ metacognition and emotion are proved to contain the 2017 model,
 provided retrieval leaves metadata unchanged. Because the
 specifications run, theory and behavior can be compared directly: the
 Lean Soar runs the same programs as the Soar 9.6.6 release and agrees
-with it on 5,859 of 5,865 comparisons, and the Lean ACT-R matches
-ACT-R~7 trace for trace on 72 tasks. The disagreements found along the
-way exposed 33 defects in the Soar kernel, two departures from its
-manual, and 43 places where the manual is wrong, silent or ambiguous.
-Some 700 theorems are now checked; the correctness of Soar's learning
-mechanism, chunking, is not yet among them.
+with it on all but 6 of 5,865 comparisons, and the Lean ACT-R matches
+ACT-R~7 trace for trace on dozens of tasks. The disagreements found
+along the way exposed 33 defects in the Soar kernel, and dozens of
+places where its manual is wrong, silent or ambiguous. Several hundred
+theorems are now checked; the correctness of Soar's learning mechanism,
+chunking, is not yet among them.
 
 Two of those theorems show that this is cognitive theory and not only
-software verification. The first is a limit on introspection. Take two
-minds that conform to the Common Model and are symbolically identical,
-but differ in any numeric metadata on their memories: activation,
-recency, frequency or utility. If at every step they agree on what the
-cognitive cycle did, what each retrieval returned along with its
-process data, what working-memory appraisal reported and what
-forgetting removed, then they stay symbolically identical and act
-identically throughout. No rule can tell them apart, and so no
-self-report can either. A mind of this kind knows the strength of its
-own memories only through outcomes and what the architecture chooses
-to report. That gives an architectural basis for the old finding that
-people's accounts of why they judged or chose as they did follow
-plausible theories rather than the actual causes\cite{nisbett1977}, and
-it fixes the only channels from which feelings of familiarity or
-confidence can be built. It is a prediction of the Common Model,
-inherited by every architecture that conforms to it.
+software verification. The first is a limit on introspection. In the
+Common Model every memory carries numbers, its activation, recency,
+frequency or utility, that no rule may examine. The theorem says how
+much of this a mind can nevertheless come to know about itself. There
+are four channels and no others: what the cognitive cycle did, what
+each retrieval returned along with its process data, what
+working-memory appraisal reported, and what forgetting removed. Two
+minds that begin symbolically identical and agree on those four,
+however much their numbers differ, stay symbolically identical and act
+identically ever after. No rule can tell them apart, and so no
+self-report can either. This is the architectural counterpart of the
+old finding that people's accounts of why they judged or chose as they
+did follow plausible theories rather than actual
+causes\cite{nisbett1977}, and it names the only material from which
+feelings of familiarity or confidence can be built. It is a prediction
+of the Common Model, inherited by every architecture that conforms to
+it.
 
 The second settles an old question about hybrid architectures: can
 graded, learned quantities override symbolic knowledge? In Soar they
-cannot. For any set of preferences, any two selection policies, whether
-random or driven by values learned by reinforcement, either make the
-same decision or both choose among options that the agent's own
+cannot. Given any set of preferences, any two selection policies,
+random or driven by values learned through reinforcement, either make
+the same decision or choose among options that the agent's own
 preferences mark as indifferent. Whether an impasse arises, and of what
-kind, never depends on the policy, and rescaling every learned value
-changes no choice and no impasse. Every Soar decision is made by
+kind, never depends on the policy. Every Soar decision is made by
 knowledge, by declared indifference, or not at all. This makes Newell's
-knowledge level\cite{newell1982} exact for Soar, and makes an impasse
-purely a fact about missing or contradictory knowledge, which is what
-impasse-driven theories of learning\cite{brown1980} require. ACT-R and
-Sigma can now be put to the same question.
+knowledge level\cite{newell1982} exact for Soar, and an impasse purely
+a fact about missing or contradictory knowledge, as impasse-driven
+theories of learning\cite{brown1980} require. ACT-R and Sigma can now
+be put to the same question.
 
-The two levels are complementary. The architecture specifications are
-faithful to the running systems but large; the library's mechanisms
+The two levels are complementary: the architecture specifications are
+faithful to the running systems but large, and the library's mechanisms
 are idealized but easy to prove things about. Refinement theorems,
 showing for example that an idealized memory computes what ACT-R's
-declarative module computes at stated parameters, would let results
-flow from one level to the other, and they are the natural next step.
+declarative module computes, are the natural next step.
 
 \paragraph{Analogies, and their limits.}
 The obvious analogy is Mathlib\cite{mathlib2020}, the Lean community's
 library of mathematics, which shows that a scattered community can
-build one consistent body of definitions and theorems in which each
-result is proved once and imported thereafter, without contributors
-needing to trust one another, because the kernel checks every proof. A
+build one consistent body of theorems, each proved once and imported
+thereafter, without contributors needing to trust one another, because
+the kernel checks every proof. A
 library shared by rival theoretical communities faces a problem Mathlib
 does not, which is who keeps the core. The Linux kernel suggests an
 answer: a small, strictly reviewed core (here specifications, laws and
@@ -203,7 +227,8 @@ provably lacks is a discriminating experiment waiting to be run. Nor is
 this software engineering. A theory is not correct because it compiles,
 or even because its theorems check. Lean establishes only that a
 conclusion follows from the stated assumptions; whether the assumptions
-capture the theory is a judgment for the theory's authors, and whether
+capture the theory is a judgment for the theory's authors, all the
+more so when an agent drafted them, and whether
 they are true of people is a question for the laboratory. Proof
 settles which conjectures follow from which assumptions; simulation
 maps what a model does and suggests the conjectures; experiments decide.
@@ -217,7 +242,9 @@ psychology's oldest computational instinct to its starting point. The
 communities best placed to carry the effort forward already exist: the
 architecture groups that agreed on the Common Model, mathematical
 psychologists who already state laws, and experimentalists who own the
-phenomena. What is required of them is not a new theory, but the
+phenomena. The library is public, and the best first contribution is a
+theory one knows from the inside, together with a result it is supposed
+to explain. What is required is not a new theory, but the
 willingness to say precisely what their present theories entail, and
 to let a machine check it.
 
