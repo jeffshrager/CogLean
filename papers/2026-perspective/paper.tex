@@ -114,10 +114,14 @@ the bench at the time, became the first theory in CogLean.
 
 \paragraph{CogLean and CogLib.}
 CogLean\cite{coglean,cogleanintro} is a project to build cognitive
-theory this way, and it already works at two levels
-(Fig.~\ref{fig:arch}). At the level of phenomena, a shared library,
+theory this way, and it already works at two levels;
+Fig.~\ref{fig:arch} shows how they are meant to fit together. At the level of phenomena, a shared library,
 CogLib, holds representations, memories, learning and control
-processes, and phenomena stated independently of any theory. A theory
+processes, and phenomena stated independently of any theory. Nothing
+in CogLib is \emph{the} memory. Each kind of memory, working,
+declarative or procedural, is a place that rival accounts can fill, and
+an architecture is one such choice made in every place at once and held
+fixed across tasks. A theory
 is a choice among these constructs, with each postulate cited to its
 source, and its theorems are explanations: deductions of a phenomenon
 from stated mechanisms and conditions, checked by Lean's kernel. At the
@@ -253,13 +257,14 @@ theories of learning\cite{brown1980} require. ACT-R and Sigma can now
 be put to the same question.
 
 \paragraph{Connecting the levels.}
-So far these are two bodies of work that share a language. The
-library's mechanisms are idealized but easy to prove things about; the
-architecture specifications are faithful to the running systems but
-large. What would make them one program is a third kind of theorem,
-which does not yet exist: a refinement theorem, showing for example
-that an idealized memory in the library computes what ACT-R's
-declarative module computes. With such theorems in place, an
+Models are already built at both levels: some on the library's
+idealized mechanisms, which are easy to prove things about, and some on
+the architecture specifications, which are faithful to the running
+systems but large. What does not yet exist is the link between the two,
+drawn dashed in Fig.~\ref{fig:arch}: a refinement theorem, showing for
+example that an idealized memory in the library computes what ACT-R's
+declarative module computes. Until then these are two bodies of work
+that share a language. With such theorems in place, an
 explanation could be followed all the way down: from a phenomenon,
 through the mechanisms that produce it, through an architecture that
 implements those mechanisms, to the implementation that people run.
@@ -324,47 +329,91 @@ consequences that nobody knew were there. What is required is not a new theory, 
 willingness to say precisely what their present theories entail, and
 to let a machine check it.
 
-\begin{figure}[t]
+\clearpage
+\begin{figure}[p]
 \centering
 \begin{tikzpicture}[
   font=\small,
-  box/.style={draw, rounded corners, align=center, inner sep=4pt},
-  wide/.style={box, minimum width=11cm, minimum height=0.9cm},
-  pkg/.style={box, fill=orange!12, minimum width=2.4cm, minimum height=0.85cm},
-  arch/.style={box, fill=green!12, minimum width=2.4cm, minimum height=0.85cm},
-  %impl/.style={box, fill=gray!12, minimum width=2.4cm, minimum height=0.7cm, font=\footnotesize},
-  arr/.style={-{Stealth[length=2mm]}, thick},
-  lbl/.style={font=\footnotesize\itshape, align=center}
+  lay/.style={font=\small, align=flush left, text width=2.45cm, anchor=west},
+  slot/.style={draw, rounded corners=3pt, fill=blue!5, minimum width=2.1cm, minimum height=2.4cm},
+  slottitle/.style={font=\footnotesize\bfseries, align=center, text width=2.0cm},
+  card/.style={draw, rounded corners=2pt, fill=white, minimum width=1.5cm, minimum height=0.32cm},
+  model/.style={draw, rounded corners, fill=orange!14, align=center, minimum width=2.5cm, minimum height=0.9cm},
+  phen/.style={draw, rounded corners=8pt, fill=yellow!22, align=center, minimum width=2.5cm, minimum height=0.8cm},
+  arch/.style={draw, rounded corners, fill=green!14, align=center, minimum width=2.6cm, minimum height=0.65cm},
+  arr/.style={-{Stealth[length=2.2mm]}, thick},
+  note/.style={font=\footnotesize\itshape, align=left, anchor=west}
 ]
-% Phenomena level
-\node[wide, fill=blue!8] (coglib) {\textbf{CogLib}: shared constructs \textperiodcentered{} laws \textperiodcentered{} theory-neutral phenomena};
-\node[pkg, below=1.0cm of coglib.south west, anchor=north west, xshift=0.0cm] (epam) {EPAM};
-\node[pkg, right=0.47cm of epam] (sc) {Strategy\\choice};
-\node[pkg, right=0.47cm of sc] (md) {Multi-digit\\addition};
-\node[pkg, right=0.47cm of md] (fam) {Memory\\families};
-\foreach \p in {epam,sc,md,fam} \draw[arr] (\p.north) -- (\p.north |- coglib.south);
-% Refinement
-\draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, dashed] ($(fam.south)+(0,0)$) -- ++(0,-1.0) coordinate (rb);
-% Architecture level
-\node[arch, below=1.0cm of fam] (actr) {ACT-R\\{\footnotesize tested vs.\ ACT-R 7}};
-\node[arch, left=0.47cm of actr] (soar) {Soar\\{\footnotesize tested vs.\ 9.6.6}};
-\node[arch, left=0.47cm of soar] (sigma) {Sigma\\{\footnotesize (partial)}};
-\node[lbl, anchor=east] at ($(fam.south)+(-0.1,-0.5)$) {refinement theorems (next step)};
-\node[wide, fill=green!6] (cmc) at (coglib |- {$(sigma.south)+(0,-1.45)$}) {\textbf{Common Model of Cognition}, as a Lean specification};
-\foreach \p in {sigma,soar,actr} \draw[arr] (\p.south) -- (\p.south |- cmc.north);
-\node[lbl, anchor=west, fill=white, inner sep=1pt] at ($(sigma.south)+(-2.75,-0.5)$) {conform, extend, depart};
+% ---------- CogLib ----------
+\draw[rounded corners=5pt, fill=blue!2] (2.8,-0.6) rectangle (16.4,3.2);
+\foreach \x/\ttl/\n [count=\i] in {4.0/{declarative\\memory}/3, 6.5/{working /\\short-term}/2,
+     9.0/{procedural\\memory}/2, 11.5/{perception\\and motor}/2, 14.0/{learning}/3} {
+  \node[slot] (s\i) at (\x,1.7) {};
+  \node[slottitle] at (\x,2.52) {\ttl};
+  \foreach \r in {1,...,\n} { \node[card] (c\i-\r) at (\x,2.35-0.5*\r) {}; }
+}
+\node[draw, rounded corners=3pt, fill=blue!10, minimum width=12.1cm, minimum height=0.55cm,
+      font=\footnotesize] (laws) at (9.0,-0.05)
+  {\textbf{laws}: each variant has a law, never has it, or lacks it at some setting};
+% ---------- Architectures ----------
+\draw[rounded corners=5pt, fill=green!4] (11.4,3.75) rectangle (15.0,5.65);
+\node[arch] (soar) at (13.2,5.12) {Soar};
+\node[arch] (actr) at (13.2,4.28) {ACT-R};
+% threads: one variant per slot (dashed = refinement, to be proved)
+\draw[dashed, thick, blue!70!black]
+  (actr.east) -- (15.7,4.28) -- (15.7,1.88) -- (c5-1.center) -- (c4-2.center) --
+  ([yshift=1.2pt]c3-1.center) -- (c2-1.center) -- (c1-1.center);
+\draw[dashed, thick, red!70!black]
+  (soar.east) -- (16.05,5.12) -- (16.05,0.85) -- (c5-3.center) -- (c4-1.center) --
+  ([yshift=-1.2pt]c3-1.center) -- (c2-2.center) -- (c1-2.center);
+\foreach \c in {c5-1,c4-2,c2-1,c1-1} \fill[blue!70!black] (\c.center) circle (2pt);
+\foreach \c in {c5-3,c4-1,c2-2,c1-2} \fill[red!70!black] (\c.center) circle (2pt);
+\fill[blue!70!black] ([xshift=-3pt]c3-1.center) circle (2pt);
+\fill[red!70!black] ([xshift=3pt]c3-1.center) circle (2pt);
+% ---------- Task models and phenomena ----------
+\node[model] (m1) at (4.0,6.75) {task model};
+\node[model] (m2) at (7.75,6.75) {task model};
+\node[model] (m3) at (13.2,6.75) {task model};
+\foreach \i in {1,2,3} {
+  \node[phen] (p\i) at (m\i |- 0,8.45) {phenomenon};
+  \draw[arr] (m\i.north) -- (p\i.south);
+}
+\draw[arr] (m1.south) -- (s1.north);
+\draw[arr] (m2.south) -- (7.75,0.225);
+\draw[arr] (m3.south) -- (13.2,5.65);
+\node[note] at (4.15,4.75) {uses one\\variant};
+\node[note] at (7.9,4.75) {needs only laws:\\holds for every\\variant with them};
+\node[note, anchor=east, align=right] at (13.05,6.02) {built on an architecture};
+\node[font=\footnotesize\itshape] at (5.75,7.62) {explains};
+% ---------- Layer labels ----------
+\node[lay] at (0,8.45) {\textbf{Phenomena}\\{\footnotesize stated neutrally}};
+\node[lay] at (0,6.75) {\textbf{Task models}\\{\footnotesize mechanisms plus task knowledge}};
+\node[lay] at (0,4.7) {\textbf{Architectures}\\{\footnotesize one variant in every slot, fixed across tasks}};
+\node[lay] at (0,1.5) {\textbf{CogLib}\\{\footnotesize slots, the rival variants in each, and laws}};
+\node[font=\footnotesize\itshape, anchor=north west, align=left, text width=13.3cm] at (2.8,-0.75)
+  {dashed: refinement, an architecture's module shown to compute what a variant computes (not yet proved)};
 \end{tikzpicture}
-\caption{CogLean at two levels. Above, theories of particular phenomena
-(orange) import CogLib's shared constructs and prove which theory-neutral
-phenomena their mechanisms produce; read together, the verdicts form a
-matrix in which each theory has a law at every parameter setting, never
-has it, or lacks it at some setting. Below, cognitive architectures
-(green) are specified in Lean against a formal Common Model, proved to
-conform to it, extend it or depart from it, and tested against their
-running implementations. Refinement theorems between idealized
-mechanisms and the architectures' modules would connect the two levels.}
+\caption{How CogLean is meant to be organized. \textbf{CogLib} is a set of
+slots, the kinds of memory and process that the Common Model of
+Cognition distinguishes, and ``memory'' is not one of them but several.
+Each slot holds rival variants behind one interface (discrimination
+nets and activation-based retrieval, for example, are two variants of
+declarative memory), and each law is something a variant provably has,
+never has, or lacks at some setting. An \textbf{architecture} is one
+variant chosen in every slot and held fixed across tasks; Soar and
+ACT-R share the slots and differ in what fills them. A \textbf{task
+model} adds task knowledge and explains a phenomenon. It may use one
+variant (EPAM, the strategy-choice model), require only laws and so
+hold for every variant that has them (the confident errors of
+multi-digit addition), or be built on an architecture (the models that
+run on the Lean ACT-R and Soar). The figure shows the intended
+organization and not the present state: CogLib so far has rival
+variants only for long-term associative memory, the other slots are
+filled in the architecture specifications, and the dashed links between
+the two are the refinement theorems still to be proved.}
 \label{fig:arch}
 \end{figure}
+\clearpage
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
