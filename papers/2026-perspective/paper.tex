@@ -340,76 +340,87 @@ to let a machine check it.
   font=\small,
   frame/.style={draw, rounded corners=5pt},
   ttl/.style={font=\bfseries, anchor=north west},
-  task/.style={draw, rounded corners, fill=orange!16, minimum width=1.25cm, minimum height=0.8cm},
-  arch/.style={draw, rounded corners, fill=green!16, minimum width=2.5cm, minimum height=1.0cm, font=\normalsize},
-  mem/.style={draw, circle, fill=blue!10, inner sep=1.5pt, minimum size=0.82cm},
-  proc/.style={draw, rounded corners=2pt, fill=violet!10, minimum size=0.74cm},
+  task/.style={draw, rounded corners, fill=orange!16, minimum width=1.2cm, minimum height=0.8cm},
+  arch/.style={draw, rounded corners, fill=green!16, minimum width=2.5cm, minimum height=0.9cm, font=\normalsize},
+  mech/.style={draw, circle, fill=blue!10, inner sep=1.5pt, minimum size=0.84cm},
+  phen/.style={draw, rounded corners=7pt, fill=yellow!28, minimum width=1.0cm, minimum height=0.7cm},
+  law/.style={draw, fill=gray!14, minimum width=0.9cm, minimum height=0.55cm},
   rowlbl/.style={font=\footnotesize\itshape, anchor=west},
   use/.style={thick},
+  yields/.style={-{Stealth[length=2mm]}, semithick},
   pickA/.style={dashed, thick, blue!70!black},
   pickS/.style={dashed, thick, red!70!black}
 ]
 % ---------- frames ----------
-\draw[frame, thick] (0,0) rectangle (16.2,10.9);
-\node[ttl, font=\large\bfseries] at (0.15,10.75) {CogLean};
-\draw[frame, fill=orange!4] (0.8,7.2) rectangle (13.9,9.4);
-\node[ttl] at (0.95,9.3) {Task level};
-\draw[frame, fill=blue!3] (0.8,0.6) rectangle (13.9,6.3);
-\node[ttl] at (0.95,6.2) {CogLib};
-% ---------- phenomenon vertical ----------
-\draw[rounded corners=8pt, dotted, line width=1.1pt, black!65] (10.15,0.95) rectangle (13.55,9.95);
-\node[font=\footnotesize\bfseries, black!75] at (11.85,10.2) {a phenomenon vertical};
+\draw[frame, thick] (0,0) rectangle (14.7,11.9);
+\node[ttl, font=\large\bfseries] at (0.15,11.75) {CogLean};
+\draw[frame, fill=orange!4] (0.8,8.3) rectangle (13.9,10.4);
+\node[ttl] at (0.95,10.3) {Task level};
+\draw[frame, fill=blue!3] (0.8,0.5) rectangle (13.9,7.4);
+\node[ttl] at (0.95,7.3) {CogLib};
+% ---------- exploratory / private vertical ----------
+\draw[rounded corners=8pt, dotted, line width=1.1pt, black!65] (10.15,0.68) rectangle (13.55,10.95);
+\node[font=\footnotesize\bfseries, black!75] at (11.85,11.2) {an exploratory / private vertical};
 % ---------- task models ----------
-\node[task] (t1) at (4.1,8.1) {T$_1$};
-\node[task] (t2) at (7.3,8.1) {T$_2$};
-\node[task] (t3) at (11.1,8.1) {T$_3$};
-\node[task] (t4) at (12.6,8.1) {T$_4$};
+\node[task] (t1) at (4.6,9.15) {T$_1$};
+\node[task] (t2) at (7.8,9.15) {T$_2$};
+\node[task] (t3) at (11.1,9.15) {T$_3$};
+\node[task] (t4) at (12.6,9.15) {T$_4$};
 % ---------- architectures ----------
-\node[arch] (actr) at (4.1,5.0) {ACT-R};
-\node[arch] (soar) at (7.3,5.0) {Soar};
-% ---------- memories and processes ----------
-\node[rowlbl] at (0.9,2.95) {memories};
-\node[rowlbl] at (0.9,1.45) {processes};
-\node[mem] (m1) at (3.3,2.95) {M$_1$};
-\node[mem] (m2) at (5.3,2.95) {M$_2$};
-\node[mem] (m3) at (7.3,2.95) {M$_3$};
-\node at (9.1,2.95) {$\cdots$};
-\node[mem] (mn) at (11.1,2.95) {M$_n$};
-\node[proc] (p1) at (3.3,1.45) {P$_1$};
-\node[proc] (p2) at (5.3,1.45) {P$_2$};
-\node[proc] (p3) at (7.3,1.45) {P$_3$};
-\node at (9.1,1.45) {$\cdots$};
-\node[proc] (pn) at (12.6,1.45) {P$_k$};
-% ---------- architecture choices (dashed) ----------
+\node[arch] (actr) at (4.6,6.15) {ACT-R};
+\node[arch] (soar) at (7.8,6.15) {Soar};
+% ---------- mechanisms, phenomena, laws ----------
+\node[rowlbl] at (0.9,4.3) {mechanisms};
+\node[rowlbl] at (0.9,2.75) {phenomena};
+\node[rowlbl] at (0.9,1.3) {laws};
+\draw[rounded corners=3pt, fill=gray!5] (3.0,0.9) rectangle (13.35,1.7);
+\foreach \x/\k in {3.8/1, 5.8/2, 7.8/3} {
+  \node[mech] (m\k) at (\x,4.3) {M$_\k$};
+  \node[phen] (p\k) at (\x,2.75) {P$_\k$};
+  \node[law] (l\k) at (\x,1.3) {L$_\k$};
+}
+\foreach \y in {4.3,2.75,1.3} \node at (9.35,\y) {$\cdots$};
+\node[mech] (mn) at (11.1,4.3) {M$_n$};
+\node[phen] (pn) at (11.1,2.75) {P$_k$};
+\node[law] (ln) at (12.6,1.3) {L$_j$};
+% ---------- architectures use mechanisms (dashed) ----------
 \draw[pickA] (actr) -- (m1);
-\draw[pickA] (actr) -- (m3);
-\draw[pickA] (actr.south) to[out=-95,in=120] (p2);
+\draw[pickA] (actr) -- (m2);
 \draw[pickS] (soar) -- (m2);
 \draw[pickS] (soar) -- (m3);
-\draw[pickS] (soar.south west) to[out=-125,in=75] (p1);
-\draw[pickS] (soar.south east) to[out=-60,in=60] (p3);
-% ---------- task models stand on something (solid) ----------
+% ---------- ... and yield phenomena ----------
+\draw[yields, blue!70!black] (3.45,5.7) .. controls (2.85,4.9) and (2.85,3.7) .. (p1.north west);
+\draw[yields, blue!70!black] (4.75,5.7) .. controls (4.8,4.8) and (4.8,3.7) .. (p2.north west);
+\draw[yields, red!70!black] (7.45,5.7) .. controls (6.8,4.8) and (6.8,3.7) .. (p2.north east);
+\draw[yields, red!70!black] (8.7,5.7) .. controls (8.95,4.9) and (8.95,3.7) .. (p3.north east);
+% ---------- task models ----------
 \draw[use] (t1) -- (actr);
 \draw[use] (t2) -- (soar);
 \draw[use] (t3) -- (mn);
-\draw[use] (t3.south) -- (pn.north west);
-\draw[use] (t4) -- (pn);
+\draw[yields] (mn) -- (pn);
+\draw[use] (t4) -- (ln);
+\draw[yields] (12.6,2.75) -- (pn.east);
 \end{tikzpicture}
 \caption{How CogLean is meant to be organized. \textbf{CogLib} holds
-many memories (M) and many processes (P), not one of each: working and
-long-term memories, rival accounts of the same memory, and the
-processes of learning and control. An architecture, here
-ACT-R or Soar, is a particular selection from them, held fixed across
-tasks (dashed lines; each such line is a refinement claim, an
+\emph{mechanisms} (M), which include the several kinds of memory and
+the rival accounts of each; \emph{phenomena} (P), stated without
+reference to any theory; and, underneath, \emph{laws} (L), each of
+which a mechanism provably has, never has, or lacks at some setting. An
+architecture, here ACT-R or Soar, is a selection of mechanisms held
+fixed across tasks (dashed lines; each is a refinement claim, an
 architecture's module shown to compute what a library mechanism
 computes, and these are still to be proved). At the \textbf{task
 level}, a task model T adds task knowledge. It may be built on an
-architecture (T$_1$, T$_2$) or directly on the memories and processes
-it needs (T$_3$, T$_4$). A \textbf{phenomenon vertical} (dotted) is one
-explanation followed from top to bottom: the task models that produce a
-phenomenon together with the library mechanisms they rest on. The
-figure shows the intended organization, not the present state of the
-library.}
+architecture (T$_1$, T$_2$), on a particular mechanism (T$_3$), or on
+laws alone, in which case it holds for every mechanism that has them
+(T$_4$). Arrows lead to the phenomena that are derived; two
+architectures may reach the same phenomenon (P$_2$) by different
+mechanisms. An \textbf{exploratory, or private, vertical} (dotted) is
+work that one group carries through every level at once: its own task
+models, with whatever mechanisms, phenomena and laws they need, kept by
+its authors while it is being explored and before any of it is reviewed
+into the shared library. The figure shows the intended organization,
+not the present state of the library.}
 \label{fig:arch}
 \end{figure}
 \clearpage
