@@ -342,7 +342,7 @@ to let a machine check it.
   ttl/.style={font=\bfseries, anchor=north west},
   rowlbl/.style={font=\footnotesize\itshape, anchor=west, align=left},
   task/.style={draw, rounded corners, fill=orange!18, minimum width=1.25cm, minimum height=0.78cm},
-  arch/.style={draw, rounded corners, fill=green!16, minimum width=2.0cm, minimum height=0.9cm, font=\normalsize},
+  arch/.style={draw, rounded corners, fill=green!16, minimum width=1.8cm, minimum height=0.9cm, font=\normalsize},
   mech/.style={draw, circle, fill=blue!10, inner sep=1.5pt, minimum size=0.86cm},
   phen/.style={draw, rounded corners=7pt, fill=yellow!30, minimum width=1.1cm, minimum height=0.72cm},
   tphen/.style={draw, rounded corners=7pt, fill=yellow!12, minimum width=1.1cm, minimum height=0.72cm},
@@ -363,13 +363,15 @@ to let a machine check it.
 \draw[rounded corners=3pt, fill=gray!14] (1.2,0.85) rectangle (13.5,1.85);
 \node[font=\normalsize\bfseries] at (7.35,1.35) {Laws \textperiodcentered{} Axioms};
 \node[rowlbl] at (0.95,3.4) {mechanisms};
-\node[rowlbl] at (0.95,5.5) {architectures};
 \node[rowlbl] at (0.95,7.3) {task-general\\phenomena};
 \node[mech] (m1) at (3.7,3.4) {M$_1$};
 \node[mech] (m2) at (5.3,3.4) {M$_2$};
 \node[mech] (m3) at (7.0,3.4) {M$_3$};
 \node at (8.4,3.4) {$\cdots$};
 \node[mech] (mk) at (9.9,3.4) {M$_k$};
+\draw[rounded corners=5pt, fill=green!5] (1.0,4.82) rectangle (8.3,6.22);
+\node[font=\fontsize{6.5}{7.6}\selectfont\bfseries, anchor=west, align=left, inner sep=0pt] at (1.12,5.76) {Common Model\\of Cognition};
+\node[rowlbl, inner sep=0pt] at (1.12,5.1) {architectures};
 \node[arch] (actr) at (4.4,5.5) {ACT-R};
 \node[arch] (soar) at (7.0,5.5) {Soar};
 \node[phen] (p1) at (5.7,7.3) {P$_1$};
@@ -430,7 +432,8 @@ the shared library. At its base are \emph{laws}, each of which a
 mechanism provably has, never has, or lacks at some setting, and the few
 logical axioms beneath every proof. Above them are \emph{mechanisms}
 (M), which include various rival models and types, for example,
-several kinds of memory. Mechanisms come together into architectures (blue and red arrows).
+several kinds of memory. Mechanisms come together into architectures (blue and red arrows),
+here ACT-R and Soar, both within the Common Model of Cognition.
 Architectures may share some mechanisms, and differ on others. The
 library also holds
 \emph{task-general phenomena} (P), patterns of behavior stated without
