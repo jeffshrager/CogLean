@@ -8,6 +8,10 @@
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,matrix}
 \usepackage[numbers,sort&compress,super]{natbib}
 \usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\newcommand{\draftheader}{\footnotesize Draft of \today; Not for circulation; Feedback: \texttt{jshrager@gmail.com}}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[C]{\draftheader}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\pagestyle{plain}
 
 \title{CogLean: Towards a Shared, Machine-Checked Library\\ of Cognitive Theory}
 
