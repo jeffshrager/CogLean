@@ -374,7 +374,7 @@ to let a machine check it.
 \node[arch] (soar) at (7.0,5.5) {Soar};
 \node[phen] (p1) at (5.7,7.3) {P$_1$};
 \node[phen] (p2) at (8.3,7.3) {P$_2$};
-\node at (10.9,7.3) {$\cdots$};
+\node at (10.2,7.3) {$\cdots$};
 \node[phen] (pj) at (12.4,7.3) {P$_j$};
 % ---------- Tasks contents ----------
 \node[rowlbl] at (0.95,11.3) {task models};
@@ -390,10 +390,10 @@ to let a machine check it.
 % exploratory / private region
 \draw[dotted, line width=1.1pt, black!70] (10.4,9.5) -- (10.4,14.0);
 \node[font=\scriptsize\bfseries, anchor=north] at (12.15,13.88) {Exploratory / private};
-\node[mech] (mx) at (11.25,10.35) {M$_{k+1}$};
-\node[phen] (px) at (12.95,10.35) {P$_{j+1}$};
-\node[task] (tx) at (12.1,11.55) {T$_{n+1}$};
-\node[tphen] (qx) at (12.1,12.75) {p$_{n+1}$};
+\node[mech] (mx) at (11.85,10.3) {M$_{k+1}$};
+\node[phen] (px) at (13.2,10.3) {P$_{j+1}$};
+\node[task] (tx) at (12.4,11.55) {T$_{n+1}$};
+\node[tphen] (qx) at (12.4,12.75) {p$_{n+1}$};
 % ---------- arrows, all upward ----------
 \foreach \m in {m1,m2,m3,mk} \draw[aG] (\m |- 0,1.85) -- (\m.south);
 % mechanisms come together into architectures
@@ -415,10 +415,14 @@ to let a machine check it.
 \draw[a] (t2) -- (q2);
 \draw[a] (tn) -- (qn);
 % private
-\draw[aG] (mx.north) to[out=80,in=-130] (tx.south west);
-\draw[aP] (px.north) to[out=100,in=-50] (tx.south east);
+\draw[aG] (mx.north) to[out=85,in=-110] ([xshift=3pt]tx.south west);
+\draw[aP] (px.north) to[out=95,in=-60] (tx.south east);
 \draw[a] (tx) -- (qx);
-\draw[aP] (pj.north) to[out=95,in=-90] (tx.south);
+\draw[aP] (pj.north) -- (tx.south);
+% the exploratory task also pulls library mechanisms
+\draw[white, line width=3pt] (m3.north east) to[out=40,in=180] (9.3,4.55) to[out=0,in=-90] (10.7,7.0) to[out=90,in=180] (tx.west);
+\draw[aG] (m3.north east) to[out=40,in=180] (9.3,4.55) to[out=0,in=-90] (10.7,7.0) to[out=90,in=180] (tx.west);
+\draw[aG] (mk.north east) to[out=50,in=-90] (11.0,7.0) to[out=90,in=-155] ([yshift=-4pt]tx.west);
 \end{tikzpicture}
 \caption{How CogLean is meant to be organized. Every arrow points
 upward, from what is assumed to what is built on it. \textbf{CogLib} is
@@ -434,9 +438,10 @@ phenomena at issue come together in a model of a particular task (T),
 and above each task model is the task-level phenomenon (p) it is proved
 to show. A task model may also be built on a mechanism directly, with
 no architecture (T$_n$). The \textbf{exploratory, or private,} region
-is work a group carries on by itself: a new task that draws on the
-library but brings its own mechanisms and phenomena where the library
-does not yet have what it needs, kept by its authors until it is ready
+is work a group carries on by itself: a new task that pulls
+mechanisms and phenomena from the library (here M$_3$, M$_k$ and
+P$_j$) and adds its own where the library does not yet have what it
+needs, kept by its authors until it is ready
 to be reviewed into the shared library. The figure shows the intended
 organization, not the present state of the library.}
 \label{fig:arch}
