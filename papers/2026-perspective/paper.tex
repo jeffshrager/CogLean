@@ -338,83 +338,78 @@ to let a machine check it.
 \centering
 \begin{tikzpicture}[
   font=\small,
-  lay/.style={font=\small, align=flush left, text width=2.45cm, anchor=west},
-  slot/.style={draw, rounded corners=3pt, fill=blue!5, minimum width=2.1cm, minimum height=2.4cm},
-  slottitle/.style={font=\footnotesize\bfseries, align=center, text width=2.0cm},
-  card/.style={draw, rounded corners=2pt, fill=white, minimum width=1.5cm, minimum height=0.32cm},
-  model/.style={draw, rounded corners, fill=orange!14, align=center, minimum width=2.5cm, minimum height=0.9cm},
-  phen/.style={draw, rounded corners=8pt, fill=yellow!22, align=center, minimum width=2.5cm, minimum height=0.8cm},
-  arch/.style={draw, rounded corners, fill=green!14, align=center, minimum width=2.6cm, minimum height=0.65cm},
-  arr/.style={-{Stealth[length=2.2mm]}, thick},
-  note/.style={font=\footnotesize\itshape, align=left, anchor=west}
+  frame/.style={draw, rounded corners=5pt},
+  ttl/.style={font=\bfseries, anchor=north west},
+  task/.style={draw, rounded corners, fill=orange!16, minimum width=1.25cm, minimum height=0.8cm},
+  arch/.style={draw, rounded corners, fill=green!16, minimum width=2.5cm, minimum height=1.0cm, font=\normalsize},
+  mem/.style={draw, circle, fill=blue!10, inner sep=1.5pt, minimum size=0.82cm},
+  proc/.style={draw, rounded corners=2pt, fill=violet!10, minimum size=0.74cm},
+  rowlbl/.style={font=\footnotesize\itshape, anchor=west},
+  use/.style={thick},
+  pickA/.style={dashed, thick, blue!70!black},
+  pickS/.style={dashed, thick, red!70!black}
 ]
-% ---------- CogLib ----------
-\draw[rounded corners=5pt, fill=blue!2] (2.8,-0.6) rectangle (16.4,3.2);
-\foreach \x/\ttl/\n [count=\i] in {4.0/{declarative\\memory}/3, 6.5/{working /\\short-term}/2,
-     9.0/{procedural\\memory}/2, 11.5/{perception\\and motor}/2, 14.0/{learning}/3} {
-  \node[slot] (s\i) at (\x,1.7) {};
-  \node[slottitle] at (\x,2.52) {\ttl};
-  \foreach \r in {1,...,\n} { \node[card] (c\i-\r) at (\x,2.35-0.5*\r) {}; }
-}
-\node[draw, rounded corners=3pt, fill=blue!10, minimum width=12.1cm, minimum height=0.55cm,
-      font=\footnotesize] (laws) at (9.0,-0.05)
-  {\textbf{laws}: each variant has a law, never has it, or lacks it at some setting};
-% ---------- Architectures ----------
-\draw[rounded corners=5pt, fill=green!4] (11.4,3.75) rectangle (15.0,5.65);
-\node[arch] (soar) at (13.2,5.12) {Soar};
-\node[arch] (actr) at (13.2,4.28) {ACT-R};
-% threads: one variant per slot (dashed = refinement, to be proved)
-\draw[dashed, thick, blue!70!black]
-  (actr.east) -- (15.7,4.28) -- (15.7,1.88) -- (c5-1.center) -- (c4-2.center) --
-  ([yshift=1.2pt]c3-1.center) -- (c2-1.center) -- (c1-1.center);
-\draw[dashed, thick, red!70!black]
-  (soar.east) -- (16.05,5.12) -- (16.05,0.85) -- (c5-3.center) -- (c4-1.center) --
-  ([yshift=-1.2pt]c3-1.center) -- (c2-2.center) -- (c1-2.center);
-\foreach \c in {c5-1,c4-2,c2-1,c1-1} \fill[blue!70!black] (\c.center) circle (2pt);
-\foreach \c in {c5-3,c4-1,c2-2,c1-2} \fill[red!70!black] (\c.center) circle (2pt);
-\fill[blue!70!black] ([xshift=-3pt]c3-1.center) circle (2pt);
-\fill[red!70!black] ([xshift=3pt]c3-1.center) circle (2pt);
-% ---------- Task models and phenomena ----------
-\node[model] (m1) at (4.0,6.75) {task model};
-\node[model] (m2) at (7.75,6.75) {task model};
-\node[model] (m3) at (13.2,6.75) {task model};
-\foreach \i in {1,2,3} {
-  \node[phen] (p\i) at (m\i |- 0,8.45) {phenomenon};
-  \draw[arr] (m\i.north) -- (p\i.south);
-}
-\draw[arr] (m1.south) -- (s1.north);
-\draw[arr] (m2.south) -- (7.75,0.225);
-\draw[arr] (m3.south) -- (13.2,5.65);
-\node[note] at (4.15,4.75) {uses one\\variant};
-\node[note] at (7.9,4.75) {needs only laws:\\holds for every\\variant with them};
-\node[note, anchor=east, align=right] at (13.05,6.02) {built on an architecture};
-\node[font=\footnotesize\itshape] at (5.75,7.62) {explains};
-% ---------- Layer labels ----------
-\node[lay] at (0,8.45) {\textbf{Phenomena}\\{\footnotesize stated neutrally}};
-\node[lay] at (0,6.75) {\textbf{Task models}\\{\footnotesize mechanisms plus task knowledge}};
-\node[lay] at (0,4.7) {\textbf{Architectures}\\{\footnotesize one variant in every slot, fixed across tasks}};
-\node[lay] at (0,1.5) {\textbf{CogLib}\\{\footnotesize slots, the rival variants in each, and laws}};
-\node[font=\footnotesize\itshape, anchor=north west, align=left, text width=13.3cm] at (2.8,-0.75)
-  {dashed: refinement, an architecture's module shown to compute what a variant computes (not yet proved)};
+% ---------- frames ----------
+\draw[frame, thick] (0,0) rectangle (16.2,10.9);
+\node[ttl, font=\large\bfseries] at (0.15,10.75) {CogLean};
+\draw[frame, fill=orange!4] (0.8,7.2) rectangle (13.9,9.4);
+\node[ttl] at (0.95,9.3) {Task level};
+\draw[frame, fill=blue!3] (0.8,0.6) rectangle (13.9,6.3);
+\node[ttl] at (0.95,6.2) {CogLib};
+% ---------- phenomenon vertical ----------
+\draw[rounded corners=8pt, dotted, line width=1.1pt, black!65] (10.15,0.95) rectangle (13.55,9.95);
+\node[font=\footnotesize\bfseries, black!75] at (11.85,10.2) {a phenomenon vertical};
+% ---------- task models ----------
+\node[task] (t1) at (4.1,8.1) {T$_1$};
+\node[task] (t2) at (7.3,8.1) {T$_2$};
+\node[task] (t3) at (11.1,8.1) {T$_3$};
+\node[task] (t4) at (12.6,8.1) {T$_4$};
+% ---------- architectures ----------
+\node[arch] (actr) at (4.1,5.0) {ACT-R};
+\node[arch] (soar) at (7.3,5.0) {Soar};
+% ---------- memories and processes ----------
+\node[rowlbl] at (0.9,2.95) {memories};
+\node[rowlbl] at (0.9,1.45) {processes};
+\node[mem] (m1) at (3.3,2.95) {M$_1$};
+\node[mem] (m2) at (5.3,2.95) {M$_2$};
+\node[mem] (m3) at (7.3,2.95) {M$_3$};
+\node at (9.1,2.95) {$\cdots$};
+\node[mem] (mn) at (11.1,2.95) {M$_n$};
+\node[proc] (p1) at (3.3,1.45) {P$_1$};
+\node[proc] (p2) at (5.3,1.45) {P$_2$};
+\node[proc] (p3) at (7.3,1.45) {P$_3$};
+\node at (9.1,1.45) {$\cdots$};
+\node[proc] (pn) at (12.6,1.45) {P$_k$};
+% ---------- architecture choices (dashed) ----------
+\draw[pickA] (actr) -- (m1);
+\draw[pickA] (actr) -- (m3);
+\draw[pickA] (actr.south) to[out=-95,in=120] (p2);
+\draw[pickS] (soar) -- (m2);
+\draw[pickS] (soar) -- (m3);
+\draw[pickS] (soar.south west) to[out=-125,in=75] (p1);
+\draw[pickS] (soar.south east) to[out=-60,in=60] (p3);
+% ---------- task models stand on something (solid) ----------
+\draw[use] (t1) -- (actr);
+\draw[use] (t2) -- (soar);
+\draw[use] (t3) -- (mn);
+\draw[use] (t3.south) -- (pn.north west);
+\draw[use] (t4) -- (pn);
 \end{tikzpicture}
-\caption{How CogLean is meant to be organized. \textbf{CogLib} is a set of
-slots, the kinds of memory and process that the Common Model of
-Cognition distinguishes, and ``memory'' is not one of them but several.
-Each slot holds rival variants behind one interface (discrimination
-nets and activation-based retrieval, for example, are two variants of
-declarative memory), and each law is something a variant provably has,
-never has, or lacks at some setting. An \textbf{architecture} is one
-variant chosen in every slot and held fixed across tasks; Soar and
-ACT-R share the slots and differ in what fills them. A \textbf{task
-model} adds task knowledge and explains a phenomenon. It may use one
-variant (EPAM, the strategy-choice model), require only laws and so
-hold for every variant that has them (the confident errors of
-multi-digit addition), or be built on an architecture (the models that
-run on the Lean ACT-R and Soar). The figure shows the intended
-organization and not the present state: CogLib so far has rival
-variants only for long-term associative memory, the other slots are
-filled in the architecture specifications, and the dashed links between
-the two are the refinement theorems still to be proved.}
+\caption{How CogLean is meant to be organized. \textbf{CogLib} holds
+many memories (M) and many processes (P), not one of each: working and
+long-term memories, rival accounts of the same memory, and the
+processes of learning and control. An architecture, here
+ACT-R or Soar, is a particular selection from them, held fixed across
+tasks (dashed lines; each such line is a refinement claim, an
+architecture's module shown to compute what a library mechanism
+computes, and these are still to be proved). At the \textbf{task
+level}, a task model T adds task knowledge. It may be built on an
+architecture (T$_1$, T$_2$) or directly on the memories and processes
+it needs (T$_3$, T$_4$). A \textbf{phenomenon vertical} (dotted) is one
+explanation followed from top to bottom: the task models that produce a
+phenomenon together with the library mechanisms they rest on. The
+figure shows the intended organization, not the present state of the
+library.}
 \label{fig:arch}
 \end{figure}
 \clearpage
