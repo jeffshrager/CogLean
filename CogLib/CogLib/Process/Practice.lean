@@ -50,7 +50,7 @@ def harmonic : Nat → Rat
 def spaced (F : Rat) : Curve := fun n => latency F n (List.range n)
 
 /-- The latency after `n` massed uses at time 0, tested at lag `L`. -/
-def massed (F : Rat) (L : Nat) : Curve := fun n => latency F L (List.replicate n 0)
+def massed (F : Rat) (L : Time) : Curve := fun n => latency F L (List.replicate n 0)
 
 theorem cast_nonneg (n : Nat) : (0 : Rat) ≤ (n : Rat) := Rat.natCast_nonneg
 
@@ -59,7 +59,7 @@ theorem cast_le {a b : Nat} (h : a ≤ b) : (a : Rat) ≤ (b : Rat) := Rat.natCa
 /-! ### The base level under the two schedules -/
 
 /-- Advancing the clock and every use together leaves the base level alone. -/
-theorem baseWeight_shift (now : Nat) (uses : List Nat) :
+theorem baseWeight_shift (now : Time) (uses : List Time) :
     baseWeight (now + 1) (uses.map Nat.succ) = baseWeight now uses := by
   simp only [baseWeight, List.map_map]
   congr 2
@@ -77,7 +77,7 @@ theorem baseWeight_spaced (n : Nat) : baseWeight n (List.range n) = harmonic n :
     rw [e, baseWeight_shift, ih, harmonic, Nat.sub_zero]
     grind
 
-theorem baseWeight_massed (L n : Nat) :
+theorem baseWeight_massed (L : Time) (n : Nat) :
     baseWeight L (List.replicate n 0) = (n : Rat) * (1 / (L : Rat)) := by
   induction n with
   | zero => simp [baseWeight]
@@ -354,7 +354,7 @@ theorem spaced_looks_like_powerLaw : ApproxScaleRatio (spaced 1) 2 (18 / 25) (3 
 
 /-! ### Massed practice: an exact power law -/
 
-theorem massed_eq_power (F : Rat) (L : Nat) (hL : 1 ≤ L) (n : Nat) (hn : 1 ≤ n) :
+theorem massed_eq_power (F : Rat) (L : Time) (hL : 1 ≤ L) (n : Nat) (hn : 1 ≤ n) :
     massed F L n = power (F * L) 1 n := by
   simp only [massed, latency, baseWeight_massed, power, Rat.pow_one]
   have : (L : Rat) ≠ 0 := by
@@ -365,7 +365,7 @@ theorem massed_eq_power (F : Rat) (L : Nat) (hL : 1 ≤ L) (n : Nat) (hn : 1 ≤
 
 /-- **Massed practice, tested after a delay, gives an exact power law**, with
 exponent 1: multiplying practice by `k` divides latency by `k`. -/
-theorem massed_scaleRatio (F : Rat) (L : Nat) (hL : 1 ≤ L) (k : Nat) (hk : 1 ≤ k) (hi : Nat) :
+theorem massed_scaleRatio (F : Rat) (L : Time) (hL : 1 ≤ L) (k : Nat) (hk : 1 ≤ k) (hi : Nat) :
     ScaleRatio (massed F L) k (1 / (k : Rat) ^ 1) 1 hi := by
   intro n hn hkn
   rw [massed_eq_power F L hL n hn,

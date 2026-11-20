@@ -73,7 +73,7 @@ variable (Q : ActParams)
 
 def codes (s : ActState) : List Item := s.chunks.map Chunk.code
 
-theorem addUse_new (t : Nat) (x : Item) :
+theorem addUse_new (t : Time) (x : Item) :
     ∀ cs : List Chunk, x ∉ cs.map Chunk.code → Act.addUse t x cs = cs ++ [⟨x, [t]⟩] := by
   intro cs
   induction cs with
@@ -84,7 +84,7 @@ theorem addUse_new (t : Nat) (x : Item) :
     have hc : c.code ≠ x := fun h => hx.1 h.symm
     simp only [Act.addUse, hc, ite_false, List.cons_append, ih hx.2]
 
-theorem codes_addUse (t : Nat) (x : Item) :
+theorem codes_addUse (t : Time) (x : Item) :
     ∀ cs : List Chunk, ∀ c ∈ (Act.addUse t x cs).map Chunk.code, c = x ∨ c ∈ cs.map Chunk.code := by
   intro cs
   induction cs with
@@ -148,13 +148,6 @@ theorem pow_pos' (m : Rat) (h : 0 < m) : ∀ k : Nat, 0 < m ^ k
   | 0 => by rw [Rat.pow_zero]; decide
   | k + 1 => by rw [Rat.pow_succ]; exact Rat.mul_pos (pow_pos' m h k) h
 
-theorem baseWeight_nonneg (now : Nat) (uses : List Nat) : 0 ≤ Act.baseWeight now uses := by
-  apply sum_nonneg
-  intro r hr
-  simp only [List.mem_map] at hr
-  obtain ⟨t, _, rfl⟩ := hr
-  exact div_nonneg' (by decide) (Rat.natCast_nonneg)
-
 theorem weight_nonneg (s : ActState) (x : Item) (hμ : 0 ≤ Q.mu) (hθ : 0 ≤ Q.theta) :
     ∀ o, 0 ≤ Act.weight Q s x o
   | none => hθ
@@ -163,7 +156,7 @@ theorem weight_nonneg (s : ActState) (x : Item) (hμ : 0 ≤ Q.mu) (hθ : 0 ≤ 
     intro r hr
     simp only [List.mem_map] at hr
     obtain ⟨c, _, rfl⟩ := hr
-    exact Rat.mul_nonneg (baseWeight_nonneg _ _) (Rat.pow_nonneg hμ)
+    exact Rat.mul_nonneg (Act.baseWeight_nonneg _ _) (Rat.pow_nonneg hμ)
 
 /-- The total weight is positive: failure always has weight. -/
 theorem total_pos (s : ActState) (x : Item) (hμ : 0 ≤ Q.mu) (hθ : 0 < Q.theta) :
@@ -176,7 +169,7 @@ theorem total_pos (s : ActState) (x : Item) (hμ : 0 ≤ Q.mu) (hθ : 0 < Q.thet
 
 /-- The chance of retrieving a code that has exactly one chunk, `c`, among the
 last ones. -/
-theorem pRet_last (cs : List Chunk) (now : Nat) (c c' : Chunk) (x : Item)
+theorem pRet_last (cs : List Chunk) (now : Time) (c c' : Chunk) (x : Item)
     (hcs : c.code ∉ cs.map Chunk.code) (hc' : c'.code ≠ c.code) :
     (pRet (actRetriever Q) ⟨now, cs ++ [c, c']⟩ x c.code =
       Act.chunkWeight Q now x c / total (Act.outcomes ⟨now, cs ++ [c, c']⟩)
@@ -255,11 +248,11 @@ theorem recency (U : List Item) (hμ : 0 < Q.mu) (hθ : 0 < Q.theta) :
     (Rat.le_of_lt hμ) hθ
   have hpow := pow_pos' Q.mu hμ (mismatches Q.fs x a)
   have hwa : Act.chunkWeight Q (s1.now + 2) x ⟨a, [s1.now]⟩ = 1 / 2 * Q.mu ^ mismatches Q.fs x a := by
-    have h2 : s1.now + 2 - s1.now = 2 := by omega
+    have h2 : s1.now + 2 - s1.now = 2 := by unfold Time; omega
     simp [Act.chunkWeight, Act.baseWeight, h2]
     grind
   have hwb : Act.chunkWeight Q (s1.now + 2) x ⟨b, [s1.now + 1]⟩ = Q.mu ^ mismatches Q.fs x a := by
-    have h1 : s1.now + 2 - (s1.now + 1) = 1 := by omega
+    have h1 : s1.now + 2 - (s1.now + 1) = 1 := by unfold Time; omega
     simp [Act.chunkWeight, Act.baseWeight, hm, h1]
     grind
   rw [hwa, hwb]
@@ -306,7 +299,7 @@ theorem cross (a b c d : Rat) (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) 
 theorem mismatches_self (fs : List Feature) (x : Item) : mismatches fs x x = 0 := by
   simp [mismatches]
 
-theorem pRet_single (now : Nat) (c : Chunk) (x : Item) :
+theorem pRet_single (now : Time) (c : Chunk) (x : Item) :
     pRet (actRetriever Q) ⟨now, [c]⟩ x c.code =
       Act.chunkWeight Q now x c / (Q.theta + Act.chunkWeight Q now x c) := by
   show prob (Act.retrieve Q _ x) _ = _
@@ -314,18 +307,18 @@ theorem pRet_single (now : Nat) (c : Chunk) (x : Item) :
   simp [Act.outcomes, strengthIn, total, Act.weight]
   grind
 
-theorem total_two (now : Nat) (c c' : Chunk) (x : Item) (h : c'.code ≠ c.code) :
+theorem total_two (now : Time) (c c' : Chunk) (x : Item) (h : c'.code ≠ c.code) :
     total (Act.outcomes ⟨now, [c, c']⟩) (Act.weight Q ⟨now, [c, c']⟩ x) =
       Q.theta + Act.chunkWeight Q now x c + Act.chunkWeight Q now x c' := by
   have h' : c.code ≠ c'.code := fun e => h e.symm
   simp [Act.outcomes, strengthIn, total, Act.weight, h, h']
   grind
 
-theorem cw_self (now t : Nat) (y : Item) :
+theorem cw_self (now t : Time) (y : Item) :
     Act.chunkWeight Q now y ⟨y, [t]⟩ = 1 / ((now - t : Nat) : Rat) := by
   simp [Act.chunkWeight, Act.baseWeight, mismatches_self, Rat.add_zero]
 
-theorem cw_other (now t : Nat) (x y : Item) :
+theorem cw_other (now t : Time) (x y : Item) :
     Act.chunkWeight Q now x ⟨y, [t]⟩ = 1 / ((now - t : Nat) : Rat) * Q.mu ^ mismatches Q.fs x y := by
   simp [Act.chunkWeight, Act.baseWeight, Rat.add_zero]
 
